@@ -101,6 +101,9 @@
 /* USER DROPDOWN DISPAY STARTS HERE  */
 
 .user-dropdown{
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 5px 8px;
   border-radius: 7px;
 }

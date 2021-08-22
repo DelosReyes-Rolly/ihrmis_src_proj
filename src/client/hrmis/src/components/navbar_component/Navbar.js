@@ -36,7 +36,7 @@ class NavbarComponent extends Component {
                         <span><AiOutlineQuestionCircle size="20px"/></span></li>
                     <li onClick={ this.onClickOptionEvent } className="user-dropdown">
                         <span className="user-avatar"><img src={DostLogo} width="20" height="20" alt="avatar"/></span>
-                        <span className="user-name-display">Terrence Calzada </span>
+                        <span className="user-name-display">Juan Dela Cruz </span>
                         <span className="user-drop-arrow"> <AiFillCaretDown size="12px"/></span>
                         <ul className="user-drop-option" style={{display: this.state.optionDisplay}}>
                             <span className="user-arrow-up"><AiFillCaretUp size="15px"/></span>
