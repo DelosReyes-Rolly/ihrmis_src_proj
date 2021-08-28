@@ -46,8 +46,6 @@ body{
 }
 
 /* Margins Ends Here */
-
-
 .padding-1{
   padding: 5px;
 }
@@ -64,14 +62,13 @@ body{
   padding-bottom: 1px;
 }
 
+/* CONTAINER SIDEBAR AND CONTENT DESIGN CONFIG */
 .container{
   display: flex;
   flex-flow: row;
   position: relative;
   width: 100%;
 }
-
-
 .positioning{
   display: grid;
   padding-left: 250px;

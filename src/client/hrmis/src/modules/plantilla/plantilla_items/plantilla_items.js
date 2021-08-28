@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import BreadcrumbComponent from '../../../components/breadcrumb_component/Breadcrumb';
 import BadgeComponents from '../../../components/badge_component/Badge';
 import { plantillaItemsBreadCramp } from '../components/breadcramp_data';
-import InputComponent from '../../../components/input_component/Input';
+import InputComponent from '../../../components/input_component/search_input/Input';
 import { selectFilter } from './components/filter_item';
 import { BsArrowUpDown  } from 'react-icons/bs'
 import { MdMoreHoriz, MdAdd } from 'react-icons/md'
 import { plantillaTableData } from './components/plantilla_table_data';
-import './plantilla_style.css'
+import './plantilla_items.css'
 
 
 function PlantillaItemView (){
@@ -46,23 +46,30 @@ function PlantillaItemView (){
                     <div className="plantilla-table">
 
                         <div className="scrollable-div-table">
-                            <table id="customers">
-                                <tr className="fixed-label-table">
-                                    <th><button><BsArrowUpDown/></button> Item No.</th>
-                                    <th><button><BsArrowUpDown/></button> Position</th>
-                                    <th><button><BsArrowUpDown/></button> Office</th>
-                                    <th><button><BsArrowUpDown/></button> Status</th>
-                                </tr>
-                                {
-                                    plantillaTableData.map(data => {
-                                        return <tr className="trClass" key={data.id}>
-                                            <td>{data.itemNo}</td>
-                                            <td>{data.position}</td>
-                                            <td>{data.office}</td>
-                                            <td className = "column-option"><span>{data.status}</span><button><MdMoreHoriz size="15"/></button></td>
-                                        </tr>;
-                                    })
-                                }
+                            <table id="custom-table">
+                                <thead>
+                                    <tr className="fixed-label-table">
+                                        <th><button><BsArrowUpDown/></button> Item No.</th>
+                                        <th><button><BsArrowUpDown/></button> Position</th>
+                                        <th><button><BsArrowUpDown/></button> Office</th>
+                                        <th><button><BsArrowUpDown/></button> Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {
+                                        plantillaTableData.map(data => {
+                                            return <tr className="trClass" key={data.id}>
+                                                <td>{data.itemNo}</td>
+                                                <td>{data.position}</td>
+                                                <td>{data.office}</td>
+                                                <td className = "column-option"><div className="inline-div-td-1">{data.status}<br/>{data.status.score}</div><div className="inline-div-td-2"><button><MdMoreHoriz size="15"/></button></div></td>
+                                            </tr>;
+                                        })
+                                    }
+
+                                </tbody>
+
 
                             </table>
                         </div>
@@ -74,8 +81,8 @@ function PlantillaItemView (){
             <div className={toggleState === 2 ? "current-tab" : "show-none"}>
                 <h1 className="margin-left-2">Employee</h1>
             </div>
-            </div>
-         );
-    }
+        </div>
+    );
+}
  
 export default PlantillaItemView;

@@ -11,9 +11,7 @@ class InputComponent extends Component {
     render() { 
         return ( 
             <div className="input-div">
-                <input className={this.addClassName} placeholder="">
-
-                </input>
+                <input className={this.addClassName} placeholder="" />
             </div>
         );
     }

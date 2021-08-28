@@ -1,5 +1,5 @@
 import React from 'react';
-import PlantillaItemView from './plantilla_items/Plantilla_items'
+import PlantillaItemView from './plantilla_items/plantilla_items'
 import { Component } from 'react';
 
 
