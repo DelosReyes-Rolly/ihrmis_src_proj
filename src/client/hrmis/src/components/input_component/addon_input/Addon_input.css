@@ -1,0 +1,30 @@
+.input-group-container {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.input-group {
+    display: flex;
+    align-content: stretch;
+    margin-top: 5px;
+}
+
+.input-group input {
+    /* flex: 1 0 auto; */
+    border-radius: 5px 0px 0px 5px;
+    border: 1px solid #55555555;
+    outline: #55555511;
+    padding: 1px 10px;
+    text-align: center;
+    width: 100%;
+}
+.input-group-addon {
+    position: relative;
+    left: -1px;
+    background: #55555511;
+    border-radius: 0px 5px 5px 0px;
+    border: 1px solid #55555533;
+    font-size: small;
+    padding: 8px 10px;
+}
