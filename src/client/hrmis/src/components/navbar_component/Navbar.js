@@ -38,9 +38,9 @@ const NavbarComponent = (props) => {
                     <span className="user-drop-arrow"> <AiFillCaretDown size="12px"/></span>
                     <ul className="user-drop-option" style={{display: dropState ? 'block':'none'}}>
                         <span className="user-arrow-up"><AiFillCaretUp size="15px"/></span>
-                        <li className="margin-top-1"><a href="/">HR Module</a></li>
-                        <li className="margin-bottom-1"><a href="/">Change Password</a></li>
-                        <li className="margin-bottom-1"><a href="/">LOGOUT</a></li>
+                        <li className="margin-top-1"><a href="/ihrmis/#">HR Module</a></li>
+                        <li className="margin-bottom-1"><a href="/ihrmis/#">Change Password</a></li>
+                        <li className="margin-bottom-1"><a href="/ihrmis/#">LOGOUT</a></li>
                     </ul>
                 </li>
             </ul>

@@ -1,0 +1,12 @@
+#textarea-component{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    outline: none;
+    border: 1px solid #55555555;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#textarea-component:focus{
+    border: 1px solid #55555599;
+}

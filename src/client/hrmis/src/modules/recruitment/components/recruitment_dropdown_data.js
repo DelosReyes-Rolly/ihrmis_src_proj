@@ -33,7 +33,6 @@ export const recruitmentDropdownFilter = [
     }
 ];
 
-
 export const recruitmentDropdownVacant = [
     {
         value: '0',
@@ -54,5 +53,23 @@ export const recruitmentDropdownVacant = [
     {
         value: '4',
         title: 'PROJECT MANAGER V',
+    },
+];
+
+export const recruitmentItemMenuList = [
+    {
+        id: 1,
+        itemTitle:"View",
+        link: "#"
+    },
+    {
+        id: 4,
+        itemTitle:"Disqualified",
+        link: "#"
+    },
+    {
+        id: 3,
+        itemTitle:"Delete",
+        link: "#"
     },
 ];

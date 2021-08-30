@@ -1,6 +1,6 @@
-import { recruitmentDropdownFilter, recruitmentDropdownVacant } from './components/recruitment_dropdown_data';
+import { recruitmentDropdownFilter, recruitmentDropdownVacant, recruitmentItemMenuList } from './components/recruitment_dropdown_data';
 import BreadcrumbComponent from '../../components/breadcrumb_component/Breadcrumb';
-import InputComponent from '../../components/input_component/search_input/Input';
+import SearchComponent from '../../components/input_component/search_input/search_input';
 import BadgeComponents from '../../components/badge_component/Badge';
 import { recruitmentBreadCramp } from './components/recruitment_breadcramp_data';
 import { recruitmentTableData } from './fake_data/recruitment_table_data';
@@ -43,23 +43,27 @@ const RecruitmentMainView = (props) => {
             <div className="selector-buttons">
                 <div className="selector-container">
                     <span className="selector-span-1"><button><MdAdd size="18"/><span>Applicant</span></button></span>
-                    <span className="margin-left-1 selector-span-1"><select>
-                        <option value="" disabled selected>Vacant Position</option>
-                        {recruitmentDropdownVacant.map(item => {
-                            return <option className="options" key={item.value} defaultValue={item.value}>{item.title}</option>
-                        })}
-                    </select></span>
-                    <span className="margin-left-1 selector-span-1"><select>
-                        <option value="" disabled selected>Filter By</option>
-                        {recruitmentDropdownFilter.map(item => {
-                            return <option className="options" key={item.value} defaultValue={item.value}>{item.title}</option>
-                        })}
-                    </select></span>
+                        <span className="margin-left-1 selector-span-1">
+                            <select defaultValue={'DEFAULT'} >
+                                <option value="DEFAULT" disabled>Vacant Position</option>
+                                {recruitmentDropdownVacant.map(item => {
+                                    return <option className="options" key={item.value} defaultValue={item.value}>{item.title}</option>
+                                })}
+                            </select>
+                        </span>
+                        <span className="margin-left-1 selector-span-1">
+                            <select defaultValue={'DEFAULT'} >
+                                <option value="DEFAULT" disabled>Filter By</option>
+                                {recruitmentDropdownFilter.map(item => {
+                                    return <option className="options" key={item.value} defaultValue={item.value}>{item.title}</option>
+                                })}
+                            </select>
+                        </span>
                     </div>
 
                     <div className="selector-container">
                         <span className="margin-right-1 selector-search-label"><label>Search</label></span>
-                        <span><InputComponent /></span>
+                        <span><SearchComponent /></span>
                     </div>
                 </div>
                 <div className="plantilla-table">
@@ -97,7 +101,10 @@ const RecruitmentMainView = (props) => {
                                                         buttonToggleState.on
                                                         ? buttonToggleState.index === data.id ? "block" 
                                                         : "none" : "none"
-                                                        }/>
+                                                        }
+                                                        itemList={recruitmentItemMenuList}
+                                                        />
+                                                
                                                 </div>
                                             </td>
                                         </tr>;

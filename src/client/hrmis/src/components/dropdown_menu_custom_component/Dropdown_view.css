@@ -1,5 +1,6 @@
 .ul-dropdown-container{
     position: absolute;
+    width: max-content;
     background-color: white;
     padding: 4px 0px;
     top: 26px;
@@ -10,6 +11,7 @@
 }
 
 .ul-menu-item{
+    
     padding: 7px 20px;
 }
 .ul-menu-item:hover{
@@ -23,8 +25,7 @@
     right: 4px;
     color: white;
 }
-
-.ul-menu-item a{
+.link-class{
     color: black;
     text-decoration: none;
 }

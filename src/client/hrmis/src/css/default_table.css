@@ -87,3 +87,13 @@
     color: rgba(54, 58, 63, 0.6);
 
 }
+
+/* HEADERS */
+
+.main-headers{
+    background-color: rgba(1, 6, 15, 0.08);
+}
+
+.secondary-headers{
+    background-color: rgba(1, 6, 15, 0.03);
+}

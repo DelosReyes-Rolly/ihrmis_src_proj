@@ -8,8 +8,10 @@ import DashboardMainView from './modules/dashboard/dashboard';
 import RequestMainView from './modules/request/Request';
 import CompensationMainView from './modules/compensation/Compensation';
 import RecruitmentMainView from './modules/recruitment/recruitment';
+import LibraryMainView from './modules/library/library';
 import './css/default_table.css';
 import './css/default_scrollbar.css';
+
 
 function App() {
   return (
@@ -28,20 +30,23 @@ function App() {
                 <Route exact path="/">
                   <DashboardMainView />
                 </Route>
-                <Route exact path="/build/">
+                <Route exact path="/ihrmis/">
                   <DashboardMainView />
                 </Route>
-                <Route path="/request">
+                <Route path="/ihrmis/request">
                   <RequestMainView />
                 </Route>
-                <Route path="/plantilla">
+                <Route path="/ihrmis/plantilla">
                   <PlantillaMainView />
                 </Route>
-                <Route path="/compensation">
+                <Route path="/ihrmis/compensation">
                   <CompensationMainView />
                 </Route>
-                <Route path="/recruitment">
+                <Route path="/ihrmis/recruitment">
                   <RecruitmentMainView />
+                </Route>
+                <Route path="/ihrmis/library">
+                  <LibraryMainView />
                 </Route>
             </Switch>
           </div>

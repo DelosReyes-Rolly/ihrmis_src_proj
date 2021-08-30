@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './Input.css'
+import './search_input.css'
 
-class InputComponent extends Component {
+class SearchComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {  }
@@ -17,4 +17,4 @@ class InputComponent extends Component {
     }
 }
  
-export default InputComponent;
+export default SearchComponent;
