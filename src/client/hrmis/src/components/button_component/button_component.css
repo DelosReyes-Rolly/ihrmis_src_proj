@@ -14,4 +14,11 @@
 .button-components:hover{
     transition: .3s;
     background: #4276A4BB;
+    border: 1px 0px 0px 0px solid #4276A4BB !important;
+}
+
+.bc-logo-component{
+    display: flex;
+    align-items: center;
+    text-align: center;
 }

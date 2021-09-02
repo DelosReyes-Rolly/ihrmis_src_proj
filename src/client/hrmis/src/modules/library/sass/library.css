@@ -1,0 +1,23 @@
+.for-position-modal .position-modal-container-1 {
+  margin: 10px 0px 0px 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-plus {
+  color: #2fd12f;
+}
+
+.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-minus {
+  color: #cc4040;
+}
+
+.for-position-modal .position-modal-container-2 {
+  margin: 10px 0px 0px 0px;
+}
+/*# sourceMappingURL=library.css.map */

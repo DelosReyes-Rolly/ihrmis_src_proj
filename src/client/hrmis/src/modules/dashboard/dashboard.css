@@ -45,14 +45,6 @@
     font-size: small;
 }
 
-.main-headers{
-    background-color: rgba(1, 6, 15, 0.08);
-}
-
-.secondary-headers{
-    background-color: rgba(1, 6, 15, 0.03);
-}
-
 .row-percent-25{ width: 25%; }
 .row-percent-50{ width: 50%; }
 .row-percent-75{ width: 75; }

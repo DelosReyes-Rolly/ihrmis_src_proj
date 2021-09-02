@@ -169,7 +169,7 @@ function JvsCrwView(props){
                             </tbody>
                         </table>
                         <br/>
-                        <ButtonComponent buttonName={'ADD'} buttonLogo={<MdAdd size="18"/>}/>
+                        <ButtonComponent buttonName={'ADD'} buttonLogo={<MdAdd size="15"/>}/>
                     <br/><br/>
                     {/* LAST FORM PARTS */}
                     {rjcInputComponentData.map(item => {

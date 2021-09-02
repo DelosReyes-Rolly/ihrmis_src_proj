@@ -3,16 +3,19 @@ import './input_component.css'
 
 const InputComponent = (props) =>{
     return(
-        <input 
+        <input style={{marginTop:"3px"}}
+            onChange={props.onChange}
+            value={props.value}
             className={`input-component ${props.className}`}
             id={props.id}
             type={props.type} 
             maxLength={props.maxLength} 
             size={props.size} 
-            value={props.value}
-            placeholder={props.placeholder}>
-
-
+            placeholder={props.placeholder}
+            min={props.min}
+            max={props.max}
+            readOnly={props.readOnly}
+            >
         </input>
     );
 }
@@ -23,6 +26,8 @@ InputComponent.defaultProps = {
     size: 999,
     className: "",
     placeholder: "",
+    onchange: ()=>{},
+    readOnly: false,
 } 
 
 export default InputComponent;
