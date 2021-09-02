@@ -5,10 +5,25 @@ export const plantillaItemsBreadCramp =[
     },
     {
         name: 'Plantilla',
-        link: './'
+        link: '#'
     },
     {
         name: 'Plantilla Items',
+        link: '#'
+    },
+];
+
+export const employeeItemsBreadCramp =[
+    {
+        name: 'Home',
+        link: './'
+    },
+    {
+        name: 'Plantilla',
+        link: '#'
+    },
+    {
+        name: 'Employee',
         link: '#'
     },
 ];
