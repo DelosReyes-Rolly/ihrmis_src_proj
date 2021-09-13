@@ -1,0 +1,19 @@
+/* SCROLL DEFAULT VALUE PROPERTY */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: whitesmoke;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4276A4;;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4276A4;;
+  }

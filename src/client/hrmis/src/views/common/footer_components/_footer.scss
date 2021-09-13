@@ -1,0 +1,30 @@
+.footer {
+    display: inline-flex;
+    position: fixed;
+    text-align: start;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    padding: 3px 20px;
+    width: 100%;
+    background-color: rgb(58, 63, 68);
+    color: white;
+    font-size: 9px;
+    font-weight: 600;
+    z-index: 101;
+    box-sizing: border-box;
+  }
+  
+
+  @media only screen and (max-width: 800px){
+    .footer{
+        
+        text-align: center !important;
+        justify-content: center !important;
+        padding: 5px 10px;  
+    }
+    p{
+      margin-left: 5px;
+      text-align: left;
+    }
+}

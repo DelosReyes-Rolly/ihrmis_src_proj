@@ -1,0 +1,223 @@
+.pds-profile-main-view{
+    padding: 20px;
+
+    .form-header{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.pds-prof-class-one{
+    font-size: small !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+}
+
+
+//USED IN FORM THIRD COMPONENTS
+.pds-prof-class-three{
+    font-size: small;
+    display: flex ;
+    flex-direction: row ;
+    align-items: center;
+
+    .container-detail-1{
+        margin-top: 5px;
+        margin-bottom: 5px;
+     
+        min-width: 15% !important;
+        color: rgba(54, 58, 63, 0.8);
+    }
+    .container-detail-2{
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .container-detail-3{
+        
+        margin-top: 5px;
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: row;
+        
+        .case-status{
+            color: rgba(54, 58, 63, 0.8);
+            margin-left: 5px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 50%;
+       
+            label{
+                display: flex;
+                justify-content: center;
+                width: 50%;
+                
+            }
+        }
+    }
+}
+
+//CLASS 2
+
+.pds-prof-class-one label{
+    color: rgba(54, 58, 63, 0.8);
+}
+
+.pds-profile-button-selection{
+    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center;
+}
+
+.hover-over-button:hover{
+    transition: .3s;
+    background-color: rgb(206, 206, 206) !important;
+}
+
+.hover-over-button-green:hover{
+    transition: .3s;
+    background-color: rgba(2, 143, 2, 0.5) !important;
+}
+
+.pds-prof-class-two{
+    font-size: small !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.tr-shade-color{
+    background-color: rgb(235, 235, 235) !important;
+    .td-sub-question{
+        width: 80%;
+    }
+    .td-yes-no{
+        width: 20%;
+        .items-checkbox{
+            display: flex; 
+            align-items: center; 
+            justify-content: space-evenly;
+            box-sizing: border-box;
+            width:100%; 
+            .checkbox-alignment{
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            
+        }
+
+        @media only screen and (max-width: 800px){
+            .items-checkbox{
+                flex-direction: column;   
+                align-items: start;
+                justify-content: start;
+            }
+        
+        }
+    }
+
+}
+
+//FOURTH FORM 
+.form-4-div{
+
+    font-size: small;
+    color: $fontSecondaryColor;
+    justify-content: flex-start;
+    .form-4-input-div{
+
+        @include containerFlexRow(true);
+        .form-4-gid-1{
+            margin-right: 5px;
+        }
+        .form-4-gid-2{
+            margin-right: 5px;
+            margin-left: 5px;
+        }
+        .form-4-gid-3{
+            margin-left: 5px;
+        }
+    }
+
+    .form-4-hereby{
+        @include containerFlexRow(true);
+        align-items: flex-start;
+        .p-tag{
+            margin-left: 15px;
+            padding: 0px;
+        }
+    }
+}
+
+.documentary-toggle{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#custom-table .tr-header th{
+    font-size: 12px;
+}
+
+//Mobile
+@media only screen and (max-width: 800px){
+        
+    .pds-prof-class-three{
+        flex-direction: column;
+        align-items: flex-start;
+
+        .container-detail-2{
+            margin-top: 3px;
+            margin-bottom: 10px;
+            min-width: 0;
+            color: rgba(54, 58, 63, 0.8);
+        }
+        .container-detail-3{
+            
+            flex-direction: column;
+            .case-status{
+                color: rgba(54, 58, 63, 0.8);
+                margin-left: 0px;
+                margin-top: 3px;
+                display: block;
+                width: auto;
+           
+                label{
+                    display: block;
+                    justify-content: center;
+                    width: auto;
+                    
+                }
+            }
+        }
+    }
+    .form-4-div{
+
+        .form-4-input-div{
+            @include containerFlexRow(false);
+            .form-4-gid-1{
+                margin-top: 5px;
+                margin-right: 0px;
+            }
+            .form-4-gid-2{
+                margin-top: 5px;
+                margin-right: 0px;
+                margin-left: 0px;
+            }
+            .form-4-gid-3{
+                margin-top: 5px;
+                margin-left: 0px;
+            }
+        }
+
+    }
+}
+
+

@@ -1,0 +1,22 @@
+.input-div{
+    margin:  auto;
+}
+
+.custom-input{
+    height: 10px 20px;
+    padding: 6px;
+    font-size: 15;
+    width: 100%;
+    box-sizing: border-box;
+    color: rgba(70, 70, 70, .9);
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid rgba(70, 70, 70, 0.2);
+}
+
+.custom-input:focus{
+    outline: rgba(70, 70, 70, 0.5);
+    border: 1px solid rgba(70, 70, 70, 0.5);
+}
+
+
