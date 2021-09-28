@@ -66,6 +66,11 @@ ul .item-list:hover, .item-list-activate{
     color: white;
 }
 
+.router-link-1{
+    text-decoration: none;
+    color: rgba(0, 0, 0, .8);
+}
+
 
 @media only screen and (max-width: 800px){
     .sidebar-menu{

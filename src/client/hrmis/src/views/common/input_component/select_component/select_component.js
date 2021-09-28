@@ -8,6 +8,7 @@ const SelectComponent = (props) => {
             style={{marginTop:"3px"}}
             onChange={props.onChange}
             readOnly={props.readOnly}
+            name={props.name}
             >
             <option className="option-component" value="DEFAULT" disabled>{props.defaultTitle}</option>
                 {props.itemList.map(item => {

@@ -1,3 +1,5 @@
+//DEPRECATED AND WILL SOON DELETE
+
 import React from 'react';
 
 function AddonInputComponents (props) {

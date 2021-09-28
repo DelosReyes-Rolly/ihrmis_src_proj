@@ -5,6 +5,7 @@ const InputComponent = (props) =>{
         <input style={{marginTop:"3px"}}
             onChange={props.onChange}
             value={props.value}
+            name={props.name}
             className={`input-component ${props.className}`}
             id={props.id}
             type={props.type} 

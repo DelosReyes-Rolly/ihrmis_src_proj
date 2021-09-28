@@ -1,16 +1,13 @@
 import CheckboxComponent from '../../../../common/input_component/checkbox_input_component/checkbox_input_component';
-import AddonInputComponents from '../../../../common/input_component/addon_input/Addon_input';
-import TextAreaComponent from '../../../../common/input_component/textarea_input_component/textarea_input_component';
 import InputComponent from '../../../../common/input_component/input_component/input_component';
-import ButtonComponent from '../../../../common/button_component/button_component.js.js';
 import React, { useState} from 'react';
-import { MdAdd } from 'react-icons/md';
 import dostLogo from './../../../../../assets/images/logo.png';
 import { rjcInputItem } from '../../static/input_items';
-import { jvsCrwTableData } from '../../fake_data/table_data';
+import { jvsCrwRelevantData, jvsCrwTableData } from '../../fake_data/table_data';
+import WeightingTable from './parts/weight_table';
 
 const JvsCrwPageComponentView = (props) =>{
-    const [dataState, setDataState] = useState(jvsCrwTableData);
+    const [dataState, _] = useState(jvsCrwTableData);
     return (
         
             <div className="jvs-crw-container">
@@ -88,9 +85,6 @@ const JvsCrwPageComponentView = (props) =>{
                             {/* SECOND HEADER  */}
                             <tr className="row-percent-75x secondary-headers">
                                 <th colSpan="3">EDUCATION</th>
-                                <td className="special-row-column row-percent-25" colSpan="1" rowSpan="2">
-                                    <AddonInputComponents label="Min. Factor Weight" addonSign={"%"}/>
-                                </td>
                             </tr>
                             <tr>
                                 <td colSpan="3">{dataState.cscQStandatard.education}</td>
@@ -98,9 +92,6 @@ const JvsCrwPageComponentView = (props) =>{
                             {/* THIRD HEADER  */}
                             <tr className="secondary-headers">
                                 <th colSpan="3">EXPERIENCE</th>
-                                <td className="special-row-column" colSpan="1" rowSpan="2">
-                                    <AddonInputComponents label="Min. Factor Weight" addonSign={"%"}/>
-                                </td>
                             </tr>
                             <tr>
                                 <td colSpan="3">{dataState.cscQStandatard.experience}</td>   
@@ -108,9 +99,6 @@ const JvsCrwPageComponentView = (props) =>{
                             {/* FOURTH HEADER  */}
                             <tr className="secondary-headers">
                                 <th colSpan="3">TRAINING</th>
-                                <td className="special-row-column" colSpan="1" rowSpan="2">
-                                    <AddonInputComponents label="Min. Factor Weight" addonSign={"%"}/>
-                                </td>
                             </tr>
                             <tr>
                                 <td colSpan="3">{dataState.cscQStandatard.training}</td>   
@@ -120,20 +108,31 @@ const JvsCrwPageComponentView = (props) =>{
                 </div>
 
                 <br/>
-                <div className="jvs-crw-main-table">
-                    <div className="mqsfjc-div">
-                        <div className="margin-right-1" style={{width: '75%'}}>
-                        <h3 style={{color: "#4276A4", fontSize:'12px', marginBottom:'6px'}}>MINIMUM QUALIFICATION STANDARDS FOR JOB COMPETENCY</h3>
-                            <TextAreaComponent />
-                        </div>
-                        <div style={{width: '25%'}}>
-                            <AddonInputComponents label="Min. Factor Weight" addonSign={"%"}/>
-                        </div>
-                    </div>
-                    <br/><br/>
 
-                    {/*REQUIRED JOB COMPETENCY */}
-                    <h3 style={{color: "#4276A4", fontSize:'14px', marginBottom:'6px'}}>REQUIRED JOB COMPETENCY 
+                <WeightingTable 
+                    title="EDUCATION"
+                    min={jvsCrwRelevantData.education.min}
+                    max={jvsCrwRelevantData.education.max}
+                    data={jvsCrwRelevantData.education.data}/>
+
+                <br/>
+
+                <WeightingTable title="RELEVANT TRAINING"
+                    min={jvsCrwRelevantData.relTraining.min}
+                    max={jvsCrwRelevantData.relTraining.max}
+                    data={jvsCrwRelevantData.relTraining.data}/>
+
+                <br/>
+
+                <WeightingTable title="RELEVANT EXPERIENCE"
+                    min={jvsCrwRelevantData.relExperience.min}
+                    max={jvsCrwRelevantData.relExperience.max}
+                    data={jvsCrwRelevantData.relExperience.data}/>
+                <br/>
+
+
+                {/*REQUIRED JOB COMPETENCY */}
+                <h3 style={{color: "#4276A4", fontSize:'14px', marginBottom:'6px'}}>REQUIRED JOB COMPETENCY 
                             <span style={{fontSize:'12px', fontWeight: 'normal'}}> (Please check all that apply)</span>
                     </h3>
                     <div className="mqsfjc-div" style={{marginBottom:'6px'}}>
@@ -145,30 +144,11 @@ const JvsCrwPageComponentView = (props) =>{
                         </div>
                     </div>
                     <br/>
-                        {/* LAST TABLE DISPLAY WITH BUTTON */}
-                        <table id="custom-table">
-                            <tbody>
-                                <tr className="secondary-headers">
-                                    <th className="row-percent-75" colSpan="2" style={{textAlign: "center"}}>CALIBRATED SCALE OF FACTOR WEIGHT</th>
-                                    <th className="row-percent-25" colSpan="2" style={{textAlign: "center"}}>PERCENTAGE (%)</th>
-                                </tr>
-                                <tr className="">
-                                    <td className="row-percent-75" colSpan="2">91-100</td>
-                                    <td className="row-percent-25" colSpan="2" style={{textAlign: "center"}}>20</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="row-percent-75" colSpan="2">81-90</td>
-                                    <td className="row-percent-25" colSpan="2" style={{textAlign: "center"}}>15</td>
-                                </tr>
-                                <tr className="secondary-headers">
-                                    <th className="row-percent-75" colSpan="2" style={{textAlign: "end"}}>MAXIMUM FACTOR WEIGHT</th>
-                                    <th className="row-percent-25" colSpan="2" style={{textAlign: "center"}}>20</th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br/>
-                        <ButtonComponent buttonName={'ADD'} buttonLogo={<MdAdd size="14"/>}/>
-                    <br/><br/>
+                        <WeightingTable 
+                        min={jvsCrwRelevantData.relExperience.min}
+                        max={jvsCrwRelevantData.relExperience.max}
+                        data={jvsCrwRelevantData.relExperience.data}/>
+                    <br/>
                     {/* LAST FORM PARTS */}
                     {rjcInputItem.map(item => {
                         return (
@@ -181,23 +161,9 @@ const JvsCrwPageComponentView = (props) =>{
                                 </div>
                             </div>);
                     })}
-
                     <br/><br/>
-                    
-                </div>
-                <div style={{display:"flex", alignItems:"flex-end", width:"100%", flexDirection:"row-reverse"}}>
-                        <ButtonComponent 
-                            border="1px solid #2A9DF4"
-                            className="jvs-crw-hover" 
-                            bgColor="#2A9DF4" 
-                            buttonName={'Save'}
-                            
-                        />
-                </div>
-                <br/><br/><br/>
             </div>
-
- 
+    
     );
 }
 

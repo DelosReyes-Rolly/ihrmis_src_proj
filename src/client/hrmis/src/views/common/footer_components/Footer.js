@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import DostLogo from '../../../assets/images/logo.png';
 
-const FooterComponent = (props) => {
+const FooterComponent = () => {
  
     return ( 
         <div className="footer">
