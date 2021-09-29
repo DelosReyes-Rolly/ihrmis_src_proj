@@ -19,6 +19,7 @@ function SidebarComponent() {
     const toggleTab = (index) => {
         setToggleState(index);
     }
+    
 
     const isNavbarEnable  = useSelector((state) => state.mobileView.sidebar);
     const classValue = isNavbarEnable ? "display-mobile-menu" : '';
@@ -31,14 +32,17 @@ function SidebarComponent() {
                     
                     {SidebarOption.map((option, key)=> {
                         if(option.more !== null){
-                            return <Link className="router-link" to={option.link} key={key}>
-                            
-                                <li onClick={() => toggleTab(option.id)}> 
+                            return <React.Fragment key={key}>
+                                <li onClick={() => toggleTab(option.id) } > 
+                                    <Link 
+                                        onClick={() => {
+                                            onClickSubDropdown(option.id)
+                                        }} 
                                     
-                                    <div onClick={() => onClickSubDropdown(option.id)} 
-                                            className={toggleState === option.id 
-                                                ? "padding-1 item-list item-list-activate" 
-                                                : "padding-1 item-list"} key={option.id}>       
+                                        to={option.link}
+                                        className={toggleState === option.id 
+                                            ? "router-link-1 padding-1 item-list item-list-activate" 
+                                            : "router-link padding-1 item-list"} key={option.id}>       
 
                                         <span className="margin-left-1 margin-right-1">
                                             {option.icon}
@@ -47,7 +51,7 @@ function SidebarComponent() {
                                         <span>
                                             {option.title}
                                         </span>
-                                    </div>
+                                    </Link>
                                     <div className={ subdDropdownState.open 
                                         ? subdDropdownState.index === option.id 
                                         ?  "sub-menu-list"
@@ -62,7 +66,7 @@ function SidebarComponent() {
                                     </div>
 
                                 </li>
-                            </Link>
+                            </React.Fragment>
                          
 
                         } else{

@@ -5,9 +5,10 @@ import ButtonComponent from '../button_component/button_component.js.js';
 const ModalComponent = (props) => {
 
     const modalViewFunction = () => {
+
         return (
             <div className="modal-component-div">
-                <form>
+                <form onSubmit = {props.onSubmit}>
                     <div className="mcf-header">
                         <h3>{props.title}</h3>
                         <button type="button" 
@@ -39,7 +40,7 @@ const ModalComponent = (props) => {
                         </div>
                         <div className="margin-left-1">
                             <ButtonComponent 
-                                type="button"
+                                type={props.onSubmitType}
                                 buttonName={props.onSubmitName}/>
                         </div>
                     </div>
@@ -59,6 +60,7 @@ ModalComponent.defaultProps = {
     title: "Title",
     isDisplay: false,
     onSubmitName: "Submit",
+    onSubmitType: "button",
     onCloseName: "Close"
 }
 

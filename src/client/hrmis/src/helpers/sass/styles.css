@@ -391,13 +391,6 @@ hr.solid {
   color: #1DA1F2;
 }
 
-.scrollable-div-table {
-  border: 1px solid rgba(122, 122, 122, 0.1);
-  scroll-behavior: smooth;
-  max-height: 60vh;
-  overflow-y: scroll;
-}
-
 .data-entry {
   font-size: 12px;
   margin-top: 10px;
@@ -411,6 +404,43 @@ hr.solid {
 
 .secondary-headers {
   background-color: rgba(1, 6, 15, 0.03);
+}
+
+/* PERCENTAGE */
+.percent-100-wide {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.percent-75-wide {
+  width: 75%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.percent-50-wide {
+  width: 50%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.percent-30-wide {
+  width: 30%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.percent-25-wide {
+  width: 25%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.percent-20-wide {
+  width: 20%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .notification-badge {
@@ -1030,6 +1060,11 @@ ul .item-list:hover, .item-list-activate {
 .router-link {
   text-decoration: none;
   color: white;
+}
+
+.router-link-1 {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 @media only screen and (max-width: 800px) {

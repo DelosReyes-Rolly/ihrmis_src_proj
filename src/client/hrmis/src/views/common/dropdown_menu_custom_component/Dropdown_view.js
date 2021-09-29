@@ -8,7 +8,7 @@ function DropdownViewComponent(props){
             <div className="ul-menu-item-arrow"><AiFillCaretUp size="15px"/></div>
             {props.itemList.map(list =>{
                 if(list.itemTitle === 'Next-in-Rank'){
-                    return <li onClick={props.onClick} className="ul-menu-item link-class">{list.itemTitle}</li>
+                    return <li onClick={props.onClick} className="ul-menu-item link-class" key={list.id}>{list.itemTitle}</li>
                 } else {
                     return (
                         <Link className="link-class" to={list.link} key={list.id}>
