@@ -47,7 +47,7 @@ const RecruitmentView = (props) => {
                         <span className="margin-left-1 selector-span-1">
                             <select defaultValue={'DEFAULT'} >
                                 <option value="DEFAULT" disabled>Vacant Position</option>
-                                {recruitmentSelectFilter .map(item => {
+                                {recruitmentSelectFilter.map(item => {
                                     return <option className="options" key={item.value} defaultValue={item.value}>{item.title}</option>
                                 })}
                             </select>

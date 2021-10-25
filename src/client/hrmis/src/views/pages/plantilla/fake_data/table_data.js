@@ -116,7 +116,7 @@ export const jvsCrwRelevantData = {
                 rate: "8",
             },
             {
-                id: "2",
+                id: "3",
                 info: "With MS or Certificate in Leadership and Management",
                 rate: "6",
             },

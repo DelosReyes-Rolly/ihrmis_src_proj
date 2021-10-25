@@ -7,16 +7,23 @@ import PlantillaView from './pages/plantilla/plantilla_view';
 import LibraryView from './pages/library/library_view';
 import RecruitmentView from './pages/recruitment/recruitment_view';
 import LoaderComponent from './common/loader_component/loader_component';
-import store from '../features/store/store';
 import { useSelector } from 'react-redux';
+import SuccessResponseComponent from './common/response_component/success_response_component/success_response_component';
+import FailResponseComponent from './common/response_component/fail_response_component/fail_response_component';
+import PdsProfilePageComponentView from './pages/library/page_components/pds_profiles_pc/pds_profile';
 
 const MainPageLayout = () => {
   const isBusy = useSelector((state) => state.load.isBusy);
+  const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
+  const isFail = useSelector((state) => state.popupResponse.isFail);
+
   return (
     
     <Router>
-
-      {isBusy && <LoaderComponent /> }
+      <h1>{isFail}</h1>
+      {isBusy && <LoaderComponent />}
+      {isSuccess && <SuccessResponseComponent />}
+      {isFail && <FailResponseComponent />}
       
       <div className="App">
 
@@ -43,17 +50,6 @@ const MainPageLayout = () => {
                 <Route path="/ihrmis/recruitment">
                   <RecruitmentView />
                 </Route>
-                {/* <Route path="/ihrmis/request">
-                  <RequestMainView />
-                </Route>
-
-                <Route path="/ihrmis/compensation">
-                  <CompensationMainView />
-                </Route>
-                
-                <Route path="/ihrmis/library">
-                  <LibraryMainView />
-                </Route> */}
             </Switch>
           </div>
         </div>

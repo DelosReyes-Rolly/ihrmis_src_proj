@@ -6,12 +6,19 @@ import { employeeSelectFilter } from '../../static/filter_items';
 import { employeeTableData } from '../../fake_data/table_data';
 import { BsArrowUpDown  } from 'react-icons/bs'
 import { MdAdd } from 'react-icons/md'
-import PdsProfilePageComponentView from '../../../library/page_components/pds_profiles_pc/pds_profile';
+import { useHistory } from "react-router-dom";
 
 const EmployeePageComponentView = () => {
     const [toggleState, setToggleState] = useState(1);
+    let history = useHistory()
+
+
     const toggleTab = (index) => {
         setToggleState(index);
+    }
+
+    const pushToPdsForms = () => {
+        history.push("/ihrmis/plantilla/form-page-one");
     }
 
     const patternTabOne = <React.Fragment>
@@ -78,18 +85,21 @@ const EmployeePageComponentView = () => {
 
             <div className="tab-button">
                 <button onClick={()=>toggleTab(1)} className={ toggleState === 1 ? "tab-tap tab-tap-activate" : "tab-tap"}>List of Employee</button>
-                <button onClick={()=>toggleTab(2)} className={ toggleState === 2 ? "tab-tap tab-tap-activate margin-left-1" : "tab-tap margin-left-1"}>PDS Profile</button>
+                <button onClick={()=>{ 
+                    toggleTab(2);
+                    pushToPdsForms();
+                }} className={ toggleState === 2 ? "tab-tap tab-tap-activate margin-left-1" : "tab-tap margin-left-1"}>PDS Profile</button>
                 <hr className="solid" />
             </div>
 
-            <div className={ toggleState === 1 ? "current-tab" : "show-none"}>
-                {patternTabOne}
-            </div>
+            {/* <div className={ toggleState === 1 ? "current-tab" : "show-none"}> */}
+            {patternTabOne}
+            {/* </div> */}
 
             {/* TAB SECOND NON REGULAR */}
-            <div className={toggleState === 2 ? "current-tab" : "show-none"}>
-                <PdsProfilePageComponentView />
-            </div>
+            {/* <div className={toggleState === 2 ? "current-tab" : "show-none"}> */}
+                {/* <PdsProfilePageComponentView/> */}
+            {/* </div> */}
     </div>
     );
 }

@@ -6,8 +6,8 @@ const loadingSlice = createSlice({
         isBusy: false
     },
     reducers: {
-        setBusy: (state)=> {
-            state.isBusy = !state.isBusy;
+        setBusy: (state, action)=> {
+            state.isBusy = action.payload;
         }
     }
 });

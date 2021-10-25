@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {AiFillCloseCircle} from 'react-icons/ai'
 
-const TagsInputComponent = ({}) => {
+const TagsInputComponent = () => {
     //STATE PROPERTIES
     const [stringInputState, setInputState] = useState([]);
 

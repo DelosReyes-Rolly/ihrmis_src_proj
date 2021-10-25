@@ -1,5 +1,5 @@
 import ModalComponent from "../../../../common/modal_component/modal_component";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { API_HOST } from "../../../../../helpers/global/global_config"
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../../common/input_component/select_component/select_component";
@@ -7,37 +7,86 @@ import TextareaComponent from '../../../../common/input_component/textarea_input
 import { apiCategoryServiceModalInputItem, apiEmploymentBasisModalInputItem, apiEmploymentStatModalInputItem, apiLevelPositionModalInputItem, apiModeCreationModalInputItem } from "../../static/input_items";
 import { useFormService } from "../../../../../services/form_service";
 import axios from "axios";
-import { useDelayService } from "../../../../../services/delay_service";
+import { useDispatch } from "react-redux";
+import { setBusy } from "../../../../../features/reducers/loading_slice";
+import ValidationComponent from "../../../../common/response_component/validation_component/validation_component";
 
 
 const AddPlantillaItemModal = (props) => {
-    const [serverResponse, setServerResponse] = useState();
+    //HANDLING ERROR RESPONSE
+    const [serverErrorResponse, setServerErrorResponse] = useState();
+
+    const [officePositionState, setOfficePositionState] = useState();
+
     const [dataToSubmit, setDataToSubmit, setHidden] = useFormService();
+    
+    //SUBMIT HANDLER
+    const dispatch = useDispatch();
+
     const submitHandler = async (e) => {
-        console.log('was pressed');
-        setHidden('itm_regular', props.regularValue ?? "1")
-        e.preventDefault();
-        console.log(dataToSubmit);
         
+        console.log('was pressed');
+        setHidden('itm_regular', props.regularValue ?? 1)
+        e.preventDefault();
+        dispatch(setBusy(true));
         await axios.post(API_HOST + '/plantilla-items', dataToSubmit)
-            .then(response  => {
+            .then(() => {
+                setServerErrorResponse(null);
                 e.target.reset();
             }).catch(error => {
-                if(!error){
-
-                    console.log(error.response.status);
+        
+                if(error.response){
                     if(error.response.status === 422){
-                        setServerResponse(error.response.data.errors);
-                        console.log(error.response.data.errors);
+                        setServerErrorResponse(Object.values(error.response.data.errors));
                         setTimeout(()=>{
-                            setServerResponse(null);
-                        }, 5000);
-                        
-                    }
+                            setServerErrorResponse(null);
+                        }, 10000); 
 
+                    } else if(error.response.status === 404){
+                        console.log('404 Page Not Found');
+                    } else if(error.response.status === 500){
+                        console.log('500 API Internal Error!');
+                    }
+                    
+                } else if (error.request){
+                    console.log('No response from server');
+                } else {
+                    console.log('Oops! Something went wrong');
                 }
+
             });
+            dispatch(setBusy(false));
     };
+
+    //GETTING POSITION AND OFFICE VALUE
+    const getPositionAndOffice = () => {
+        axios.get(API_HOST + '/office-position').then(response => {
+            setOfficePositionState(response.data.data);
+            
+        }).then(error => {
+
+            if(error){
+                if(error.response){
+                    if(error.response.status === 422){
+                        console.log('422 API server responded with an error');
+                    } else if (error.response.status === 404){
+                        console.log('404 NOT FOUND');
+                    } else if (error.response.status === 500){
+                        console.log('500 INTERNAL SERVER ERROR');
+                    }
+                } else if(error.request){
+    
+                } else{
+    
+                }
+            }
+        })
+    }
+
+    useEffect(()=>{
+        getPositionAndOffice();
+
+    },[]);
 
     return (
         <React.Fragment>
@@ -50,29 +99,25 @@ const AddPlantillaItemModal = (props) => {
             onSubmitType="submit"
             onClose={props.onClose}
             >   
-                {serverResponse && 
-                    <div style={{ color:'red' }}>
-                        <h4>Failed to Submit</h4>
-                        
-                        {serverResponse.itm_no && serverResponse.itm_no.map((data, key)=>{
-                            return (
-                                <p key={key}>{data}</p>
-                            );
-                        })}
-                        {serverResponse.itm_function && serverResponse.itm_function.map((data, key)=>{
-                            return (
-                                <p key={key}>{data}</p>
-                            );
-                        })}
-                    </div>
-                }
-                <br/>
-                <div className="add-plantilla-item-modal">
-                   
+                {serverErrorResponse && 
+                    <ValidationComponent title="FAILED TO SUBMIT">   
+                        {/* {serverErrorResponse.itm_no && <p>- {serverErrorResponse.itm_no}</p>}
+                        {serverErrorResponse.itm_function && <p>- {serverErrorResponse.itm_function}</p>} */}
 
+                        {
+                            serverErrorResponse.map((item, key)=>{
+                                return <p key={key}>- {item}</p>
+                            }) 
+                        }
+                    </ValidationComponent>
+                }
+
+                <br/>
+
+                <div className="add-plantilla-item-modal">
                     <span className="left-input item-modal-1">
                         <label>Item No.</label>
-                        <InputComponent name="itm_no" onChange={ (e)=>setDataToSubmit(e) } maxLength="10"/>
+                        <InputComponent name="itm_no" onChange={ (e)=>setDataToSubmit(e) } maxLength="30"/>
                     </span>
                     <span className="right-input item-modal-2">
                         <label>Employment Status</label>
@@ -83,14 +128,40 @@ const AddPlantillaItemModal = (props) => {
                 <div className="add-plantilla-item-modal">
                     <span className="left-input item-modal-1">
                         <label>Position</label>
-                        {/* name="itm_pos_id" onChange={ (e)=>setDataToSubmit(e) } */}
-                        <SelectComponent  />
+                        <select className="select-component" style={{ marginTop:'3px' }}
+                            name="itm_pos_id" 
+                            onChange={ (e)=>setDataToSubmit(e) }
+                        >
+                            <option className="option-component" value="DEFAULT" disabled>{props.defaultTitle}</option>
+                            {officePositionState && officePositionState.positions.map((item, key) => {
+                                return (
+                                    <option className="option-component" 
+                                        key={key} 
+                                        value={item.pos_id}
+                                        >{item.pos_title}
+                                    </option>
+                                );
+                            })}
+                        </select>
                     </span>
 
                     <span className="right-input item-modal-2">
                         <label>Office</label>
-                        {/* name="itm_ofc_id" onChange={ (e)=>setDataToSubmit(e) } */}
-                        <SelectComponent  />
+                        <select className="select-component" style={{ marginTop:'3px' }}
+                            name="itm_ofc_id" 
+                            onChange={ (e)=>setDataToSubmit(e) }
+                        >
+                            <option className="option-component" value="DEFAULT" disabled>{props.defaultTitle}</option>
+                            {officePositionState && officePositionState.offices.map((item, key)=> {
+                                return (
+                                    <option className="option-component" 
+                                        key={key} 
+                                        value={item.ofc_id}
+                                        >{item.ofc_name}
+                                    </option>
+                                );
+                            })}
+                        </select>
                     </span>
                 </div>
                 <div className="add-plantilla-item-modal">

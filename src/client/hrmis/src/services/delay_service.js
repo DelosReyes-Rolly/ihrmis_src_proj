@@ -1,15 +1,29 @@
 import { useDispatch } from "react-redux";
-import { setBusy } from "../features/reducers/loading_slice";
+import { setFail, setSuccess } from "../features/reducers/popup_response";
 
 
 export const useDelayService = () => {
     let dispatch = useDispatch();
 
-    const delayRender = () => {
+    // const delayRender = () => {
+    //     setTimeout(()=>{
+    //         dispatch();
+    //     }, 1000);
+    // };
+
+    const successRender = () => {
+        dispatch(setSuccess(true));
         setTimeout(()=>{
-            dispatch(setBusy());
-        }, 1000);
+            dispatch(setSuccess(false));
+        }, 5000);
     };
 
-    return [delayRender];
+    const failRender = () => {
+        dispatch(setFail(true));
+        setTimeout(()=>{
+            dispatch(setFail(false));
+        }, 5000);
+    };
+
+    return [failRender, successRender];
 }

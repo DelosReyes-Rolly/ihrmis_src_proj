@@ -5,18 +5,19 @@ import { plantillaItemsBreadCramp } from '../../static/breadcramp_data';
 import SearchComponent from '../../../../common/input_component/search_input/search_input';
 import { plantillaItemSelectFilter } from '../../static/filter_items';
 import { plantillaItemMenuItem } from '../../static/menu_items';
-import { BsArrowUpDown  } from 'react-icons/bs'
-import { MdMoreHoriz, MdAdd } from 'react-icons/md'
-import React, { useEffect, useMemo, useState } from 'react';
 import AddPlantillaItemModal from '../add_plantilla_item_modal/add_plantilla_item_modal';
 import NextInRankModal from '../next_in_rank_modal/next_in_rank_modal';
 import { useToggleService } from '../../../../../services/toggle_service';
-import axios from 'axios';
 import { API_HOST } from '../../../../../helpers/global/global_config';
-import { useDispatch, useSelector } from 'react-redux';
 import { setBusy } from '../../../../../features/reducers/loading_slice';
 import { statusDisplay } from '../../static/display_option';
-import { propTypes } from 'react-recaptcha';
+import { BsArrowUpDown  } from 'react-icons/bs'
+import { MdMoreHoriz, MdAdd } from 'react-icons/md'
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+
+// import { propTypes } from 'react-recaptcha';
 
 const PlantillaItemPageComponentView = () => {
 
@@ -25,20 +26,6 @@ const PlantillaItemPageComponentView = () => {
     const toggleTab = (index) => {
         setToggleState(index);
     }
-
-    const [buttonToggleState, setButtonToggleState] = useState({on: false, index: 0});
-
-
-    const buttonTogleTab = (number) => {
-        if(buttonToggleState.on === false){
-            setButtonToggleState({on: true, index: number});
-        } else {
-            setButtonToggleState({on: false, index: number});
-        }
-    }
-
-
-    const patternTab = "";
     
     return ( 
         <React.Fragment>
@@ -85,33 +72,28 @@ const TableView = (props) => {
                 setButtonToggleState({on: false, index: number});
             }
         }
-        //API CALL FOR VIEWING
-        let dispatch = useDispatch();
-        const loading = useSelector((state) => state.load.isBusy);
-        const [plantillaItemTableData, setData] = useState();
-    
-        const plantillaItemApi = async () => {
-            dispatch(setBusy());
 
-            await axios.get(API_HOST + '/plantilla-items')
-                .then(
-                    response => {
-                        
-                        setData(response.data.data);
-                        console.log(response.data.data);
-                        console.log('Run');
-                    }
-                ).catch(
-                    error => {
-                        console.log(error);
-                    }
-                );
-            // console.log(response.data.data.position.ofc_name)
-            dispatch(setBusy());
-        }
-    
-        useEffect(()=>{
+        //API CALL FOR VIEWING
+        const dispatch = useDispatch();
+        const [plantillaItemTableData, setData] = useState();        
+        useEffect(()=>{     
+            const plantillaItemApi = async () => {
+                dispatch(setBusy(true));
+                await axios.get(API_HOST + '/plantilla-items')
+                    .then(
+                        response => {            
+                            setData(response.data.data);
+                            console.log('Run');
+                        }
+                    ).catch(
+                        error => {
+                            console.log(error);
+                        }
+                    );
+                dispatch(setBusy(false));
+            }
             plantillaItemApi();
+            
         },[]);
 
     return ( 
@@ -167,29 +149,26 @@ const TableView = (props) => {
                                     if(props.regularValue === 1 & data.itm_regular === 1 ){
                                         return (
                                             <tr className="trClass" key={data.itm_id}>
-                                            <td>{data.itm_no?? ""}</td>
-                                            <td>{data.position.pos_short_name ?? ""}</td>
-                                            <td>{data.office.ofc_acronym ?? ""}</td>
-                                            <td className = "column-option"><div className="inline-div-td-1">{statusDisplay[data.itm_status]}<br/>{}</div><div className="inline-div-td-2">
-                                                <button onClick={()=>buttonTogleTab(data.itm_id)}><MdMoreHoriz size="15"/></button>
-                                            
-                                                <DropdownViewComponent display={
-                                                        buttonToggleState.on
-                                                        ? buttonToggleState.index === data.itm_id ? "block" 
-                                                        : "none" : "none"
-                                                    }
-                                                    itemList={plantillaItemMenuItem}
-                                                    onClick={()=>{
-                                                        setToggletoggleNextRank(); 
-                                                        setButtonToggleState({on: data.itm_id, index: false})
-                                                    }}
-                                                />
-                                            </div></td>
-                                        </tr>);
-                                    }
-
-
-                                    if(props.regularValue === 0 & data.itm_regular === 0 ){
+                                                <td>{data.itm_no?? ""}</td>
+                                                <td>{data.position.pos_short_name ?? ""}</td>
+                                                <td>{data.office.ofc_acronym ?? ""}</td>
+                                                <td className = "column-option"><div className="inline-div-td-1">{statusDisplay[data.itm_status]}<br/>{}</div><div className="inline-div-td-2">
+                                                    <button onClick={()=>buttonTogleTab(data.itm_id)}><MdMoreHoriz size="15"/></button>
+                                                
+                                                    <DropdownViewComponent display={
+                                                            buttonToggleState.on
+                                                            ? buttonToggleState.index === data.itm_id ? "block" 
+                                                            : "none" : "none"
+                                                        }
+                                                        itemList={plantillaItemMenuItem}
+                                                        onClick={()=>{
+                                                            setToggletoggleNextRank(); 
+                                                            setButtonToggleState({on: data.itm_id, index: false})
+                                                        }}
+                                                    />
+                                                </div></td>
+                                            </tr>);
+                                    } else if (props.regularValue === 0 & data.itm_regular === 0){
                                         return (
                                             <tr className="trClass" key={data.itm_id}>
                                             <td>{data.itm_no}</td>
@@ -212,10 +191,9 @@ const TableView = (props) => {
                                             </div></td>
                                         </tr>);
                                     }
-                                
-                                    
-                                })
-                            }
+                                    return (<React.Fragment></React.Fragment>);
+                                }
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -166,8 +166,78 @@
     font-size: 12px;
 }
 
+
+//CITIZENSHIP FORM ONE STYLE
+.citizenship-container{
+    color: $fontSecondaryColor;
+    @include containerFlexRow(true);
+    width: 100%;
+    .div-1{
+        width: 50%;
+        margin-right: 5px;
+    }
+    .div-2{
+        width: 50%;
+        margin-left: 5px;
+    }
+
+    .checked-dropdown{
+        margin-bottom: 10px;
+        @include containerFlexRow(true);
+        align-items: center;
+        .checked-1{
+            width: 30%;
+        }
+        .checked-2{
+            width: 70%;
+        }
+    }
+}
+
+//COPY ADDRESS FORM
+.per-address-head{
+    @include containerFlexRow(true);
+    align-items: center;
+    margin-bottom: 10px;
+    h5{
+        margin-right: 10px;
+    }
+    .res-address-copy{
+        color: rgba(54, 58, 63, 0.8);
+        font-size: small;
+        @include containerFlexRow(true);
+        align-items: center;
+        .copy-icon{
+            margin-right: 5px;
+        }
+        
+    }
+}
+
 //Mobile
 @media only screen and (max-width: 800px){
+    .citizenship-container{
+        @include containerFlexRow(false);
+        .div-1{
+            width: 100%;
+            margin-right: 0px;
+        }
+        .div-2{
+            width: 100%;
+            margin-left: 0px;
+        }
+        .checked-dropdown{
+            margin-bottom: 10px;
+            @include containerFlexRow(false);
+            align-items: center;
+            .checked-1{
+                width: 100%;
+            }
+            .checked-2{
+                width: 100%;
+            }
+        }
+    }
         
     .pds-prof-class-three{
         flex-direction: column;

@@ -10,13 +10,23 @@ const SelectComponent = (props) => {
             readOnly={props.readOnly}
             name={props.name}
             >
-            <option className="option-component" value="DEFAULT" disabled>{props.defaultTitle}</option>
+            <option className="option-component" selected disabled>{props.defaultTitle}</option>
                 {props.itemList.map(item => {
-                    return <option className="option-component" 
-                        key={item.id} 
-                        value={item.id}
-                        >{item.title}
-                    </option>
+
+                    if(item.id == null){
+                        return <option className="option-component" 
+                            key={item.name} 
+                            value={item.code}
+                            >{item.name}
+                        </option>
+                    } else {
+                        return <option className="option-component" 
+                            key={item.id} 
+                            value={item.id}
+                            >{item.title}
+                        </option>
+                    }
+
             })}
             
         </select>
