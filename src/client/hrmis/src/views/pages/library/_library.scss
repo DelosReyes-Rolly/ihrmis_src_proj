@@ -1,0 +1,22 @@
+    .for-position-modal{
+        .position-modal-container-1{
+            margin: 10px 0px 0px 0px;
+            display: flex;
+            flex-direction: row;
+
+            .pmc-hover-over-icon-plus{
+                color: rgb(47, 209, 47);
+            }
+
+            .pmc-hover-over-icon-minus{
+                color: rgb(204, 64, 64);
+            }
+            
+        }
+
+        .position-modal-container-2{
+            margin: 10px 0px 0px 0px;
+        }
+    }
+
+@import './page_components/pds_profiles_pc/pds_profile';

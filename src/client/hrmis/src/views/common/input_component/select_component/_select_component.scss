@@ -1,0 +1,13 @@
+.select-component{
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    background-color: white;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #55555555; 
+    padding: 5px 8px; 
+}
+
+.select-component .option-component{
+    background-color: white;
+}

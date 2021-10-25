@@ -1,0 +1,195 @@
+@use '../../../../../helpers/sass/defaults/_default_colors.scss' as *;
+
+/* START OF THE JVS/CRW */
+.jvs-crw-container{
+    margin: 10px 20px 30px 20px;
+
+    .form-header{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+}
+
+
+/* select vertion */
+.version-dropdown{
+    text-align: right;
+}
+
+.select-version{
+    padding: 5px 10px;
+    color: rgba(4, 17, 32, 0.8);
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid rgba(4, 17, 32, 0.8);
+    text-align: center;
+    text-align-last:center;
+    outline: #4276A4;
+}
+
+.select-version:hover, .select-version:active{
+    transition: .3s;
+    border: 1px solid #4276A4;
+    outline: #4276A4;
+}
+
+/* TABLE STARTS HERE  */
+
+.jvs-crw-main-table{
+    font-size: small;
+}
+
+.row-percent-25{ width: 25%; }
+.row-percent-50{ width: 50%; }
+.row-percent-75{ width: 75; }
+.row-percent-100{ width: 100%; }
+
+.special-row-column{
+    background-color: whitesmoke;
+    border: none !important;
+
+}
+
+
+/* minimum start qualification starts here */
+
+.mqsfjc-div{
+    display: flex;
+    flex-direction: row;
+    color: rgba(54, 58, 63, 0.7);
+}
+
+.checkbox-mqsfjc{
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
+}
+
+/* last button hover  */
+.jvs-crw-hover:hover{
+    background-color: #2A9DF4AA !important;
+    
+}
+
+
+// jvs scorring
+.scoring-div{
+    @include containerFlexRow(true);
+    justify-content: right;
+    div{
+        width: 50%;
+        @include containerFlexRow(true);
+        align-items: center;
+        justify-content: right;
+        margin: 10px 0px;
+        h6{
+            color: #4276A4; 
+            font-size:14px; 
+            margin-bottom:6px;
+            span{
+                padding: 5px 20px 5px 20px; 
+                background-color: #55555520;
+                margin-left: 10px;
+                border: 1px solid #55555530;
+            }
+
+        }
+
+    }
+}
+
+.remarks-div-1{
+    
+    h5{
+        color: $fontSecondaryColor;
+    }
+
+    div{
+
+        @include containerFlexRow(true);
+        button {
+            padding: 0px 20px;
+            border: 1px solid $primary-color;
+            font-weight: 600;
+        }
+        .button-1{ 
+            color: $primary-color;
+            border: 1px solid $primary-color;
+        }.button-2{
+            color: white;
+            background-color: $primary-color;
+            border-radius: 0px 3px 3px 0px;
+        }
+
+        .button-1:hover{ 
+            transition: .2s;
+            background-color: #11111120;
+            border: 1px solid #4276A480;
+        }.button-2:hover{
+            transition: .2s;
+            background-color:  #4276A480;
+            border: 1px solid #4276A480;
+        }
+    }
+}
+.remarks-div-2{
+    @include containerFlexRow(true);
+    justify-content: space-between;
+    div{
+        @include containerFlexRow(true);
+        button{
+            margin-left: 10px;
+        }
+
+        .on-save{
+            color: cornflowerblue;
+            border: 1px solid cornflowerblue;
+            background-color: whitesmoke;
+        }
+        .on-exit{
+            color: $fontSecondaryColor;
+            border: 1px solid $fontSecondaryColor;
+            background-color: whitesmoke;
+        }
+        .on-submit{
+            color: white;
+            border: 1px solid green;
+            background-color: green;
+        }
+
+        .on-save:hover{
+            color: #4276A4;
+            border: 1px solid #4276A4;
+            background-color: rgb(235, 235, 235);
+        }
+        .on-exit:hover{
+            color: $fontSecondaryColor;
+            border: 1px solid $fontSecondaryColor;
+            background-color: rgb(235, 235, 235);
+        }
+        .on-submit:hover{
+            color: white;
+            border: 1px solid rgb(40, 158, 40);
+            background-color: rgb(40, 158, 40);
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+
+    .scoring-div{
+        @include containerFlexRow(false);
+        justify-content: right;
+        div{
+            width: 100%;
+            margin: 10px;
+            @include containerFlexRow(false);
+            align-items: flex-start;
+            justify-content: right;
+        }
+    } 
+}
