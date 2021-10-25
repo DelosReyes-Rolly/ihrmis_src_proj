@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 class TblofficesController extends Controller
 {
     public function index(){
-        return TblofficesResource::collection(Tbloffices::all()); 
     }
 
     public function store(Request $request)

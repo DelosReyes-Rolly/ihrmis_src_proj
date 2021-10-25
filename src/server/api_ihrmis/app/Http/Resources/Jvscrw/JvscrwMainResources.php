@@ -17,9 +17,10 @@ class JvscrwMainResources extends JsonResource
         
         return [
             'itm_no' => $this->itm_no,
-            'jvs' => new JvsCrwResource($this->whenLoaded('tbljvs')),
+            'jvs' => JvsCrwResource::collection($this->whenLoaded('tbljvs')),
             'office' => new JvsOfficeResource($this->whenLoaded('tbloffices')),
             'position' => new JvsPositionResource($this->whenLoaded('tblpositions')),
+            'duty_rspnsblty'=> $this->tbldtyresponsibility
         ];
     }
 }

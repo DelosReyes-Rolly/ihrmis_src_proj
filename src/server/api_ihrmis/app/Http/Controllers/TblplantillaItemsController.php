@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Plantilla\GetOfficesPositionResource;
 use App\Http\Resources\Plantilla\TblplantillaItemsResource;
+use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
+use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 
 class TblplantillaItemsController extends Controller
@@ -62,6 +65,14 @@ class TblplantillaItemsController extends Controller
     
     public function show($id){
         return TblplantillaItems::findOrFail($id);
+    }
+
+    public function officePosition(){
+
+        return new GetOfficesPositionResource([
+            'positions' => Tblpositions::get('pos_title'), 
+            'offices' => Tbloffices::get('ofc_name'),
+        ]);
     }
 
 }

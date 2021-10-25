@@ -26,7 +26,7 @@ class Tblpositions extends Model
     }
 
     public function tblplantillaItems(){
-        return $this->belongsMany(TblplantillaItems::class);
+        return $this->belongsToMany(TblplantillaItems::class);
     }
 
 }

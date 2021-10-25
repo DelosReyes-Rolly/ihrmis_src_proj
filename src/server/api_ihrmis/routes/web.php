@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\PdfEmailGeneratorController;
+use App\Mail\VerifyApplicantMail;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +21,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/send-email', function () {
+
+    dd(env('FRONTEND_APPLICANT_REDIRECT_URL') . "3");
+    
+});
+
+Route::get('/send-email-pdf', [PdfEmailGeneratorController::class, 'index']);
