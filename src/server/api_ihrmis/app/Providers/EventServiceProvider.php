@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\Second\SecApplicantProfile;
+use App\Models\TbljvsCompetencies;
+use App\Observers\ApplicantObservers\ApplicantProfileObserver;
+use App\Observers\JvsCompetenciesObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,5 +31,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        TbljvsCompetencies::observe(JvsCompetenciesObserver::class);
+        SecApplicantProfile::observe(ApplicantProfileObserver::class);
     }
 }

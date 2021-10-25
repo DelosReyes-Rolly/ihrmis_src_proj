@@ -18,8 +18,8 @@ class JvsCrwResource extends JsonResource
             'prepared' => $this->jvs_prepared,
             'approved' => $this->jvs_approved,
             'signed_file' => $this->jvs_signed_file,
-            // 'dts_rspnsblty' => $this->tbljvsDutiesRes
-            'competencies' => $this->tbljvsCompentencies,
+            'jvs_dts_rspnsblty' => $this->tbljvsDutiesRspnsblts,
+            'competencies' =>  JvsCmptncsResource::collection($this->tbljvsCompetencies),
         ];
     }
 }

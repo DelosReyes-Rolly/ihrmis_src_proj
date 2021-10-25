@@ -40,6 +40,10 @@ class TblplantillaItems extends Model
     }
     
     public function tbljvs(){
-        return $this->belongsTo(Tbljvs::class, 'itm_id' ,'jvs_itm_id');
+        return $this->hasMany(Tbljvs::class, 'jvs_itm_id' ,'itm_id');
+    }
+
+    public function tbldtyresponsibility(){
+        return $this->hasMany(TblplantillaDutiesRspnsblts::class, 'dty_itm_id' ,'itm_id');
     }
 }

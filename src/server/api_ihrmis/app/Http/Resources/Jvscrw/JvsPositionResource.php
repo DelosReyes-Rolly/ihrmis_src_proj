@@ -18,7 +18,7 @@ class JvsPositionResource extends JsonResource
             
             'title' => $this->pos_title,
             'salary_grade' => $this->pos_salary_grade,
-            'csc_standards' => JvsCscStandardResource::collection($this->tblpositionCscStandards->all())
+            'csc_standards' => JvsCscStandardResource::collection($this->tblpositionCscStandards)
         ];
     }
 }

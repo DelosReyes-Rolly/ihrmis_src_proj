@@ -18,19 +18,24 @@ class Tbljvs extends Model
         'jvs_min_com_desc',
         'jvs_prepared',
         'jvs_approved',
-        'jvs_signed'
+        'jvs_signed_file'
     ];
 
     public $timestamps = false;
 
-    public function tbljvs()
+    public function tblplantillaItems()
     {
-        return $this->hasOne(TblplantillaItems::class, 'itm_id', 'jvs_itm_id');
+        return $this->belongsTo(TblplantillaItems::class, 'itm_id', 'jvs_itm_id');
     }
     
-    public function tbljvsDutiesResponsibilty()
+    public function tbljvsDutiesRspnsblts()
     {
         return $this->hasMany(TbljvsDutiesRspnsblts::class, 'dty_jvs_id' ,'jvs_id');
+    }
+
+    public function tbljvsCompetencies()
+    {
+        return $this->hasMany(TbljvsCompetencies::class, 'com_jvs_id' ,'jvs_id');
     }
 
 }

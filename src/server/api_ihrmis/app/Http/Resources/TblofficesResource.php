@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Resources;
-
-use App\Models\TblplantillaItems;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TblofficesResource extends JsonResource
