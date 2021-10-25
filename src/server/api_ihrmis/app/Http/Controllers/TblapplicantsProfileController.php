@@ -229,7 +229,7 @@ class TblapplicantsProfileController extends Controller
                 $setAsVerified->where('app_id', $request->applicant)->is_verified = 1;
                 $setAsVerified->save();
                 $verify->where('id_sec_applicant', $request->applicant)->delete();
-                return redirect()->away(env('FRONTEND_PAGE_URL') . $request->applicant);
+                return redirect()->away(env('FRONTEND_APPLICANT_REDIRECT_URL') . $request->applicant);
             }
         } else {
             abort('404');
