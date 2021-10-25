@@ -51,14 +51,14 @@ Route::get('verify-email', [TblapplicantsProfileController::class, "verifyEmail"
 Route::post('jvscrw/{id}', [JvscrwMainController::class, "writeJvs"]);
 Route::get('jvscrw/{id}', [JvscrwMainController::class, "show"]);
 
-// Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
+
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);
 // Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
 
 
 
 
-
+Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);

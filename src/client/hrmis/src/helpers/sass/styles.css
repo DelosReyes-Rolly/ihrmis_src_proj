@@ -1845,6 +1845,56 @@ input:checked + .slider:before {
   margin-right: 5px;
 }
 
+.success-email-confirm {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 30px auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  max-width: 600px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.success-email-confirm h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.success-email-confirm div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.success-email-confirm div div {
+  margin: 5px 10px;
+}
+
+.success-email-confirm div div .back-color {
+  color: rgba(70, 70, 70, 0.8);
+  background-color: whitesmoke;
+  border: 1px solid rgba(70, 70, 70, 0.8) !important;
+}
+
+.success-email-confirm div div .back-color:hover {
+  background-color: #dfdfdf;
+}
+
 @media only screen and (max-width: 800px) {
   .citizenship-container {
     display: -webkit-box;

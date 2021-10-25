@@ -5,6 +5,7 @@ import PlantillaItemPageComponentView from './page_component/plantilla_items_pc/
 import PdsProfilePageComponentView from '../library/page_components/pds_profiles_pc/pds_profile'
 import FormPageOne from '../library/page_components/pds_profiles_pc/parts/forms/form_page_one';
 import JvsCrwPageComponentView from './page_component/jvs_crw_pc/jvs_crw';
+import { SuccessEmailConfirmation, SentEmailConfirmation } from '../library/page_components/pds_profiles_pc/parts/email_confirmation';
 
 const PlantillaView =()=> {
 
@@ -26,6 +27,12 @@ const PlantillaView =()=> {
                 </Route> 
                 <Route path="/ihrmis/plantilla/form-page-one">
                   <PdsProfilePageComponentView/>
+                </Route>
+                <Route path="/ihrmis/plantilla/verify-email">
+                  <SentEmailConfirmation/>
+                </Route>
+                <Route path="/ihrmis/plantilla/success-confirmation/">
+                  <SuccessEmailConfirmation/>
                 </Route>
             </Switch>
 

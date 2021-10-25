@@ -19,6 +19,7 @@ import { formOneInput } from '../../../../static/input_items';
 import { setBusy } from '../../../../../../../features/reducers/loading_slice'
 import { setFail } from '../../../../../../../features/reducers/popup_response';
 import { useDelayService } from '../../../../../../../services/delay_service';
+import { useHistory } from 'react-router-dom'
 
 const FormPageOne = () => {
 
@@ -37,6 +38,12 @@ const FormPageOne = () => {
     // REDUX STATE AND FUNCIONALITIES
     // ===================================
     const dispatch = useDispatch();
+
+
+    // ===================================
+    // HANDLING ROUTES
+    // ===================================
+    let history = useHistory();
     
     // ===================================
     // ERROR HANDLING STATE
@@ -71,16 +78,15 @@ const FormPageOne = () => {
     // ===================================
     const submitHandler = async (e) => {
         e.preventDefault();
-        
+
         if(verifyCapcha == true){
             setCaptcha(false);
-            // recaptchaResetRef.current.reset();
-            
             dispatch(setBusy(true));
             await axios.post(API_HOST + '/new-applicant', applicantDataHolder)
             .then((response) => {  
                 e.target.reset();
                 setServerErrorResponse(null);
+                history.push(`/ihrmis/plantilla/verify-email/${response.data.item}`);
                 succeed();
             }).catch(error => {
         
@@ -91,22 +97,22 @@ const FormPageOne = () => {
                         failed();
                     } else if(error.response.status === 404){
                         console.log('404 Page Not Found');
-                        setServerErrorResponse(null);
+                        history.push('/ihrmis/plantilla/four-zero-four')
                         failed();
                     } else if(error.response.status === 500){
                         console.log('500 API Internal Error!');
                         console.log(error.response.data.message);
-                        setServerErrorResponse(null);
+                        setServerErrorResponse([`500: ${error.response.data.message}`]);
                         failed();
                     }
                     
                 } else if (error.request){
                     console.log('No response from server');
-                    
-                    setServerErrorResponse(null);
+                    setServerErrorResponse([`Please check your internet connectivity`]);
                     failed();
                 } else {
                     console.log('Oops! Something went wrong');
+                    setServerErrorResponse([`Oops! Something went wrong`]);
                     dispatch(setFail(true));
                     failed();
                 }
