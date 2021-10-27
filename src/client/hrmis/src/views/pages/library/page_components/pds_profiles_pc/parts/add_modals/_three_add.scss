@@ -1,0 +1,36 @@
+// =================================
+// FOR EDUCATION MODAL STYLE
+// =================================
+.add-educ-modal-container{
+    @include containerFlexRow(false);
+    .first-level-div{
+        margin-bottom: 10px;
+        @include containerFlexRow(false);
+        .second-level-div{
+            margin-bottom: 10px;
+            
+        }
+        .year-from-to{
+            @include containerFlexRow(true);
+            margin-bottom: 10px;
+            .from{
+                margin-right: 5px;
+            }
+            .to{
+                margin-left: 5px;
+            }
+        }
+
+        .year-graduated{
+            @include containerFlexRow(true);
+            margin-bottom: 10px;
+            .yearend{
+                margin-right: 5px;
+            }
+            .highest{
+                margin-left: 5px;
+            }
+        }
+    }
+}
+

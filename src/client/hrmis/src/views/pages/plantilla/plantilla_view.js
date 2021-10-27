@@ -48,7 +48,7 @@ const PlantillaView =()=> {
                   // ROUTES FOR PDS FORMS SUBMIT SUCCESSTIONS
                   // =============================================
                 */}
-                <Route path="/ihrmis/plantilla/verify-email">
+                <Route path="/ihrmis/plantilla/verify-email/:email">
                   <SentEmailConfirmation/>
                 </Route>
                 <Route path="/ihrmis/plantilla/success-confirmation/:item">
