@@ -78,12 +78,11 @@ const FormPageTwo = () => {
     // =====================================
     const submitHandler = async (e) => {
         e.preventDefault();
-        history.push(`/ihrmis/plantilla/subbmit-success/${item}`);
         if(item !== null || item !== undefined){
             dispatch(setBusy(true));
             await axios.post(API_HOST + `/new-afc/${item}`, inputState)
             .then((response) => {  
-                addChildArrayState([]);
+                // addChildArrayState([]);
                 setServerErrorResponse(null);
                 succeed();
                 history.push(`/ihrmis/plantilla/subbmit-success/${item}`);

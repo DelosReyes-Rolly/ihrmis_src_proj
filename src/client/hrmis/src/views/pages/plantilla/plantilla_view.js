@@ -33,16 +33,15 @@ const PlantillaView =()=> {
                   // =============================================
                 */}
 
-                <Route path="/ihrmis/plantilla/form-page-one/:item">
+                <Route path="/ihrmis/plantilla/form-page-one/:item?">
                   <FormPageOne/>
                 </Route>
-                <Route path="/ihrmis/plantilla/form-page-two/:item">
+                <Route path="/ihrmis/plantilla/form-page-two/:item?">
                   <FormPageTwo />
                 </Route>
-                <Route path="/ihrmis/plantilla/form-page-three/:item">
+                <Route path="/ihrmis/plantilla/form-page-three/:item?">
                   <FormPageThree />
                 </Route>
-
 
                 {/* 
                   // =============================================
