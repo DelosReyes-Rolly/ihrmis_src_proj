@@ -86,7 +86,7 @@ const FormPageOne = () => {
             .then((response) => {  
                 e.target.reset();
                 setServerErrorResponse(null);
-                history.push(`/ihrmis/plantilla/verify-email/${response.data.item}`);
+                history.push(`/ihrmis/plantilla/verify-email/${applicantDataHolder.app_email_addr}`);
                 setter(null); succeed();
             }).catch(error => {
         

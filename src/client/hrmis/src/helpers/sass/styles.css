@@ -1895,6 +1895,19 @@ input:checked + .slider:before {
   background-color: #dfdfdf;
 }
 
+.success-email-confirm .header-confirmation {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
 @media only screen and (max-width: 800px) {
   .citizenship-container {
     display: -webkit-box;
@@ -1989,6 +2002,69 @@ input:checked + .slider:before {
     margin-top: 5px;
     margin-left: 0px;
   }
+}
+
+.add-educ-modal-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.add-educ-modal-container .first-level-div {
+  margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.add-educ-modal-container .first-level-div .second-level-div {
+  margin-bottom: 10px;
+}
+
+.add-educ-modal-container .first-level-div .year-from-to {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.add-educ-modal-container .first-level-div .year-from-to .from {
+  margin-right: 5px;
+}
+
+.add-educ-modal-container .first-level-div .year-from-to .to {
+  margin-left: 5px;
+}
+
+.add-educ-modal-container .first-level-div .year-graduated {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.add-educ-modal-container .first-level-div .year-graduated .yearend {
+  margin-right: 5px;
+}
+
+.add-educ-modal-container .first-level-div .year-graduated .highest {
+  margin-left: 5px;
 }
 
 @use '../../../../../helpers/sass/defaults/_default_colors.scss' as *;

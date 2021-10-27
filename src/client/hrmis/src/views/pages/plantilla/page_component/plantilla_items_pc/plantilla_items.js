@@ -114,6 +114,7 @@ const TableView = (props) => {
                             isDisplay={ toggleAddPlantillaItem } 
                             onClose={ () => setTogglePlantillaItem() }
                             regularValue={props.regularValue}/>
+                            
                         <span className="margin-left-1 selector-span-1">
                             <select defaultValue={'DEFAULT'} >
                                 <option value="DEFAULT" disabled>Filter By</option>

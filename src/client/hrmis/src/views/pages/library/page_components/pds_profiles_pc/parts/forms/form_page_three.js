@@ -4,6 +4,7 @@ import { educationalBackgroundData } from '../../../../fake_data/table_data';
 import ButtonComponent from './../../../../../../common/button_component/button_component.js';
 import { MdAdd } from 'react-icons/md';
 import { useToggleService } from '../../../../../../../services/toggle_service';
+import ThreeAddEducationModal from '../add_modals/three_add_educ';
 
 const FormPageThree = (props) => {
     return (
@@ -27,9 +28,19 @@ const FormPageThree = (props) => {
 }
 
 const TableOne = () => {
+    // ===========================================
+    // CUSTOM HOOK SERVICE
+    // ===========================================
     let [showData, setShowData] = useToggleService(false);
+    let [toogleAddData, setToogleAddData] = useToggleService(false);
+    
     return (
         <React.Fragment>
+            
+            <ThreeAddEducationModal 
+                isDisplay={ toogleAddData } 
+                onClose={ () => setToogleAddData(!toogleAddData) }
+            />
             <div className="scrollable-div-table" >
                 <table id="custom-table">
                     <thead>
@@ -93,10 +104,9 @@ const TableOne = () => {
                 </table>
             </div>
             <div style={{marginTop:'10px'}}>
-                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="ADD"/>
+                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="ADD EDUCATION" onClick={()=>{setToogleAddData(!toogleAddData)}}/>
             </div>
 
-            
         </React.Fragment>
     );
 }
