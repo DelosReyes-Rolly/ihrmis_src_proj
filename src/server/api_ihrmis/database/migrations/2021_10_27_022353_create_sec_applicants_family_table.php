@@ -14,7 +14,7 @@ class CreateSecApplicantsFamilyTable extends Migration
     public function up()
     {
         Schema::connection('mysql2')->create('sec_applicants_family', function (Blueprint $table) {
-            $table->unsignedInteger('app_id')->index('app_id')->comment('Applicant ID. A unique identification of records.');
+            $table->unsignedInteger('app_id')->unique('app_id')->comment('Applicant ID. A unique identification of records.');
             $table->string('app_sps_nm_last', 50)->comment('Spouse\'s last name.');
             $table->string('app_sps_nm_first', 50)->comment('Spouse\'s first name.');
             $table->string('app_sps_nm_mid', 50)->comment('Spouse\'s middle name in full.');
