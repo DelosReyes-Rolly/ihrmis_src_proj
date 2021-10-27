@@ -14,7 +14,6 @@ class TblapplicantChildren extends Model
     protected $primary = 'chi_app_id';
     protected $fillable = [
         'chi_app_id',
-        'chi_app_time',
         'chi_app_name',
         'chi_app_birthdate',
     ];

@@ -27,7 +27,7 @@ const FormPageOne = () => {
     // CUSTOM HOOK SERVICE
     // ===================================
         // FOR FORM
-    const [applicantDataHolder, setDataInput, arrInput] = useFormService();
+    const [applicantDataHolder, setDataInput, arrInput, setter] = useFormService();
         // FOR GETTING BRGY, MUNICIPALITY, PROVINCE STATES
     const [resCity, resBrgy, getResCity, getResBrgy] = useLocationService();
     const [perCity, perBrgy, getPerCity, getPerBrgy] = useLocationService();
@@ -87,7 +87,7 @@ const FormPageOne = () => {
                 e.target.reset();
                 setServerErrorResponse(null);
                 history.push(`/ihrmis/plantilla/verify-email/${response.data.item}`);
-                succeed();
+                setter(null); succeed();
             }).catch(error => {
         
                 if(error.response){
@@ -108,7 +108,7 @@ const FormPageOne = () => {
                     
                 } else if (error.request){
                     console.log('No response from server');
-                    setServerErrorResponse([`Please check your internet connectivity`]);
+                    setServerErrorResponse([`Please check your network connectivity`]);
                     failed();
                 } else {
                     console.log('Oops! Something went wrong');
@@ -131,385 +131,388 @@ const FormPageOne = () => {
 
         <React.Fragment>
 
-            {/* 
-                //==========================================
-                // PDS ON-210 MAIN HEADER
-                //==========================================
-            */}
-            <div className="form-header">
-                <img src={dostLogo} width="50px" height="50px" alt="dost-logo"/>
-                <h3>Department of Science and Technology</h3>
-                <p>General Santos Avenue, Bicutan Taguig City</p> <br/><br/>
-                <h2>PERSONAL DATA SHEET</h2>
-                <br/><br/>
-            </div>
+            <div className="pds-profile-main-view">
+                {/* 
+                    //==========================================
+                    // PDS ON-210 MAIN HEADER
+                    //==========================================
+                */}
+                <div className="form-header">
+                    <img src={dostLogo} width="50px" height="50px" alt="dost-logo"/>
+                    <h3>Department of Science and Technology</h3>
+                    <p>General Santos Avenue, Bicutan Taguig City</p> <br/><br/>
+                    <h2>PERSONAL DATA SHEET</h2>
+                    <br/><br/>
+                </div>
 
-            <div style={{fontSize:"small"}}>
-                <p><em><strong>WARNING:</strong> Any misrepresentation made in Personal 
-                        Data Sheet and the Work Experience Sheet shall 
-                        cause the filing of administrative/criminal case/s 
-                        against the person concerned</em></p>
-                <br/>
-                <p>READ THE <a href="#">GUIDE</a> BEFORE ACOMPLISHING THIS FORM 
-                        DO NOT ABBREVIATE. Indicate N/A if not Applicable.</p>
-            </div><br/>
-            
-            {/* 
-                //==========================================
-                // PDS ON-210 FORM SERVER ERROR RESPONSE 
-                //==========================================
-            */}
-            {
-                captcha 
-                    ? <ValidationComponent title="FAILED TO SUBMIT">
-                        {captcha && <p>- Please Complete the CAPTCHA</p>}
-                    </ValidationComponent>
-                    : serverErrorResponse != null 
+                <div style={{fontSize:"small"}}>
+                    <p><em><strong>WARNING:</strong> Any misrepresentation made in Personal 
+                            Data Sheet and the Work Experience Sheet shall 
+                            cause the filing of administrative/criminal case/s 
+                            against the person concerned</em></p>
+                    <br/>
+                    <p>READ THE <a href="#">GUIDE</a> BEFORE ACOMPLISHING THIS FORM 
+                            DO NOT ABBREVIATE. Indicate N/A if not Applicable.</p>
+                </div><br/>
+                
+                {/* 
+                    //==========================================
+                    // PDS ON-210 FORM SERVER ERROR RESPONSE 
+                    //==========================================
+                */}
+                {
+                    captcha 
                         ? <ValidationComponent title="FAILED TO SUBMIT">
-                            {
-                                serverErrorResponse.map((item, key)=>{
-                                    return <p key={key}>- {item}</p>
-                                }) 
-                            }
+                            {captcha && <p>- Please Complete the CAPTCHA</p>}
                         </ValidationComponent>
-                        : null
-            }<br/>
-
-            {/* 
-                //==========================================
-                // PDS ON-210 FORM SECTION 
-                //==========================================
-            */}
-
-            <form style={{boxSizing:"border-box"}} onSubmit={submitHandler}>
-                {/* 
-                    //==========================================
-                    // FORM HEADER SECTION 
-                    //==========================================
-                */}
-                <table id="custom-table">
-                    <thead>
-                        <tr className="main-headers">
-                            <th className="">
-                                I. PERSONAL INFORMATION
-                            </th>
-                        </tr>
-                    </thead>
-                </table><br/>
+                        : serverErrorResponse != null 
+                            ? <ValidationComponent title="FAILED TO SUBMIT">
+                                {
+                                    serverErrorResponse.map((item, key)=>{
+                                        return <p key={key}>- {item}</p>
+                                    }) 
+                                }
+                            </ValidationComponent>
+                            : null
+                }<br/>
 
                 {/* 
                     //==========================================
-                    // USER NAME INFORMATION SECTION 
+                    // PDS ON-210 FORM SECTION 
                     //==========================================
                 */}
 
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"50%"}}>
-                        <label>Surname</label>
-                        <InputComponent name="app_nm_last" onChange={ e=>{setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"50%"}}>
-                        <label>First Name</label>
-                        <InputComponent name="app_nm_first" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                </div>
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"50%"}}>
-                        <label>Name Extension (Jr., Sr.)</label>
-                        <InputComponent name="app_nm_extn" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"50%"}}>
-                        <label>Middle Name</label>
-                        <InputComponent name="app_nm_mid" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                </div><br/>
+                <form style={{boxSizing:"border-box"}} onSubmit={submitHandler}>
+                    {/* 
+                        //==========================================
+                        // FORM HEADER SECTION 
+                        //==========================================
+                    */}
+                    <table id="custom-table">
+                        <thead>
+                            <tr className="main-headers">
+                                <th className="">
+                                    I. PERSONAL INFORMATION
+                                </th>
+                            </tr>
+                        </thead>
+                    </table><br/>
 
-                {/* 
-                    //==========================================
-                    // OTHER USER INFORMATION SECTION 
-                    //==========================================
-                */}
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"25%"}}>
-                        <label> Date of Birth</label>
-                        <InputComponent type="date" name="app_birth_date" onChange={ e =>setDataInput(e) }/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"45%"}}>
-                        <label>Place of Birth</label>
-                        <InputComponent name="app_birth_place" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"15%"}}>
-                        <label>Sex</label>
-                        <SelectComponent name="app_sex" itemList={formOneInput.sex}  defaultTitle="Sex" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"15%"}}>
-                        <label>Blood Type</label>
-                        <SelectComponent name="app_blood_type" itemList={formOneInput.blood_type} defaultTitle="Blood Type" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                </div>
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"25%"}}>
-                        <label>Civil Status</label>
-                        <SelectComponent name="app_civil_status" itemList={formOneInput.civil_status} defaultTitle="Civil Status" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"45%"}}>
-                        <label>If others, please specify</label>
-                        <InputComponent name="app_civil_others" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"15%"}}>
-                        <label>Height (m)</label>
-                        <InputComponent name="app_height" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"15%"}}>
-                        <label>Weight (kg)</label>
-                        <InputComponent name="app_weight" onChange={ e => {setDataInput(e)}} />
-                    </div>
-                </div>
+                    {/* 
+                        //==========================================
+                        // USER NAME INFORMATION SECTION 
+                        //==========================================
+                    */}
 
-                {/* 
-                    //==========================================
-                    // EMPLOYMENT INFORMATION SECTION 
-                    //==========================================
-                */}
-                <div className="pds-prof-class-one">
                     <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                        <div style={{marginRight:"5px", width:"33%"}}>
-                            <label>GSIS ID No.</label>
-                            <InputComponent name="app_gsis" onChange={ e => {setDataInput(e)}}/>
+                        <div style={{marginRight:"5px", width:"50%"}}>
+                            <label>Surname</label>
+                            <InputComponent name="app_nm_last" onChange={ e=>{setDataInput(e)}}/>
                         </div>
-                        <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
-                            <label>PAG-IBIG ID No</label>
-                            <InputComponent name="app_pagibig" onChange={ e => {setDataInput(e)}}/>
-                        </div>
-                        <div style={{marginLeft:"5px", width:"33%"}}>
-                            <label>PHILHEALTH No.</label>
-                            <InputComponent name="app_philhealth" onChange={ e => {setDataInput(e)}}/>
+                        <div style={{marginLeft:"5px", width:"50%"}}>
+                            <label>First Name</label>
+                            <InputComponent name="app_nm_first" onChange={ e => {setDataInput(e)}}/>
                         </div>
                     </div>
-                </div>
-
-                <div className="pds-prof-class-one">
                     <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                        <div style={{marginRight:"5px", width:"33%"}}>
-                            <label>SSS No.</label>
-                            <InputComponent name="app_sss" onChange={ e => {setDataInput(e)}}/>
+                        <div style={{marginRight:"5px", width:"50%"}}>
+                            <label>Name Extension (Jr., Sr.)</label>
+                            <InputComponent name="app_nm_extn" onChange={ e => {setDataInput(e)}}/>
                         </div>
-                        <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
-                            <label>TIN No</label>
-                            <InputComponent name="app_tin" onChange={ e => {setDataInput(e)}}/>
+                        <div style={{marginLeft:"5px", width:"50%"}}>
+                            <label>Middle Name</label>
+                            <InputComponent name="app_nm_mid" onChange={ e => {setDataInput(e)}}/>
                         </div>
-                        <div style={{marginLeft:"5px", width:"33%"}}>
-                            <label>Agency Employee No.</label>
-                            <InputComponent name="app_emp_no" onChange={ e => {setDataInput(e)}}/>
+                    </div><br/>
+
+                    {/* 
+                        //==========================================
+                        // OTHER USER INFORMATION SECTION 
+                        //==========================================
+                    */}
+                    <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                        <div style={{marginRight:"5px", width:"25%"}}>
+                            <label> Date of Birth</label>
+                            <InputComponent type="date" name="app_birth_date" onChange={ e =>setDataInput(e) }/>
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"45%"}}>
+                            <label>Place of Birth</label>
+                            <InputComponent name="app_birth_place" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"15%"}}>
+                            <label>Sex</label>
+                            <SelectComponent name="app_sex" itemList={formOneInput.sex}  defaultTitle="Sex" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                        <div style={{marginLeft:"5px", width:"15%"}}>
+                            <label>Blood Type</label>
+                            <SelectComponent name="app_blood_type" itemList={formOneInput.blood_type} defaultTitle="Blood Type" onChange={ e => {setDataInput(e)}}/>
                         </div>
                     </div>
-                </div><br/>
-
-                 {/* 
-                    //==========================================
-                    // CITIZENSHIP INFORMATION SECTION 
-                    //==========================================
-                */}
-                <h5 style={{color:"rgba(54, 58, 63, 0.8)", marginBottom:"10px"}}>CITIZENSHIP</h5>
-                <div className="pds-prof-class-one">
-                    <div className="citizenship-container">
-                        <div className="div-1">
-                            <CitizenshiFormOne 
-                                stateValue={citizenshipState} 
-                                filipino={ () => { 
-                                    setCitizenshipState(1); 
-                                    arrInput('app_filipino', 1); 
-                                }}
-                                other={ () => { 
-                                    setCitizenshipState(2); 
-                                    arrInput('app_filipino', 0); 
-                                }}>
-
-                                <SelectComponent name="app_dual_cny_id" defaultTitle="Specify Country" itemList={countryList} 
-                                    onChange={(e)=> {
-                                        { setDataInput(e) }
-                                }}/>
-                            </CitizenshiFormOne>
+                    <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                        <div style={{marginRight:"5px", width:"25%"}}>
+                            <label>Civil Status</label>
+                            <SelectComponent name="app_civil_status" itemList={formOneInput.civil_status} defaultTitle="Civil Status" onChange={ e => {setDataInput(e)}}/>
                         </div>
-
-                        {
-                            citizenshipState == 1 && 
-                            <div className="div-2">
-                                <div className="checked-dropdown">  
-                                    <div className="checked-1">
-                                        <CheckboxComponent
-                                            checked={dualCitizen} 
-                                            onChange={ (e) => {
-                                                setDualCitizen(!dualCitizen)
-                                                arrInput('is_dual_citizen', e.target.checked == true ? true : false);
-                                        }}/> 
-                                        <span className="margin-left-1">Dual Citizen</span>
-                                    </div>
-                                    <div className="checked-2">
-                                        {
-                                            dualCitizen == true && 
-                                            <SelectComponent name="app_dual_type" defaultTitle="Specify Country" 
-                                                itemList = {formOneInput.dual_citizen_type}
-                                                onChange={(e)=>{
-                                                setDataInput(e);
-                                            }}/>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div><br/>
-
-                {/* 
-                    //==========================================
-                    // RESEDENTIAL ADDRESS INFORMATION SECTION 
-                    //==========================================
-                */}
-
-                <h5 style={{color:"rgba(54, 58, 63, 0.8)", marginBottom:"10px"}}>RESIDENTIAL ADDRESS</h5>
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"20%"}}>
-                        <label>House/Block/Lot No.</label>
-                        <InputComponent name="res_block_lot" onChange={e => setDataInput(e)}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"25%"}}>
-                        <label>Street</label>
-                        <InputComponent name="res_street" onChange={e => setDataInput(e)}/>
-                        
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"40%"}}>
-                        <label>Subdivision/Village</label>
-                        <InputComponent name="res_sub_village" onChange={e => setDataInput(e)}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"15%"}}>
-                        <label>Zip Code</label>
-                        <InputComponent name="res_zip_code" onChange={e => setDataInput(e)}/>
-                    </div>
-                </div>
-
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"33%"}}>
-                        <label>Province</label>
-                        <SelectComponent name="res_province" defaultTitle="Province" itemList={phil.provinces} 
-                            onChange={e => {
-                                setDataInput(e);
-                                getResCity(e.target.value);
-                            }}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
-                        <label>City/Municipality</label>
-                        <SelectComponent name="res_municipality" defaultTitle="City" itemList={resCity == null ? [] : resCity} 
-                            onChange={e => {
-                                setDataInput(e);
-                                getResBrgy(e.target.value)
-                            }}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"33%"}}>
-                        <label>Barangay</label>
-                        <SelectComponent name="res_barangay" defaultTitle="Barangay" itemList={resBrgy == null ? [] : resBrgy} onChange={e => setDataInput(e)}/>
-                    </div>
-                </div>
-                
-                <br/>
-                {/* 
-                    //==========================================
-                    // PERMANENT ADDRESS INFORMATION SECTION
-                    //==========================================
-                */}
-                
-                <div className="per-address-head"> {/* header of permanent address */}
-                    <h5 style={{color:"rgba(54, 58, 63, 0.8)"}}>PERMANENT ADDRESS</h5>
-                    <span className="res-address-copy" onClick={()=>setCopiedAddress()}><IoCopySharp className="copy-icon" size="14px"/> {isCopied ? "Input Permanent Address": "Copy Resedential Address"}</span>
-                </div>
-                {isCopied == false && 
-                    <div>
-                        <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                            <div style={{marginRight:"5px", width:"20%"}}>
-                                <label>House/Block/Lot No.</label>
-                                <InputComponent name="per_block_lot" onChange={e => setDataInput(e)}/>
-                            </div>
-                            <div style={{marginRight:"5px", marginLeft:"5px", width:"25%"}}>
-                                <label>Street</label>
-                                <InputComponent name="per_street" onChange={e => setDataInput(e)}/>
-                            </div>
-                            <div style={{marginRight:"5px", marginLeft:"5px", width:"40%"}}>
-                                <label>Subdivision/Village</label>
-                                <InputComponent name="per_sub_village" onChange={e => setDataInput(e)}/>
-                            </div>
-                            <div style={{marginLeft:"5px", width:"15%"}}>
-                                <label>Zip Code</label>
-                                <InputComponent name="per_zip_code" onChange={e => setDataInput(e)}/>
-                            </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"45%"}}>
+                            <label>If others, please specify</label>
+                            <InputComponent name="app_civil_others" onChange={ e => {setDataInput(e)}}/>
                         </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"15%"}}>
+                            <label>Height (m)</label>
+                            <InputComponent name="app_height" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                        <div style={{marginLeft:"5px", width:"15%"}}>
+                            <label>Weight (kg)</label>
+                            <InputComponent name="app_weight" onChange={ e => {setDataInput(e)}} />
+                        </div>
+                    </div>
+
+                    {/* 
+                        //==========================================
+                        // EMPLOYMENT INFORMATION SECTION 
+                        //==========================================
+                    */}
+                    <div className="pds-prof-class-one">
                         <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
                             <div style={{marginRight:"5px", width:"33%"}}>
-                                <label>Barangay</label>
-                                <SelectComponent name="per_province" defaultTitle="Province"  itemList={phil.provinces} 
-                                    onChange={e => {
-                                        setDataInput(e);
-                                        getPerCity(e.target.value);
-                                }}/>
+                                <label>GSIS ID No.</label>
+                                <InputComponent name="app_gsis" onChange={ e => {setDataInput(e)}}/>
                             </div>
                             <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
-                                <label>City/Municipality</label>
-                                <SelectComponent name="per_municipality" defaultTitle="City" 
-                                    itemList={perCity == null ? [] : perCity}
-                                    onChange={e => {
-                                        setDataInput(e);
-                                        getPerBrgy(e.target.value);
-                                }}/>
+                                <label>PAG-IBIG ID No</label>
+                                <InputComponent name="app_pagibig" onChange={ e => {setDataInput(e)}}/>
                             </div>
                             <div style={{marginLeft:"5px", width:"33%"}}>
-                                <label>Province</label>
-                                <SelectComponent name="per_barangay" defaultTitle="Barangay" 
-                                    itemList={perBrgy == null ? [] : perBrgy}
-                                    onChange={e => setDataInput(e)}/>
+                                <label>PHILHEALTH No.</label>
+                                <InputComponent name="app_philhealth" onChange={ e => {setDataInput(e)}}/>
                             </div>
                         </div>
                     </div>
-                }<br/>
-                {/* 
-                    //==========================================
-                    // CONTACT INFORMATION SECTION
-                    //==========================================
-                */}
-                <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
-                    <div style={{marginRight:"5px", width:"30%"}}>
-                        <label>Telephone No.</label>
-                        <InputComponent name="app_tel_no" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginRight:"5px", marginLeft:"5px", width:"30%"}}>
-                        <label>Mobile No</label>
-                        <InputComponent name="app_mobile_no" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                    <div style={{marginLeft:"5px", width:"40%"}}>
-                        <label>Email Address</label>
-                        <InputComponent name="app_email_addr" onChange={ e => {setDataInput(e)}}/>
-                    </div>
-                </div><br/><br/>
-                
-                {/* 
-                    //==========================================
-                    // CAPTCHA INFORMATION SECTION
-                    //==========================================
-                */}
-                <div className="pds-prof-class-two">
-                    <div>
-                        <ReCAPTCHA
-                            // ref={recaptchaResetRef}
-                            sitekey="6LdIujEcAAAAAJRdTNTP0jkmHt60fVZMlj7Fn7nT"
-                            onChange={()=>setVerifyCaptcha(true)}
-                            onExpired={()=>setVerifyCaptcha(false)}
-                            onErrored={()=>setVerifyCaptcha(false)}
-                        />
-                    </div>
-                    <div>
-                        <ButtonComponent buttonName="Submit"/>
-                    </div>
-                </div>
 
-            </form><br/><br/>
+                    <div className="pds-prof-class-one">
+                        <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                            <div style={{marginRight:"5px", width:"33%"}}>
+                                <label>SSS No.</label>
+                                <InputComponent name="app_sss" onChange={ e => {setDataInput(e)}}/>
+                            </div>
+                            <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
+                                <label>TIN No</label>
+                                <InputComponent name="app_tin" onChange={ e => {setDataInput(e)}}/>
+                            </div>
+                            <div style={{marginLeft:"5px", width:"33%"}}>
+                                <label>Agency Employee No.</label>
+                                <InputComponent name="app_emp_no" onChange={ e => {setDataInput(e)}}/>
+                            </div>
+                        </div>
+                    </div><br/>
+
+                    {/* 
+                        //==========================================
+                        // CITIZENSHIP INFORMATION SECTION 
+                        //==========================================
+                    */}
+                    <h5 style={{color:"rgba(54, 58, 63, 0.8)", marginBottom:"10px"}}>CITIZENSHIP</h5>
+                    <div className="pds-prof-class-one">
+                        <div className="citizenship-container">
+                            <div className="div-1">
+                                <CitizenshiFormOne 
+                                    stateValue={citizenshipState} 
+                                    filipino={ () => { 
+                                        setCitizenshipState(1); 
+                                        arrInput('app_filipino', 1); 
+                                    }}
+                                    other={ () => { 
+                                        setCitizenshipState(2); 
+                                        arrInput('app_filipino', 0); 
+                                    }}>
+
+                                    <SelectComponent name="app_dual_cny_id" defaultTitle="Specify Country" itemList={countryList} 
+                                        onChange={(e)=> {
+                                            { setDataInput(e) }
+                                    }}/>
+                                </CitizenshiFormOne>
+                            </div>
+
+                            {
+                                citizenshipState == 1 && 
+                                <div className="div-2">
+                                    <div className="checked-dropdown">  
+                                        <div className="checked-1">
+                                            <CheckboxComponent
+                                                checked={dualCitizen} 
+                                                onChange={ (e) => {
+                                                    setDualCitizen(!dualCitizen)
+                                                    arrInput('is_dual_citizen', e.target.checked == true ? true : false);
+                                            }}/> 
+                                            <span className="margin-left-1">Dual Citizen</span>
+                                        </div>
+                                        <div className="checked-2">
+                                            {
+                                                dualCitizen == true && 
+                                                <SelectComponent name="app_dual_type" defaultTitle="Specify Country" 
+                                                    itemList = {formOneInput.dual_citizen_type}
+                                                    onChange={(e)=>{
+                                                    setDataInput(e);
+                                                }}/>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div><br/>
+
+                    {/* 
+                        //==========================================
+                        // RESEDENTIAL ADDRESS INFORMATION SECTION 
+                        //==========================================
+                    */}
+
+                    <h5 style={{color:"rgba(54, 58, 63, 0.8)", marginBottom:"10px"}}>RESIDENTIAL ADDRESS</h5>
+                    <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                        <div style={{marginRight:"5px", width:"20%"}}>
+                            <label>House/Block/Lot No.</label>
+                            <InputComponent name="res_block_lot" onChange={e => setDataInput(e)}/>
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"25%"}}>
+                            <label>Street</label>
+                            <InputComponent name="res_street" onChange={e => setDataInput(e)}/>
+                            
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"40%"}}>
+                            <label>Subdivision/Village</label>
+                            <InputComponent name="res_sub_village" onChange={e => setDataInput(e)}/>
+                        </div>
+                        <div style={{marginLeft:"5px", width:"15%"}}>
+                            <label>Zip Code</label>
+                            <InputComponent name="res_zip_code" onChange={e => setDataInput(e)}/>
+                        </div>
+                    </div>
+
+                    <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                        <div style={{marginRight:"5px", width:"33%"}}>
+                            <label>Province</label>
+                            <SelectComponent name="res_province" defaultTitle="Province" itemList={phil.provinces} 
+                                onChange={e => {
+                                    setDataInput(e);
+                                    getResCity(e.target.value);
+                                }}/>
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
+                            <label>City/Municipality</label>
+                            <SelectComponent name="res_municipality" defaultTitle="City" itemList={resCity == null ? [] : resCity} 
+                                onChange={e => {
+                                    setDataInput(e);
+                                    getResBrgy(e.target.value)
+                                }}/>
+                        </div>
+                        <div style={{marginLeft:"5px", width:"33%"}}>
+                            <label>Barangay</label>
+                            <SelectComponent name="res_barangay" defaultTitle="Barangay" itemList={resBrgy == null ? [] : resBrgy} onChange={e => setDataInput(e)}/>
+                        </div>
+                    </div>
+                    
+                    <br/>
+                    {/* 
+                        //==========================================
+                        // PERMANENT ADDRESS INFORMATION SECTION
+                        //==========================================
+                    */}
+                    
+                    <div className="per-address-head"> {/* header of permanent address */}
+                        <h5 style={{color:"rgba(54, 58, 63, 0.8)"}}>PERMANENT ADDRESS</h5>
+                        <span className="res-address-copy" onClick={()=>setCopiedAddress()}><IoCopySharp className="copy-icon" size="14px"/> {isCopied ? "Input Permanent Address": "Copy Resedential Address"}</span>
+                    </div>
+                    {isCopied == false && 
+                        <div>
+                            <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                                <div style={{marginRight:"5px", width:"20%"}}>
+                                    <label>House/Block/Lot No.</label>
+                                    <InputComponent name="per_block_lot" onChange={e => setDataInput(e)}/>
+                                </div>
+                                <div style={{marginRight:"5px", marginLeft:"5px", width:"25%"}}>
+                                    <label>Street</label>
+                                    <InputComponent name="per_street" onChange={e => setDataInput(e)}/>
+                                </div>
+                                <div style={{marginRight:"5px", marginLeft:"5px", width:"40%"}}>
+                                    <label>Subdivision/Village</label>
+                                    <InputComponent name="per_sub_village" onChange={e => setDataInput(e)}/>
+                                </div>
+                                <div style={{marginLeft:"5px", width:"15%"}}>
+                                    <label>Zip Code</label>
+                                    <InputComponent name="per_zip_code" onChange={e => setDataInput(e)}/>
+                                </div>
+                            </div>
+                            <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                                <div style={{marginRight:"5px", width:"33%"}}>
+                                    <label>Barangay</label>
+                                    <SelectComponent name="per_province" defaultTitle="Province"  itemList={phil.provinces} 
+                                        onChange={e => {
+                                            setDataInput(e);
+                                            getPerCity(e.target.value);
+                                    }}/>
+                                </div>
+                                <div style={{marginRight:"5px", marginLeft:"5px", width:"33%"}}>
+                                    <label>City/Municipality</label>
+                                    <SelectComponent name="per_municipality" defaultTitle="City" 
+                                        itemList={perCity == null ? [] : perCity}
+                                        onChange={e => {
+                                            setDataInput(e);
+                                            getPerBrgy(e.target.value);
+                                    }}/>
+                                </div>
+                                <div style={{marginLeft:"5px", width:"33%"}}>
+                                    <label>Province</label>
+                                    <SelectComponent name="per_barangay" defaultTitle="Barangay" 
+                                        itemList={perBrgy == null ? [] : perBrgy}
+                                        onChange={e => setDataInput(e)}/>
+                                </div>
+                            </div>
+                        </div>
+                    }<br/>
+                    {/* 
+                        //==========================================
+                        // CONTACT INFORMATION SECTION
+                        //==========================================
+                    */}
+                    <div className="pds-prof-class-one" style={{marginBottom:"10px"}}>
+                        <div style={{marginRight:"5px", width:"30%"}}>
+                            <label>Telephone No.</label>
+                            <InputComponent name="app_tel_no" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                        <div style={{marginRight:"5px", marginLeft:"5px", width:"30%"}}>
+                            <label>Mobile No</label>
+                            <InputComponent name="app_mobile_no" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                        <div style={{marginLeft:"5px", width:"40%"}}>
+                            <label>Email Address</label>
+                            <InputComponent name="app_email_addr" onChange={ e => {setDataInput(e)}}/>
+                        </div>
+                    </div><br/><br/>
+                    
+                    {/* 
+                        //==========================================
+                        // CAPTCHA INFORMATION SECTION
+                        //==========================================
+                    */}
+                    <div className="pds-prof-class-two">
+                        <div>
+                            <ReCAPTCHA
+                                // ref={recaptchaResetRef}
+                                sitekey="6LdIujEcAAAAAJRdTNTP0jkmHt60fVZMlj7Fn7nT"
+                                onChange={()=>setVerifyCaptcha(true)}
+                                onExpired={()=>setVerifyCaptcha(false)}
+                                onErrored={()=>setVerifyCaptcha(false)}
+                            />
+                        </div>
+                        <div>
+                            <ButtonComponent buttonName="Submit"/>
+                        </div>
+                    </div>
+
+                </form><br/><br/>
+            </div>
+            
 
         </React.Fragment>
     );

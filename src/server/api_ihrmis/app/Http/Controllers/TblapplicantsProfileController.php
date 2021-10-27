@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Applicants\TblapplicantChildren;
 use App\Models\Applicants\TblapplicantsFamily;
-use Illuminate\Support\Str;
+use App\Models\Second\SecApplicantChildren;
+use App\Models\Second\SecApplicantFamily;
 use App\Models\Second\SecApplicantProfile;
 use App\Models\Second\SecApplicantVerification;
 use Illuminate\Http\Request;
@@ -176,42 +177,64 @@ class TblapplicantsProfileController extends Controller
     public function createFamilyChildren($id, Request $request)
     {
         
-        $familyApplicant = TblapplicantsFamily::create([
-            'app_id' => $id, 
-            'app_sps_nm_last' => $request->app_sps_nm_last,
-            'app_sps_nm_first' => $request->app_sps_nm_first,
-            'app_sps_nm_mid' => $request->app_sps_nm_mid,
-            'app_sps_nm_extn' => $request->app_sps_nm_extn ?? 'NA',
-            'app_sps_occupation' => $request->app_sps_occupation,
-            'app_sps_bus_name' => $request->app_sps_bus_name,
-            'app_sps_bus_addr' => $request->app_sps_bus_addr,
-            'app_sps_tel_no' => $request->app_sps_tel_no,
+        $request->validate([
+            'app_sps_nm_last' => 'required',
+            'app_sps_nm_first' => 'required',
+            'app_sps_nm_mid' => 'required',
+            'app_sps_occupation' => 'required',
+            'app_sps_bus_name' => 'required',
+            'app_sps_bus_addr' => 'required',
+            'app_sps_tel_no' => 'required',
+
+            'app_fthr_nm_last' => 'required',
+            'app_fthr_nm_first' => 'required',
+            'app_fthr_nm_mid'  => 'required',
     
-            'app_fthr_nm_last' => $request->app_fthr_nm_last,
-            'app_fthr_nm_first' => $request->app_fthr_nm_first,
-            'app_fthr_nm_mid' => $request->app_fthr_nm_mid,
-            'app_fthr_nm_extn' => $request->app_fthr_nm_extn ?? 'NA',
-    
-            'app_mthr_nm_last' => $request->app_mthr_nm_last,
-            'app_mthr_nm_first' => $request->app_mthr_nm_first,
-            'app_mthr_nm_mid' => $request->app_mthr_nm_mid,
-            'app_mthr_nm_extn' => $request->app_mthr_nm_extn ?? 'NA',
+            'app_mthr_nm_last' => 'required',
+            'app_mthr_nm_first' => 'required',
+            'app_mthr_nm_mid' => 'required',
         ]);
 
+        $familyApplicant = SecApplicantFamily::findOrNew($id);
+        
+        $familyApplicant->app_id = $id; 
+        $familyApplicant->app_sps_nm_last = $request->app_sps_nm_last;
+        $familyApplicant->app_sps_nm_first = $request->app_sps_nm_first;
+        $familyApplicant->app_sps_nm_mid = $request->app_sps_nm_mid;
+        $familyApplicant->app_sps_nm_extn = $request->app_sps_nm_extn ?? 'NA';
+        $familyApplicant->app_sps_occupation = $request->app_sps_occupation;
+        $familyApplicant->app_sps_bus_name = $request->app_sps_bus_name;
+        $familyApplicant->app_sps_bus_addr = $request->app_sps_bus_addr;
+        $familyApplicant->app_sps_tel_no = $request->app_sps_tel_no;
+
+        $familyApplicant->app_fthr_nm_last = $request->app_fthr_nm_last;
+        $familyApplicant->app_fthr_nm_first = $request->app_fthr_nm_first;
+        $familyApplicant->app_fthr_nm_mid = $request->app_fthr_nm_mid;
+        $familyApplicant->app_fthr_nm_extn = $request->app_fthr_nm_extn ?? 'NA';
+
+        $familyApplicant->app_mthr_nm_last = $request->app_mthr_nm_last;
+        $familyApplicant->app_mthr_nm_first = $request->app_mthr_nm_first;
+        $familyApplicant->app_mthr_nm_mid = $request->app_mthr_nm_mid;
+        $familyApplicant->app_mthr_nm_extn = $request->app_mthr_nm_extn ?? 'NA';
+
         if(isset($request->children)){
-            
+            SecApplicantChildren::destroy($id);
+        
             foreach ($request->children as $value) {
-                $children = new TblapplicantChildren();
+                $children = new SecApplicantChildren();
                 $children->chi_app_id = $id;
-                $children->chi_app_name = $value['chi_app_name'];
-                $children->chi_app_birthdate = date($value['chi_app_birthdate']);
+                $children->chi_app_name = $value['name'];
+                $children->chi_app_birthdate = date($value['birthday']);
                 $children->save();
             }
 
-            $familyApplicant->save();
+            
         }
 
+        $familyApplicant->save();
+
         return response()->json([
+            'item' => $id,
             'status' => 200,
             'message' => "Added Successfully",
         ]);
@@ -224,10 +247,8 @@ class TblapplicantsProfileController extends Controller
 
         if($verify != null){
             if($verify->token == $request->token){
-                $setAsVerified = SecApplicantProfile::where('app_id', $request->applicant)->first();
+                $setAsVerified = SecApplicantProfile::where('app_id', $request->applicant)->update(["is_verified" => 1]);
                 // where('app_id', $request->applicant)->first(find($request->applicant)
-                $setAsVerified->where('app_id', $request->applicant)->is_verified = 1;
-                $setAsVerified->save();
                 $verify->where('id_sec_applicant', $request->applicant)->delete();
                 return redirect()->away(env('FRONTEND_APPLICANT_REDIRECT_URL') . $request->applicant);
             }

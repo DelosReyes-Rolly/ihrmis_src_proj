@@ -17,6 +17,6 @@ export const useFormService = () => {
         });
     }
 
-    return [formData, formSingleInput, formObjectInput];
+    return [formData, formSingleInput, formObjectInput, formDataSetter];
 }
  

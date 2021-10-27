@@ -8,7 +8,9 @@ import { useToggleService } from '../../../../../../../services/toggle_service';
 const FormPageThree = (props) => {
     return (
         <React.Fragment>
-            <div>
+            <br/><br/>
+            <div className="pds-profile-main-view">
+            
                 <TableOne />
                 <br/><br/>
                 <TableTwo />
