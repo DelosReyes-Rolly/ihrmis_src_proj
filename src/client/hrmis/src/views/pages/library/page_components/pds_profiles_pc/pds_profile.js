@@ -13,25 +13,10 @@ import { setBusy } from '../../../../../features/reducers/loading_slice.js';
 
 
 const PdsProfilePageComponentView = (props) => {
-    //STATES HOOK
-    const [formState, setformState] = useState(1);
-    let dispatch = useDispatch();
-    let [delayLit] = useDelayService();
-
-    //METHODS
-    const nextFormState = () =>{
-        if(formState >= 6) return;
-        setformState(formState + 1);
-    }
-
-    const previusFormState = () =>{
-        if(formState <= 1) return;
-        setformState(formState - 1);
-    }
-
+    
     return (
         <div className="pds-profile-main-view">
-            <FormPageOne />
+            {/* <FormPageOne /> */}
         </div>     
     );
 }

@@ -5,18 +5,17 @@ namespace App\Models\Second;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SecApplicantVerification extends Model
+class SecApplicantChildren extends Model
 {
     use HasFactory;
-
     public $connection="mysql2";
-    protected $table = 'sec_applicants_verification';
-    protected $primary = 'id_sec_applicant';
+    protected $table = 'sec_applicants_children';
+    protected $primaryKey = 'chi_app_id';
     protected $fillable = [
-        'id_sec_applicant',
-        'token'
+        'chi_app_id',
+        'chi_app_name',
+        'chi_app_birthdate',
     ];
-
     public $timestamps = false;
-
 }
+

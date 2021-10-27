@@ -10,55 +10,90 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setBusy } from "../../../../../features/reducers/loading_slice";
 import ValidationComponent from "../../../../common/response_component/validation_component/validation_component";
+import { useDelayService } from "../../../../../services/delay_service";
 
 
 const AddPlantillaItemModal = (props) => {
-    //HANDLING ERROR RESPONSE
+    // ==========================================
+    // ERROR HANDLING
+    // ==========================================
     const [serverErrorResponse, setServerErrorResponse] = useState();
+    const [failed, succeed] = useDelayService();
 
-    const [officePositionState, setOfficePositionState] = useState();
-
-    const [dataToSubmit, setDataToSubmit, setHidden] = useFormService();
+    // ==========================================
+    // CUSTOM HOOKS
+    // ==========================================
+    const [dataToSubmit, setDataToSubmit, setHidden, setter] = useFormService();
     
-    //SUBMIT HANDLER
+    // ==========================================
+    // REDUX STATE MANAGEMENT
+    // ==========================================
     const dispatch = useDispatch();
 
+
+    // ==========================================
+    // SUBMIT HANDLER
+    // ==========================================
     const submitHandler = async (e) => {
         
         console.log('was pressed');
-        setHidden('itm_regular', props.regularValue ?? 1)
         e.preventDefault();
         dispatch(setBusy(true));
         await axios.post(API_HOST + '/plantilla-items', dataToSubmit)
-            .then(() => {
+            .then((response) => {
                 setServerErrorResponse(null);
-                e.target.reset();
+                e.target.reset(); setter(null);
+                succeed();
             }).catch(error => {
         
                 if(error.response){
                     if(error.response.status === 422){
                         setServerErrorResponse(Object.values(error.response.data.errors));
+                        failed();
                         setTimeout(()=>{
                             setServerErrorResponse(null);
                         }, 10000); 
 
                     } else if(error.response.status === 404){
                         console.log('404 Page Not Found');
+                        setServerErrorResponse(['404 Page Not Found']);
+                        setTimeout(()=>{
+                            setServerErrorResponse(null);
+                        }, 10000); 
+                        failed();
                     } else if(error.response.status === 500){
                         console.log('500 API Internal Error!');
+                        setServerErrorResponse([`500 ${error.response.data.message}`]);
+                        setTimeout(()=>{
+                            setServerErrorResponse(null);
+                        }, 10000); 
                     }
                     
                 } else if (error.request){
                     console.log('No response from server');
+                    setServerErrorResponse([`Please check your network connectivity`]);
+                    setTimeout(()=>{
+                        setServerErrorResponse(null);
+                    }, 10000); 
+                    failed();
                 } else {
                     console.log('Oops! Something went wrong');
+                    setServerErrorResponse(['Oops! Something went wrong']);
+                    setTimeout(()=>{
+                        setServerErrorResponse(null);
+                    }, 10000); 
                 }
 
             });
             dispatch(setBusy(false));
     };
 
-    //GETTING POSITION AND OFFICE VALUE
+
+    // ==========================================
+    // GETTING POSITION AND OFFICE VALUE
+    // ==========================================
+    const [officePositionState, setOfficePositionState] = useState();
+
     const getPositionAndOffice = () => {
         axios.get(API_HOST + '/office-position').then(response => {
             setOfficePositionState(response.data.data);
@@ -85,7 +120,7 @@ const AddPlantillaItemModal = (props) => {
 
     useEffect(()=>{
         getPositionAndOffice();
-
+        setHidden('itm_regular', props.regularValue);
     },[]);
 
     return (
@@ -101,9 +136,6 @@ const AddPlantillaItemModal = (props) => {
             >   
                 {serverErrorResponse && 
                     <ValidationComponent title="FAILED TO SUBMIT">   
-                        {/* {serverErrorResponse.itm_no && <p>- {serverErrorResponse.itm_no}</p>}
-                        {serverErrorResponse.itm_function && <p>- {serverErrorResponse.itm_function}</p>} */}
-
                         {
                             serverErrorResponse.map((item, key)=>{
                                 return <p key={key}>- {item}</p>
