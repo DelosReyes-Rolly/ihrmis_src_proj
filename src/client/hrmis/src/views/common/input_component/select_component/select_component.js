@@ -26,9 +26,7 @@ const SelectComponent = (props) => {
                             >{item.title}
                         </option>
                     }
-
             })}
-            
         </select>
     );
 }

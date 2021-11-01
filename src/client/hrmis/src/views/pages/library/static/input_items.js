@@ -99,3 +99,29 @@ export const formOneInput =
             }
        ]
    }
+
+
+export const formThreeInput = {
+    "add_educ_level": [
+        {
+            id: '0',
+            title: 'N/A'
+        },
+        {
+            id: '1',
+            title: 'Elementary'
+        },
+        {
+            id: '2',
+            title: 'Vocational'
+        },
+        {
+            id: '3',
+            title: 'College'
+        },
+        {
+            id: '4',
+            title: 'Graduate Studies'
+        },
+    ]
+} 

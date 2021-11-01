@@ -2004,6 +2004,12 @@ input:checked + .slider:before {
   }
 }
 
+.tr-education-record:hover {
+  -webkit-transition: .3s;
+  transition: .3s;
+  background-color: #e2e2e2;
+}
+
 .add-educ-modal-container {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2014,8 +2020,32 @@ input:checked + .slider:before {
           flex-direction: column;
 }
 
-.add-educ-modal-container .first-level-div {
+.add-educ-modal-container .first-type-div {
   margin-bottom: 10px;
+}
+
+.add-educ-modal-container .second-type-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.add-educ-modal-container .second-type-div .from, .add-educ-modal-container .second-type-div .yearend {
+  width: 50%;
+  margin-right: 5px;
+}
+
+.add-educ-modal-container .second-type-div .to, .add-educ-modal-container .second-type-div .highest {
+  width: 50%;
+  margin-left: 5px;
+}
+
+.add-csc-modal-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2025,11 +2055,57 @@ input:checked + .slider:before {
           flex-direction: column;
 }
 
-.add-educ-modal-container .first-level-div .second-level-div {
+.add-csc-modal-container .first-type-div {
   margin-bottom: 10px;
 }
 
-.add-educ-modal-container .first-level-div .year-from-to {
+.add-csc-modal-container .second-type-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 10px;
+}
+
+.add-csc-modal-container .second-type-div .rating {
+  margin-right: 5px;
+}
+
+.add-csc-modal-container .second-type-div .examination-date {
+  margin-left: 5px;
+}
+
+.add-csc-modal-container .second-type-div .license-number {
+  margin-right: 5px;
+  width: 60%;
+}
+
+.add-csc-modal-container .second-type-div .validity {
+  margin-left: 5px;
+  width: 40%;
+}
+
+.add-workexp-modal-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.add-workexp-modal-container .first-type-div {
+  margin-bottom: 10px;
+}
+
+.add-workexp-modal-container .second-type-div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2040,15 +2116,61 @@ input:checked + .slider:before {
   margin-bottom: 10px;
 }
 
-.add-educ-modal-container .first-level-div .year-from-to .from {
-  margin-right: 5px;
+.add-workexp-modal-container .second-type-div div {
+  width: 50%;
 }
 
-.add-educ-modal-container .first-level-div .year-from-to .to {
-  margin-left: 5px;
+.add-workexp-modal-container .second-type-div .status {
+  margin: 0px 5px 0px 0px;
 }
 
-.add-educ-modal-container .first-level-div .year-graduated {
+.add-workexp-modal-container .second-type-div .service {
+  margin: 0px 0px 0px 5px;
+}
+
+.add-workexp-modal-container .third-type-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.add-workexp-modal-container .third-type-div .salary {
+  width: 50%;
+  margin: 0px 5px 0px 0px;
+}
+
+.add-workexp-modal-container .third-type-div .grade, .add-workexp-modal-container .third-type-div .increment {
+  width: 25%;
+  margin: 0px 5px 0px 5px;
+}
+
+.add-workexp-modal-container .third-type-div .increment {
+  margin: 0px 0px 0px 5px;
+}
+
+.add-volwork-modal-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.add-volwork-modal-container .first-type-div {
+  margin-bottom: 10px;
+}
+
+.add-volwork-modal-container .second-type-div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2059,12 +2181,140 @@ input:checked + .slider:before {
   margin-bottom: 10px;
 }
 
-.add-educ-modal-container .first-level-div .year-graduated .yearend {
+.add-volwork-modal-container .second-type-div .from, .add-volwork-modal-container .second-type-div .position {
+  width: 50%;
   margin-right: 5px;
 }
 
-.add-educ-modal-container .first-level-div .year-graduated .highest {
+.add-volwork-modal-container .second-type-div .to, .add-volwork-modal-container .second-type-div .hours {
+  width: 50%;
   margin-left: 5px;
+}
+
+.add-intervention-modal-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.add-intervention-modal-container .first-type-div {
+  margin-bottom: 10px;
+}
+
+.add-intervention-modal-container .second-type-div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.add-intervention-modal-container .second-type-div .from, .add-intervention-modal-container .second-type-div .type {
+  width: 50%;
+  margin-right: 5px;
+}
+
+.add-intervention-modal-container .second-type-div .to, .add-intervention-modal-container .second-type-div .hours {
+  width: 50%;
+  margin-left: 5px;
+}
+
+@media only screen and (max-width: 800px) {
+  .add-educ-modal-container .second-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0;
+  }
+  .add-educ-modal-container .second-type-div .from, .add-educ-modal-container .second-type-div .to, .add-educ-modal-container .second-type-div .yearend, .add-educ-modal-container .second-type-div .highest {
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+  }
+  .add-csc-modal-container .second-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .add-csc-modal-container .second-type-div .rating, .add-csc-modal-container .second-type-div .examination-date, .add-csc-modal-container .second-type-div .license-number, .add-csc-modal-container .second-type-div .validity {
+    margin: 0px 0px 10px 0px;
+    width: 100%;
+  }
+  .add-csc-modal-container .second-type-div .examination-date {
+    margin: 0px;
+  }
+  .add-workexp-modal-container {
+    margin: 0px 0px 0px 0px;
+  }
+  .add-workexp-modal-container .second-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0px 0px 0px 0px;
+  }
+  .add-workexp-modal-container .second-type-div .status, .add-workexp-modal-container .second-type-div .service {
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+  }
+  .add-workexp-modal-container .third-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .add-workexp-modal-container .third-type-div .salary, .add-workexp-modal-container .third-type-div .grade, .add-workexp-modal-container .third-type-div .increment {
+    width: 100%;
+    margin: 0px 0px 10px 5px;
+  }
+  .add-volwork-modal-container .second-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0;
+  }
+  .add-volwork-modal-container .second-type-div .from, .add-volwork-modal-container .second-type-div .to, .add-volwork-modal-container .second-type-div .position, .add-volwork-modal-container .second-type-div .hours {
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+  }
+  .add-intervention-modal-container .second-type-div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    margin: 0;
+  }
+  .add-intervention-modal-container .second-type-div .from, .add-intervention-modal-container .second-type-div .to, .add-intervention-modal-container .second-type-div .type, .add-intervention-modal-container .second-type-div .hours {
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+  }
 }
 
 @use '../../../../../helpers/sass/defaults/_default_colors.scss' as *;
