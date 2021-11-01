@@ -34,14 +34,15 @@ const ModalComponent = (props) => {
                                 type="button"
                                 bgColor="rgb(230, 230, 230)"
                                 border="1px solid rgba(70, 70, 70, 0.8)"
-                                onClick={props.onClose}
+                                onClick={props.onPressed != null ? props.onPressed : props.onClose}
                                 buttonName={props.onCloseName}/>
 
                         </div>
                         <div className="margin-left-1">
                             <ButtonComponent 
                                 type={props.onSubmitType}
-                                buttonName={props.onSubmitName}/>
+                                buttonName={props.onSubmitName}
+                                />
                         </div>
                     </div>
                 </form>

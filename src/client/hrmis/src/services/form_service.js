@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export const useFormService = () => {
-    const [formData, formDataSetter] = useState({});
+export const useFormService = (initial = {}) => {
+    const [formData, formDataSetter] = useState(initial);
 
     const formSingleInput = (e) => {
         formDataSetter({
