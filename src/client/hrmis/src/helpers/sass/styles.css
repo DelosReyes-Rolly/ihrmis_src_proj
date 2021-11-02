@@ -2075,10 +2075,12 @@ input:checked + .slider:before {
 
 .add-csc-modal-container .second-type-div .rating {
   margin-right: 5px;
+  width: 50%;
 }
 
 .add-csc-modal-container .second-type-div .examination-date {
   margin-left: 5px;
+  width: 50%;
 }
 
 .add-csc-modal-container .second-type-div .license-number {

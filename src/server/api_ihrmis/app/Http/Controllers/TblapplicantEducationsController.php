@@ -29,7 +29,7 @@ class TblapplicantEducationsController extends Controller
         ]);
 
         if(isset($request->item)){
-            $updateEducation = SecApplicantEducation::where('edu_app_idref',$request->item)->update([
+            SecApplicantEducation::where('edu_app_idref',$request->item)->update([
                 'edu_app_idref' => $request->item,
                 'edu_app_id' => $id,
                 'edu_app_level' => $request->edu_app_level,
@@ -60,14 +60,6 @@ class TblapplicantEducationsController extends Controller
             'item' => $id,
             'status' => 200,
             'message' => "Added Successfully",
-        ]);
-    }
-
-    public function update($id)
-    {
-        return response()->json([
-            'status' => 200,
-            'message' => "Updated Successfully",
         ]);
     }
 

@@ -44,62 +44,80 @@ const TableOne = () => {
     // ===========================================
     const [failed, succeed] = useDelayService();
     let [showData, setShowData] = useToggleService(false);
-    
-    let [ render ,setRender ] = useToggleService(); // For rendering whenever recieve an update
-    let [ toogleAddModal, setToogleAddModal ] = useToggleService(false); // toogle for popping up modals
-    let [ toogleUpdateModal, setToogleUpdateModal ] = useToggleService(false); // toogle for popping up modals
-    
-    const [educationRecord, setEducationRecord] = useState([]);
-    const [state, setstate] = useState(null);
-    
+
+    // ===========================================
+    // REACT ROUTER FUNCTIONALITY
+    // ===========================================
     const { item } = useParams();
 
-    const getEducationRecord = async () => {
+    // ===========================================
+    // REDUX TOOLKIT FUNCTIONALITY
+    // ===========================================
+    const dispatch = useDispatch();
 
+    // ===========================================
+    // GET ALL EDUCATION RECORD HTTP REQUEST
+    // ===========================================
+    const [educationRecord, setEducationRecord] = useState([]);
+    const getEducationRecord = async () => {
         await axios.get(API_HOST + `/new-education/${item}`).then((response) => {
-            // console.log(response.data.data);
             setEducationRecord(response.data.data)
         }).catch(error => {
             console.log(error);
         })
     }
 
-    const dispatch = useDispatch();
-
+    // ===========================================
+    // REMOVE EDUCATION RECORD HTTP REQUEST
+    // ===========================================
+    const [dataContainer, setDataContainer] = useState(null);
     const removeEducationRecord = async (record) => {
         dispatch(setBusy(true));
         await axios.delete(API_HOST + `/new-education/${record}`).then(response => {
             console.log(response);
             succeed();
         });
-        setRender();
         dispatch(setBusy(false));
+    }
+
+    // ===========================================
+    // FOR EDUCATION RENDER AND TOOGLE UPDATE hANDLER
+    // ===========================================
+    let [ toogle, setToggle] = useState(
+        {
+            "addModal": false,
+            "updateModal": false,
+        }
+    );
+
+    const toggleSetter = (name) => {
+        setToggle({ ...toogle, [name]: !toogle[name]});
     }
 
     useEffect(() => {
         getEducationRecord();
-    }, [toogleAddModal, render, toogleUpdateModal])
+    }, [toogle])
     
     return (
         <React.Fragment>
             
             <ThreeAddEducationModal 
-                isDisplay={ toogleAddModal } 
+                isDisplay={ toogle.addModal } 
                 onClose={ () => {
-                    setToogleAddModal(!toogleAddModal)
+                    toggleSetter("addModal");
                 } }
             />
 
             <ThreeAddEducationModal 
-                isDisplay={ toogleUpdateModal } 
+                isDisplay={ toogle.updateModal } 
                 onPressed ={ () => {
-                    removeEducationRecord(state.item);
-                    setToogleUpdateModal(!toogleUpdateModal);
+                    removeEducationRecord(dataContainer.item);
+                    toggleSetter("updateModal");
                 } }
                 onClose={ () => {
-                    setToogleUpdateModal(!toogleUpdateModal);
+                    toggleSetter("updateModal");
                 } }
-                data = { state }
+                data = { dataContainer }
             />
             
             <div className="scrollable-div-table" >
@@ -138,12 +156,12 @@ const TableOne = () => {
                     </thead>
                     {showData && 
                         <React.Fragment>
-                            {educationRecord.map((item, key)=> {
+                            {educationRecord == null ? null : educationRecord.map((item, key)=> {
                                 return (
                                     <React.Fragment key={key} >
                                         <tbody>
                                             
-                                            <tr className="tr-education-record" onClick={ () => {   setstate(item); setToogleUpdateModal(!toogleUpdateModal);   }}>
+                                            <tr className="tr-education-record" onClick={ () => {   setDataContainer(item); toggleSetter("updateModal");   }}>
                                                 <td colSpan="5" style={{textAlign:"center"}}>
                                                     {item.school}
                                                 </td>
@@ -170,7 +188,7 @@ const TableOne = () => {
                 </table>
             </div>
             <div style={{marginTop:'10px'}}>
-                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={()=>{setToogleAddModal(!toogleAddModal)}}/>
+                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={()=>{toggleSetter("addModal")}}/>
             </div>
 
         </React.Fragment>
@@ -178,14 +196,84 @@ const TableOne = () => {
 }
 
 const TableTwo = () => {
+ 
+    // ===========================================
+    // CUSTOM HOOK SERVICE
+    // ===========================================
+    const [failed, succeed] = useDelayService();
     let [showData, setShowData] = useToggleService(false);
-    let [toogleAddData, setToogleAddData] = useToggleService(false);
+
+    // ===========================================
+    // REACT ROUTER FUNCTIONALITY
+    // ===========================================
+    const { item } = useParams();
+
+    // ===========================================
+    // REDUX TOOLKIT FUNCTIONALITY
+    // ===========================================
+    const dispatch = useDispatch();
+
+    // ===========================================
+    // GET ALL EDUCATION RECORD HTTP REQUEST
+    // ===========================================
+    const [cselibilityRecord, setCselibilityRecord] = useState([]);
+    const getCseligibilityRecord = async () => {
+        await axios.get(API_HOST + `/new-csc-eleigibility/3` ).then((response) => {
+            setCselibilityRecord(response.data.data)
+            console.log(response.data.data)
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    // ===========================================
+    // REMOVE EDUCATION RECORD HTTP REQUEST
+    // ===========================================
+    const [dataContainer, setDataContainer] = useState(null);
+    const removeCseligibilityRecord = async (record) => {
+        dispatch(setBusy(true));
+        await axios.delete(API_HOST + `/new-csc-eleigibility/${record}`).then(response => {
+            console.log(response);
+            succeed();
+        });
+        dispatch(setBusy(false));
+    }
+
+    // ===========================================
+    // FOR EDUCATION RENDER AND TOOGLE UPDATE hANDLER
+    // ===========================================
+    let [ toogle, setToggle] = useState(
+        {
+            "addModal": false,
+            "updateModal": false,
+        }
+    );
+
+    const toggleSetter = (name) => {
+        setToggle({ ...toogle, [name]: !toogle[name]});
+    }
+
+    useEffect(() => {
+        getCseligibilityRecord();
+    }, [toogle])
 
     return (
         <React.Fragment>
             <ThreeAddCivilServiceModal 
-                isDisplay={ toogleAddData } 
-                onClose={ () => setToogleAddData(!toogleAddData) }
+                isDisplay={ toogle.addModal } 
+                onClose={ () => toggleSetter("addModal") }
+            />
+
+            <ThreeAddCivilServiceModal 
+                isDisplay={ toogle.updateModal }
+                onPressed={ 
+                    () => {
+                        removeCseligibilityRecord(dataContainer.cse_app_time)
+                        toggleSetter("updateModal"); 
+                    }
+                }
+                onClose={ () => toggleSetter("updateModal") }
+                data={ dataContainer }
             />
             <div className="scrollable-div-table" >
                 <table id="custom-table">
@@ -224,39 +312,42 @@ const TableTwo = () => {
                             </th>
                         </tr>
                     </thead>
+                
                     {showData && 
-                        <tbody>
-                            {/* {educationalBackgroundData.map((item, key)=> {
-                                return (
-                                    <tr key={key}>
-                                        <td colSpan="4" style={{textAlign:"center"}}>
-                                            {item.school}
-                                        </td>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.school}
-                                        </td>
-                                        <td colSpan="4" style={{textAlign:"center"}}>
-                                            {item.level}
-                                        </td>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.year.from}
-                                        </td>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.year.to}
-                                        </td>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.unitEarned}
-                                        </td>
-                                    </tr>
-                                );
-                            })} */}
-                            
-                        </tbody>
+                        
+                            <React.Fragment>
+                                {cselibilityRecord == null ? "" : cselibilityRecord.map((item, key)=> {
+                                    return (
+                                        <tbody className="tr-education-record" onClick={() => { setDataContainer(item); toggleSetter("updateModal")} } key={key}>
+                                            <tr >
+                                                <td colSpan="4" style={{textAlign:"center"}}>
+                                                    {item.cse_app_title}
+                                                </td>
+                                                <td colSpan="1" style={{textAlign:"center"}}>
+                                                    {item.cse_app_rating}
+                                                </td>
+                                                <td colSpan="4" style={{textAlign:"center"}}>
+                                                    {item.cse_app_place}
+                                                </td>
+                                                <td colSpan="1" style={{textAlign:"center"}}>
+                                                    {item.cse_app_date}
+                                                </td>
+                                                <td colSpan="1" style={{textAlign:"center"}}>
+                                                    {item.cse_app_license}
+                                                </td>
+                                                <td colSpan="1" style={{textAlign:"center"}}>
+                                                    {item.cse_app_validity}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    );
+                                })}
+                            </React.Fragment>
                     }
                 </table>
             </div>
             <div style={{marginTop:'10px'}}>
-                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={ () => { setToogleAddData(!toogleAddData)}}/>
+                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={ () => { toggleSetter("addModal")}}/>
             </div>
             
 

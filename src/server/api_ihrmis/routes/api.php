@@ -38,10 +38,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('new-applicant', [TblapplicantsProfileController::class, "createApplicant"]);
 Route::post('new-afc/{id}', [TblapplicantsProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantsProfileController::class, "verifyEmail"]);
-//app-educ
+//add-educ
 Route::post('new-education/{id}', [TblapplicantEducationsController::class, "addEducationRecord"]);
 Route::get('new-education/{id}', [TblapplicantEducationsController::class, "getEducationRecord"]);
 Route::delete('new-education/{id}', [TblapplicantEducationsController::class, "removeEducationRecord"]);
+//add-csc
+Route::get('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "getCseligibilityRecord"]);
+Route::post('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
+Route::delete('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "removeCseligibilityRecord"]);
 // Route::resource('new-training/{id}', TblapplicantTrainingsController::class);
 // Route::resource('new-vol-work/{id}', TblapplicantVoluntaryWorkController::class);
 // Route::resource('new-experiences/{id}', TblapplicantExperiencesController::class);
