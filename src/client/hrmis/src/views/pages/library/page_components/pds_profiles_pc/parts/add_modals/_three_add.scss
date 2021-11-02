@@ -68,10 +68,10 @@
             width: 50%;
             
         }
-        .status{
+        .from, .status{
             margin: 0px 5px 0px 0px;
         }
-        .service{
+        .to, .service{
             margin: 0px 0px 0px 5px;
         }
     }
@@ -169,7 +169,7 @@
         .second-type-div{
             @include containerFlexRow(false);
             margin: 0px 0px 0px 0px;
-            .status, .service{
+            .from, .to, .status, .service{
                 width: 100%;
                 margin: 0px 0px 10px 0px;
             }

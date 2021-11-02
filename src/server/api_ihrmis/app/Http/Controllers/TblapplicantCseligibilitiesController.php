@@ -12,8 +12,8 @@ class TblapplicantCseligibilitiesController extends Controller
    
     public function getCseligibilityRecord($id)
     {   
-        $education = SecApplicantCscEligibility::where('cse_app_id', $id)->get();
-        return ApplicantCseligibilityResource::collection($education);
+        $cseLigibility = SecApplicantCscEligibility::where('cse_app_id', $id)->get();
+        return ApplicantCseligibilityResource::collection($cseLigibility);
     }
     
     public function addCseligibilityRecord($id, Request $request)

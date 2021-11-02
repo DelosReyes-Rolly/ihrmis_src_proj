@@ -2122,11 +2122,11 @@ input:checked + .slider:before {
   width: 50%;
 }
 
-.add-workexp-modal-container .second-type-div .status {
+.add-workexp-modal-container .second-type-div .from, .add-workexp-modal-container .second-type-div .status {
   margin: 0px 5px 0px 0px;
 }
 
-.add-workexp-modal-container .second-type-div .service {
+.add-workexp-modal-container .second-type-div .to, .add-workexp-modal-container .second-type-div .service {
   margin: 0px 0px 0px 5px;
 }
 
@@ -2272,7 +2272,7 @@ input:checked + .slider:before {
             flex-direction: column;
     margin: 0px 0px 0px 0px;
   }
-  .add-workexp-modal-container .second-type-div .status, .add-workexp-modal-container .second-type-div .service {
+  .add-workexp-modal-container .second-type-div .from, .add-workexp-modal-container .second-type-div .to, .add-workexp-modal-container .second-type-div .status, .add-workexp-modal-container .second-type-div .service {
     width: 100%;
     margin: 0px 0px 10px 0px;
   }

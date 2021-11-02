@@ -218,7 +218,7 @@ const TableTwo = () => {
     // ===========================================
     const [cselibilityRecord, setCselibilityRecord] = useState([]);
     const getCseligibilityRecord = async () => {
-        await axios.get(API_HOST + `/new-csc-eleigibility/3` ).then((response) => {
+        await axios.get(API_HOST + `/new-csc-eleigibility/${ item }` ).then((response) => {
             setCselibilityRecord(response.data.data)
             console.log(response.data.data)
         }).catch(error => {
@@ -255,7 +255,7 @@ const TableTwo = () => {
 
     useEffect(() => {
         getCseligibilityRecord();
-    }, [toogle])
+    }, [toogle]);
 
     return (
         <React.Fragment>
@@ -357,13 +357,81 @@ const TableTwo = () => {
 }
 
 const TableThree = () => {
+     // ===========================================
+    // CUSTOM HOOK SERVICE
+    // ===========================================
+    const [failed, succeed] = useDelayService();
     let [showData, setShowData] = useToggleService(false);
-    let [toogleAddData, setToogleAddData] = useToggleService(false);
+
+    // ===========================================
+    // REACT ROUTER FUNCTIONALITY
+    // ===========================================
+    const { item } = useParams();
+
+    // ===========================================
+    // REDUX TOOLKIT FUNCTIONALITY
+    // ===========================================
+    const dispatch = useDispatch();
+
+    // ===========================================
+    // GET ALL WORK RECORD HTTP REQUEST
+    // ===========================================
+    const [workExperienceRecord, setWorkExperienceRecord] = useState([]);
+    const getWorkExperienceRecord = async () => {
+        await axios.get(API_HOST + `/new-work-experience/${ item }` ).then((response) => {
+            setWorkExperienceRecord(response.data.data)
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    // ===========================================
+    // REMOVE WORK RECORD HTTP REQUEST
+    // ===========================================
+    const [dataContainer, setDataContainer] = useState(null);
+    const removeWorkExpRecord = async (record) => {
+        dispatch(setBusy(true));
+        console.log("Hello Pressed");
+        await axios.delete(API_HOST + `/new-work-experience/${record}`).then(response => {
+            console.log(response);
+            succeed();
+        });
+        dispatch(setBusy(false));
+    }
+
+    // ===========================================
+    // FOR WORK RENDER AND TOOGLE UPDATE hANDLER
+    // ===========================================
+    let [ toogle, setToggle] = useState({
+        "addModal": false,
+        "updateModal": false,
+    });
+
+    const toggleSetter = (name) => {
+        setToggle({ ...toogle, [name]: !toogle[name]});
+    }
+
+    useEffect(() => {
+        getWorkExperienceRecord();
+    }, [toogle])
+
     return (
         <React.Fragment>
             <ThreeAddWorkExperienceModal 
-                isDisplay={ toogleAddData } 
-                onClose={ () => setToogleAddData(!toogleAddData) }
+                isDisplay={ toogle.addModal } 
+                onClose={ () => toggleSetter("addModal") }
+            />
+
+            <ThreeAddWorkExperienceModal 
+                isDisplay={ toogle.updateModal } 
+                onPressed={ 
+                    () => {
+                        removeWorkExpRecord(dataContainer.exp_app_time)
+                        toggleSetter("updateModal"); 
+                    }
+                }
+                onClose={ () => toggleSetter("updateModal") }
+                data={ dataContainer }
             />
             <div className="scrollable-div-table" >
                 <table id="custom-table">
@@ -399,38 +467,42 @@ const TableThree = () => {
                         </tr> 
                     </thead>
                     {showData && 
-                        <tbody>
-                            {/* {educationalBackgroundData.map((item, key)=> {
+                        <React.Fragment>
+                            { workExperienceRecord == null ? null : workExperienceRecord.map((item, key)=> {
                                 return (
-                                    <tr key={key}>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.school}
-                                        </td>
-                                        <td colSpan="3" style={{textAlign:"center"}}>
-                                            {item.school}
-                                        </td>
-                                        <td colSpan="3" style={{textAlign:"center"}}>
-                                            {item.school}
-                                        </td>
-                                        <td colSpan="2" style={{textAlign:"center"}}>
-                                            {item.level}
-                                        </td>
-                                        <td colSpan="2" style={{textAlign:"center"}}>
-                                            {item.year.from}
-                                        </td>
-                                        <td colSpan="1" style={{textAlign:"center"}}>
-                                            {item.year.to}
-                                        </td>
-                                    </tr>
+                                    <tbody key={key} className="tr-education-record" onClick={ () => {   setDataContainer(item); console.log(dataContainer); toggleSetter("updateModal");}} >
+                                        <tr>
+                                            <td colSpan="1" style={{textAlign:"center"}}>
+                                                { item.enclusive }
+                                            </td>
+                                            <td colSpan="3" style={{textAlign:"center"}}>
+                                                { item.exp_app_position }
+                                            </td>
+                                            <td colSpan="3" style={{textAlign:"center"}}>
+                                                { item.exp_app_agency }
+                                            </td>
+                                            <td colSpan="2" style={{textAlign:"center"}}>
+                                                { item.exp_app_salary }
+                                            </td>
+                                            <td colSpan="2" style={{textAlign:"center"}}>
+                                                { item.exp_app_appntmnt }
+                                            </td>
+                                            <td colSpan="1" style={{textAlign:"center"}}>
+                                                { item.exp_app_govt }
+                                            </td>
+                                        </tr>
+                                    </tbody>
                                 );
-                            })} */}
-                            
-                        </tbody>
+                            })}
+                        </React.Fragment>  
                     }
+                            
+                            
+              
                 </table>
             </div>
             <div style={{marginTop:'10px'}}>
-                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={ ()=>{setToogleAddData(!toogleAddData)}}/>
+                <ButtonComponent buttonLogoStart={<MdAdd size="14px"/>} buttonName="Add Record" onClick={ ()=>{toggleSetter("addModal")}}/>
             </div>
 
             

@@ -46,6 +46,11 @@ Route::delete('new-education/{id}', [TblapplicantEducationsController::class, "r
 Route::get('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "getCseligibilityRecord"]);
 Route::post('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
 Route::delete('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "removeCseligibilityRecord"]);
+//add-exp
+Route::get('new-work-experience/{id}', [TblapplicantExperiencesController::class, "getExperienceRecord"]);
+Route::post('new-work-experience/{id}', [TblapplicantExperiencesController::class, "addExperienceRecord"]);
+Route::delete('new-work-experience/{id}', [TblapplicantExperiencesController::class, "removeExperienceRecord"]);
+
 // Route::resource('new-training/{id}', TblapplicantTrainingsController::class);
 // Route::resource('new-vol-work/{id}', TblapplicantVoluntaryWorkController::class);
 // Route::resource('new-experiences/{id}', TblapplicantExperiencesController::class);
