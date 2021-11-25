@@ -17,6 +17,7 @@ class CreateTblapplicantsChildrenTable extends Migration
             $table->unsignedInteger('chi_app_id')->index('chi_app_id')->comment('Applicant ID. Identifies the related applicant.');
             $table->string('chi_app_name', 150)->comment('Child\'s full name.');
             $table->date('chi_app_birthdate')->comment('Child\'s birthdate or date of birth.');
+            $table->timestamp('chi_timestamp_id')->useCurrent()->comment('Unique id for children');
         });
     }
 

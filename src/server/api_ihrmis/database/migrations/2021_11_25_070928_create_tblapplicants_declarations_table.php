@@ -18,7 +18,7 @@ class CreateTblapplicantsDeclarationsTable extends Migration
             $table->string('dec_app_question', 5)->comment('Question that needs to be answered. Represented in a unique referencing code. ');
             $table->unsignedTinyInteger('dec_app_yes')->comment('Indicator if answer to the question is Yes. [0-No, 1-Yes].');
             $table->string('dec_app_details')->comment('Details if the answer to the question is Yes.');
-            $table->date('dec_app_date')->comment('Detail that requires a date answer. ');
+            $table->date('dec_app_date')->nullable()->comment('Detail that requires a date answer. ');
             $table->primary(['dec_app_id', 'dec_app_question']);
         });
     }

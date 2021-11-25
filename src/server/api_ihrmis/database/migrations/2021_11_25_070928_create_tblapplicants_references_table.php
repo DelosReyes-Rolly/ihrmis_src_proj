@@ -15,6 +15,7 @@ class CreateTblapplicantsReferencesTable extends Migration
     {
         Schema::create('tblapplicants_references', function (Blueprint $table) {
             $table->unsignedInteger('ref_app_id')->comment('Applicant ID. Identifies the related applicant.');
+            $table->timestamp('ref_app_timestamp')->useCurrent()->unique('ref_app_timestamp')->comment('Unique static identifier');
             $table->string('ref_app_email', 100)->comment('Email address of the reference.
 Served as a secondary key for a
 unique identification of records.');
