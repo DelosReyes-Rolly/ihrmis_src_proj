@@ -13,4 +13,4 @@ function ValidationComponent(props) {
     )
 }
 
-export default ValidationComponent
+export default ValidationComponent;

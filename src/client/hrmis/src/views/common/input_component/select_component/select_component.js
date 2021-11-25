@@ -10,7 +10,7 @@ const SelectComponent = (props) => {
             readOnly={props.readOnly}
             name={props.name}
             >
-            <option className="option-component" selected disabled>{props.defaultTitle}</option>
+            <option className="option-component" defaultValue disabled>{props.defaultTitle}</option>
                 {props.itemList.map(item => {
 
                     if(item.id == null){

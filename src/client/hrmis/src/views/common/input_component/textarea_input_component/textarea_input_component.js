@@ -8,7 +8,10 @@ const TextAreaComponent = (props) => {
             onChange={props.onChange}
             maxLength={props.maxLength} 
             rows={props.row}
-            placeholder={props.placeHolder}>
+            placeholder={props.placeHolder}
+            value={props.value}
+        >
+            
         </textarea>
     );
 }

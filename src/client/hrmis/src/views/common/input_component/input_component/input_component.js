@@ -10,10 +10,9 @@ const InputComponent = (props) =>{
             id={props.id}
             type={props.type} 
             maxLength={props.maxLength} 
+            minLength={props.minLength}
             size={props.size} 
             placeholder={props.placeholder}
-            min={props.min}
-            max={props.max}
             readOnly={props.readOnly}
             >
         </input>

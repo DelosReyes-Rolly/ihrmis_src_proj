@@ -5,7 +5,7 @@ const ToggleSwitchComponent = (props) => {
 
     return (
         <label className="switch">
-            <input type="checkbox" onChange={props.onChange}/>
+            <input ref={props.checkboxRef} onClick={props.onClick} value="1" type="checkbox" name={props.name} onChange={props.onChange}/>
             <span className="slider round"></span>
         </label>
     );
