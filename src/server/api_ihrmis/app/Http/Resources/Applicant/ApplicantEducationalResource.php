@@ -19,8 +19,8 @@ class ApplicantEducationalResource extends JsonResource
             'school' => $this->edu_app_school,
             'unit_earned' => $this->edu_app_units,
             'level' => $this->edu_app_level,
-            'to' => $this->edu_app_from,
-            'from' => $this->edu_app_to,
+            'to' => $this->edu_app_to,
+            'from' => $this->edu_app_from,
             'degree' => $this->edu_app_degree,
             'graduated' => $this->edu_app_graduated,
             'honors' => $this->edu_app_honors

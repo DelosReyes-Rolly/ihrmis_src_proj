@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Applicant;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\ApplicantCseligibilityResource;
 use App\Models\Applicants\TblapplicantCseligibilities;
-use App\Models\Second\SecApplicantCscEligibility;
 use Illuminate\Http\Request;
 
 class TblapplicantCseligibilitiesController extends Controller
 {
-   
     public function getCseligibilityRecord($id)
     {   
-        $cseLigibility = SecApplicantCscEligibility::where('cse_app_id', $id)->get();
+        $cseLigibility = TblapplicantCseligibilities::where('cse_app_id', $id)->get();
         return ApplicantCseligibilityResource::collection($cseLigibility);
     }
     
@@ -26,11 +25,13 @@ class TblapplicantCseligibilitiesController extends Controller
             "cse_app_rating" => "numeric",
             "cse_app_license" => "required",
             "cse_app_validity" => "required",
+        ],[
+            "required" => "This field is required"
         ]);
 
         if(isset($request->item)){
 
-            SecApplicantCscEligibility::where('cse_app_time',$request->item)->update([
+            TblapplicantCseligibilities::where('cse_app_time',$request->item)->update([
                 'cse_app_id' => $id,
                 'cse_app_time' => $request->item,
                 'cse_app_title' => $request->cse_app_title,
@@ -42,7 +43,7 @@ class TblapplicantCseligibilitiesController extends Controller
             ]);
 
         } else {
-            $cseLigibility = new SecApplicantCscEligibility();
+            $cseLigibility = new TblapplicantCseligibilities();
             $cseLigibility->cse_app_id = $id;
             $cseLigibility->cse_app_title = $request->cse_app_title;
             $cseLigibility->cse_app_date = $request->cse_app_date;
@@ -63,7 +64,7 @@ class TblapplicantCseligibilitiesController extends Controller
 
     public function removeCseligibilityRecord($id)
     {
-        SecApplicantCscEligibility::where('cse_app_time', $id)->delete();
+        TblapplicantCseligibilities::where('cse_app_time', $id)->delete();
         return response()->json([
             'status' => 200,
             'message' => "Deleted Succesfully",

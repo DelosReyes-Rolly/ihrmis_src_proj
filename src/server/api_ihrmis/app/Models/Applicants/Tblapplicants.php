@@ -10,7 +10,7 @@ class Tblapplicants extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_profile';
-    protected $primary = 'app_id';
+    protected $primaryKey = 'app_id';
     protected $fillable = [
         'app_emp_no',
         'app_nm_last',

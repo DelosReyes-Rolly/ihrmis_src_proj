@@ -47,7 +47,7 @@ number in its current agency.');
             $table->string('app_id_dateplace', 50)->comment('Date and place of issuance indicated in the government issued ID.');
             $table->string('app_photo')->nullable()->comment('File and directory path of the applicant\'s photo.');
             $table->unsignedTinyInteger('app_agree')->comment('Indicator if applicant acknowledge and sworn to the declaration of true statement. [0-No, 1-Yes].');
-            $table->integer('is_verified')->default(0);
+            $table->integer('app_verified')->default(0);
         });
     }
 

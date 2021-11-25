@@ -10,7 +10,7 @@ class TblapplicantCseligibilities extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_cseligibilities';
-    protected $primary = 'cse_app_id';
+    protected $primaryKey = 'cse_app_id';
     protected $fillable = [
         'cse_app_id',
         'cse_app_time',
@@ -21,6 +21,5 @@ class TblapplicantCseligibilities extends Model
         'cse_app_license',
         'cse_app_validity',
     ];
-    
     public $timestamps = false;
 }

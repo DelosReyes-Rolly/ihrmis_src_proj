@@ -10,7 +10,7 @@ class TblapplicantsProfile extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_profile';
-    protected $primary = 'app_id';
+    protected $primaryKey = 'app_id';
     protected $fillable = [
         'app_emp_no',
         'app_nm_last',
@@ -42,6 +42,8 @@ class TblapplicantsProfile extends Model
         'app_id_no',
         'app_id_dateplace',
         'app_agree',
+        'app_photo',
+        'is_verified',
     ];
 
     public $timestamps = false;

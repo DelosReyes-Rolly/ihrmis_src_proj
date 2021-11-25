@@ -19,6 +19,7 @@ class ApplicantExperienceResource extends JsonResource
         $startDate = Carbon::parse($this->exp_app_from);
         $endDate = Carbon::parse($this->exp_app_to);
         $enclusiveDate = $startDate->diffInYears($endDate, false);
+        
         return [
             'exp_app_time' => $this->exp_app_time,
             'exp_app_id' => $this->exp_app_id,

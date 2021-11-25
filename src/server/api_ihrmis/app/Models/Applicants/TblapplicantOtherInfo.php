@@ -10,7 +10,7 @@ class TblapplicantOtherInfo extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_other_info';
-    protected $primary = 'oth_app_id';
+    protected $primaryKey = 'oth_app_id';
     protected $fillable = [
         'oth_app_id',
         'oth_app_time',

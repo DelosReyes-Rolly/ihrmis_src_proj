@@ -9,7 +9,7 @@ class TblapplicantDeclarations extends Model
 {
     use HasFactory;
     protected $table = 'tblapplicants_declarations';
-    protected $primary = 'dec_app_id';
+    protected $primaryKey = 'dec_app_id';
     protected $fillable = [
         'dec_app_id',
         'dec_app_question',

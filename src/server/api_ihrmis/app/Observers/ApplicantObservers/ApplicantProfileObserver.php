@@ -3,8 +3,8 @@
 namespace App\Observers\ApplicantObservers;
 
 use App\Mail\VerifyApplicantMail;
-use App\Models\Second\SecApplicantProfile;
-use App\Models\Second\SecApplicantVerification;
+use App\Models\Applicants\TblapplicantsProfile;
+use App\Models\Applicants\TblapplicantVerification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -16,15 +16,14 @@ class ApplicantProfileObserver
      * @param  \App\Models\TblapplicantsProfile  $tblapplicantsProfile
      * @return void
      */
-    public function created(SecApplicantProfile $tblapplicantsProfile)
+    public function created(TblapplicantsProfile $tblapplicantsProfile)
     {
-        $fullnameArray = [];
-        
+        $fullnameArray = []; 
         $APPLICANT_TOKEN = Str::random(64);
 
-        $createVerification = new SecApplicantVerification();
-        $createVerification->id_sec_applicant = $tblapplicantsProfile->id;
-        $createVerification->token = $APPLICANT_TOKEN;
+        $createVerification = new TblapplicantVerification();
+        $createVerification->vry_app_id = $tblapplicantsProfile->id;
+        $createVerification->vry_app_token = $APPLICANT_TOKEN;
         $createVerification->save();
 
         if($tblapplicantsProfile->app_nm_extn !== 'N/A'){
@@ -51,8 +50,7 @@ class ApplicantProfileObserver
             'position' => 'Administrative Officer II',
             'from_email'=> env('MAIL_FROM_ADDRESS'),
             'recruiter'=> env('MAIL_FROM_RECUITER'),
-            'redirect_link' =>  env('APP_API_URL') . 'verify-email?token=' . $APPLICANT_TOKEN . '&applicant=' . $tblapplicantsProfile->id
-
+            'redirect_link' =>  env('APP_API_URL') . 'verify-email?token=' . $APPLICANT_TOKEN . '&applicant=' . $tblapplicantsProfile->app_id
         ];
         
         Mail::to($details['applicant_email'])->send(new VerifyApplicantMail($details));

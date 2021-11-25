@@ -11,13 +11,12 @@ class TblapplicantChildren extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_children';
-    protected $primary = 'chi_app_id';
+    protected $primaryKey = 'chi_app_id';
     protected $fillable = [
         'chi_app_id',
         'chi_app_name',
         'chi_app_birthdate',
     ];
-    
     public $timestamps = false;
     
     public function tblapplicant()

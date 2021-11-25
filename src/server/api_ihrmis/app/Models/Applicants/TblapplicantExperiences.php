@@ -10,7 +10,7 @@ class TblapplicantExperiences extends Model
     use HasFactory;
     
     protected $table = 'tblapplicants_experiences';
-    protected $primary = 'exp_app_id';
+    protected $primaryKey = 'exp_app_id';
     protected $fillable = [
         'exp_app_id',
         'exp_app_time',
@@ -23,7 +23,6 @@ class TblapplicantExperiences extends Model
         'exp_app_step',
         'exp_app_appntmnt',
         'exp_app_govt',
-        'exp_app_rel_fields',
     ];
     
     public $timestamps = false;

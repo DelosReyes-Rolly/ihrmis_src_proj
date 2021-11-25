@@ -10,9 +10,9 @@ class TblapplicantsFamily extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_family';
-    protected $primary = 'app_id';
+    protected $primaryKey = 'app_id';
     protected $fillable = [
-        'app_id',
+        'app_id', 
         'app_sps_nm_last',
         'app_sps_nm_first',
         'app_sps_nm_mid',

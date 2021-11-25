@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Providers;
+
+use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Second\SecApplicantProfile;
 use App\Models\TbljvsCompetencies;
 use App\Observers\ApplicantObservers\ApplicantProfileObserver;
@@ -32,6 +34,6 @@ class EventServiceProvider extends ServiceProvider
     {
         //
         TbljvsCompetencies::observe(JvsCompetenciesObserver::class);
-        SecApplicantProfile::observe(ApplicantProfileObserver::class);
+        TblapplicantsProfile::observe(ApplicantProfileObserver::class);
     }
 }
