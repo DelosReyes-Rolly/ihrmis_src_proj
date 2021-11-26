@@ -110,7 +110,7 @@ const FormPageOne = () => {
   };
 
   const getApplicantRecord = async () => {
-    await axios.get(API_HOST + `/get-new-applicant/${item}`).then((res) => {
+    await axios.get(API_HOST + `get-new-applicant/${item}`).then((res) => {
       const data = res ? res.data.data : undefined;
 
       getResCity(data.res_province ?? "");
