@@ -8,12 +8,10 @@ const onSubmit = async (data, endpoint, params, withFiles = false) => {
   const contentType = withFiles
     ? "multipart/form-data"
     : "application/x-www-form-urlencoded";
-  const parameter = params == undefined ? "" : params;
+  const parameter = params === undefined || params === null ? "" : params;
   let errorGenerator = undefined;
 
   try {
-    //This function is to map data object into formData instance
-    // file.foreach((item) => formData.append(keyname_of_file,))
     Object.keys(data).forEach((key) => {
       if (Array.isArray(data[key])) {
         if (withFiles == true) {
