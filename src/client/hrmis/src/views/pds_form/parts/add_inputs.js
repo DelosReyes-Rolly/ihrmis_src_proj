@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import {
   setMessageError,
@@ -11,15 +11,14 @@ import { API_HOST } from "../../../helpers/global/global_config";
 import useAxiosRequestHelper from "../../../helpers/use_hooks/axios_request_helper";
 import { usePopUpHelper } from "../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../common/input_component/input_component/input_component";
-import ValidationComponent from "../../common/response_component/validation_component/validation_component";
 
 const PdsAddInput = (props) => {
   // ===========================================
   // ROUTER STATE
   // ===========================================
   const { item } = useParams();
-  const errorObj = useSelector((state) => state.error.objectError);
-  const errorMsg = useSelector((state) => state.error.messageError);
+  // const errorObj = useSelector((state) => state.error.objectError);
+  // const errorMsg = useSelector((state) => state.error.messageError);
   const dispatch = useDispatch();
 
   // ===========================================
@@ -30,7 +29,7 @@ const PdsAddInput = (props) => {
 
   const getOtherInfoRecord = async () => {
     await axios
-      .get(API_HOST + `/new-other-info/${item}`)
+      .get(API_HOST + `new-other-info/${item}`)
       .then((response) => {
         setOtherInfoData(response.data.data);
       })
@@ -44,7 +43,7 @@ const PdsAddInput = (props) => {
   // ===========================================
   const removeOtherInfoRecord = async (record) => {
     await axios
-      .delete(API_HOST + `/new-other-info/${record}`)
+      .delete(API_HOST + `new-other-info/${record}`)
       .then((response) => {
         console.log(response);
       });
@@ -72,7 +71,7 @@ const PdsAddInput = (props) => {
     // INPUT HANDLER
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(addInfoData, "/new-other-info/", item)
+      .post(addInfoData, "new-other-info", item)
       .then(() => {})
       .catch((error) => {
         renderFail();

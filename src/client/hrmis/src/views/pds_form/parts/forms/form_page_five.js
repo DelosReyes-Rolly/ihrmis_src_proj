@@ -69,24 +69,22 @@ const FormPageFive = () => {
   };
 
   const getApplcntGvrnmntIdRecord = async () => {
-    await axios
-      .get(API_HOST + "/get-new-applicant/" + item)
-      .then((response) => {
-        setter({
-          app_id_issued: response.data.data
-            ? response.data.data.app_id_issued
-            : "",
-          app_id_no: response.data.data ? response.data.data.app_id_no : "",
-          app_id_dateplace: response.data.data
-            ? response.data.data.app_id_dateplace
-            : "",
-          app_photo: response.data.data
-            ? response.data.data.app_photo === imageIncompleteLinkStr
-              ? ""
-              : response.data.data.app_photo
-            : "",
-        });
+    await axios.get(API_HOST + "get-new-applicant/" + item).then((response) => {
+      setter({
+        app_id_issued: response.data.data
+          ? response.data.data.app_id_issued
+          : "",
+        app_id_no: response.data.data ? response.data.data.app_id_no : "",
+        app_id_dateplace: response.data.data
+          ? response.data.data.app_id_dateplace
+          : "",
+        app_photo: response.data.data
+          ? response.data.data.app_photo === imageIncompleteLinkStr
+            ? ""
+            : response.data.data.app_photo
+          : "",
       });
+    });
   };
 
   useEffect(() => {
@@ -250,14 +248,14 @@ const ReferenceTable = (props) => {
   const [referenceRecord, setReferenceRecord] = useState();
 
   const getReferenceRecord = async () => {
-    await axios.get(API_HOST + `/new-reference/${item}`).then((response) => {
+    await axios.get(API_HOST + `new-reference/${item}`).then((response) => {
       setReferenceRecord(response.data.data);
     });
   };
 
   const removeReferenceRecord = async (record) => {
     await axios
-      .delete(API_HOST + `/new-reference/${record}`)
+      .delete(API_HOST + `new-reference/${record}`)
       .then((response) => {
         console.log(response);
       });

@@ -1845,7 +1845,7 @@ input:checked + .slider:before {
 
 .next-submit-back-button .last-submit-button {
   margin-right: 5px;
-  margin-left: 5px;
+  margin-left: 0px;
   background-color: #5c995c;
   border: 1px solid #5c995c;
 }

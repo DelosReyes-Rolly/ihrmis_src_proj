@@ -65,7 +65,7 @@ const FormPageFour = () => {
 
   const getDeclarationRecord = async () => {
     await axios
-      .get(API_HOST + "/new-get-delcaration/" + item)
+      .get(API_HOST + "new-get-delcaration/" + item)
       .then((response) => {
         let data = response.data.data;
         setter({

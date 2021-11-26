@@ -6,7 +6,7 @@ import ButtonComponent from "../../common/button_component/button_component.js";
 
 const PrevNextSubButtons = (props) => {
   const { item } = useParams();
-  const dispatch = useDispatch();
+
   return (
     <React.Fragment>
       <div className="next-submit-back-button">

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { setBusy } from "../../../../features/reducers/loading_slice";
-import httpRequestHelper from "../../../../helpers/http_request_helper";
 import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
 import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";

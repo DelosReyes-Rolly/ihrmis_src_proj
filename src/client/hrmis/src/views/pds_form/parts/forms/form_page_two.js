@@ -66,7 +66,7 @@ const FormPageTwo = () => {
   };
 
   const getFamilyRecord = async () => {
-    await axios.get(API_HOST + "/get-new-family/" + item).then((res) => {
+    await axios.get(API_HOST + "get-new-family/" + item).then((res) => {
       let data = res.data.data ? res.data.data : undefined;
       setter({
         app_sps_nm_last: data.app_sps_nm_last ?? "",
@@ -95,7 +95,7 @@ const FormPageTwo = () => {
   const [displayChildren, setDisplayChildren] = useState();
 
   const getChildrenRecord = async () => {
-    await axios.get(API_HOST + "/new-children/" + item).then((response) => {
+    await axios.get(API_HOST + "new-children/" + item).then((response) => {
       setDisplayChildren(response.data.data);
     });
   };
@@ -417,7 +417,7 @@ const ChildrenList = (props) => {
     e.preventDefault();
 
     await useAxiosRequestHelper
-      .post(dataState, "/new-children/", item)
+      .post(dataState, "new-children", item)
       .then(() => {
         e.target.reset();
         setter({});
@@ -440,7 +440,7 @@ const ChildrenList = (props) => {
   };
 
   const removeChildRecord = async (id) => {
-    await axios.delete(API_HOST + "/new-children/" + id);
+    await axios.delete(API_HOST + "new-children/" + id);
     props.updateData();
   };
 

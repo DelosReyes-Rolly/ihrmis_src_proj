@@ -57,6 +57,7 @@ const ThreeAddWorkExperienceModal = (props) => {
         e.target.reset();
         dispatch(setMessageError(undefined));
         renderSuccess();
+        props.onClose();
       })
       .catch((error) => {
         renderFail();
