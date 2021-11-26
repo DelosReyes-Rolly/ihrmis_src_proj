@@ -79,9 +79,8 @@ const FormPageOne = () => {
     e.preventDefault();
     if (verifyCapcha == true) {
       dispatch(setBusy(true));
-
       await useAxiosRequestHelper
-        .post(applicantDataHolder, "/new-applicant/", item)
+        .post(applicantDataHolder, "new-applicant", item)
         .then(() => {
           dispatch(setObjectError(undefined));
 

@@ -123,7 +123,7 @@ const FormPageSix = () => {
     console.log(document.getElementById("app_others_file").files);
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-requirement/", item, true)
+      .post(dataState, "new-requirement", item, true)
       .then(() => {
         renderSuccess();
         dispatch(setObjectError({}));

@@ -46,7 +46,7 @@ const FormPageFour = () => {
 
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-declaration/", item)
+      .post(dataState, "new-declaration", item)
       .then(() => {
         renderSuccess();
         dispatch(setObjectError({}));

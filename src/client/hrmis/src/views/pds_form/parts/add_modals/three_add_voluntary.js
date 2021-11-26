@@ -42,7 +42,7 @@ const ThreeAddVoluntrayWorkModal = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(dataState, "/new-voluntary-work/", item)
+      .post(dataState, "new-voluntary-work", item)
       .then(() => {
         e.target.reset();
         dispatch(setMessageError(undefined));

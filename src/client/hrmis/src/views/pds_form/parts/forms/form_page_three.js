@@ -90,7 +90,7 @@ const TableOne = () => {
   const [educationRecord, setEducationRecord] = useState([]);
   const getEducationRecord = async () => {
     await axios
-      .get(API_HOST + `/new-education/${item}`)
+      .get(API_HOST + `new-education/${item}`)
       .then((response) => {
         setEducationRecord(response.data.data);
       })
@@ -104,7 +104,7 @@ const TableOne = () => {
   const removeEducationRecord = async (record) => {
     dispatch(setBusy(true));
     await axios
-      .delete(API_HOST + `/new-education/${record}`)
+      .delete(API_HOST + `new-education/${record}`)
       .then(() => {
         renderSuccess();
       })
@@ -318,7 +318,7 @@ const TableTwo = () => {
   const [cselibilityRecord, setCselibilityRecord] = useState([]);
   const getCseligibilityRecord = async () => {
     await axios
-      .get(API_HOST + `/new-csc-eleigibility/${item}`)
+      .get(API_HOST + `new-csc-eleigibility/${item}`)
       .then((response) => {
         setCselibilityRecord(response.data.data);
       })
@@ -334,7 +334,7 @@ const TableTwo = () => {
   const removeCseligibilityRecord = async (record) => {
     dispatch(setBusy(true));
     await axios
-      .delete(API_HOST + `/new-csc-eleigibility/${record}`)
+      .delete(API_HOST + `new-csc-eleigibility/${record}`)
       .then(() => renderSuccess())
       .catch(() => renderFail());
     dispatch(setBusy(false));
@@ -554,7 +554,7 @@ const TableThree = () => {
   const [workExperienceRecord, setWorkExperienceRecord] = useState([]);
   const getWorkExperienceRecord = async () => {
     await axios
-      .get(API_HOST + `/new-work-experience/${item}`)
+      .get(API_HOST + `new-work-experience/${item}`)
       .then((response) => {
         setWorkExperienceRecord(response.data.data);
       })
@@ -570,7 +570,7 @@ const TableThree = () => {
   const removeWorkExpRecord = async (record) => {
     dispatch(setBusy(true));
     await axios
-      .delete(API_HOST + `/new-work-experience/${record}`)
+      .delete(API_HOST + `new-work-experience/${record}`)
       .then(() => renderSuccess())
       .catch(() => renderFail());
     dispatch(setBusy(false));
@@ -788,7 +788,7 @@ const TableFour = () => {
   const [voluntaryRecord, setVoluntaryRecord] = useState([]);
   const getVoluntaryRecord = async () => {
     await axios
-      .get(API_HOST + `/new-voluntary-work/${item}`)
+      .get(API_HOST + `new-voluntary-work/${item}`)
       .then((response) => {
         setVoluntaryRecord(response.data.data);
       })
@@ -805,7 +805,7 @@ const TableFour = () => {
     dispatch(setBusy(true));
     console.log("Hello Pressed");
     await axios
-      .delete(API_HOST + `/new-voluntary-work/${record}`)
+      .delete(API_HOST + `new-voluntary-work/${record}`)
       .then(() => renderSuccess())
       .catch(() => renderFail());
     dispatch(setBusy(false));
@@ -1016,7 +1016,7 @@ const TableFive = () => {
   const [trainingRecord, setTrainingRecord] = useState([]);
   const getTrainingRecord = async () => {
     await axios
-      .get(API_HOST + `/new-training/${item}`)
+      .get(API_HOST + `new-training/${item}`)
       .then((response) => {
         setTrainingRecord(response.data.data);
       })
@@ -1032,7 +1032,7 @@ const TableFive = () => {
   const removeTrainingRecord = async (record) => {
     dispatch(setBusy(true));
     await axios
-      .delete(API_HOST + `/new-training/${record}`)
+      .delete(API_HOST + `new-training/${record}`)
       .then(() => renderSuccess())
       .catch(() => renderFail());
     dispatch(setBusy(false));

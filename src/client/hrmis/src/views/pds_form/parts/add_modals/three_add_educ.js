@@ -45,7 +45,7 @@ const ThreeAddEducationModal = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(dataState, "/new-education/", item)
+      .post(dataState, "new-education", item)
       .then(() => {
         e.target.reset();
         dispatch(setObjectError({}));

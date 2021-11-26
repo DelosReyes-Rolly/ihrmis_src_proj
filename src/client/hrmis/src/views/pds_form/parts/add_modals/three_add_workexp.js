@@ -52,7 +52,7 @@ const ThreeAddWorkExperienceModal = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(dataState, "/new-work-experience/", item)
+      .post(dataState, "new-work-experience", item)
       .then(() => {
         e.target.reset();
         dispatch(setMessageError(undefined));

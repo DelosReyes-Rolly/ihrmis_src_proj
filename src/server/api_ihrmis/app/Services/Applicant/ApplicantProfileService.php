@@ -274,7 +274,6 @@ class ApplicantProfileService {
         $applicantData->app_dual_type = 0;
     }
     
-    
     //ADDRESS INFO
     if($request->boolean('copied_addr') == false){
         $perAddrssArr = [];
@@ -294,17 +293,10 @@ class ApplicantProfileService {
         $applicantData->app_permanent_addr = $address;
     }
     
-
     //CONTACT INFO
     $applicantData->app_tel_no = $request->app_tel_no;
     $applicantData->app_mobile_no = $request->app_mobile_no;
     $applicantData->app_email_addr = $request->app_email_addr;
-    
-    //ID INFO
-    // $applicantData->app_id_issued = $request->app_id_issued ?? "NA";
-    // $applicantData->app_id_no = $request->app_id_no ?? "NA";
-    // $applicantData->app_id_dateplace = $request->app_id_dateplace ?? "NA";
-    // $applicantData->app_agree = $request->app_agree ?? 0;
 
     $applicantData->save();
 

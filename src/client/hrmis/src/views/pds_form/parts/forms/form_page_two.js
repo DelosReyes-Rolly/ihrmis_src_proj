@@ -47,7 +47,7 @@ const FormPageTwo = () => {
     e.preventDefault();
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-afc/", item)
+      .post(dataState, "new-afc", item)
       .then(() => {
         renderSuccess();
         dispatch(setMessageError(undefined));

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PdfEmailGeneratorController;
+// use App\Http\Controllers\PdfEmailGeneratorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +22,4 @@ Route::get('/send-email', function () {
     dd(env('FRONTEND_APPLICANT_REDIRECT_URL') . "3");
 });
 
-Route::get('/send-email-pdf', [PdfEmailGeneratorController::class, 'index']);
+// Route::get('/send-email-pdf', [PdfEmailGeneratorController::class, 'index']);

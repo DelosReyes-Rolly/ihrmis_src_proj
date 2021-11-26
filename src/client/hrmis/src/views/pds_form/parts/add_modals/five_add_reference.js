@@ -33,7 +33,7 @@ const FourAddReferenceModal = (props) => {
     e.preventDefault();
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-reference/", item)
+      .post(dataState, "new-reference", item)
       .then(() => {
         renderSuccess();
         setServerErrorResponse(null);
@@ -54,29 +54,6 @@ const FourAddReferenceModal = (props) => {
       });
     dispatch(setBusy(false));
   };
-
-  //   httpRequestHelper
-  //     .post(dataState, "/new-reference/", item)
-  //     .then((result) => {
-  //       renderSuccess();
-  //       setServerErrorResponse(null);
-  //       props.onClose();
-  //       setter({
-  //         item: "",
-  //         ref_app_name: "",
-  //         ref_app_addr: "",
-  //         ref_app_email: "",
-  //         ref_app_tel_no: "",
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       if (typeof error === "object" && error !== null)
-  //         setServerErrorResponse([error.message]);
-  //       else setServerErrorResponse([error.message]);
-  //       renderFail();
-  //     });
-  //   dispatch(setBusy(false));
-  // };
 
   useEffect(() => {
     setServerErrorResponse(null);

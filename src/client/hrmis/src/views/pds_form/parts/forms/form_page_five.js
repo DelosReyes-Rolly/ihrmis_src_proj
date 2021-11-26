@@ -49,7 +49,7 @@ const FormPageFive = () => {
     e.preventDefault();
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-profile/", item, true)
+      .post(dataState, "new-profile", item, true)
       .then(() => {
         renderSuccess();
         dispatch(setObjectError({}));

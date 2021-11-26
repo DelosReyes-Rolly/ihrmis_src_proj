@@ -41,7 +41,7 @@ const ThreeAddCivilServiceModal = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(dataState, "/new-csc-eleigibility/", item)
+      .post(dataState, "new-csc-eleigibility", item)
       .then(() => {
         props.onClose();
         dispatch(setMessageError(undefined));

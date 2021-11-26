@@ -49,7 +49,7 @@ const ThreeAddInterventionModal = (props) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     await useAxiosRequestHelper
-      .post(dataState, "/new-training/", item)
+      .post(dataState, "new-training", item)
       .then(() => {
         e.target.reset();
         props.onClose();
