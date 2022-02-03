@@ -8,7 +8,7 @@ import {
   setMessageError,
   setObjectError,
 } from "../../../../features/reducers/error_handler_slice";
-import { setBusy } from "../../../../features/reducers/loading_slice";
+import { setBusy } from "../../../../features/reducers/popup_response";
 import { API_HOST } from "../../../../helpers/global/global_config";
 import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
 import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
@@ -100,15 +100,7 @@ const FormPageFive = () => {
         <div>
           <ReferenceTable />
         </div>
-        <br />
-        <br />
         <form onSubmit={submitHandler} encType="multipart/form-data">
-          {errorMsg && (
-            <ValidationComponent title="FAILED TO SUBMIT">
-              <p>- {errorMsg} </p>
-            </ValidationComponent>
-          )}
-          <br />
           <div className="form-4-div">
             <div className="form-4-input-div">
               <div className="id-containers">
@@ -214,11 +206,11 @@ const FormPageFive = () => {
                 <PrevNextSubButtons
                   page={5}
                   onClickBack={() => {
-                    navigate(`/ihrmis/pds-applicant/form-page-four/${item}`);
+                    navigate(`/pds-applicant/form-page-four/${item}`);
                     dispatch(setMessageError(undefined));
                   }}
                   onClickNext={() => {
-                    navigate(`/ihrmis/pds-applicant/form-page-six/${item}`);
+                    navigate(`/pds-applicant/form-page-six/${item}`);
                     dispatch(setMessageError(undefined));
                   }}
                 />
@@ -262,7 +254,7 @@ const ReferenceTable = (props) => {
     toggleSetter("updateModal");
   };
 
-  const [dataContainer, setDataContainer] = useState();
+  // const [dataContainer, setDataContainer] = useState();
 
   // ===========================================
   // FOR EDUCATION INIT STATE RENDER AND TOOGLE UPDATE HANDLER
@@ -344,7 +336,6 @@ const ReferenceTable = (props) => {
 const UploadImageComponent = (props) => {
   useEffect(() => {
     console.log(props.imgServer);
-    // console.log(props.imgUrl);
   }, []);
   return (
     <React.Fragment>

@@ -13,17 +13,13 @@ import {
 } from "../../static/input_items";
 import { useFormHelper } from "../../../../../helpers/use_hooks/form_helper";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { setBusy } from "../../../../../features/reducers/loading_slice";
-import ValidationComponent from "../../../../common/response_component/validation_component/validation_component";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 
 const AddPlantillaItemModal = (props) => {
   // ==========================================
   // ERROR HANDLING
   // ==========================================
-  const [serverErrorResponse, setServerErrorResponse] = useState();
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 
   // ==========================================
   // CUSTOM HOOKS
@@ -33,58 +29,25 @@ const AddPlantillaItemModal = (props) => {
   // ==========================================
   // REDUX STATE MANAGEMENT
   // ==========================================
-  const dispatch = useDispatch();
 
   // ==========================================
   // SUBMIT HANDLER
   // ==========================================
   const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(setBusy(true));
+    renderBusy(true);
     await axios
-      .post(API_HOST + "/plantilla-items", dataToSubmit)
-      .then((response) => {
-        setServerErrorResponse(null);
+      .post(API_HOST + "plantilla-items", dataToSubmit)
+      .then(() => {
         e.target.reset();
         setter(null);
-        renderSuccess();
+        renderSucceed();
       })
-      .catch((error) => {
-        renderFail();
-        if (error.response) {
-          if (error.response.status === 422) {
-            setServerErrorResponse(Object.values(error.response.data.errors));
-            setTimeout(() => {
-              setServerErrorResponse(null);
-            }, 10000);
-          } else if (error.response.status === 404) {
-            console.log("404 Page Not Found");
-            setServerErrorResponse(["404 Page Not Found"]);
-            setTimeout(() => {
-              setServerErrorResponse(null);
-            }, 10000);
-          } else if (error.response.status === 500) {
-            console.log("500 API Internal Error!");
-            setServerErrorResponse([`500 ${error.response.data.message}`]);
-            setTimeout(() => {
-              setServerErrorResponse(null);
-            }, 10000);
-          }
-        } else if (error.request) {
-          console.log("No response from server");
-          setServerErrorResponse([`Please check your network connectivity`]);
-          setTimeout(() => {
-            setServerErrorResponse(null);
-          }, 10000);
-        } else {
-          console.log("Oops! Something went wrong");
-          setServerErrorResponse(["Oops! Something went wrong"]);
-          setTimeout(() => {
-            setServerErrorResponse(null);
-          }, 10000);
-        }
+      .catch((err) => {
+        renderFailed({});
+        console.log(err.response);
       });
-    dispatch(setBusy(false));
+    renderBusy(false);
   };
 
   // ==========================================
@@ -94,25 +57,11 @@ const AddPlantillaItemModal = (props) => {
 
   const getPositionAndOffice = () => {
     axios
-      .get(API_HOST + "/office-position")
+      .get(API_HOST + "office-position")
       .then((response) => {
         setOfficePositionState(response.data.data);
       })
-      .then((error) => {
-        if (error) {
-          if (error.response) {
-            if (error.response.status === 422) {
-              console.log("422 API server responded with an error");
-            } else if (error.response.status === 404) {
-              console.log("404 NOT FOUND");
-            } else if (error.response.status === 500) {
-              console.log("500 INTERNAL SERVER ERROR");
-            }
-          } else if (error.request) {
-          } else {
-          }
-        }
-      });
+      .catch((error) => {});
   };
 
   useEffect(() => {
@@ -131,16 +80,6 @@ const AddPlantillaItemModal = (props) => {
         onSubmitType="submit"
         onClose={props.onClose}
       >
-        {serverErrorResponse && (
-          <ValidationComponent title="FAILED TO SUBMIT">
-            {serverErrorResponse.map((item, key) => {
-              return <p key={key}>- {item}</p>;
-            })}
-          </ValidationComponent>
-        )}
-
-        <br />
-
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-1">
             <label>Item No.</label>
@@ -169,8 +108,8 @@ const AddPlantillaItemModal = (props) => {
               name="itm_pos_id"
               onChange={(e) => setDataToSubmit(e)}
             >
-              <option className="option-component" value="DEFAULT" disabled>
-                {props.defaultTitle}
+              <option className="option-component" value="">
+                Default
               </option>
               {officePositionState &&
                 officePositionState.positions.map((item, key) => {
@@ -195,8 +134,8 @@ const AddPlantillaItemModal = (props) => {
               name="itm_ofc_id"
               onChange={(e) => setDataToSubmit(e)}
             >
-              <option className="option-component" value="DEFAULT" disabled>
-                {props.defaultTitle}
+              <option className="option-component" value="">
+                Default
               </option>
               {officePositionState &&
                 officePositionState.offices.map((item, key) => {

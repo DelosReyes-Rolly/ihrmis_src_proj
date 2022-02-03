@@ -1,3 +1,12 @@
+//DEFAULTS
+@import "./defaults/default_colors";
+@import "./defaults/default_mixins";
+@import "./defaults/default_themes";
+@import "./defaults/default_plantilla";
+@import "./defaults/default_scrollbar";
+@import "./defaults/default_table";
+@import "./defaults/default_percent";
+
 * {
   margin: 0px;
   padding: 0px;
@@ -79,20 +88,35 @@ body {
   /* position: relative; */
 }
 
+.error-validation-styles {
+  color: rgb(255, 68, 68);
+}
+
+.flex-row {
+  @include containerFlexRow(true);
+}
+.flex-col {
+  @include containerFlexRow(false);
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.items-align-center {
+  align-items: center;
+}
+
+.items-align-start {
+  align-items: start;
+}
+
 @media only screen and (max-width: 800px) {
   .positioning {
     padding-left: 0;
   }
 }
-
-//DEFAULTS
-@import "./defaults/default_colors";
-@import "./defaults/default_mixins";
-@import "./defaults/default_themes";
-@import "./defaults/default_plantilla";
-@import "./defaults/default_scrollbar";
-@import "./defaults/default_table";
-@import "./defaults/default_percent";
 
 //COMPONENTS
 @import "./../../views/common/import_component_style";

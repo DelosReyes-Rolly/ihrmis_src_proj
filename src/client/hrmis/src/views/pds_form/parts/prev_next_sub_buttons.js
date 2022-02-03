@@ -1,6 +1,5 @@
 import React from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import ButtonComponent from "../../common/button_component/button_component.js";
 
@@ -15,7 +14,7 @@ const PrevNextSubButtons = (props) => {
             type="button"
             buttonLogoStart={<AiOutlineLeft size="15px" />}
             className="back-button"
-            buttonName="Back"
+            buttonName="Previous"
             onClick={props.onClickBack}
           />
         )}

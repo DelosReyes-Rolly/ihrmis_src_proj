@@ -17,7 +17,7 @@ class TblapplicantChildrenController extends Controller
 
     public function addChildrenRecord($id, Request $request){
         $request->validate([
-            'chi_app_name' => 'required',
+            'chi_app_name' => 'required|regex:/^[\pL\s\-]+$/u',
             'chi_app_birthdate' => 'required',
         ],[
             'required' => "This field is required"

@@ -34,7 +34,6 @@
 
   .second-type-div {
     @include containerFlexRow(true);
-    align-items: center;
     margin-bottom: 10px;
 
     .rating {
@@ -81,7 +80,6 @@
   }
   .third-type-div {
     @include containerFlexRow(true);
-    align-items: flex-end;
     margin-bottom: 10px;
     .salary {
       width: 50%;

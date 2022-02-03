@@ -1,31 +1,34 @@
 import axios from "axios";
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import {
-  setMessageError,
-  setObjectError,
-} from "../../../features/reducers/error_handler_slice";
-import { API_HOST } from "../../../helpers/global/global_config";
-import useAxiosRequestHelper from "../../../helpers/use_hooks/axios_request_helper";
+  API_HOST,
+  validationRequired,
+} from "../../../helpers/global/global_config";
+import useAxiosHelper from "../../../helpers/use_hooks/axios_helper";
 import { usePopUpHelper } from "../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../common/input_component/input_component/input_component";
+import * as Yup from "yup";
+
+const ADD_TYPE = {
+  skill: "SKILL",
+  recog: "RECOG",
+  membr: "MEMBR",
+};
 
 const PdsAddInput = (props) => {
   // ===========================================
   // ROUTER STATE
   // ===========================================
   const { item } = useParams();
-  // const errorObj = useSelector((state) => state.error.objectError);
-  // const errorMsg = useSelector((state) => state.error.messageError);
-  const dispatch = useDispatch();
 
   // ===========================================
   // GET OTHER INFO RECORD HTTP REQUEST
   // ===========================================
-  const { renderFail } = usePopUpHelper();
   const [otherInfoData, setOtherInfoData] = useState([]);
+  const { renderFailed } = usePopUpHelper();
 
   const getOtherInfoRecord = async () => {
     await axios
@@ -50,10 +53,6 @@ const PdsAddInput = (props) => {
     setUpdateScreen(!updateScreen);
   };
 
-  // ===================================
-  // ERROR HANDLING STATE
-  // ===================================
-
   // =======================================
   //  SUBMIT HANDLER
   // =======================================
@@ -67,24 +66,24 @@ const PdsAddInput = (props) => {
     });
   };
 
-  const submitHandler = async (e) => {
-    // INPUT HANDLER
-    e.preventDefault();
-    await useAxiosRequestHelper
-      .post(addInfoData, "new-other-info", item)
-      .then(() => {})
-      .catch((error) => {
-        renderFail();
-        if (typeof error === "object") {
-          dispatch(setObjectError(error));
-          dispatch(setMessageError("Unprocessable Entity"));
-        } else {
-          dispatch(setMessageError(error));
-        }
-      });
-    setUpdateScreen(!updateScreen);
-  };
+  const AddInputForm = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      oth_app_type: props.type,
+      oth_app_desc: "",
+    },
+    validationSchema: Yup.object({
+      oth_app_desc: validationRequired,
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      await useAxiosHelper
+        .post(values, "new-other-info", item)
+        .then(() => resetForm())
+        .catch((err) => renderFailed({ content: err.message }));
 
+      setUpdateScreen(!updateScreen);
+    },
+  });
   // =======================================
   //  INIT STATE AND COMPONENT RENDERER
   // =======================================
@@ -92,10 +91,6 @@ const PdsAddInput = (props) => {
 
   useEffect(() => {
     getOtherInfoRecord();
-    setAddInfoData({
-      oth_app_type: props.type,
-      oth_app_desc: "",
-    });
   }, [updateScreen]);
 
   return (
@@ -106,14 +101,17 @@ const PdsAddInput = (props) => {
           <span className="invalid-response"></span>
         </div>
       </div>
-      <form onSubmit={submitHandler}>
+      <form onSubmit={AddInputForm.handleSubmit}>
         {/* DISPLAY DATA STARTS HERE */}
         {otherInfoData === null
           ? null
           : otherInfoData.map((item, key) => {
               if (item.oth_app_type == props.type)
                 return (
-                  <div className="pds-prof-class-one" key={key}>
+                  <div
+                    style={{ display: "flex", alignItems: "center" }}
+                    key={key}
+                  >
                     <div style={{ width: "100%", paddingRight: "5px" }}>
                       <InputComponent
                         maxLenght="150"
@@ -135,14 +133,12 @@ const PdsAddInput = (props) => {
                 );
             })}
 
-        <div className="pds-prof-class-one">
+        <div style={{ display: "flex", alignItems: "center" }}>
           <div style={{ width: "100%", paddingRight: "5px" }}>
             <InputComponent
               name="oth_app_desc"
-              value={addInfoData ? addInfoData.oth_app_desc : ""}
-              onChange={(e) => {
-                inputOtherInfo(e);
-              }}
+              value={AddInputForm.values.oth_app_desc}
+              onChange={AddInputForm.handleChange}
             />
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -159,9 +155,50 @@ const PdsAddInput = (props) => {
             </button>
           </div>
         </div>
+        <ValidationHandler error={AddInputForm.errors} type={props.type} />
       </form>
     </React.Fragment>
   );
 };
 
 export default PdsAddInput;
+
+const ValidationHandler = ({ error, type }) => {
+  switch (type) {
+    case ADD_TYPE.skill:
+      return (
+        <div>
+          {error?.oth_app_desc && error?.oth_app_desc ? (
+            <span className="invalid-response error-position">
+              {error?.oth_app_desc}
+            </span>
+          ) : null}
+        </div>
+      );
+
+    case ADD_TYPE.recog:
+      return (
+        <div>
+          {error?.oth_app_desc && error?.oth_app_desc ? (
+            <span className="invalid-response error-position">
+              {error?.oth_app_desc}
+            </span>
+          ) : null}
+        </div>
+      );
+
+    case ADD_TYPE.membr:
+      return (
+        <div>
+          {error?.oth_app_desc && error?.oth_app_desc ? (
+            <span className="invalid-response error-position">
+              {error?.oth_app_desc}
+            </span>
+          ) : null}
+        </div>
+      );
+
+    default:
+      return null;
+  }
+};

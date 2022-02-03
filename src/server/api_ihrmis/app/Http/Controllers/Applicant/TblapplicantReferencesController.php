@@ -19,10 +19,14 @@ class TblapplicantReferencesController extends Controller
     public function addReferenceRecord($id, Request $request)
     {
         $request->validate([
-            'ref_app_name' => "required",
+            'ref_app_name' => 'required|regex:/^[\pL\s\-]+$/u',
             "ref_app_email" => "required|email:rfc",
-            'ref_app_email' => "required",
+            'ref_app_addr' => "required",
             'ref_app_tel_no' => "required"
+        ],[
+            'email' => 'Invalid input',
+            'regex' => 'Invalid input',
+            'required' => 'This field is required'
         ]);
 
         $reference = new TblapplicantReferences();

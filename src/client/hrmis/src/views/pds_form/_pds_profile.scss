@@ -11,19 +11,98 @@
   }
 }
 
+// PDS CLASS 1 CONTAINER
 .pds-prof-class-one {
-  font-size: small !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center;
+  font-size: small;
+  @include containerFlexRow(true);
+  align-items: flex-start;
+  label {
+    color: rgba(54, 58, 63, 0.8);
+  }
 }
 
-/// USED IN FORM THIRD COMPONENTS
+.main-citizen-container {
+  @include containerFlexRow(true);
+  color: rgba(54, 58, 63, 0.8);
+  font-size: small;
+  width: 100%;
+  .secondary-citizen-container {
+    margin-right: 10px;
+    @include containerFlexRow(false);
+    width: 50%;
+    .check-list {
+      @include containerFlexRow(true);
+      align-items: center;
+    }
+    .check-list-others {
+      justify-content: space-between;
+      @include containerFlexRow(true);
+
+      align-items: center;
+      .check-list {
+        @include containerFlexRow(true);
+        align-items: center;
+      }
+      .citizen-select {
+        position: relative;
+        .error-position {
+          position: absolute;
+          left: 10px;
+          bottom: -15px;
+        }
+      }
+    }
+  }
+  .secondary-citizen-container-two {
+    margin-left: 10px;
+    @include containerFlexRow(true);
+    width: 50%;
+    align-items: center;
+    justify-content: space-between;
+    .check-list {
+      @include containerFlexRow(true);
+      align-items: center;
+    }
+    .citizen-select {
+      position: relative;
+      .error-position {
+        position: absolute;
+        left: 0px;
+        bottom: -15px;
+      }
+    }
+  }
+}
+
+// PDS CLASS 2 CONTAINER
+.pds-prof-class-two {
+  font-size: small !important;
+  @include containerFlexRow(true);
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.pds-prof-class-two-children {
+  font-size: small;
+  position: relative;
+  @include containerFlexRow(true);
+  align-items: center;
+  label {
+    color: rgba(54, 58, 63, 0.8);
+  }
+  .error-position {
+    position: absolute;
+    bottom: -15px;
+  }
+}
+
+// PDS CLASS 3 CONTAINER
 .pds-prof-class-three {
   font-size: small;
   display: flex;
-  flex-direction: row;
+  @include containerFlexRow(true);
   align-items: center;
+  margin: 15px 0px;
 
   .container-detail-1 {
     margin-top: 5px;
@@ -35,6 +114,11 @@
   .container-detail-2 {
     margin-top: 5px;
     margin-bottom: 5px;
+    position: relative;
+    .error-position {
+      position: absolute;
+      bottom: -15px;
+    }
   }
   .container-detail-3 {
     margin-top: 5px;
@@ -45,24 +129,25 @@
     .case-status {
       color: rgba(54, 58, 63, 0.8);
       margin-left: 5px;
-      display: flex;
-      flex-direction: row;
+      @include containerFlexRow(true);
       align-items: center;
       width: 50%;
 
       label {
-        display: flex;
+        @include containerFlexRow(true);
         justify-content: center;
-        width: 50%;
+        width: 30%;
+      }
+      div {
+        position: relative;
+        width: 70%;
+        .error-position {
+          position: absolute;
+          bottom: -15px;
+        }
       }
     }
   }
-}
-
-//CLASS 2
-
-.pds-prof-class-one label {
-  color: rgba(54, 58, 63, 0.8);
 }
 
 .pds-profile-button-selection {
@@ -81,14 +166,6 @@
 .hover-over-button-green:hover {
   transition: 0.3s;
   background-color: rgba(2, 143, 2, 0.5) !important;
-}
-
-.pds-prof-class-two {
-  font-size: small !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: flex-end;
-  justify-content: space-between;
 }
 
 .tr-shade-color {
@@ -236,33 +313,6 @@
   font-size: 12px;
 }
 
-//CITIZENSHIP FORM ONE STYLE
-.citizenship-container {
-  color: $fontSecondaryColor;
-  @include containerFlexRow(true);
-  width: 100%;
-  .div-1 {
-    width: 50%;
-    margin-right: 5px;
-  }
-  .div-2 {
-    width: 50%;
-    margin-left: 5px;
-  }
-
-  .checked-dropdown {
-    margin-bottom: 10px;
-    @include containerFlexRow(true);
-    align-items: center;
-    .checked-1 {
-      width: 30%;
-    }
-    .checked-2 {
-      width: 70%;
-    }
-  }
-}
-
 //COPY ADDRESS FORM
 .per-address-head {
   @include containerFlexRow(true);
@@ -320,8 +370,8 @@
 }
 
 .invalid-response {
-  margin-left: 10px;
   color: rgb(233, 61, 61);
+  font-size: small;
 }
 
 //FORM SIX STYLE
@@ -379,29 +429,6 @@
 
 //Mobile
 @media only screen and (max-width: 800px) {
-  .citizenship-container {
-    @include containerFlexRow(false);
-    .div-1 {
-      width: 100%;
-      margin-right: 0px;
-    }
-    .div-2 {
-      width: 100%;
-      margin-left: 0px;
-    }
-    .checked-dropdown {
-      margin-bottom: 10px;
-      @include containerFlexRow(false);
-      align-items: center;
-      .checked-1 {
-        width: 100%;
-      }
-      .checked-2 {
-        width: 100%;
-      }
-    }
-  }
-
   .pds-prof-class-three {
     flex-direction: column;
     align-items: flex-start;
@@ -425,6 +452,10 @@
           display: block;
           justify-content: center;
           width: auto;
+          width: 100%;
+        }
+        div {
+          width: 100%;
         }
       }
     }

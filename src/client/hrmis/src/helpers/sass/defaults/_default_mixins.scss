@@ -1,8 +1,8 @@
-@mixin containerFlexRow($flex){
-    display: flex;
-    @if $flex{
-        flex-direction: row;
-    } @else {
-        flex-direction: column;
-    }
-} 
+@mixin containerFlexRow($flex) {
+  display: flex;
+  @if $flex {
+    flex-direction: row;
+  } @else {
+    flex-direction: column;
+  }
+}
