@@ -6,7 +6,6 @@ import {
   setObjectError,
 } from "../../../../features/reducers/error_handler_slice";
 import { setBusy } from "../../../../features/reducers/popup_response";
-import httpRequestHelper from "../../../../helpers/http_request_helper";
 import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
 import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
@@ -123,7 +122,7 @@ const FormPageSix = () => {
     console.log(document.getElementById("app_others_file").files);
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-requirement/", item, true)
+      .post(dataState, "new-requirement", item, true)
       .then(() => {
         renderSuccess();
         dispatch(setObjectError({}));
@@ -229,7 +228,7 @@ const FormPageSix = () => {
                 <PrevNextSubButtons
                   page={6}
                   onClickBack={() =>
-                    navigate(`/ihrmis/pds-applicant/form-page-five/${item}`)
+                    navigate(`/pds-applicant/form-page-five/${item}`)
                   }
                 />
               </div>

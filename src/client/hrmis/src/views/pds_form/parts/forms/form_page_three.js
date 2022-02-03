@@ -1,9 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineArrowDown, AiOutlineArrowUp } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { setBusy } from "../../../../features/reducers/popup_response";
 import { API_HOST } from "../../../../helpers/global/global_config";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper";
@@ -17,10 +15,6 @@ import ThreeAddWorkExperienceModal from "../add_modals/three_add_workexp";
 import ThreeAddInterventionModal from "../add_modals/three_add_intervention";
 import PrevNextSubButtons from "../prev_next_sub_buttons";
 import DostHeader from "../dost_header";
-import {
-  setMessageError,
-  setObjectError,
-} from "../../../../features/reducers/error_handler_slice";
 import { useScrollToTop } from "../../../../helpers/use_hooks/useScollTop";
 
 const FormPageThree = () => {
@@ -49,11 +43,9 @@ const FormPageThree = () => {
         <div className="buttons-pos-right">
           <PrevNextSubButtons
             page={3}
-            onClickBack={() =>
-              navigate(`/ihrmis/pds-applicant/form-page-two/${item}`)
-            }
+            onClickBack={() => navigate(`/pds-applicant/form-page-two/${item}`)}
             onClickNext={() =>
-              navigate(`/ihrmis/pds-applicant/form-page-four/${item}`)
+              navigate(`/pds-applicant/form-page-four/${item}`)
             }
           />
         </div>
@@ -66,7 +58,7 @@ const TableOne = () => {
   // ===========================================
   // CUSTOM HOOK SERVICE
   // ===========================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderFailed, renderSucceed, renderBusy } = usePopUpHelper();
   let [showData, setShowData] = useToggleHelper(false);
 
   // ===========================================
@@ -75,22 +67,12 @@ const TableOne = () => {
   const { item } = useParams();
 
   // ===========================================
-  // REDUX TOOLKIT FUNCTIONALITY
-  // ===========================================
-  const dispatch = useDispatch();
-
-  const onCloseClearError = () => {
-    dispatch(setMessageError(undefined));
-    dispatch(setObjectError({}));
-  };
-
-  // ===========================================
   // GET ALL EDUCATION RECORD HTTP REQUEST
   // ===========================================
   const [educationRecord, setEducationRecord] = useState([]);
   const getEducationRecord = async () => {
     await axios
-      .get(API_HOST + `/new-education/${item}`)
+      .get(API_HOST + `new-education/${item}`)
       .then((response) => {
         setEducationRecord(response.data.data);
       })
@@ -102,14 +84,14 @@ const TableOne = () => {
   // ===========================================
   const [dataContainer, setDataContainer] = useState(null);
   const removeEducationRecord = async (record) => {
-    dispatch(setBusy(true));
+    renderBusy(true);
     await axios
-      .delete(API_HOST + `/new-education/${record}`)
+      .delete(API_HOST + `new-education/${record}`)
       .then(() => {
-        renderSuccess();
+        renderSucceed({ content: "Deleted Successfully" });
       })
-      .catch(() => renderFail());
-    dispatch(setBusy(false));
+      .catch((err) => renderFailed({ content: err.message }));
+    renderBusy(false);
   };
 
   // ===========================================
@@ -137,10 +119,7 @@ const TableOne = () => {
       */}
       <ThreeAddEducationModal
         isDisplay={toogle.addModal}
-        onClose={() => {
-          toggleSetter("addModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("addModal")}
       />
       {/* 
           // ===========================================
@@ -152,12 +131,8 @@ const TableOne = () => {
         onPressed={() => {
           removeEducationRecord(dataContainer.item);
           toggleSetter("updateModal");
-          onCloseClearError();
         }}
-        onClose={() => {
-          toggleSetter("updateModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("updateModal")}
         data={dataContainer}
       />
 
@@ -294,31 +269,20 @@ const TableTwo = () => {
   // ===========================================
   // CUSTOM HOOK SERVICE
   // ===========================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderFailed, renderSucceed, renderBusy } = usePopUpHelper();
   let [showData, setShowData] = useToggleHelper(false);
 
   // ===========================================
   // REACT ROUTER FUNCTIONALITY
   // ===========================================
   const { item } = useParams();
-
-  const onCloseClearError = () => {
-    dispatch(setMessageError(undefined));
-    dispatch(setObjectError({}));
-  };
-
-  // ===========================================
-  // REDUX TOOLKIT FUNCTIONALITY
-  // ===========================================
-  const dispatch = useDispatch();
-
   // ===========================================
   // GET ALL CIVIL SERVICE RECORD HTTP REQUEST
   // ===========================================
   const [cselibilityRecord, setCselibilityRecord] = useState([]);
   const getCseligibilityRecord = async () => {
     await axios
-      .get(API_HOST + `/new-csc-eleigibility/${item}`)
+      .get(API_HOST + `new-csc-eleigibility/${item}`)
       .then((response) => {
         setCselibilityRecord(response.data.data);
       })
@@ -332,12 +296,12 @@ const TableTwo = () => {
   // ===========================================
   const [dataContainer, setDataContainer] = useState(null);
   const removeCseligibilityRecord = async (record) => {
-    dispatch(setBusy(true));
+    renderBusy(true);
     await axios
-      .delete(API_HOST + `/new-csc-eleigibility/${record}`)
-      .then(() => renderSuccess())
-      .catch(() => renderFail());
-    dispatch(setBusy(false));
+      .delete(API_HOST + `new-csc-eleigibility/${record}`)
+      .then(() => renderSucceed({ content: "Deleted Successfully" }))
+      .catch((err) => renderFailed({ content: err.message }));
+    renderBusy(false);
   };
 
   // ===========================================
@@ -365,10 +329,7 @@ const TableTwo = () => {
       */}
       <ThreeAddCivilServiceModal
         isDisplay={toogle.addModal}
-        onClose={() => {
-          toggleSetter("addModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("addModal")}
       />
       {/* 
           // ===========================================
@@ -380,12 +341,8 @@ const TableTwo = () => {
         onPressed={() => {
           removeCseligibilityRecord(dataContainer.cse_app_time);
           toggleSetter("updateModal");
-          onCloseClearError();
         }}
-        onClose={() => {
-          toggleSetter("updateModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("updateModal")}
         data={dataContainer}
       />
       <div className="scrollable-div-table">
@@ -531,22 +488,14 @@ const TableThree = () => {
   // ===========================================
   // CUSTOM HOOK SERVICE
   // ===========================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+
   let [showData, setShowData] = useToggleHelper(false);
 
   // ===========================================
   // REACT ROUTER FUNCTIONALITY
   // ===========================================
   const { item } = useParams();
-  const onCloseClearError = () => {
-    dispatch(setMessageError(undefined));
-    dispatch(setObjectError({}));
-  };
-
-  // ===========================================
-  // REDUX TOOLKIT FUNCTIONALITY
-  // ===========================================
-  const dispatch = useDispatch();
 
   // ===========================================
   // GET ALL WORK RECORD HTTP REQUEST
@@ -554,7 +503,7 @@ const TableThree = () => {
   const [workExperienceRecord, setWorkExperienceRecord] = useState([]);
   const getWorkExperienceRecord = async () => {
     await axios
-      .get(API_HOST + `/new-work-experience/${item}`)
+      .get(API_HOST + `new-work-experience/${item}`)
       .then((response) => {
         setWorkExperienceRecord(response.data.data);
       })
@@ -568,12 +517,12 @@ const TableThree = () => {
   // ===========================================
   const [dataContainer, setDataContainer] = useState(null);
   const removeWorkExpRecord = async (record) => {
-    dispatch(setBusy(true));
+    renderBusy(true);
     await axios
-      .delete(API_HOST + `/new-work-experience/${record}`)
-      .then(() => renderSuccess())
-      .catch(() => renderFail());
-    dispatch(setBusy(false));
+      .delete(API_HOST + `new-work-experience/${record}`)
+      .then(() => renderSucceed({ content: "Deleted Successfully" }))
+      .catch((err) => renderFailed({ content: err.message }));
+    renderBusy(false);
   };
 
   // ===========================================
@@ -610,10 +559,7 @@ const TableThree = () => {
         */}
       <ThreeAddWorkExperienceModal
         isDisplay={toogle.addModal}
-        onClose={() => {
-          toggleSetter("addModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("addModal")}
       />
       {/* 
             // ===========================================
@@ -625,12 +571,8 @@ const TableThree = () => {
         onPressed={() => {
           removeWorkExpRecord(dataContainer.exp_app_time);
           toggleSetter("updateModal");
-          onCloseClearError();
         }}
-        onClose={() => {
-          toggleSetter("updateModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("updateModal")}
         data={dataContainer}
       />
 
@@ -766,21 +708,13 @@ const TableFour = () => {
   // ===========================================
   // CUSTOM HOOK SERVICE
   // ===========================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   let [showData, setShowData] = useToggleHelper(false);
 
   // ===========================================
   // REACT ROUTER FUNCTIONALITY
   // ===========================================
   const { item } = useParams();
-  const onCloseClearError = () => {
-    dispatch(setMessageError(undefined));
-    dispatch(setObjectError({}));
-  };
-  // ===========================================
-  // REDUX TOOLKIT FUNCTIONALITY
-  // ===========================================
-  const dispatch = useDispatch();
 
   // ===========================================
   // GET ALL VOLUNTARY RECORD HTTP REQUEST
@@ -788,7 +722,7 @@ const TableFour = () => {
   const [voluntaryRecord, setVoluntaryRecord] = useState([]);
   const getVoluntaryRecord = async () => {
     await axios
-      .get(API_HOST + `/new-voluntary-work/${item}`)
+      .get(API_HOST + `new-voluntary-work/${item}`)
       .then((response) => {
         setVoluntaryRecord(response.data.data);
       })
@@ -802,13 +736,13 @@ const TableFour = () => {
   // ===========================================
   const [dataContainer, setDataContainer] = useState(null);
   const removeVoluntaryWorkRecord = async (record) => {
-    dispatch(setBusy(true));
+    renderBusy(true);
     console.log("Hello Pressed");
     await axios
-      .delete(API_HOST + `/new-voluntary-work/${record}`)
-      .then(() => renderSuccess())
-      .catch(() => renderFail());
-    dispatch(setBusy(false));
+      .delete(API_HOST + `new-voluntary-work/${record}`)
+      .then(() => renderSucceed({ content: "Deleted Successfully" }))
+      .catch((err) => renderFailed({ content: err.message }));
+    renderBusy(false);
   };
 
   // ===========================================
@@ -836,10 +770,7 @@ const TableFour = () => {
         */}
       <ThreeAddVoluntrayWorkModal
         isDisplay={toogle.addModal}
-        onClose={() => {
-          toggleSetter("addModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("addModal")}
       />
       {/*
             // ===========================================
@@ -851,12 +782,8 @@ const TableFour = () => {
         onPressed={() => {
           removeVoluntaryWorkRecord(dataContainer.vol_app_time);
           toggleSetter("updateModal");
-          onCloseClearError();
         }}
-        onClose={() => {
-          toggleSetter("updateModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("updateModal")}
         data={dataContainer}
       />
 
@@ -992,23 +919,13 @@ const TableFive = () => {
   // ===========================================
   // CUSTOM HOOK SERVICE
   // ===========================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   let [showData, setShowData] = useToggleHelper(false);
 
   // ===========================================
   // REACT ROUTER FUNCTIONALITY
   // ===========================================
   let { item } = useParams();
-  let navigate = useNavigate();
-
-  // ===========================================
-  // REDUX TOOLKIT FUNCTIONALITY
-  // ===========================================
-  const dispatch = useDispatch();
-  const onCloseClearError = () => {
-    dispatch(setMessageError(undefined));
-    dispatch(setObjectError({}));
-  };
 
   // ===========================================
   // GET ALL TRAINING RECORD HTTP REQUEST
@@ -1016,7 +933,7 @@ const TableFive = () => {
   const [trainingRecord, setTrainingRecord] = useState([]);
   const getTrainingRecord = async () => {
     await axios
-      .get(API_HOST + `/new-training/${item}`)
+      .get(API_HOST + `new-training/${item}`)
       .then((response) => {
         setTrainingRecord(response.data.data);
       })
@@ -1030,12 +947,12 @@ const TableFive = () => {
   // ===========================================
   const [dataContainer, setDataContainer] = useState(null);
   const removeTrainingRecord = async (record) => {
-    dispatch(setBusy(true));
+    renderBusy(true);
     await axios
-      .delete(API_HOST + `/new-training/${record}`)
-      .then(() => renderSuccess())
-      .catch(() => renderFail());
-    dispatch(setBusy(false));
+      .delete(API_HOST + `new-training/${record}`)
+      .then(() => renderSucceed({ content: "Deleted Successfully" }))
+      .catch((err) => renderFailed({ content: err.message }));
+    renderBusy(false);
   };
 
   // ===========================================
@@ -1063,10 +980,7 @@ const TableFive = () => {
             */}
       <ThreeAddInterventionModal
         isDisplay={toogle.addModal}
-        onClose={() => {
-          toggleSetter("addModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("addModal")}
       />
 
       {/* 
@@ -1079,12 +993,8 @@ const TableFive = () => {
         onPressed={() => {
           removeTrainingRecord(dataContainer.trn_app_time);
           toggleSetter("updateModal");
-          onCloseClearError();
         }}
-        onClose={() => {
-          toggleSetter("updateModal");
-          onCloseClearError();
-        }}
+        onClose={() => toggleSetter("updateModal")}
         data={dataContainer}
       />
 

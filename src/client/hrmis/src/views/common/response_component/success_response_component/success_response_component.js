@@ -1,15 +1,16 @@
 import React from "react";
 import { MdClose } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setSuccess } from "../../../../features/reducers/popup_response";
 
-const SuccessResponseComponent = (props) => {
+const SuccessResponseComponent = () => {
   const dispatch = useDispatch();
+  const { message } = useSelector((state) => state.popupResponse);
   return (
     <React.Fragment>
       <div className="succeed-response">
         <div className="title-success-response">
-          <strong>{props.title}</strong>{" "}
+          <strong>{message.title}</strong>{" "}
           <span
             onClick={() => {
               dispatch(setSuccess(false));
@@ -18,15 +19,10 @@ const SuccessResponseComponent = (props) => {
             <MdClose size="14px" />
           </span>
         </div>
-        <div className="children-success-response">{props.children}</div>
+        <div className="children-success-response">{message.content}</div>
       </div>
     </React.Fragment>
   );
-};
-
-SuccessResponseComponent.defaultProps = {
-  children: "Action succeeded",
-  title: "SUCCESS: Action Accepted!",
 };
 
 export default SuccessResponseComponent;

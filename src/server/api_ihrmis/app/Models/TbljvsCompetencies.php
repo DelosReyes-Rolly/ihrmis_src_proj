@@ -10,7 +10,7 @@ class TbljvsCompetencies extends Model
     use HasFactory;
 
     protected $table = 'tbljvs_competencies';
-    protected $primary = 'com_jvs_id';
+    protected $primaryKey = 'com_jvs_id';
 
     protected $fillable = [
         'com_jvs_id',

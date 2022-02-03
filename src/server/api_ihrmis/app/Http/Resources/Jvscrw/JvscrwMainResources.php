@@ -20,7 +20,6 @@ class JvscrwMainResources extends JsonResource
             'jvs' => JvsCrwResource::collection($this->whenLoaded('tbljvs')),
             'office' => new JvsOfficeResource($this->whenLoaded('tbloffices')),
             'position' => new JvsPositionResource($this->whenLoaded('tblpositions')),
-            'duty_rspnsblty'=> $this->tbldtyresponsibility
         ];
     }
 }

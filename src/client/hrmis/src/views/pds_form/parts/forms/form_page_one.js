@@ -1,30 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
+import { useDispatch } from "react-redux";
 import { useLocationHelper } from "../../../../helpers/use_hooks/location_helper";
-import ValidationComponent from "../../../common/response_component/validation_component/validation_component";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../common/input_component/select_component/select_component";
-import CheckboxComponent from "../../../common/input_component/checkbox_input_component/checkbox_input_component";
-import { setBusy } from "../../../../features/reducers/popup_response";
 import ReCAPTCHA from "react-google-recaptcha";
 import { IoCopySharp } from "react-icons/io5";
-import CitizenshipFormOne from "../citizenship_form_one";
 import { formOneInput } from "../../static/input_items";
 import countryList from "iso-3166-country-list";
 import phil from "phil-reg-prov-mun-brgy";
 import PrevNextSubButtons from "../prev_next_sub_buttons";
-import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
-import {
-  setMessageError,
-  setObjectError,
-} from "../../../../features/reducers/error_handler_slice";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import DostHeader from "../dost_header";
 import axios from "axios";
-import { API_HOST } from "../../../../helpers/global/global_config";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useScrollToTop } from "../../../../helpers/use_hooks/useScollTop";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { setMessageError } from "../../../../features/reducers/error_handler_slice";
+import {
+  API_HOST,
+  validationName,
+  validationRequired,
+  validationRequiredNum,
+  validationEmail,
+  yesterday,
+} from "../../../../helpers/global/global_config";
+import useAxiosHelper from "../../../../helpers/use_hooks/axios_helper";
+
+const PER_ADDR_RULE = Yup.string().when("copy_res_addr", {
+  is: "false",
+  then: validationRequired,
+});
 
 const FormPageOne = () => {
   useScrollToTop();
@@ -32,190 +38,192 @@ const FormPageOne = () => {
   // CUSTOM HOOK SERVICE
   // ===================================
   // FOR FORM
-  const [applicantDataHolder, setDataInput, arrInput, setter] = useFormHelper(
-    {}
-  );
-  // FOR GETTING BRGY, MUNICIPALITY, PROVINCE STATES
-  const [resCity, resBrgy, getResCity, getResBrgy] = useLocationHelper();
-  const [perCity, perBrgy, getPerCity, getPerBrgy] = useLocationHelper();
+  const [getApplicantData, setgetApplicantData] = useState({});
+
   // FOR CLOSING POPUPS
-  const { renderFail, renderSuccess } = usePopUpHelper();
+  const { renderBusy, renderSucceed, renderFailed } = usePopUpHelper();
+
   // ===================================
   // REDUX STATE AND FUNCIONALITIES
   // ===================================
   const dispatch = useDispatch();
-  const errorObj = useSelector((state) => state.error.objectError);
-  const errorMsg = useSelector((state) => state.error.messageError);
 
   // ===================================
   // HANDLING ROUTES
   // ===================================
   const { item } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   // ===================================
   // DISPLAYING SELECT MENU IN CITIZENSHIP
   // ===================================
-  const [isDisplaySelect, setIsDisplaySelect] = useState(undefined);
-  // ===================================
-  // CAPTCHA LOGIC STATE
-  // ===================================
+  const [resCity, resBrgy, getResCity, getResBrgy] = useLocationHelper();
+  const [perCity, perBrgy, getPerCity, getPerBrgy] = useLocationHelper();
+
   const [verifyCapcha, setVerifyCaptcha] = useState(false); // Use for determining if user successfully finish the captcha
-  const [captcha, setCaptcha] = useState(false); // Use for displaying captcha input error handling
-
-  // ===================================
-  // ADDRESS FUNCTION AND STATE
-  // ===================================
-  const [diplayPermanent, setdiplayPermanent] = useState(true);
-  const setCopiedAddress = () => {
-    setdiplayPermanent(!diplayPermanent);
-    arrInput("copied_addr", diplayPermanent);
-  };
-
-  // ===================================
-  //  SUBBMIT HANDLER
-  // ===================================
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    if (verifyCapcha == true) {
-      dispatch(setBusy(true));
-      await useAxiosRequestHelper
-        .post(applicantDataHolder, "/new-applicant/", item)
-        .then(() => {
-          dispatch(setObjectError(undefined));
-
-          renderSuccess();
-          if (item === undefined) {
-            navigate(
-              "/ihrmis/pds-applicant/email-confirmation/" +
-                applicantDataHolder.app_email_addr
-            );
-          }
-        })
-        .catch((err) => {
-          renderFail();
-          if (typeof err === "object") {
-            dispatch(setObjectError(err));
-            dispatch(setMessageError("Unprocessable Entity"));
-          } else {
-            dispatch(setMessageError(err));
-          }
-        });
-      dispatch(setBusy(false));
-      setCaptcha(false);
-    } else {
-      renderFail();
-      setCaptcha(true);
-    }
-  };
 
   const getApplicantRecord = async () => {
-    await axios.get(API_HOST + `/get-new-applicant/${item}`).then((res) => {
-      const data = res ? res.data.data : undefined;
-
-      getResCity(data.res_province ?? "");
-      getResBrgy(data.res_municipality ?? "");
+    await axios.get(API_HOST + `get-new-applicant/${item}`).then((res) => {
+      const data = res ? res.data.data : null;
+      console.log(data);
+      getResCity(data ? data.res_province : "");
+      getResBrgy(data ? data.res_municipality : "");
       getPerCity(data.per_province ?? "");
       getPerBrgy(data.per_municipality ?? "");
-
-      setIsDisplaySelect(data ? data.app_filipino : "");
-      setter({
-        app_nm_last: data ? data.app_nm_last : "",
-        app_nm_first: data ? data.app_nm_first : "",
-        app_nm_extn: data ? data.app_nm_extn : "",
-        app_nm_mid: data ? data.app_nm_mid : "",
-
-        app_birth_date: data ? data.app_birth_date : "",
-        app_birth_place: data ? data.app_birth_place : "",
-        app_sex: data ? data.app_sex : "",
-        app_blood_type: data ? data.app_blood_type : "",
-        app_civil_status: data ? data.app_civil_status : "",
-        app_height: data ? data.app_height : "",
-        app_weight: data ? data.app_weight : "",
-
-        app_gsis: data ? data.app_gsis : "",
-        app_pagibig: data ? data.app_pagibig : "",
-        app_philhealth: data ? data.app_philhealth : "",
-        app_sss: data ? data.app_sss : "",
-        app_tin: data ? data.app_tin : "",
-        app_emp_no: data ? data.app_emp_no : "",
-
-        //CIVI STATUS
-        app_filipino: data ? data.app_filipino : "",
-        app_dual_type: data ? data.app_dual_type : "",
-        app_dual_cny_id: data ? data.app_dual_cny_id : "",
-
-        res_block_lot: data ? data.res_block_lot : "",
-        res_street: data ? data.res_street : "",
-        res_sub_village: data ? data.res_sub_village : "",
-        res_zip_code: data ? data.res_zip_code : "",
-        res_barangay: data ? data.res_barangay : "",
-        res_municipality: data ? data.res_municipality : "",
-        res_province: data ? data.res_province : "",
-
-        per_block_lot: data ? data.per_block_lot : "",
-        per_street: data ? data.per_street : "",
-        per_sub_village: data ? data.per_sub_village : "",
-        per_zip_code: data ? data.per_zip_code : "",
-        per_barangay: data ? data.per_barangay : "",
-        per_municipality: data ? data.per_municipality : "",
-        per_province: data ? data.per_province : "",
-
-        app_tel_no: data ? data.app_tel_no : "",
-        app_mobile_no: data ? data.app_mobile_no : "",
-        app_email_addr: data ? data.app_email_addr : "",
-      });
+      setgetApplicantData({ ...data });
     });
   };
+
   const checkItemIfNull = () => {
-    if (item !== undefined) setVerifyCaptcha(!verifyCapcha);
+    if (item !== undefined) setVerifyCaptcha(true);
   };
+
   useEffect(() => {
     checkItemIfNull();
-    arrInput("copied_addr", !diplayPermanent);
     getApplicantRecord();
   }, []);
+
+  const pdsOneInputHandler = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      app_nm_last: getApplicantData?.app_nm_last ?? "",
+      app_nm_first: getApplicantData?.app_nm_first ?? "",
+      app_nm_extn: getApplicantData?.app_nm_extn ?? "",
+      app_nm_mid: getApplicantData.app_nm_mid ?? "",
+
+      app_birth_date: getApplicantData?.app_birth_date ?? "",
+      app_birth_place: getApplicantData?.app_birth_place ?? "",
+      app_sex: getApplicantData?.app_sex ?? "",
+      app_blood_type: getApplicantData?.app_blood_type ?? "",
+      app_civil_status: getApplicantData?.app_civil_status ?? "",
+      app_civil_others: getApplicantData?.app_civil_others ?? "",
+      app_height: getApplicantData?.app_height ?? "",
+      app_weight: getApplicantData?.app_weight ?? "",
+
+      app_gsis: getApplicantData?.app_gsis ?? "",
+      app_pagibig: getApplicantData?.app_pagibig ?? "",
+      app_philhealth: getApplicantData?.app_philhealth ?? "",
+      app_sss: getApplicantData?.app_sss ?? "",
+      app_tin: getApplicantData?.app_tin ?? "",
+      app_emp_no: getApplicantData?.app_emp_no ?? "",
+
+      app_filipino: getApplicantData?.app_filipino ?? undefined,
+      app_dual_cny_id: getApplicantData?.app_dual_cny_id ?? "",
+      app_dual_type_check:
+        getApplicantData?.app_dual_type != 0 &&
+        getApplicantData?.app_dual_type != null
+          ? true
+          : false,
+
+      app_dual_type: getApplicantData?.app_dual_type ?? "",
+
+      res_block_lot: getApplicantData?.res_block_lot ?? "",
+      res_street: getApplicantData?.res_street ?? "",
+      res_sub_village: getApplicantData?.res_sub_village ?? "",
+      res_zip_code: getApplicantData?.res_zip_code ?? "",
+      res_province: getApplicantData?.res_province ?? "",
+      res_municipality: getApplicantData?.res_municipality ?? "",
+      res_barangay: getApplicantData?.res_barangay ?? "",
+
+      copy_res_addr: false,
+
+      per_block_lot: getApplicantData?.per_block_lot ?? "",
+      per_street: getApplicantData?.per_street ?? "",
+      per_sub_village: getApplicantData?.per_sub_village ?? "",
+      per_zip_code: getApplicantData?.per_zip_code ?? "",
+      per_province: getApplicantData?.per_province ?? "",
+      per_municipality: getApplicantData?.per_municipality ?? "",
+      per_barangay: getApplicantData?.per_barangay ?? "",
+
+      app_tel_no: getApplicantData?.app_tel_no ?? "",
+      app_mobile_no: getApplicantData?.app_mobile_no ?? "",
+      app_email_addr: getApplicantData?.app_email_addr ?? "",
+    },
+
+    validationSchema: Yup.object({
+      app_nm_last: validationName,
+      app_nm_first: validationName,
+      app_nm_extn: validationName,
+      app_nm_mid: validationName,
+
+      app_birth_date: validationRequired.max(yesterday, "Invalid Birthdate"),
+      app_birth_place: validationRequired,
+      app_sex: validationRequired,
+      app_blood_type: validationRequired,
+      app_civil_status: validationRequired,
+      app_civil_others: Yup.string().when("app_civil_status", {
+        is: "OT",
+        then: validationRequired,
+      }),
+      app_height: validationRequiredNum,
+      app_weight: validationRequiredNum,
+
+      app_gsis: validationRequired,
+      app_pagibig: validationRequired,
+      app_philhealth: validationRequired,
+      app_sss: validationRequired,
+      app_tin: validationRequired,
+      app_emp_no: validationRequired,
+
+      app_filipino: validationRequiredNum,
+      app_dual_cny_id: Yup.string().when("app_filipino", {
+        is: 0,
+        then: Yup.string().required("This field is required"),
+      }),
+      app_dual_type_check: Yup.bool(),
+      app_dual_type: Yup.string().when("app_dual_type_check", {
+        is: 1,
+        then: Yup.string().required("This field is required"),
+      }),
+
+      res_block_lot: validationRequired,
+      res_street: validationRequired,
+      res_sub_village: validationRequired,
+      res_zip_code: validationRequiredNum,
+      res_province: validationRequired,
+      res_municipality: validationRequired,
+      res_barangay: validationRequired,
+
+      copy_res_addr: Yup.string(),
+
+      per_block_lot: PER_ADDR_RULE,
+      per_street: PER_ADDR_RULE,
+      per_sub_village: PER_ADDR_RULE,
+      per_zip_code: Yup.number().when("copy_res_addr", {
+        is: "false",
+        then: validationRequiredNum,
+      }),
+      per_province: PER_ADDR_RULE,
+      per_municipality: PER_ADDR_RULE,
+      per_barangay: PER_ADDR_RULE,
+
+      app_tel_no: validationRequiredNum,
+      app_mobile_no: validationRequiredNum,
+      app_email_addr: validationEmail,
+    }),
+    onSubmit: async (values) => {
+      console.log(values);
+      if (verifyCapcha === true) {
+        renderBusy(true);
+        await useAxiosHelper
+          .post(values, "new-applicant", item)
+          .then(() => renderSucceed({ content: "Form submitted" }))
+          .catch((err) => renderFailed({ content: err.message }));
+        renderBusy(false);
+      } else {
+        renderFailed({ content: "Please complete the CAPTCHA" });
+      }
+    },
+  });
 
   return (
     <React.Fragment>
       <div className="pds-profile-main-view">
-        {/* 
-            //==========================================
-            // PDS ON-210 MAIN HEADER
-            //==========================================
-        */}
-
         <DostHeader />
         <br />
-
-        {/* 
-            //==========================================
-            // PDS ON-210 FORM SERVER ERROR RESPONSE 
-            //==========================================
-        */}
-        {captcha ? (
-          <ValidationComponent title="FAILED TO SUBMIT">
-            {captcha && <p>Please Complete the CAPTCHA</p>}
-          </ValidationComponent>
-        ) : errorMsg !== undefined || errorMsg == "" ? (
-          <ValidationComponent title="FAILED TO SUBMIT">
-            <p>{errorMsg}</p>
-          </ValidationComponent>
-        ) : null}
-        <br />
-
-        {/* 
-            //==========================================
-            // PDS ON-210 FORM SECTION 
-            //==========================================
-        */}
-
-        <form style={{ boxSizing: "border-box" }} onSubmit={submitHandler}>
-          {/* 
-              //==========================================
-              // FORM HEADER SECTION 
-              //==========================================
-          */}
+        <form
+          style={{ boxSizing: "border-box" }}
+          onSubmit={pdsOneInputHandler.handleSubmit}
+        >
           <table id="custom-table">
             <thead>
               <tr className="main-headers">
@@ -224,716 +232,33 @@ const FormPageOne = () => {
             </thead>
           </table>
           <br />
-
-          {/* 
-              //==========================================
-              // USER NAME INFORMATION SECTION 
-              //==========================================
-          */}
-
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "50%" }}>
-              <label>Surname</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_nm_last : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_nm_last ?? ""}
-                name="app_nm_last"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "50%" }}>
-              <label>First Name</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_nm_first : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_nm_first ?? ""}
-                name="app_nm_first"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-          </div>
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "50%" }}>
-              <label>Name Extension (Jr., Sr.)</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_nm_extn : ""}
-              </span>
-              <InputComponent
-                maxLength="10"
-                value={applicantDataHolder.app_nm_extn ?? ""}
-                name="app_nm_extn"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "50%" }}>
-              <label>Middle Name</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_nm_mid : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_nm_mid ?? ""}
-                name="app_nm_mid"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-          </div>
+          <UserNameInformation formik={pdsOneInputHandler} />
           <br />
-
-          {/* 
-              //==========================================
-              // OTHER USER INFORMATION SECTION 
-              //==========================================
-          */}
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "25%" }}>
-              <label> Date of Birth</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_birth_date : ""}
-              </span>
-              <InputComponent
-                type="date"
-                value={applicantDataHolder.app_birth_date ?? ""}
-                name="app_birth_date"
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "45%" }}
-            >
-              <label>Place of Birth</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_birth_place : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_birth_place ?? ""}
-                name="app_birth_place"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "15%" }}
-            >
-              <label>Sex</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_sex : ""}
-              </span>
-              <SelectComponent
-                name="app_sex"
-                itemList={formOneInput.sex}
-                value={applicantDataHolder.app_sex ?? ""}
-                defaultTitle="Sex"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "15%" }}>
-              <label>Blood Type</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_blood_type : ""}
-              </span>
-              <SelectComponent
-                name="app_blood_type"
-                itemList={formOneInput.blood_type}
-                value={applicantDataHolder.app_blood_type ?? ""}
-                defaultTitle="Blood Type"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-          </div>
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "25%" }}>
-              <label>Civil Status</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_civil_status : ""}
-              </span>
-              <SelectComponent
-                name="app_civil_status"
-                itemList={formOneInput.civil_status}
-                value={applicantDataHolder.app_civil_status ?? ""}
-                defaultTitle="Civil Status"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "45%" }}
-            >
-              <label>If others, please specify</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_civil_others : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_civil_others ?? ""}
-                name="app_civil_others"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "15%" }}
-            >
-              <label>Height (m)</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_height : ""}
-              </span>
-              <InputComponent
-                maxLength="6"
-                minLength="3"
-                value={applicantDataHolder.app_height ?? ""}
-                name="app_height"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "15%" }}>
-              <label>Weight (kg)</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_weight : ""}
-              </span>
-              <InputComponent
-                maxLength="6"
-                minLength="3"
-                value={applicantDataHolder.app_weight ?? ""}
-                name="app_weight"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-          </div>
-
-          {/* 
-              //==========================================
-              // EMPLOYMENT INFORMATION SECTION 
-              //==========================================
-          */}
-          <div className="pds-prof-class-one">
-            <div
-              className="pds-prof-class-one"
-              style={{ marginBottom: "10px" }}
-            >
-              <div style={{ marginRight: "5px", width: "33%" }}>
-                <label>GSIS ID No.</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_gsis : ""}
-                </span>
-                <InputComponent
-                  maxLength="20"
-                  value={applicantDataHolder.app_gsis ?? ""}
-                  name="app_gsis"
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-              <div
-                style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}
-              >
-                <label>PAG-IBIG ID No</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_pagibig : ""}
-                </span>
-                <InputComponent
-                  maxLength="20"
-                  name="app_pagibig"
-                  value={applicantDataHolder.app_pagibig ?? ""}
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-              <div style={{ marginLeft: "5px", width: "33%" }}>
-                <label>PHILHEALTH No.</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_philhealth : ""}
-                </span>
-                <InputComponent
-                  page="1"
-                  maxLength="20"
-                  value={applicantDataHolder.app_philhealth ?? ""}
-                  name="app_philhealth"
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="pds-prof-class-one">
-            <div
-              className="pds-prof-class-one"
-              style={{ marginBottom: "10px" }}
-            >
-              <div style={{ marginRight: "5px", width: "33%" }}>
-                <label>SSS No.</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_sss : ""}
-                </span>
-                <InputComponent
-                  maxLength="20"
-                  name="app_sss"
-                  value={applicantDataHolder.app_sss ?? ""}
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-              <div
-                style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}
-              >
-                <label>TIN No</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_tin : ""}
-                </span>
-                <InputComponent
-                  maxLength="20"
-                  value={applicantDataHolder.app_tin ?? ""}
-                  name="app_tin"
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-              <div style={{ marginLeft: "5px", width: "33%" }}>
-                <label>Agency Employee No.</label>
-                <span className="invalid-response">
-                  {errorObj ? errorObj.app_emp_no : ""}
-                </span>
-                <InputComponent
-                  maxLength="20"
-                  value={applicantDataHolder.app_emp_no ?? ""}
-                  name="app_emp_no"
-                  onChange={(e) => {
-                    setDataInput(e);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          <OtherUserInformation formik={pdsOneInputHandler} />
           <br />
-
-          {/* 
-              //==========================================
-              // CITIZENSHIP INFORMATION SECTION 
-              //==========================================
-          */}
-          <h5 style={{ color: "rgba(54, 58, 63, 0.8)", marginBottom: "10px" }}>
-            CITIZENSHIP
-            <span className="invalid-response">
-              {errorObj ? errorObj.app_filipino ?? "" : null}
-            </span>
-          </h5>
-          <div className="pds-prof-class-one">
-            <div className="citizenship-container">
-              <div className="div-1">
-                <CitizenshipFormOne
-                  name="app_filipino"
-                  value={applicantDataHolder.app_filipino ?? undefined}
-                  onChange={(e) => {
-                    setDataInput(e);
-                    setIsDisplaySelect(e.target.value);
-                  }}
-                  display={isDisplaySelect}
-                >
-                  <div
-                    className="invalid-response"
-                    style={{ marginLeft: "0px" }}
-                  >
-                    {errorObj ? `${errorObj.app_dual_cny_id ?? ""}` : null}
-                  </div>
-                  <SelectComponent
-                    name="app_dual_cny_id"
-                    defaultTitle="Specify Country"
-                    itemList={countryList}
-                    value={applicantDataHolder.app_dual_cny_id ?? ""}
-                    onChange={(e) => {
-                      {
-                        setDataInput(e);
-                      }
-                    }}
-                  />
-                </CitizenshipFormOne>
-              </div>
-
-              <div className="div-2">
-                {isDisplaySelect == 1 && (
-                  <div className="checked-dropdown">
-                    <div className="checked-1">
-                      <CheckboxComponent
-                        name="is_dual_citizen"
-                        value="1"
-                        onChange={(e) => {
-                          setDataInput(e);
-                        }}
-                      />
-                      <span className="margin-left-1">Dual Citizen</span>
-                    </div>
-                    <div className="checked-2">
-                      <div
-                        className="invalid-response"
-                        style={{ marginLeft: "0px" }}
-                      >
-                        {errorObj ? `${errorObj.app_dual_type ?? ""}` : null}
-                      </div>
-
-                      <SelectComponent
-                        name="app_dual_type"
-                        defaultTitle="Specify Country"
-                        itemList={formOneInput.dual_citizen_type}
-                        value={applicantDataHolder.app_dual_type ?? ""}
-                        onChange={(e) => {
-                          setDataInput(e);
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <EmploymentInformation formik={pdsOneInputHandler} />
           <br />
-
-          {/* 
-            //==========================================
-            // RESEDENTIAL ADDRESS INFORMATION SECTION 
-            //==========================================
-          */}
-
-          <h5 style={{ color: "rgba(54, 58, 63, 0.8)", marginBottom: "10px" }}>
-            RESIDENTIAL ADDRESS
-          </h5>
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "20%" }}>
-              <label>House/Block/Lot No.</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_block_lot : ""}
-              </span>
-              <InputComponent
-                maxLength="30"
-                value={applicantDataHolder.res_block_lot ?? ""}
-                name="res_block_lot"
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "25%" }}
-            >
-              <label>Street</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_street : ""}
-              </span>
-              <InputComponent
-                maxLength="40"
-                value={applicantDataHolder.res_street ?? ""}
-                name="res_street"
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "40%" }}
-            >
-              <label>Subdivision/Village</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_sub_village : ""}
-              </span>
-              <InputComponent
-                maxLength="40"
-                value={applicantDataHolder.res_sub_village ?? ""}
-                name="res_sub_village"
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "15%" }}>
-              <label>Zip Code</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_zip_code : ""}
-              </span>
-              <InputComponent
-                maxLength="4"
-                value={applicantDataHolder.res_zip_code ?? ""}
-                name="res_zip_code"
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-          </div>
-
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "33%" }}>
-              <label>Province</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_province : ""}
-              </span>
-              <SelectComponent
-                name="res_province"
-                defaultTitle="Province"
-                value={applicantDataHolder.res_province ?? ""}
-                itemList={phil.provinces}
-                onChange={(e) => {
-                  setDataInput(e);
-                  getResCity(e.target.value);
-                }}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}
-            >
-              <label>City/Municipality</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_municipality : ""}
-              </span>
-              <SelectComponent
-                name="res_municipality"
-                defaultTitle="City"
-                value={applicantDataHolder.res_municipality ?? ""}
-                itemList={resCity == null ? [] : resCity}
-                onChange={(e) => {
-                  setDataInput(e);
-                  getResBrgy(e.target.value);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "33%" }}>
-              <label>Barangay</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.res_barangay : ""}
-              </span>
-              <SelectComponent
-                name="res_barangay"
-                value={applicantDataHolder.res_barangay ?? ""}
-                defaultTitle="Barangay"
-                itemList={resBrgy == null ? [] : resBrgy}
-                onChange={(e) => setDataInput(e)}
-              />
-            </div>
-          </div>
-
+          <CitizenshipInformation formik={pdsOneInputHandler} />
           <br />
-          {/* 
-              //==========================================
-              // PERMANENT ADDRESS INFORMATION SECTION
-              //==========================================
-          */}
-
-          <div className="per-address-head">
-            {/* header of permanent address */}
-            <h5 style={{ color: "rgba(54, 58, 63, 0.8)" }}>
-              PERMANENT ADDRESS
-            </h5>
-            <span
-              className="res-address-copy"
-              onClick={() => setCopiedAddress()}
-            >
-              <IoCopySharp className="copy-icon" size="14px" />{" "}
-              {diplayPermanent
-                ? "Input Permanent Address"
-                : "Copy Resedential Address"}
-            </span>
-          </div>
-          {diplayPermanent == true && (
-            <div>
-              <div
-                className="pds-prof-class-one"
-                style={{ marginBottom: "10px" }}
-              >
-                <div style={{ marginRight: "5px", width: "20%" }}>
-                  <label>House/Block/Lot No.</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_block_lot : ""}
-                  </span>
-                  <InputComponent
-                    maxLength="30"
-                    name="per_block_lot"
-                    value={applicantDataHolder.per_block_lot ?? ""}
-                    onChange={(e) => setDataInput(e)}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginRight: "5px",
-                    marginLeft: "5px",
-                    width: "25%",
-                  }}
-                >
-                  <label>Street</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_street : ""}
-                  </span>
-                  <InputComponent
-                    maxLength="40"
-                    name="per_street"
-                    value={applicantDataHolder.per_street ?? ""}
-                    onChange={(e) => setDataInput(e)}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginRight: "5px",
-                    marginLeft: "5px",
-                    width: "40%",
-                  }}
-                >
-                  <label>Subdivision/Village</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_sub_village : ""}
-                  </span>
-                  <InputComponent
-                    maxLength="40"
-                    name="per_sub_village"
-                    value={applicantDataHolder.per_sub_village ?? ""}
-                    onChange={(e) => setDataInput(e)}
-                  />
-                </div>
-                <div style={{ marginLeft: "5px", width: "15%" }}>
-                  <label>Zip Code</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_zip_code : ""}
-                  </span>
-                  <InputComponent
-                    maxLength="4"
-                    name="per_zip_code"
-                    value={applicantDataHolder.per_zip_code ?? ""}
-                    onChange={(e) => setDataInput(e)}
-                  />
-                </div>
-              </div>
-              <div
-                className="pds-prof-class-one"
-                style={{ marginBottom: "10px" }}
-              >
-                <div style={{ marginRight: "5px", width: "33%" }}>
-                  <label>Barangay</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_province : ""}
-                  </span>
-                  <SelectComponent
-                    name="per_province"
-                    defaultTitle="Province"
-                    itemList={phil.provinces}
-                    value={applicantDataHolder.per_province ?? ""}
-                    onChange={(e) => {
-                      setDataInput(e);
-                      getPerCity(e.target.value);
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginRight: "5px",
-                    marginLeft: "5px",
-                    width: "33%",
-                  }}
-                >
-                  <label>City/Municipality</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_municipality : ""}
-                  </span>
-                  <SelectComponent
-                    name="per_municipality"
-                    defaultTitle="City"
-                    itemList={perCity == null ? [] : perCity}
-                    value={applicantDataHolder.per_municipality ?? ""}
-                    onChange={(e) => {
-                      setDataInput(e);
-                      getPerBrgy(e.target.value);
-                    }}
-                  />
-                </div>
-                <div style={{ marginLeft: "5px", width: "33%" }}>
-                  <label>Province</label>
-                  <span className="invalid-response">
-                    {errorObj ? errorObj.per_barangay : ""}
-                  </span>
-                  <SelectComponent
-                    name="per_barangay"
-                    defaultTitle="Barangay"
-                    value={applicantDataHolder.per_barangay ?? ""}
-                    itemList={perBrgy == null ? [] : perBrgy}
-                    onChange={(e) => setDataInput(e)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
+          <ResAddressInformation
+            formik={pdsOneInputHandler}
+            resCity={resCity}
+            resBrgy={resBrgy}
+            getResCity={getResCity}
+            getResBrgy={getResBrgy}
+          />
           <br />
-          {/* 
-              //==========================================
-              // CONTACT INFORMATION SECTION
-              //==========================================
-          */}
-          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
-            <div style={{ marginRight: "5px", width: "30%" }}>
-              <label>Telephone No.</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_tel_no : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                name="app_tel_no"
-                value={applicantDataHolder.app_tel_no ?? ""}
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div
-              style={{ marginRight: "5px", marginLeft: "5px", width: "30%" }}
-            >
-              <label>Mobile No</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_mobile_no : ""}
-              </span>
-              <InputComponent
-                maxLength="50"
-                value={applicantDataHolder.app_mobile_no ?? ""}
-                name="app_mobile_no"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-            <div style={{ marginLeft: "5px", width: "40%" }}>
-              <label>Email Address</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.app_email_addr : ""}
-              </span>
-              <InputComponent
-                maxLength="150"
-                value={applicantDataHolder.app_email_addr ?? ""}
-                name="app_email_addr"
-                onChange={(e) => {
-                  setDataInput(e);
-                }}
-              />
-            </div>
-          </div>
+          <PerAddressInformation
+            formik={pdsOneInputHandler}
+            perCity={perCity}
+            perBrgy={perBrgy}
+            getPerCity={getPerCity}
+            getPerBrgy={getPerBrgy}
+          />
+          <br />
+          <UserContactInformation formik={pdsOneInputHandler} />
           <br />
           <br />
-
           {/* 
               //==========================================
               // CAPTCHA INFORMATION SECTION
@@ -957,7 +282,11 @@ const FormPageOne = () => {
                       setVerifyCaptcha(false);
                     }
                   }}
-                  onErrored={() => setVerifyCaptcha(false)}
+                  onErrored={() => {
+                    if (item === undefined) {
+                      setVerifyCaptcha(false);
+                    }
+                  }}
                 />
               </div>
             ) : undefined}
@@ -965,7 +294,7 @@ const FormPageOne = () => {
               <PrevNextSubButtons
                 page={1}
                 onClickNext={() => {
-                  navigate(`/ihrmis/pds-applicant/form-page-two/${item}`);
+                  navigate(`/pds-applicant/form-page-two/${item}`);
                   dispatch(setMessageError(undefined));
                 }}
               />
@@ -980,3 +309,742 @@ const FormPageOne = () => {
 };
 
 export default FormPageOne;
+
+//==========================================
+// USER NAME INFORMATION SECTION
+//==========================================
+
+const UserNameInformation = ({ formik }) => {
+  return (
+    <React.Fragment>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "50%" }}>
+          <label>Surname</label>
+          <InputComponent
+            maxLength="50"
+            name="app_nm_last"
+            value={formik.values.app_nm_last}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_nm_last && formik.errors.app_nm_last ? (
+            <span className="invalid-response">
+              {formik.errors.app_nm_last}
+            </span>
+          ) : null}
+        </div>
+
+        <div style={{ marginLeft: "5px", width: "50%" }}>
+          <label>First Name</label>
+          <InputComponent
+            maxLength="50"
+            name="app_nm_first"
+            value={formik.values.app_nm_first}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_nm_first && formik.errors.app_nm_first ? (
+            <span className="invalid-response">
+              {formik.errors.app_nm_first}
+            </span>
+          ) : null}
+        </div>
+      </div>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "50%" }}>
+          <label>Name Extension (Jr., Sr.)</label>
+          <InputComponent
+            maxLength="10"
+            name="app_nm_extn"
+            value={formik.values.app_nm_extn}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_nm_extn && formik.errors.app_nm_extn ? (
+            <span className="invalid-response">
+              {formik.errors.app_nm_extn}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginLeft: "5px", width: "50%" }}>
+          <label>Middle Name</label>
+          <InputComponent
+            maxLength="50"
+            name="app_nm_mid"
+            value={formik.values.app_nm_mid}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_nm_mid && formik.errors.app_nm_mid ? (
+            <span className="invalid-response">{formik.errors.app_nm_mid}</span>
+          ) : null}
+        </div>
+      </div>
+      <br />
+    </React.Fragment>
+  );
+};
+
+const OtherUserInformation = ({ formik }) => {
+  return (
+    <React.Fragment>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "25%" }}>
+          <label> Date of Birth</label>
+          <InputComponent
+            type="date"
+            name="app_birth_date"
+            value={formik.values.app_birth_date}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_birth_date && formik.errors.app_birth_date ? (
+            <span className="invalid-response">
+              {formik.errors.app_birth_date}
+            </span>
+          ) : null}
+        </div>
+
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "45%" }}>
+          <label>Place of Birth</label>
+          <InputComponent
+            maxLength="50"
+            name="app_birth_place"
+            value={formik.values.app_birth_place}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_birth_place && formik.errors.app_birth_place ? (
+            <span className="invalid-response">
+              {formik.errors.app_birth_place}
+            </span>
+          ) : null}
+        </div>
+
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "15%" }}>
+          <label>Sex</label>
+          <SelectComponent
+            name="app_sex"
+            itemList={formOneInput.sex}
+            defaultTitle="Sex"
+            value={formik.values.app_sex}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_sex && formik.errors.app_sex ? (
+            <span className="invalid-response">{formik.errors.app_sex}</span>
+          ) : null}
+        </div>
+
+        <div style={{ marginLeft: "5px", width: "15%" }}>
+          <label>Blood Type</label>
+          <SelectComponent
+            name="app_blood_type"
+            itemList={formOneInput.blood_type}
+            defaultTitle="Blood Type"
+            value={formik.values.app_blood_type}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_blood_type && formik.errors.app_blood_type ? (
+            <span className="invalid-response">
+              {formik.errors.app_blood_type}
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "25%" }}>
+          <label>Civil Status</label>
+          <SelectComponent
+            name="app_civil_status"
+            itemList={formOneInput.civil_status}
+            defaultTitle="Civil Status"
+            value={formik.values.app_civil_status}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_civil_status && formik.errors.app_civil_status ? (
+            <span className="invalid-response">
+              {formik.errors.app_civil_status}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "45%" }}>
+          <label>If others, please specify</label>
+          <InputComponent
+            maxLength="50"
+            name="app_civil_others"
+            value={formik.values.app_civil_others}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_civil_others && formik.errors.app_civil_others ? (
+            <span className="invalid-response">
+              {formik.errors.app_civil_others}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "15%" }}>
+          <label>Height (m)</label>
+          <InputComponent
+            maxLength="6"
+            minLength="3"
+            name="app_height"
+            value={formik.values.app_height}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_height && formik.errors.app_height ? (
+            <span className="invalid-response">{formik.errors.app_height}</span>
+          ) : null}
+        </div>
+        <div style={{ marginLeft: "5px", width: "15%" }}>
+          <label>Weight (kg)</label>
+          <InputComponent
+            maxLength="6"
+            minLength="3"
+            name="app_weight"
+            value={formik.values.app_weight}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_weight && formik.errors.app_weight ? (
+            <span className="invalid-response">{formik.errors.app_weight}</span>
+          ) : null}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const EmploymentInformation = ({ formik }) => {
+  return (
+    <React.Fragment>
+      <div className="pds-prof-class-one">
+        <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+          <div style={{ marginRight: "5px", width: "33%" }}>
+            <label>GSIS ID No.</label>
+            <InputComponent
+              maxLength="20"
+              name="app_gsis"
+              value={formik.values.app_gsis}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_gsis && formik.errors.app_gsis ? (
+              <span className="invalid-response">{formik.errors.app_gsis}</span>
+            ) : null}
+          </div>
+          <div style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}>
+            <label>PAG-IBIG ID No</label>
+            <InputComponent
+              maxLength="20"
+              name="app_pagibig"
+              value={formik.values.app_pagibig}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_pagibig && formik.errors.app_pagibig ? (
+              <span className="invalid-response">
+                {formik.errors.app_pagibig}
+              </span>
+            ) : null}
+          </div>
+          <div style={{ marginLeft: "5px", width: "33%" }}>
+            <label>PHILHEALTH No.</label>
+            <InputComponent
+              page="1"
+              maxLength="20"
+              name="app_philhealth"
+              value={formik.values.app_philhealth}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_philhealth && formik.errors.app_philhealth ? (
+              <span className="invalid-response">
+                {formik.errors.app_philhealth}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </div>
+      <div className="pds-prof-class-one">
+        <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+          <div style={{ marginRight: "5px", width: "33%" }}>
+            <label>SSS No.</label>
+            <InputComponent
+              maxLength="20"
+              name="app_sss"
+              value={formik.values.app_sss}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_sss && formik.errors.app_sss ? (
+              <span className="invalid-response">{formik.errors.app_sss}</span>
+            ) : null}
+          </div>
+          <div style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}>
+            <label>TIN No</label>
+            <InputComponent
+              maxLength="20"
+              name="app_tin"
+              value={formik.values.app_tin}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_tin && formik.errors.app_tin ? (
+              <span className="invalid-response">{formik.errors.app_tin}</span>
+            ) : null}
+          </div>
+
+          <div style={{ marginLeft: "5px", width: "33%" }}>
+            <label>Agency Employee No.</label>
+            <InputComponent
+              maxLength="20"
+              name="app_emp_no"
+              value={formik.values.app_emp_no}
+              onChange={formik.handleChange}
+            />
+            {formik.touched.app_emp_no && formik.errors.app_emp_no ? (
+              <span className="invalid-response">
+                {formik.errors.app_emp_no}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const CitizenshipInformation = ({ formik }) => {
+  return (
+    <React.Fragment>
+      <div
+        className="flex-row items-align-center"
+        style={{ marginBottom: "10px" }}
+      >
+        <h5 style={{ color: "rgba(54, 58, 63, 0.8)" }}>CITIZENSHIP</h5>
+        {formik.touched.app_filipino && formik.errors.app_filipino ? (
+          <label
+            className="invalid-response"
+            style={{ fontSize: "small", paddingLeft: "10px" }}
+          >
+            {formik.errors.app_filipino}
+          </label>
+        ) : null}
+      </div>
+      <div className="main-citizen-container">
+        <div className="secondary-citizen-container">
+          <div className="check-list">
+            <input
+              type="radio"
+              value="1"
+              name="app_filipino"
+              onChange={formik.handleChange}
+              checked={
+                parseInt(formik.values.app_filipino) === 1 ? true : false
+              }
+            />
+            <span style={{ paddingLeft: "10px" }}>Filipino</span>
+          </div>
+          <br />
+          <div className="check-list-others">
+            <div className="check-list" style={{ width: "30%" }}>
+              <input
+                type="radio"
+                value="0"
+                name="app_filipino"
+                onChange={formik.handleChange}
+                checked={
+                  parseInt(formik.values.app_filipino) === 0 ? true : false
+                }
+              />
+              <span style={{ paddingLeft: "10px" }}>Others</span>
+            </div>
+
+            {formik.values.app_filipino == 0 ? (
+              <div
+                className="citizen-select"
+                style={{ paddingLeft: "10px", width: "70%" }}
+              >
+                <SelectComponent
+                  name="app_dual_cny_id"
+                  itemList={countryList}
+                  defaultTitle="Specify Country"
+                  value={formik.values.app_dual_cny_id}
+                  onChange={formik.handleChange}
+                />
+                {formik.touched.app_dual_cny_id &&
+                formik.errors.app_dual_cny_id ? (
+                  <span className="invalid-response error-position">
+                    {formik.errors.app_dual_cny_id}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        {/* SECONDARY */}
+        {formik.values.app_filipino == 1 ? (
+          <div className="secondary-citizen-container-two">
+            <div className="check-list" style={{ width: "30%" }}>
+              <input
+                type="checkbox"
+                value="1"
+                name="app_dual_type_check"
+                onChange={formik.handleChange}
+                checked={formik.values.app_dual_type_check}
+              />
+              <span style={{ paddingLeft: "10px" }}>Dual Citizen</span>
+            </div>
+
+            <div
+              className="citizen-select"
+              style={{ marginLeft: "10px", width: "70%" }}
+            >
+              <SelectComponent
+                name="app_dual_type"
+                itemList={formOneInput.dual_citizen_type}
+                value={formik.values.app_dual_type}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.app_dual_type && formik.errors.app_dual_type ? (
+                <span className="invalid-response error-position">
+                  {formik.errors.app_dual_type}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </div>
+      <br />
+    </React.Fragment>
+  );
+};
+
+const ResAddressInformation = ({
+  formik,
+  resCity,
+  resBrgy,
+  getResCity,
+  getResBrgy,
+}) => {
+  return (
+    <React.Fragment>
+      <h5 style={{ color: "rgba(54, 58, 63, 0.8)", marginBottom: "10px" }}>
+        RESIDENTIAL ADDRESS
+      </h5>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "20%" }}>
+          <label>House/Block/Lot No.</label>
+          <InputComponent
+            maxLength="30"
+            name="res_block_lot"
+            value={formik.values.res_block_lot}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.res_block_lot && formik.errors.res_block_lot ? (
+            <span className="invalid-response">
+              {formik.errors.res_block_lot}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "25%" }}>
+          <label>Street</label>
+          <InputComponent
+            maxLength="40"
+            name="res_street"
+            value={formik.values.res_street}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.res_street && formik.errors.res_street ? (
+            <span className="invalid-response">{formik.errors.res_street}</span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "40%" }}>
+          <label>Subdivision/Village</label>
+          <InputComponent
+            maxLength="40"
+            name="res_sub_village"
+            value={formik.values.res_sub_village}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.res_sub_village && formik.errors.res_sub_village ? (
+            <span className="invalid-response">
+              {formik.errors.res_sub_village}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginLeft: "5px", width: "15%" }}>
+          <label>Zip Code</label>
+
+          <InputComponent
+            maxLength="4"
+            name="res_zip_code"
+            value={formik.values.res_zip_code}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.res_zip_code && formik.errors.res_zip_code ? (
+            <span className="invalid-response">
+              {formik.errors.res_zip_code}
+            </span>
+          ) : null}
+        </div>
+      </div>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "33%" }}>
+          <label>Province</label>
+          <SelectComponent
+            name="res_province"
+            defaultTitle="Province"
+            itemList={phil.provinces}
+            value={formik.values.res_province}
+            onChange={(e) => {
+              formik.handleChange(e);
+              getResCity(e.target.value);
+            }}
+          />
+          {formik.touched.res_province && formik.errors.res_province ? (
+            <span className="invalid-response">
+              {formik.errors.res_province}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "33%" }}>
+          <label>City/Municipality</label>
+          <SelectComponent
+            name="res_municipality"
+            defaultTitle="City"
+            itemList={resCity === null ? [] : resCity}
+            value={formik.values.res_municipality}
+            onChange={(e) => {
+              formik.handleChange(e);
+              getResBrgy(e.target.value);
+            }}
+          />
+          {formik.touched.res_municipality && formik.errors.res_municipality ? (
+            <span className="invalid-response">
+              {formik.errors.res_municipality}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginLeft: "5px", width: "33%" }}>
+          <label>Barangay</label>
+          <SelectComponent
+            name="res_barangay"
+            defaultTitle="Barangay"
+            itemList={resBrgy == null ? [] : resBrgy}
+            value={formik.values.res_barangay}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.res_barangay && formik.errors.res_barangay ? (
+            <span className="invalid-response">
+              {formik.errors.res_barangay}
+            </span>
+          ) : null}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const PerAddressInformation = ({
+  formik,
+  perCity,
+  perBrgy,
+  getPerCity,
+  getPerBrgy,
+}) => {
+  return (
+    <React.Fragment>
+      <div className="per-address-head">
+        <h5 style={{ color: "rgba(54, 58, 63, 0.8)" }}>PERMANENT ADDRESS</h5>
+        <label className="res-address-copy" htmlFor="copy_res_addr">
+          <IoCopySharp className="copy-icon" size="14px" />
+          {formik.values.copy_res_addr === false
+            ? "Copy Resedential Address"
+            : "Input Permanent Address"}
+        </label>
+        <input
+          type="checkbox"
+          name="copy_res_addr"
+          value={true}
+          id="copy_res_addr"
+          onChange={formik.handleChange}
+          hidden
+        />
+      </div>
+      {formik.values.copy_res_addr === false ? (
+        <div>
+          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+            <div style={{ marginRight: "5px", width: "20%" }}>
+              <label>House/Block/Lot No.</label>
+              <InputComponent
+                maxLength="30"
+                name="per_block_lot"
+                value={formik.values.per_block_lot}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.per_block_lot && formik.errors.per_block_lot ? (
+                <span className="invalid-response">
+                  {formik.errors.per_block_lot}
+                </span>
+              ) : null}
+            </div>
+            <div
+              style={{
+                marginRight: "5px",
+                marginLeft: "5px",
+                width: "25%",
+              }}
+            >
+              <label>Street</label>
+              <InputComponent
+                maxLength="40"
+                name="per_street"
+                value={formik.values.per_street}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.per_street && formik.errors.per_street ? (
+                <span className="invalid-response">
+                  {formik.errors.per_street}
+                </span>
+              ) : null}
+            </div>
+            <div
+              style={{
+                marginRight: "5px",
+                marginLeft: "5px",
+                width: "40%",
+              }}
+            >
+              <label>Subdivision/Village</label>
+              <InputComponent
+                maxLength="40"
+                name="per_sub_village"
+                value={formik.values.per_sub_village}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.per_sub_village &&
+              formik.errors.per_sub_village ? (
+                <span className="invalid-response">
+                  {formik.errors.per_sub_village}
+                </span>
+              ) : null}
+            </div>
+            <div style={{ marginLeft: "5px", width: "15%" }}>
+              <label>Zip Code</label>
+              <InputComponent
+                maxLength="4"
+                name="per_zip_code"
+                value={formik.values.per_zip_code}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.per_zip_code && formik.errors.per_zip_code ? (
+                <span className="invalid-response">
+                  {formik.errors.per_zip_code}
+                </span>
+              ) : null}
+            </div>
+          </div>
+          <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+            <div style={{ marginRight: "5px", width: "33%" }}>
+              <label>Province</label>
+              <SelectComponent
+                name="per_province"
+                defaultTitle="Province"
+                itemList={phil.provinces}
+                value={formik.values.per_province}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  getPerCity(e.target.value);
+                }}
+              />
+              {formik.touched.per_province && formik.errors.per_province ? (
+                <span className="invalid-response">
+                  {formik.errors.per_province}
+                </span>
+              ) : null}
+            </div>
+            <div
+              style={{
+                marginRight: "5px",
+                marginLeft: "5px",
+                width: "33%",
+              }}
+            >
+              <label>City/Municipality</label>
+              <SelectComponent
+                name="per_municipality"
+                defaultTitle="City"
+                itemList={perCity == null ? [] : perCity}
+                value={formik.values.per_municipality}
+                onChange={(e) => {
+                  formik.handleChange(e);
+                  getPerBrgy(e.target.value);
+                }}
+              />
+              {formik.touched.per_municipality &&
+              formik.errors.per_municipality ? (
+                <span className="invalid-response">
+                  {formik.errors.per_municipality}
+                </span>
+              ) : null}
+            </div>
+            <div style={{ marginLeft: "5px", width: "33%" }}>
+              <label>Barangay</label>
+              <SelectComponent
+                name="per_barangay"
+                defaultTitle="Barangay"
+                itemList={perBrgy == null ? [] : perBrgy}
+                value={formik.values.per_barangay}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.per_barangay && formik.errors.per_barangay ? (
+                <span className="invalid-response">
+                  {formik.errors.per_barangay}
+                </span>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </React.Fragment>
+  );
+};
+
+const UserContactInformation = ({ formik }) => {
+  return (
+    <React.Fragment>
+      <div className="pds-prof-class-one" style={{ marginBottom: "10px" }}>
+        <div style={{ marginRight: "5px", width: "30%" }}>
+          <label>Telephone No.</label>
+          <InputComponent
+            maxLength="50"
+            name="app_tel_no"
+            value={formik.values.app_tel_no}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_tel_no && formik.errors.app_tel_no ? (
+            <span className="invalid-response">{formik.errors.app_tel_no}</span>
+          ) : null}
+        </div>
+        <div style={{ marginRight: "5px", marginLeft: "5px", width: "30%" }}>
+          <label>Mobile No</label>
+          <InputComponent
+            maxLength="50"
+            name="app_mobile_no"
+            value={formik.values.app_mobile_no}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_mobile_no && formik.errors.app_mobile_no ? (
+            <span className="invalid-response">
+              {formik.errors.app_mobile_no}
+            </span>
+          ) : null}
+        </div>
+        <div style={{ marginLeft: "5px", width: "40%" }}>
+          <label>Email Address</label>
+          <InputComponent
+            maxLength="150"
+            name="app_email_addr"
+            value={formik.values.app_email_addr}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.app_email_addr && formik.errors.app_email_addr ? (
+            <span className="invalid-response">
+              {formik.errors.app_email_addr}
+            </span>
+          ) : null}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};

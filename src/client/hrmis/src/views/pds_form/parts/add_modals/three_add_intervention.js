@@ -1,88 +1,70 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useFormik } from "formik";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
-import {
-  setMessageError,
-  setObjectError,
-} from "../../../../features/reducers/error_handler_slice";
-import { setBusy } from "../../../../features/reducers/loading_slice";
-import { setFail } from "../../../../features/reducers/popup_response";
-import { API_HOST } from "../../../../helpers/global/global_config";
-import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
-import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
+import * as Yup from "yup";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../common/input_component/select_component/select_component";
 import TextAreaComponent from "../../../common/input_component/textarea_input_component/textarea_input_component";
 import ModalComponent from "../../../common/modal_component/modal_component";
-import ValidationComponent from "../../../common/response_component/validation_component/validation_component";
 import { formThreeInput } from "../../static/input_items";
+import {
+  validationDate,
+  validationRequired,
+  validationRequiredNum,
+  yesterday,
+} from "../../../../helpers/global/global_config";
+import useAxiosHelper from "../../../../helpers/use_hooks/axios_helper";
 
 const ThreeAddInterventionModal = (props) => {
-  // ===========================================================
-  // CUSTOM HOOK SERVICE
-  // ===========================================================
-  const [dataState, singleInput, multiInput, setter] = useFormHelper();
-
-  // ===================================
-  // REDUX STATE AND FUNCIONALITIES
-  // ===================================
-  const dispatch = useDispatch();
-
+  const { renderFailed, renderBusy, renderSucceed } = usePopUpHelper();
   // ===================================
   // HANDLING ROUTES
   // ===================================
   const { item } = useParams();
 
-  // ===================================
-  // ERROR HANDLING STATE
-  // ===================================
-  const [serverErrorResponse, setServerErrorResponse] = useState();
-
   // ===========================================================
   // SUBMIT HANDLER
   // ===========================================================
-  const { renderFail, renderSuccess } = usePopUpHelper();
-  const errorObj = useSelector((state) => state.error.objectError);
-  const errorMsg = useSelector((state) => state.error.messageError);
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    await useAxiosRequestHelper
-      .post(dataState, "/new-training/", item)
-      .then(() => {
-        e.target.reset();
-        props.onClose();
-        dispatch(setMessageError(undefined));
-        renderSuccess();
-      })
-      .catch((error) => {
-        renderFail();
-        if (typeof error === "object") {
-          dispatch(setObjectError(error));
-          dispatch(setMessageError("Unprocessable Entity"));
-        } else {
-          dispatch(setMessageError(error));
-        }
-      });
-  };
+  const trainingPdsForm = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      item: props?.data?.trn_app_time ?? "",
+      trn_app_title: props?.data?.trn_app_title ?? "",
+      trn_app_from: props?.data?.trn_app_from ?? "",
+      trn_app_to: props?.data?.trn_app_to ?? "",
+      trn_app_hours: props?.data?.trn_app_hours ?? "",
+      trn_app_type: props?.data?.trn_app_type ?? "",
+      trn_app_sponsor: props?.data?.trn_app_sponsor ?? "",
+      trn_app_cmptncy: props?.data?.trn_app_cmptncy ?? "",
+    },
+    validationSchema: Yup.object({
+      trn_app_title: validationRequired,
+      trn_app_from: validationDate.max(yesterday, "Invalid Date"),
+      trn_app_to: validationDate.max(yesterday, "Invalid Date"),
+      trn_app_hours: validationRequiredNum,
+      trn_app_type: validationRequired,
+      trn_app_sponsor: validationRequired,
+      trn_app_cmptncy: validationRequired,
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      renderBusy(true);
+      await useAxiosHelper
+        .post(values, "new-training", item)
+        .then(() => {
+          resetForm();
+          renderSucceed({ content: "Form Submitted" });
+          props.onClose();
+        })
+        .catch((err) => renderFailed({ content: err.message }));
+      renderBusy(false);
+    },
+  });
 
   // ===========================================================
   // INIT STATE
   // ===========================================================
-  useEffect(() => {
-    console.log(props.data);
-    setter({
-      item: props.data ? props.data.trn_app_time : "",
-      trn_app_title: props.data ? props.data.trn_app_title : "",
-      trn_app_from: props.data ? props.data.trn_app_from : "",
-      trn_app_to: props.data ? props.data.trn_app_to : "",
-      trn_app_hours: props.data ? props.data.trn_app_hours : "",
-      trn_app_type: props.data ? props.data.trn_app_type : "",
-      trn_app_sponsor: props.data ? props.data.trn_app_sponsor : "",
-      trn_app_cmptncy: props.data ? props.data.trn_app_cmptncy : "",
-    });
-  }, [props.isDisplay]);
+  useEffect(() => {}, [props.isDisplay]);
 
   return (
     <React.Fragment>
@@ -92,16 +74,11 @@ const ThreeAddInterventionModal = (props) => {
         onCloseName="Delete"
         isDisplay={props.isDisplay}
         onPressed={props.onPressed}
-        onSubmit={submitHandler}
+        onSubmit={trainingPdsForm.handleSubmit}
         onSubmitType="submit"
         onClose={props.onClose}
       >
         <div className="add-intervention-modal-container">
-          {errorMsg && (
-            <ValidationComponent title="FAILED TO SUBMIT">
-              <p> {errorMsg} </p>
-            </ValidationComponent>
-          )}
           <br />
 
           <div className="first-type-div">
@@ -109,15 +86,19 @@ const ThreeAddInterventionModal = (props) => {
               Title of Learning and DEvelopment Interventions/Training Programs
               (write in full)
             </label>
-            <span className="invalid-response">
-              {errorObj ? errorObj.trn_app_title : ""}
-            </span>
+
             <InputComponent
               maxLenght="255"
               name="trn_app_title"
-              value={dataState.trn_app_title}
-              onChange={(e) => singleInput(e)}
+              value={trainingPdsForm.values.trn_app_title}
+              onChange={trainingPdsForm.handleChange}
             />
+            {trainingPdsForm.touched.trn_app_title &&
+            trainingPdsForm.errors.trn_app_title ? (
+              <span className="invalid-response">
+                {trainingPdsForm.errors.trn_app_title}
+              </span>
+            ) : null}
           </div>
 
           <div className="first-type-div">
@@ -129,80 +110,101 @@ const ThreeAddInterventionModal = (props) => {
           <div className="second-type-div">
             <div className="from">
               <label>From</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.trn_app_from : ""}
-              </span>
               <InputComponent
                 type="date"
                 name="trn_app_from"
-                value={dataState.trn_app_from}
-                onChange={(e) => singleInput(e)}
+                value={trainingPdsForm.values.trn_app_from}
+                onChange={trainingPdsForm.handleChange}
               />
+              {trainingPdsForm.touched.trn_app_from &&
+              trainingPdsForm.errors.trn_app_from ? (
+                <span className="invalid-response">
+                  {trainingPdsForm.errors.trn_app_from}
+                </span>
+              ) : null}
             </div>
             <div className="to">
               <label>To</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.trn_app_to : ""}
-              </span>
+
               <InputComponent
                 type="date"
                 name="trn_app_to"
-                value={dataState.trn_app_to}
-                onChange={(e) => singleInput(e)}
+                value={trainingPdsForm.values.trn_app_to}
+                onChange={trainingPdsForm.handleChange}
               />
+              {trainingPdsForm.touched.trn_app_to &&
+              trainingPdsForm.errors.trn_app_to ? (
+                <span className="invalid-response">
+                  {trainingPdsForm.errors.trn_app_to}
+                </span>
+              ) : null}
             </div>
           </div>
 
           <div className="second-type-div">
             <div className="type">
               <label>Type of Learning and Development</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.add_training_type : ""}
-              </span>
+
               <SelectComponent
                 name="trn_app_type"
                 itemList={formThreeInput.add_training_type}
                 defaultTitle="Type"
-                value={dataState.trn_app_type}
-                onChange={(e) => singleInput(e)}
+                value={trainingPdsForm.values.trn_app_type}
+                onChange={trainingPdsForm.handleChange}
               />
+              {trainingPdsForm.touched.trn_app_type &&
+              trainingPdsForm.errors.trn_app_type ? (
+                <span className="invalid-response">
+                  {trainingPdsForm.errors.trn_app_type}
+                </span>
+              ) : null}
             </div>
             <div className="hours">
               <label>Number of Hours</label>
-              <span className="invalid-response">
-                {errorObj ? errorObj.trn_app_hours : ""}
-              </span>
+
               <InputComponent
                 maxLenght="3"
                 name="trn_app_hours"
-                value={dataState.trn_app_hours}
-                onChange={(e) => singleInput(e)}
+                value={trainingPdsForm.values.trn_app_hours}
+                onChange={trainingPdsForm.handleChange}
               />
+              {trainingPdsForm.touched.trn_app_hours &&
+              trainingPdsForm.errors.trn_app_hours ? (
+                <span className="invalid-response">
+                  {trainingPdsForm.errors.trn_app_hours}
+                </span>
+              ) : null}
             </div>
           </div>
 
           <div className="first-type-div">
             <label>Conducted/Sponsored bY (write in full)</label>
-            <span className="invalid-response">
-              {errorObj ? errorObj.trn_app_sponsor : ""}
-            </span>
             <TextAreaComponent
               name="trn_app_sponsor"
-              value={dataState.trn_app_sponsor}
-              onChange={(e) => singleInput(e)}
+              value={trainingPdsForm.values.trn_app_sponsor}
+              onChange={trainingPdsForm.handleChange}
             />
+            {trainingPdsForm.touched.trn_app_sponsor &&
+            trainingPdsForm.errors.trn_app_sponsor ? (
+              <span className="invalid-response">
+                {trainingPdsForm.errors.trn_app_sponsor}
+              </span>
+            ) : null}
           </div>
 
           <div className="first-type-div">
             <label>Competency Addressed</label>
-            <span className="invalid-response">
-              {errorObj ? errorObj.trn_app_cmptncy : ""}
-            </span>
             <InputComponent
               name="trn_app_cmptncy"
-              value={dataState.trn_app_cmptncy}
-              onChange={(e) => singleInput(e)}
+              value={trainingPdsForm.values.trn_app_cmptncy}
+              onChange={trainingPdsForm.handleChange}
             />
+            {trainingPdsForm.touched.trn_app_cmptncy &&
+            trainingPdsForm.errors.trn_app_cmptncy ? (
+              <span className="invalid-response">
+                {trainingPdsForm.errors.trn_app_cmptncy}
+              </span>
+            ) : null}
           </div>
         </div>
       </ModalComponent>

@@ -11,7 +11,7 @@ use App\Http\Controllers\Applicant\TblapplicantReferencesController;
 use App\Http\Controllers\Applicant\TblapplicantRequirementsController;
 use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
-use App\Http\Controllers\JvscrwMainController;
+use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblpositionsController;
@@ -81,14 +81,19 @@ Route::post('new-declaration/{id}', [TblapplicantDeclarationController::class, "
 //GOVERNMENT ID
 Route::post('new-profile/{id}', [TblapplicantProfileController::class, "addGovernmentId"]);
 Route::post('new-profile-image/{id}', [TblapplicantProfileController::class, "addimage"]);
-
+//REQUIREMENTS
 Route::post('new-requirement/{id}', [TblapplicantRequirementsController::class, "addDocuments"]);
 
 //=======================================================================================
-// JVSCRW ENDPOINTS
+// JVSCRW ENDPOINTSDEPLOYMENT OF IHRMIS RSP JVSCRW
 //=======================================================================================
-Route::post('jvscrw/{id}', [JvscrwMainController::class, "writeJvs"]);
-Route::get('jvscrw/{id}', [JvscrwMainController::class, "show"]);
+// Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
+Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
+Route::post('jvscrw-competency-rating/{id}/sequence/{order?}', [TbljvsController::class, "addCompenencyAndRating"]);
+Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
+Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
+Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
+Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
 
 
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);

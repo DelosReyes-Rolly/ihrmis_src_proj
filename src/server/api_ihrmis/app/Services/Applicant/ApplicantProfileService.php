@@ -8,58 +8,61 @@ class ApplicantProfileService {
 
   public function createApplicant($request)
   {
-    $request->validate( [
-      'app_nm_last' => 'required|alpha|max:50|regex:/^[\pL\s\-]+$/u',
-      'app_nm_first' => 'required|alpha|max:50|regex:/^[\pL\s\-]+$/u',
-      'app_nm_mid' => 'required|alpha|max:50',
-      'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-      'app_birth_place' => 'required',
-      // 'app_sex' => 'required',
-      // 'app_blood_type' => 'required',
-      // 'app_civil_status' => 'required',
+    // $request->validate([
+    //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\- ]+$/u',
+    //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
+    //   'app_nm_extn' => 'max:10',
+    //   'app_nm_mid' => 'required|alpha|max:50',
+    //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
+    //   'app_birth_place' => 'required',
+    //   // 'app_sex' => 'required',
+    //   // 'app_blood_type' => 'required',
+    //   // 'app_civil_status' => 'required',
 
-      'app_civil_others' => 'required_if:app_civil_status,OT',
+    //   'app_civil_others' => 'required_if:app_civil_status,OT',
       
-      'app_height' => 'required|numeric',
-      'app_weight' => 'required|numeric',
+    //   'app_height' => 'required|numeric',
+    //   'app_weight' => 'required|numeric',
           
-      'app_emp_no' => 'required|alpha_num',
-      'app_gsis' => 'required|alpha_num',
-      'app_pagibig' => 'required|alpha_num',
-      'app_philhealth' => 'required|alpha_num',
-      'app_sss' => 'required|alpha_num',
-      'app_tin' => 'required|alpha_num',
+    //   'app_emp_no' => 'required|alpha_num',
+    //   'app_gsis' => 'required|alpha_num',
+    //   'app_pagibig' => 'required|alpha_num',
+    //   'app_philhealth' => 'required|alpha_num',
+    //   'app_sss' => 'required|alpha_num',
+    //   'app_tin' => 'required|alpha_num',
 
-      'app_filipino' => 'required',
-      'app_dual_cny_id' => 'required_if:app_filipino,0',
-      'app_dual_type' => 'required_if:is_dual_citizen,1',
+    //   'app_filipino' => 'required',
+    //   'app_dual_cny_id' => 'required_if:app_filipino,0',
+    //   'app_dual_type' => 'required_if:is_dual_citizen,1',
       
-      'res_block_lot' => 'required',
-      'res_street' => 'required',
-      'res_sub_village' => 'required',
-      'res_zip_code' => 'required',
-      'res_barangay' => 'required',
-      'res_municipality' => 'required',
-      'res_province' => 'required',
+    //   'res_block_lot' => 'required',
+    //   'res_street' => 'required',
+    //   'res_sub_village' => 'required',
+    //   'res_zip_code' => 'required',
+    //   'res_barangay' => 'required',
+    //   'res_municipality' => 'required',
+    //   'res_province' => 'required',
 
-      'per_block_lot' => 'required_if:copied_addr,false',
-      'per_street' => 'required_if:copied_addr,false',
-      'per_sub_village' => 'required_if:copied_addr,false',
-      'per_zip_code' => 'required_if:copied_addr,false',
-      'per_barangay' => 'required_if:copied_addr,false',
-      'per_municipality' => 'required_if:copied_addr,false',
-      'per_province' => 'required_if:copied_addr,false',
+    //   'per_block_lot' => 'required_if:copied_addr,false',
+    //   'per_street' => 'required_if:copied_addr,false',
+    //   'per_sub_village' => 'required_if:copied_addr,false',
+    //   'per_zip_code' => 'required_if:copied_addr,false',
+    //   'per_barangay' => 'required_if:copied_addr,false',
+    //   'per_municipality' => 'required_if:copied_addr,false',
+    //   'per_province' => 'required_if:copied_addr,false',
 
-      'app_tel_no' => 'required|numeric',
-      'app_mobile_no' => 'required|numeric',
-      'app_email_addr' => 'required|email:rfc',
-    ], [
-        'required' => 'This field is required.',
-        'required_if' => 'This field is required.',
-        'numeric' => 'Invalid input.',
-        'alpha' => 'Invalid input.',
-        'alpha_num' => 'Invalid input.'
-    ]);
+    //   'app_tel_no' => 'required|numeric',
+    //   'app_mobile_no' => 'required|numeric',
+    //   'app_email_addr' => 'required|email:rfc',
+    // ], [
+    //     'required' => 'This field is required.',
+    //     'required_if' => 'This field is required.',
+    //     'numeric' => 'Invalid input.',
+    //     'alpha_num' => 'Invalid input.',
+    //     'max' =>  'Invalid input',
+    //     'regex' => 'Invalid input',
+    //     'email' => 'Invalid email'
+    // ]);
 
     //IMPLODING ADDRESSES
     $fullAddress = [];
@@ -71,7 +74,7 @@ class ApplicantProfileService {
     array_push($fullAddress, $request->res_municipality);
     array_push($fullAddress, $request->res_province);
 
-    $address = implode(", ", $fullAddress);
+    $address = implode("|", $fullAddress);
 
     $applicantData = new TblapplicantsProfile();
     //USER INFO
@@ -109,8 +112,7 @@ class ApplicantProfileService {
     $applicantData->app_filipino = $request->app_filipino;
 
     if($request->app_filipino == 1){
-
-        if($request->is_dual_type == 1){
+        if($request->app_dual_type_check == 1){
             $applicantData->app_dual_type = $request->app_dual_type;
         } else {
             $applicantData->app_dual_type = 0;
@@ -118,14 +120,11 @@ class ApplicantProfileService {
         $applicantData->app_dual_cny_id = $request->app_dual_cny_id ?? "NA";
 
     } else if($request->app_filipino == 0){
-
-        $applicantData->app_dual_cny_id = $request->app_dual_cny_id ?? "AF";
         $applicantData->app_dual_type = 0;
     }
     
-    
     //ADDRESS INFO
-    if($request->boolean('copied_addr') == false){
+    if($request->boolean("copy_res_addr")  == false){
         $perAddrssArr = [];
         array_push($perAddrssArr, $request->per_block_lot);
         array_push($perAddrssArr, $request->per_street);
@@ -134,7 +133,7 @@ class ApplicantProfileService {
         array_push($perAddrssArr, $request->per_barangay);
         array_push($perAddrssArr, $request->per_municipality);
         array_push($perAddrssArr, $request->per_province); 
-        $perAddress = implode(", ", array_filter($perAddrssArr));
+        $perAddress = implode("|", array_filter($perAddrssArr));
 
         $applicantData->app_resident_addr = $address;
         $applicantData->app_permanent_addr = $perAddress;
@@ -143,7 +142,6 @@ class ApplicantProfileService {
         $applicantData->app_permanent_addr = $address;
     }
     
-
     //CONTACT INFO
     $applicantData->app_tel_no = $request->app_tel_no;
     $applicantData->app_mobile_no = $request->app_mobile_no;
@@ -161,58 +159,61 @@ class ApplicantProfileService {
   }
 
   public function modifyApplicant($id, $request){
-    $request->validate( [
-      'app_nm_last' => 'required|alpha|max:50|regex:/^[\pL\s\-]+$/u',
-      'app_nm_first' => 'required|alpha|max:50|regex:/^[\pL\s\-]+$/u',
-      'app_nm_mid' => 'required|alpha|max:50',
-      'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-      'app_birth_place' => 'required',
-      // 'app_sex' => 'required',
-      // 'app_blood_type' => 'required',
-      // 'app_civil_status' => 'required',
+    // $request->validate( [
+    //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
+    //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
+    //   'app_nm_mid' => 'required|alpha|max:50',
 
-      'app_civil_others' => 'required_if:app_civil_status,OT',
+    //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
+    //   'app_birth_place' => 'required',
+    //   // 'app_sex' => 'required',
+    //   // 'app_blood_type' => 'required',
+    //   // 'app_civil_status' => 'required',
+
+    //   'app_civil_others' => 'required_if:app_civil_status,OT',
       
-      'app_height' => 'required|numeric',
-      'app_weight' => 'required|numeric',
+    //   'app_height' => 'required|numeric',
+    //   'app_weight' => 'required|numeric',
           
-      'app_emp_no' => 'required|alpha_num',
-      'app_gsis' => 'required|alpha_num',
-      'app_pagibig' => 'required|alpha_num',
-      'app_philhealth' => 'required|alpha_num',
-      'app_sss' => 'required|alpha_num',
-      'app_tin' => 'required|alpha_num',
+    //   'app_emp_no' => 'required|alpha_num',
+    //   'app_gsis' => 'required|alpha_num',
+    //   'app_pagibig' => 'required|alpha_num',
+    //   'app_philhealth' => 'required|alpha_num',
+    //   'app_sss' => 'required|alpha_num',
+    //   'app_tin' => 'required|alpha_num',
 
-      'app_filipino' => 'required',
-      'app_dual_cny_id' => 'required_if:app_filipino,0',
-      'app_dual_type' => 'required_if:is_dual_citizen,1',
+    //   'app_filipino' => 'required',
+    //   'app_dual_cny_id' => 'required_if:app_filipino,0',
+    //   'app_dual_type' => 'required_if:is_dual_citizen,1',
       
-      'res_block_lot' => 'required',
-      'res_street' => 'required',
-      'res_sub_village' => 'required',
-      'res_zip_code' => 'required',
-      'res_barangay' => 'required',
-      'res_municipality' => 'required',
-      'res_province' => 'required',
+    //   'res_block_lot' => 'required',
+    //   'res_street' => 'required',
+    //   'res_sub_village' => 'required',
+    //   'res_zip_code' => 'required',
+    //   'res_barangay' => 'required',
+    //   'res_municipality' => 'required',
+    //   'res_province' => 'required',
 
-      'per_block_lot' => 'required_if:copied_addr,false',
-      'per_street' => 'required_if:copied_addr,false',
-      'per_sub_village' => 'required_if:copied_addr,false',
-      'per_zip_code' => 'required_if:copied_addr,false',
-      'per_barangay' => 'required_if:copied_addr,false',
-      'per_municipality' => 'required_if:copied_addr,false',
-      'per_province' => 'required_if:copied_addr,false',
+    //   'per_block_lot' => 'required_if:copied_addr,false',
+    //   'per_street' => 'required_if:copied_addr,false',
+    //   'per_sub_village' => 'required_if:copied_addr,false',
+    //   'per_zip_code' => 'required_if:copied_addr,false',
+    //   'per_barangay' => 'required_if:copied_addr,false',
+    //   'per_municipality' => 'required_if:copied_addr,false',
+    //   'per_province' => 'required_if:copied_addr,false',
 
-      'app_tel_no' => 'required|numeric',
-      'app_mobile_no' => 'required|numeric',
-      'app_email_addr' => 'required|email:rfc',
-    ], [
-        'required' => 'This field is required.',
-        'required_if' => 'This field is required.',
-        'numeric' => 'Invalid input.',
-        'alpha' => 'Invalid input.',
-        'alpha_num' => 'Invalid input.'
-    ]);
+    //   'app_tel_no' => 'required|numeric',
+    //   'app_mobile_no' => 'required|numeric',
+    //   'app_email_addr' => 'required|email:rfc',
+    // ], [
+    //     'required' => 'This field is required.',
+    //     'required_if' => 'This field is required.',
+    //     'numeric' => 'Invalid input.',
+    //     'alpha_num' => 'Invalid input.',
+    //     'max' =>  'Invalid input',
+    //     'regex' => 'Invalid input',
+    //     'email' => 'Invalid email'
+    // ]);
 
     //IMPLODING ADDRESSES
     $fullAddress = [];
@@ -224,7 +225,7 @@ class ApplicantProfileService {
     array_push($fullAddress, $request->res_municipality);
     array_push($fullAddress, $request->res_province);
 
-    $address = implode(", ", $fullAddress);
+    $address = implode("|", $fullAddress);
 
     $applicantData = TblapplicantsProfile::find($id);
      
@@ -243,7 +244,7 @@ class ApplicantProfileService {
     if($request->app_civil_status == "OT"){
         $applicantData->app_civil_others = $request->app_civil_others;
     } else{
-        $applicantData->app_civil_others = "N/A";
+        $applicantData->app_civil_others = "NA";
     }
     
     
@@ -262,7 +263,7 @@ class ApplicantProfileService {
     $applicantData->app_filipino = $request->app_filipino;
 
     if($request->app_filipino == 1){
-        if($request->is_dual_citizen == 1){
+        if($request->app_dual_type_check == 1){
             $applicantData->app_dual_type = $request->app_dual_type;
         } else {
             $applicantData->app_dual_type = 0;
@@ -270,13 +271,11 @@ class ApplicantProfileService {
         $applicantData->app_dual_cny_id = $request->app_dual_cny_id ?? "NA";
 
     } else if($request->app_filipino == 0){
-        $applicantData->app_dual_cny_id = $request->app_dual_cny_id ?? "AF";
         $applicantData->app_dual_type = 0;
     }
     
-    
     //ADDRESS INFO
-    if($request->boolean('copied_addr') == false){
+    if($request->boolean("copy_res_addr")  == false){
         $perAddrssArr = [];
         array_push($perAddrssArr, $request->per_block_lot);
         array_push($perAddrssArr, $request->per_street);
@@ -285,7 +284,7 @@ class ApplicantProfileService {
         array_push($perAddrssArr, $request->per_barangay);
         array_push($perAddrssArr, $request->per_municipality);
         array_push($perAddrssArr, $request->per_province); 
-        $perAddress = implode(", ", array_filter($perAddrssArr));
+        $perAddress = implode("|", array_filter($perAddrssArr));
 
         $applicantData->app_resident_addr = $address;
         $applicantData->app_permanent_addr = $perAddress;
@@ -294,17 +293,10 @@ class ApplicantProfileService {
         $applicantData->app_permanent_addr = $address;
     }
     
-
     //CONTACT INFO
     $applicantData->app_tel_no = $request->app_tel_no;
     $applicantData->app_mobile_no = $request->app_mobile_no;
     $applicantData->app_email_addr = $request->app_email_addr;
-    
-    //ID INFO
-    // $applicantData->app_id_issued = $request->app_id_issued ?? "NA";
-    // $applicantData->app_id_no = $request->app_id_no ?? "NA";
-    // $applicantData->app_id_dateplace = $request->app_id_dateplace ?? "NA";
-    // $applicantData->app_agree = $request->app_agree ?? 0;
 
     $applicantData->save();
 

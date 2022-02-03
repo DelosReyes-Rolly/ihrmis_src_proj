@@ -35,94 +35,88 @@ const MainRouter = () => {
         {isBusy && <LoaderComponent />}
         {isSuccess && <SuccessResponseComponent />}
         {isFail && <FailResponseComponent />}
-        <BrowserRouter>
+        <BrowserRouter basename="/ihrmis">
+          {/* basename="" */}
           <Routes>
-            <Route exact path="/ihrmis" element={<MainPageLayout />}>
+            <Route exact path="/" element={<MainPageLayout />}>
               {/* RSP MODULE ROUTES */}
-              <Route index element={<Navigate to="/ihrmis/rsp/dashboard" />} />
-              <Route path="/ihrmis/rsp/dashboard" element={<DashboardView />} />
+              <Route index element={<Navigate to="/rsp/dashboard" />} />
+              <Route path="/rsp/dashboard" element={<DashboardView />} />
 
-              <Route path="/ihrmis/rsp/plantilla" element={<PlantillaView />}>
+              <Route path="/rsp/plantilla" element={<PlantillaView />}>
                 <Route
-                  path="/ihrmis/rsp/plantilla/"
+                  path="/rsp/plantilla/"
                   element={<EmployeePageComponentView />}
                 />
                 <Route
-                  path="/ihrmis/rsp/plantilla/employee"
+                  path="/rsp/plantilla/employee"
                   element={<EmployeePageComponentView />}
                 />
                 <Route
                   exact
-                  path="/ihrmis/rsp/plantilla/plantilla-items"
+                  path="/rsp/plantilla/plantilla-items"
                   element={<PlantillaItemPageComponentView />}
                 />
                 <Route
-                  path="/ihrmis/rsp/plantilla/plantilla-items/jvs-crw"
+                  path="/rsp/plantilla/plantilla-items/jvs-crw"
                   element={<JvsCrwPageComponentView />}
                 />
               </Route>
 
-              <Route path="/ihrmis/rsp/library" element={<LibraryView />} />
+              <Route path="/rsp/library" element={<LibraryView />} />
 
-              <Route
-                path="/ihrmis/rsp/recruitment"
-                element={<RecruitmentView />}
-              />
+              <Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
 
-              <Route path="/ihrmis/rsp/request" element={<RequestView />} />
+              <Route path="/rsp/recruitment" element={<RecruitmentView />} />
 
-              <Route
-                path="/ihrmis/rsp/compensation"
-                element={<CompensationView />}
-              />
+              <Route path="/rsp/request" element={<RequestView />} />
+
+              <Route path="/rsp/compensation" element={<CompensationView />} />
 
               {/* OTHER MODULE ROUTES */}
             </Route>
 
             {/* PDS FORM APPLICANT ROUTES */}
-            <Route path="/ihrmis/pds-applicant">
-              <Route path="/ihrmis/pds-applicant">
+            <Route path="/pds-applicant">
+              <Route path="/pds-applicant">
                 <Route
                   exact
-                  path="/ihrmis/pds-applicant/form-page-one/:item"
+                  path="/pds-applicant/form-page-one/:item"
                   element={<FormPageOne />}
                 />
-                <Route
-                  exact
-                  path="/ihrmis/pds-applicant/"
-                  element={<FormPageOne />}
-                />
+                <Route exact path="/pds-applicant/" element={<FormPageOne />} />
               </Route>
 
               <Route
-                path="/ihrmis/pds-applicant/form-page-two/:item"
+                path="/pds-applicant/form-page-two/:item"
                 element={<FormPageTwo />}
               />
               <Route
-                path="/ihrmis/pds-applicant/form-page-three/:item"
+                path="/pds-applicant/form-page-three/:item"
                 element={<FormPageThree />}
               />
               <Route
-                path="/ihrmis/pds-applicant/form-page-four/:item"
+                path="/pds-applicant/form-page-four/:item"
                 element={<FormPageFour />}
               />
               <Route
-                path="/ihrmis/pds-applicant/form-page-five/:item"
+                path="/pds-applicant/form-page-five/:item"
                 element={<FormPageFive />}
               />
               <Route
-                path="/ihrmis/pds-applicant/form-page-six/:item"
+                path="/pds-applicant/form-page-six/:item"
                 element={<FormPageSix />}
               />
               <Route
-                path="/ihrmis/pds-applicant/email-confirmation/:email"
+                path="/pds-applicant/email-confirmation/:email"
                 element={<SentEmailConfirmation />}
               />
               <Route
-                path="/ihrmis/pds-applicant/success-confirmation/:item"
+                path="/pds-applicant/success-confirmation/:item"
                 element={<SuccessEmailConfirmation />}
               />
             </Route>
+
             <Route
               path="*"
               element={

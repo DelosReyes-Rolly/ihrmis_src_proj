@@ -17,7 +17,7 @@ const EmployeePageComponentView = () => {
   };
 
   const pushToPdsForms = () => {
-    navigate("/ihrmis/plantilla/form-page-one");
+    navigate("/pds-applicant/");
   };
 
   const patternTabOne = (

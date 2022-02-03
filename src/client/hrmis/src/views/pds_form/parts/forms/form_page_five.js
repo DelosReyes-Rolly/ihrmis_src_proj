@@ -8,7 +8,7 @@ import {
   setMessageError,
   setObjectError,
 } from "../../../../features/reducers/error_handler_slice";
-import { setBusy } from "../../../../features/reducers/loading_slice";
+import { setBusy } from "../../../../features/reducers/popup_response";
 import { API_HOST } from "../../../../helpers/global/global_config";
 import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
 import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
@@ -49,7 +49,7 @@ const FormPageFive = () => {
     e.preventDefault();
     dispatch(setBusy(true));
     await useAxiosRequestHelper
-      .post(dataState, "/new-profile/", item, true)
+      .post(dataState, "new-profile", item, true)
       .then(() => {
         renderSuccess();
         dispatch(setObjectError({}));
@@ -69,24 +69,22 @@ const FormPageFive = () => {
   };
 
   const getApplcntGvrnmntIdRecord = async () => {
-    await axios
-      .get(API_HOST + "/get-new-applicant/" + item)
-      .then((response) => {
-        setter({
-          app_id_issued: response.data.data
-            ? response.data.data.app_id_issued
-            : "",
-          app_id_no: response.data.data ? response.data.data.app_id_no : "",
-          app_id_dateplace: response.data.data
-            ? response.data.data.app_id_dateplace
-            : "",
-          app_photo: response.data.data
-            ? response.data.data.app_photo === imageIncompleteLinkStr
-              ? ""
-              : response.data.data.app_photo
-            : "",
-        });
+    await axios.get(API_HOST + "get-new-applicant/" + item).then((response) => {
+      setter({
+        app_id_issued: response.data.data
+          ? response.data.data.app_id_issued
+          : "",
+        app_id_no: response.data.data ? response.data.data.app_id_no : "",
+        app_id_dateplace: response.data.data
+          ? response.data.data.app_id_dateplace
+          : "",
+        app_photo: response.data.data
+          ? response.data.data.app_photo === imageIncompleteLinkStr
+            ? ""
+            : response.data.data.app_photo
+          : "",
       });
+    });
   };
 
   useEffect(() => {
@@ -102,15 +100,7 @@ const FormPageFive = () => {
         <div>
           <ReferenceTable />
         </div>
-        <br />
-        <br />
         <form onSubmit={submitHandler} encType="multipart/form-data">
-          {errorMsg && (
-            <ValidationComponent title="FAILED TO SUBMIT">
-              <p>- {errorMsg} </p>
-            </ValidationComponent>
-          )}
-          <br />
           <div className="form-4-div">
             <div className="form-4-input-div">
               <div className="id-containers">
@@ -216,11 +206,11 @@ const FormPageFive = () => {
                 <PrevNextSubButtons
                   page={5}
                   onClickBack={() => {
-                    navigate(`/ihrmis/pds-applicant/form-page-four/${item}`);
+                    navigate(`/pds-applicant/form-page-four/${item}`);
                     dispatch(setMessageError(undefined));
                   }}
                   onClickNext={() => {
-                    navigate(`/ihrmis/pds-applicant/form-page-six/${item}`);
+                    navigate(`/pds-applicant/form-page-six/${item}`);
                     dispatch(setMessageError(undefined));
                   }}
                 />
@@ -250,21 +240,21 @@ const ReferenceTable = (props) => {
   const [referenceRecord, setReferenceRecord] = useState();
 
   const getReferenceRecord = async () => {
-    await axios.get(API_HOST + `/new-reference/${item}`).then((response) => {
+    await axios.get(API_HOST + `new-reference/${item}`).then((response) => {
       setReferenceRecord(response.data.data);
     });
   };
 
   const removeReferenceRecord = async (record) => {
     await axios
-      .delete(API_HOST + `/new-reference/${record}`)
+      .delete(API_HOST + `new-reference/${record}`)
       .then((response) => {
         console.log(response);
       });
     toggleSetter("updateModal");
   };
 
-  const [dataContainer, setDataContainer] = useState();
+  // const [dataContainer, setDataContainer] = useState();
 
   // ===========================================
   // FOR EDUCATION INIT STATE RENDER AND TOOGLE UPDATE HANDLER
@@ -346,7 +336,6 @@ const ReferenceTable = (props) => {
 const UploadImageComponent = (props) => {
   useEffect(() => {
     console.log(props.imgServer);
-    // console.log(props.imgUrl);
   }, []);
   return (
     <React.Fragment>

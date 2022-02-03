@@ -26,7 +26,8 @@ class TblapplicantCseligibilitiesController extends Controller
             "cse_app_license" => "required",
             "cse_app_validity" => "required",
         ],[
-            "required" => "This field is required"
+            "required" => "This field is required",
+            "numeric" => "Must be number"
         ]);
 
         if(isset($request->item)){

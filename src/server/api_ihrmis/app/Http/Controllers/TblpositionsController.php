@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Plantilla\GetOfficesPositionResource;
-use App\Http\Resources\TblofficesResource;
-use App\Http\Resources\TblpositionsResource;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 

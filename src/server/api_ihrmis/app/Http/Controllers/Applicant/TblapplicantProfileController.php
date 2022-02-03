@@ -54,21 +54,24 @@ class TblapplicantProfileController extends Controller
 
       
         $request->validate([
-            'app_sps_nm_last' => 'required',
-            'app_sps_nm_first' => 'required',
-            'app_sps_nm_mid' => 'required',
+            'app_sps_nm_last' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_sps_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_sps_nm_mid' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_sps_nm_extn' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_sps_occupation' => 'required',
             'app_sps_bus_name' => 'required',
             'app_sps_bus_addr' => 'required',
             'app_sps_tel_no' => 'required',
 
-            'app_fthr_nm_last' => 'required',
-            'app_fthr_nm_first' => 'required',
+            'app_fthr_nm_last' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_fthr_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_fthr_nm_mid'  => 'required',
+            'app_fthr_nm_extn' => 'required|regex:/^[\pL\s\-]+$/u',
     
-            'app_mthr_nm_last' => 'required',
-            'app_mthr_nm_first' => 'required',
-            'app_mthr_nm_mid' => 'required',
+            'app_mthr_nm_last' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_mthr_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_mthr_nm_mid' => 'required|regex:/^[\pL\s\-]+$/u',
+            'app_mthr_nm_extn' => 'required|regex:/^[\pL\s\-]+$/u',
         
         ], [
             'required' => 'This field is required.'
