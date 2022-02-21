@@ -24,6 +24,8 @@ import PlantillaItemPageComponentView from "../views/rsp_module/plantilla/page_c
 import JvsCrwPageComponentView from "../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
 import CompensationView from "../views/rsp_module/compensation/compensation_view";
 import RequestView from "../views/rsp_module/request/request_view";
+import LoginView from "../views/authentication/login_view";
+import PlantillaItemInformation from "../views/rsp_module/plantilla/page_component/plantilla_item_info_pc/plantilla_item_info";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -38,7 +40,8 @@ const MainRouter = () => {
         <BrowserRouter basename="/ihrmis">
           {/* basename="" */}
           <Routes>
-            <Route exact path="/" element={<MainPageLayout />}>
+            <Route exact path="/" element={<LoginView />} />
+            <Route exact path="/rsp" element={<MainPageLayout />}>
               {/* RSP MODULE ROUTES */}
               <Route index element={<Navigate to="/rsp/dashboard" />} />
               <Route path="/rsp/dashboard" element={<DashboardView />} />
@@ -60,6 +63,11 @@ const MainRouter = () => {
                 <Route
                   path="/rsp/plantilla/plantilla-items/jvs-crw"
                   element={<JvsCrwPageComponentView />}
+                />
+
+                <Route
+                  path="/rsp/plantilla/plantilla-items/info/:item"
+                  element={<PlantillaItemInformation />}
                 />
               </Route>
 

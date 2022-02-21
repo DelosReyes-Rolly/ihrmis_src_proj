@@ -21,6 +21,11 @@ class TblplantillaItemsResource extends JsonResource
             'itm_no' => $this->itm_no,
             'itm_regular' => $this->itm_regular,
             'itm_status' => $this->itm_status,
+            'itm_level' => $this->itm_level,
+            'itm_function' => $this->itm_function,
+            'itm_basis' => $this->itm_basis,
+            'itm_category' => $this->itm_category,
+            'itm_creation' => $this->itm_creation,
             //RELATIONSHIP
             'position' => new TblpositionsResource($this->tblpositions),
             'office' => new TblofficesResource($this->tbloffices),

@@ -25,7 +25,7 @@ import DutiesResponsibilityTable from "../duties_responsibility_table";
 
 // TODO: change jvsId to actual value
 
-const JvsFormOne = () => {
+const JvsFormOne = ({ itemId }) => {
   const [dataState, _] = useState(jvsCrwTableData);
 
   // REDUX FUNCTIONALITIES
@@ -147,14 +147,13 @@ const JvsFormOne = () => {
         );
       })
       .catch((err) => console.log(err));
-
-    console.log(competencies);
   };
 
   useEffect(() => {
     fetchJvsDutiesResponsibityOnLoad();
     fetchCscQualificationOnLoad();
     fetchCompetenciesOnLoad();
+    console.log(competencies);
   }, []);
 
   return (
@@ -287,6 +286,7 @@ const JvsFormOne = () => {
         </table>
       </div>
       <br />
+      {console.log(competencies)}
       <WeightingTable
         title="EDUCATION"
         type="ED"

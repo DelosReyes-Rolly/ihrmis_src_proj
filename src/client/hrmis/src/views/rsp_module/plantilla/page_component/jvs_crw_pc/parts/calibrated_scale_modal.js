@@ -56,11 +56,16 @@ const CalibratedScaleModal = ({
           "com_others",
           "com_experience",
         ];
-        return (
-          competencies[type[number]].tbl_com_type[
-            competencies[type[number]].tbl_com_type.length - 1
-          ].rtg_seq_order + 1
-        );
+
+        if (competencies[type[number]].tbl_com_type?.length === undefined) {
+          return 1;
+        } else {
+          return (
+            competencies[type[number]].tbl_com_type[
+              competencies[type[number]].tbl_com_type.length - 1
+            ].rtg_seq_order + 1
+          );
+        }
       };
 
       if (type === "ED") {
@@ -104,8 +109,9 @@ const CalibratedScaleModal = ({
               rtg_factor: values.rtg_factor,
               rtg_com_type: type,
               rtg_id: jvsId,
-              rtg_seq_order: orderSelector,
+              rtg_seq_order: orderSelector ?? 1,
               rtg_percent: values.rtg_percent,
+              com_specific: specific === null ? "default" : specific,
             })
           );
         }

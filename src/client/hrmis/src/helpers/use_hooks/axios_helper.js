@@ -8,6 +8,8 @@ const onSubmitRequest = async (
   withFiles = false,
   files = null
 ) => {
+  let token = document.head.querySelector('meta[name="csrf-token"]');
+
   const formData = withFiles === false ? data : new FormData();
   const contentType = withFiles
     ? "multipart/form-data"

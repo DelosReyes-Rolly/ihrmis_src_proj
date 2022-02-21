@@ -1,19 +1,16 @@
-import React, { Component } from 'react';
+import React from "react";
 
-class SearchComponent extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  }
-    }
+const SearchComponent = ({ placeholder, onChange, value }) => {
+  return (
+    <div className="input-div">
+      <input
+        className="custom-input"
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+};
 
-    addClassName = "custom-input " + this.props.className;
-    render() { 
-        return ( 
-            <div className="input-div">
-                <input className={this.addClassName} placeholder={this.props.placeholder} />
-            </div>
-        );
-    }
-}
- 
 export default SearchComponent;

@@ -148,16 +148,51 @@ const jvscrwSlice = createSlice({
       let { rtg_com_type } = action.payload;
 
       const competenciesStateStructure = (state, com_type, action) => {
-        return {
-          ...state.competencies,
-          [com_type]: {
-            ...state.competencies[com_type],
-            tbl_com_type: [
-              ...state.competencies[com_type].tbl_com_type,
-              action.payload,
-            ],
-          },
-        };
+        const {
+          rtg_factor,
+          rtg_com_type,
+          rtg_id,
+          rtg_seq_order,
+          rtg_percent,
+          com_specific,
+        } = action.payload;
+
+        if (rtg_seq_order === 1) {
+          return {
+            ...state.competencies,
+            [com_type]: {
+              com_jvs_id: rtg_id,
+              com_specific: com_specific,
+              com_type: rtg_com_type,
+              tbl_com_type: [
+                {
+                  rtg_factor,
+                  rtg_com_type,
+                  rtg_id,
+                  rtg_seq_order,
+                  rtg_percent,
+                },
+              ],
+            },
+          };
+        } else {
+          return {
+            ...state.competencies,
+            [com_type]: {
+              ...state.competencies[com_type],
+              tbl_com_type: [
+                ...state.competencies[com_type].tbl_com_type,
+                {
+                  rtg_factor,
+                  rtg_com_type,
+                  rtg_id,
+                  rtg_seq_order,
+                  rtg_percent,
+                },
+              ],
+            },
+          };
+        }
       };
 
       if (rtg_com_type === "ED") {

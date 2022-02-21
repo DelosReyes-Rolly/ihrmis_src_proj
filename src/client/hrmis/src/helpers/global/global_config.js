@@ -22,3 +22,7 @@ export const validationEmail = Yup.string()
 export const validationDate = Yup.date().required("This field is required");
 
 export const yesterday = new Date(Date.now() - 86400000);
+
+// export const axios_header = {
+//   "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+// };

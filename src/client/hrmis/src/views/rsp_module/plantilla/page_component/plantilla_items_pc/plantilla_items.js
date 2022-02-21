@@ -1,22 +1,17 @@
-import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
-import BadgeComponents from "../../../../common/badge_component/Badge";
 import { plantillaItemsBreadCramp } from "../../static/breadcramp_data";
 import SearchComponent from "../../../../common/input_component/search_input/search_input";
 import { plantillaItemSelectFilter } from "../../static/filter_items";
-import { plantillaItemMenuItem } from "../../static/menu_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
-import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
 import { useToggleService } from "../../../../../services/toggle_service";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { statusDisplay } from "../../static/display_option";
-import { BsArrowUp } from "react-icons/bs";
-import { MdMoreHoriz, MdAdd } from "react-icons/md";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import axios from "axios";
+import { BsArrowDown, BsArrowUp } from "react-icons/bs";
+import { MdAdd } from "react-icons/md";
+import React, { useLayoutEffect, useMemo, useState } from "react";
+import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 
-// import { propTypes } from 'react-recaptcha';
+import axios from "axios";
 
 const PlantillaItemPageComponentView = () => {
   const [toggleState, setToggleState] = useState(1);
@@ -31,86 +26,195 @@ const PlantillaItemPageComponentView = () => {
           <BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
         </div>
 
-        <div className="tab-button">
-          <button
-            onClick={() => toggleTab(1)}
-            className={
-              toggleState === 1 ? "tab-tap tab-tap-activate" : "tab-tap"
-            }
-          >
-            Regular
-          </button>
-          <BadgeComponents className="tab-badge-add-style" value={"9"} />
-          <button
-            onClick={() => toggleTab(2)}
-            className={
-              toggleState === 2
-                ? "tab-tap tab-tap-activate margin-left-1"
-                : "tab-tap margin-left-1"
-            }
-          >
-            Non-Regular
-          </button>
+        <div className="regular-tab-component">
+          <div className="reg-tab-container">
+            <button
+              onClick={() => toggleTab(1)}
+              className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
+            >
+              Regular
+            </button>
+
+            <button
+              onClick={() => toggleTab(2)}
+              className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
+            >
+              Non-Regular
+            </button>
+          </div>
+
           <hr className="solid" />
         </div>
 
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
-          <TableView regularValue={1} />
+          <PlantillaDataTableDisplay type={1} />
         </div>
 
         {/* TAB SECOND NON REGULAR */}
         <div className={toggleState === 2 ? "current-tab" : "show-none"}>
-          <TableView regularValue={0} />
+          <PlantillaDataTableDisplay type={0} />
         </div>
       </div>
     </React.Fragment>
   );
 };
 
-const TableView = (props) => {
-  let [toggleNextRank, setToggletoggleNextRank] = useToggleService(false);
-  let [toggleAddPlantillaItem, setTogglePlantillaItem] =
-    useToggleService(false);
+export default PlantillaItemPageComponentView;
 
-  const [buttonToggleState, setButtonToggleState] = useState({
-    on: false,
-    index: 0,
-  });
+export const PlantillaDataTableDisplay = ({ type }) => {
+  const [plotData, setPlotData] = useState([]);
+  const plantillaItemApi = async () => {
+    await axios
+      .get(API_HOST + "plantilla-items/" + type)
+      .then((response) => {
+        let data = response.data.data ?? [];
 
-  const buttonTogleTab = (number) => {
-    if (buttonToggleState.on === false) {
-      setButtonToggleState({ on: true, index: number });
-    } else {
-      setButtonToggleState({ on: false, index: number });
-    }
+        let dataPlot = [];
+        data?.forEach((element) => {
+          dataPlot.push({
+            itm_no: element.itm_no,
+            pos_short_name: element.position.pos_short_name,
+            ofc_acronym: element.office.ofc_acronym,
+            itm_status: statusDisplay[element.itm_status],
+            pos_category: element.position.pos_category,
+          });
+        });
+
+        setPlotData(dataPlot);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  //API CALL FOR VIEWING
-  const dispatch = useDispatch();
-  const [plantillaItemTableData, setData] = useState();
-  useEffect(() => {
-    const plantillaItemApi = async () => {
-      await axios
-        .get(API_HOST + "plantilla-items")
-        .then((response) => {
-          setData(response.data.data);
-          console.log("Run");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    plantillaItemApi(plantillaItemTableData);
-    console.log();
+  useLayoutEffect(() => {
+    plantillaItemApi();
   }, []);
+
+  let data = useMemo(() => plotData, [plotData]);
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Item No.",
+        accessor: "itm_no", // accessor is the "key" in the data
+      },
+      {
+        Header: "Position",
+        accessor: "pos_short_name",
+      },
+      {
+        Header: "Office",
+        accessor: "ofc_acronym",
+      },
+      {
+        Header: "Status",
+        accessor: "itm_status",
+      },
+      {
+        Header: "Category",
+        accessor: "pos_category",
+      },
+    ],
+    []
+  );
+
+  const initialState = { hiddenColumns: "pos_category" };
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter,
+    setFilter,
+  } = useTable(
+    {
+      initialState,
+      columns,
+      data,
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
+  );
+
+  const { globalFilter } = state;
 
   return (
     <React.Fragment>
-      <NextInRankModal
-        isDisplay={toggleNextRank}
-        onClose={setToggletoggleNextRank}
+      <br />
+      <AddPlantillaItems
+        type={type}
+        search={globalFilter}
+        setSearch={setGlobalFilter}
+        statusFilter={setFilter}
       />
 
+      <div className="default-table">
+        <table className="table-design" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr
+                className="main-header"
+                {...headerGroup.getHeaderGroupProps()}
+              >
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <BsArrowDown />
+                        ) : (
+                          <BsArrowUp />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr className="trHoverBody" {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p
+          style={{
+            fontSize: "small",
+            color: "rgba(70, 70, 70, 0.6)",
+            marginTop: "10px",
+          }}
+        >
+          Total of {rows.length} entries
+        </p>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
+  let [toggleAddPlantillaItem, setTogglePlantillaItem] =
+    useToggleService(false);
+  return (
+    <React.Fragment>
       <div className="selector-buttons">
         <div className="selector-container">
           <span className="selector-span-1">
@@ -122,14 +226,13 @@ const TableView = (props) => {
           <AddPlantillaItemModal
             isDisplay={toggleAddPlantillaItem}
             onClose={() => setTogglePlantillaItem()}
-            regularValue={props.regularValue}
+            type={type}
           />
 
           <span className="margin-left-1 selector-span-1">
-            <select defaultValue={"DEFAULT"}>
-              <option value="DEFAULT" disabled>
-                Filter By
-              </option>
+            <select
+              onChange={(e) => statusFilter("pos_category", e.target.value)}
+            >
               {plantillaItemSelectFilter.map((item) => {
                 return (
                   <option
@@ -150,139 +253,14 @@ const TableView = (props) => {
             <label>Search</label>
           </span>
           <span>
-            <SearchComponent placeholder="Search" />
+            <SearchComponent
+              placeholder="Search"
+              value={search || ""}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </span>
         </div>
-      </div>
-
-      <div className="plantilla-table">
-        <div className="scrollable-div-table">
-          <table id="custom-table">
-            <thead>
-              <tr className="fixed-label-table">
-                <th>
-                  <button>
-                    <BsArrowUp />
-                  </button>{" "}
-                  Item No.
-                </th>
-                <th>
-                  <button>
-                    <BsArrowUp />
-                  </button>{" "}
-                  Position
-                </th>
-                <th>
-                  <button>
-                    <BsArrowUp />
-                  </button>{" "}
-                  Office
-                </th>
-                <th>
-                  <button>
-                    <BsArrowUp />
-                  </button>{" "}
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {plantillaItemTableData &&
-                plantillaItemTableData.map((data) => {
-                  if ((props.regularValue === 1) & (data.itm_regular === 1)) {
-                    return (
-                      <tr className="trClass" key={data.itm_id}>
-                        <td>{data.itm_no ?? ""}</td>
-                        <td>{data.position.pos_short_name ?? ""}</td>
-                        <td>{data.office.ofc_acronym ?? ""}</td>
-                        <td className="column-option">
-                          <div className="inline-div-td-1">
-                            {statusDisplay[data.itm_status]}
-                            <br />
-                            {}
-                          </div>
-                          <div className="inline-div-td-2">
-                            <button onClick={() => buttonTogleTab(data.itm_id)}>
-                              <MdMoreHoriz size="15" />
-                            </button>
-
-                            <DropdownViewComponent
-                              display={
-                                buttonToggleState.on
-                                  ? buttonToggleState.index === data.itm_id
-                                    ? "block"
-                                    : "none"
-                                  : "none"
-                              }
-                              itemList={plantillaItemMenuItem}
-                              onClick={() => {
-                                setToggletoggleNextRank();
-                                setButtonToggleState({
-                                  on: data.itm_id,
-                                  index: false,
-                                });
-                              }}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  } else if (
-                    (props.regularValue === 0) &
-                    (data.itm_regular === 0)
-                  ) {
-                    return (
-                      <tr className="trClass" key={data.itm_id}>
-                        <td>{data.itm_no}</td>
-                        <td>{data.position.pos_short_name}</td>
-                        <td>{data.office.ofc_acronym}</td>
-                        <td className="column-option">
-                          <div className="inline-div-td-1">
-                            {statusDisplay[data.itm_status]}
-                            <br />
-                            {}
-                          </div>
-                          <div className="inline-div-td-2">
-                            <button onClick={() => buttonTogleTab(data.itm_id)}>
-                              <MdMoreHoriz size="15" />
-                            </button>
-
-                            <DropdownViewComponent
-                              display={
-                                buttonToggleState.on
-                                  ? buttonToggleState.index === data.itm_id
-                                    ? "block"
-                                    : "none"
-                                  : "none"
-                              }
-                              itemList={plantillaItemMenuItem}
-                              onClick={() => {
-                                setToggletoggleNextRank();
-                                setButtonToggleState({
-                                  on: data.itm_id,
-                                  index: false,
-                                });
-                              }}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  }
-                  return <React.Fragment></React.Fragment>;
-                })}
-            </tbody>
-          </table>
-        </div>
-
-        <p className="data-entry">
-          Total of {plantillaItemTableData && plantillaItemTableData.length}{" "}
-          Entries
-        </p>
-        <br />
       </div>
     </React.Fragment>
   );
 };
-
-export default PlantillaItemPageComponentView;
