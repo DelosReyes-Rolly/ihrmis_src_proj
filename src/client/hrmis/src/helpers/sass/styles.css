@@ -346,7 +346,7 @@ hr.solid {
 * {
   margin: 0px;
   padding: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .app {
@@ -3110,7 +3110,7 @@ input:checked + .slider:before {
 
 .next-rank-modal-container .nrm-header {
   font-weight: 600;
-  color: #4880B3;
+  color: #4880b3;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3224,10 +3224,16 @@ input:checked + .slider:before {
         -ms-flex-direction: column;
             flex-direction: column;
   }
-  .add-plantilla-item-modal .left-input, .add-plantilla-item-modal .middle-input, .add-plantilla-item-modal .right-input {
+  .add-plantilla-item-modal .left-input,
+  .add-plantilla-item-modal .middle-input,
+  .add-plantilla-item-modal .right-input {
     margin: 0;
   }
-  .add-plantilla-item-modal .item-modal-1, .add-plantilla-item-modal .item-modal-2, .add-plantilla-item-modal .item-modal-3, .add-plantilla-item-modal .item-modal-4, .add-plantilla-item-modal .item-modal-5 {
+  .add-plantilla-item-modal .item-modal-1,
+  .add-plantilla-item-modal .item-modal-2,
+  .add-plantilla-item-modal .item-modal-3,
+  .add-plantilla-item-modal .item-modal-4,
+  .add-plantilla-item-modal .item-modal-5 {
     width: 100%;
     margin-bottom: 5px;
   }

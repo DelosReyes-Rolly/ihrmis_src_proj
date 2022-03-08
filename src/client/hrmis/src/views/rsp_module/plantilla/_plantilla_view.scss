@@ -1,94 +1,105 @@
-.add-plantilla-item-modal{
-    display: flex;
-    margin-bottom: 10px;
-    .left-input{
-        margin-right: 5px;
-    }
-    .middle-input{
-        margin-right: 5px;
-        margin-left: 5px;
-    }
-    .right-input{
-        margin-left: 5px;
-    }
+.add-plantilla-item-modal {
+	display: flex;
+	margin-bottom: 10px;
+	.left-input {
+		margin-right: 5px;
+	}
+	.middle-input {
+		margin-right: 5px;
+		margin-left: 5px;
+	}
+	.right-input {
+		margin-left: 5px;
+	}
 
-    .item-modal-1{
-        width: 65%;
-    }.item-modal-2{
-        width: 35%;
-    }
-    .item-modal-3{
-        width: 30%;
-    }.item-modal-4{
-        width: 40%;
-    }.item-modal-5{
-        width: 100%;
-    }
+	.item-modal-1 {
+		width: 65%;
+	}
+	.item-modal-2 {
+		width: 35%;
+	}
+	.item-modal-3 {
+		width: 30%;
+	}
+	.item-modal-4 {
+		width: 40%;
+	}
+	.item-modal-5 {
+		width: 100%;
+	}
 }
 
-.next-rank-modal-container{
-    .nrm-header{
-        font-weight: 600;
-        color: #4880B3;
-        @include containerFlexRow(true);
-        
-        .check-box-alignment{
-            
-            @include containerFlexRow(true);
-            align-items: center;
-        
-            span{
-                @include containerFlexRow(true);
-                align-items: center;
-                justify-content: center;
-            }
-        }
-        .container-1{
-            width: 40%;
-        }.container-2{
-            width: 40%;
-        }.container-3{
-            width: 20%;
-        }
-    }
+.next-rank-modal-container {
+	.nrm-header {
+		font-weight: 600;
+		color: #4880b3;
+		@include containerFlexRow(true);
 
-    .nrm-body{
-        font-weight: 400;
-        @include containerFlexRow(true);
-        .check-box-alignment{
-            
-            @include containerFlexRow(true);
-            align-items: center;
-        
-            span{
-                @include containerFlexRow(true);
-                align-items: center;
-                justify-content: center;
-            }
-        }
-        .container-1{
-            width: 40%;
-        }.container-2{
-            width: 40%;
-        }.container-3{
-            width: 20%;
-        }
-    }
+		.check-box-alignment {
+			@include containerFlexRow(true);
+			align-items: center;
 
-    .bold-selected{
-        font-weight: 600;
-    }
+			span {
+				@include containerFlexRow(true);
+				align-items: center;
+				justify-content: center;
+			}
+		}
+		.container-1 {
+			width: 40%;
+		}
+		.container-2 {
+			width: 40%;
+		}
+		.container-3 {
+			width: 20%;
+		}
+	}
+
+	.nrm-body {
+		font-weight: 400;
+		@include containerFlexRow(true);
+		.check-box-alignment {
+			@include containerFlexRow(true);
+			align-items: center;
+
+			span {
+				@include containerFlexRow(true);
+				align-items: center;
+				justify-content: center;
+			}
+		}
+		.container-1 {
+			width: 40%;
+		}
+		.container-2 {
+			width: 40%;
+		}
+		.container-3 {
+			width: 20%;
+		}
+	}
+
+	.bold-selected {
+		font-weight: 600;
+	}
 }
 
-@media only screen and (max-width: 800px){
-    .add-plantilla-item-modal{
-        flex-direction: column;
-        .left-input, .middle-input, .right-input{
-            margin: 0;
-        }
-        .item-modal-1, .item-modal-2, .item-modal-3, .item-modal-4, .item-modal-5{
-            width: 100%;
-            margin-bottom: 5px;
-        }
-    }
+@media only screen and (max-width: 800px) {
+	.add-plantilla-item-modal {
+		flex-direction: column;
+		.left-input,
+		.middle-input,
+		.right-input {
+			margin: 0;
+		}
+		.item-modal-1,
+		.item-modal-2,
+		.item-modal-3,
+		.item-modal-4,
+		.item-modal-5 {
+			width: 100%;
+			margin-bottom: 5px;
+		}
+	}
 }

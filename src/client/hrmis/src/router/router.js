@@ -24,7 +24,7 @@ import PlantillaItemPageComponentView from "../views/rsp_module/plantilla/page_c
 import JvsCrwPageComponentView from "../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
 import CompensationView from "../views/rsp_module/compensation/compensation_view";
 import RequestView from "../views/rsp_module/request/request_view";
-
+import PlantillaVacantPageComponent from "../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
   const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
@@ -62,6 +62,11 @@ const MainRouter = () => {
                   element={<JvsCrwPageComponentView />}
                 />
               </Route>
+              <Route
+                exact
+                path="/rsp/plantilla/plantilla-items/vacantpositions"
+                element={<PlantillaVacantPageComponent />}
+              />
 
               <Route path="/rsp/library" element={<LibraryView />} />
 

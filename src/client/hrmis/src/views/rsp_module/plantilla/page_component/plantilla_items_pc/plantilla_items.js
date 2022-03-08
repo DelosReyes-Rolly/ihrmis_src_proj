@@ -53,7 +53,6 @@ const PlantillaItemPageComponentView = () => {
           </button>
           <hr className="solid" />
         </div>
-
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
           <TableView regularValue={1} />
         </div>

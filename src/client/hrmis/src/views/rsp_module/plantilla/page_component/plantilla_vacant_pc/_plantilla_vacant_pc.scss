@@ -1,0 +1,14 @@
+.plantilla-view {
+  .three-idiot {
+    display: flex;
+    justify-content: end;
+    padding: 0px 20px;
+    background-color: blue;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .three-idiot {
+    padding-right: 10px;
+  }
+}
