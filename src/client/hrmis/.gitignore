@@ -23,3 +23,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+../../server/api_ihrmis/.gitignore
+modified:   ../../server/api_ihrmis/composer.lock
