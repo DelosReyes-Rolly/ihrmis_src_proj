@@ -1,0 +1,10 @@
+.plantilla-icon{
+   
+  color: #4276a4;
+  font-size: 1.2em;
+}
+
+.plantilla-icon:hover{
+  
+  @include zoomInEffect();
+} 

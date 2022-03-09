@@ -15,6 +15,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaItemsController;
+use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -115,7 +116,6 @@ Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
-
-
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);

@@ -38,6 +38,11 @@ export const SidebarOption = [
         title: "Plantilla Items",
         link: "/rsp/plantilla/plantilla-items",
       },
+      {
+        id: 3,
+        title: "Vacant Positions",
+        link: "/rsp/plantilla/plantilla-items/vacantpositions",
+      },
     ],
     link: "/rsp/plantilla",
   },
