@@ -16,11 +16,20 @@ import axios from "axios";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
 
-const AddPlantillaItemModal = ({ type, isDisplay, onClose, plantillaData }) => {
+const AddPlantillaItemModal = ({
+  type,
+  isDisplay,
+  onClose,
+  plantillaData,
+  plantillaID = null,
+}) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   let token = document.head.querySelector('meta[name="csrf-token"]');
-
+  let dispatch = useDispatch();
+  const endpointId = plantillaID === null ? "/0" : "/" + plantillaID;
   // ==========================================
   // FORMIK FORM
   // ==========================================
@@ -36,7 +45,7 @@ const AddPlantillaItemModal = ({ type, isDisplay, onClose, plantillaData }) => {
       itm_category: plantillaData?.itm_category ?? "",
       itm_function: plantillaData?.itm_function ?? "",
       itm_creation: plantillaData?.itm_creation ?? "",
-      itm_regular: type ?? plantillaData?.regular,
+      itm_regular: type ?? plantillaData?.itm_regular,
     },
     validationSchema: Yup.object({
       itm_no: Yup.string()
@@ -75,19 +84,23 @@ const AddPlantillaItemModal = ({ type, isDisplay, onClose, plantillaData }) => {
         .typeError("Must be a number")
         .required("This field is required"),
     }),
-    onSubmit: async (value) => {
+    onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
       await axios
-        .post(API_HOST + "plantilla-items", value, {
+        .post(API_HOST + "plantilla-items" + endpointId, value, {
           headers: { "X-CSRF-TOKEN": token.content },
         })
         .then(() => {
-          renderSucceed();
+          renderSucceed({});
+          dispatch(setRefresh());
+          resetForm();
         })
         .catch((err) => {
-          // renderFailed();
+          renderFailed({});
         });
       renderBusy(false);
+
+      onClose();
     },
   });
 

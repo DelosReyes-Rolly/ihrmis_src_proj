@@ -6,12 +6,16 @@ const popupResponseSlice = createSlice({
     isBusy: false,
     isSuccess: false,
     isFail: false,
+    refresh: false,
     message: {
       title: "",
       content: "",
     },
   },
   reducers: {
+    setRefresh: (state) => {
+      state.refresh = !state.refresh;
+    },
     setBusy: (state, action) => {
       state.isBusy = action.payload;
     },
@@ -28,6 +32,6 @@ const popupResponseSlice = createSlice({
   },
 });
 
-export const { setBusy, setSuccess, setFail, setMessage } =
+export const { setBusy, setSuccess, setFail, setMessage, setRefresh } =
   popupResponseSlice.actions;
 export default popupResponseSlice.reducer;

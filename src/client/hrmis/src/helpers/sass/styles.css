@@ -1585,6 +1585,34 @@ input:checked + .slider:before {
   font-size: small;
 }
 
+.four-o-four-page {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  height: 80vh;
+  background-color: whitesmoke;
+}
+
+.four-o-four-page .code-design {
+  font-size: 150px;
+  color: #004e87;
+}
+
+.four-o-four-page .descript-design {
+  font-size: 30px;
+  color: #464646;
+}
+
 .pds-profile-main-view {
   padding: 50px 30px;
   max-width: 1200px;
@@ -2971,6 +2999,12 @@ input:checked + .slider:before {
   border: 1px solid #4276a480;
 }
 
+.remarks-div-1 div .button-2:active,
+.remarks-div-1 div .button-1:active {
+  -webkit-transform: translateY(2px);
+          transform: translateY(2px);
+}
+
 .remarks-div-2 {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3060,7 +3094,7 @@ input:checked + .slider:before {
 
 .prepared-proved .prepared-button {
   margin-left: 5px;
-  height: 35px;
+  height: 30px;
   width: 120px;
   border-radius: 5px;
   background-color: #4276a4;
@@ -3068,7 +3102,14 @@ input:checked + .slider:before {
 }
 
 .prepared-proved .prepared-button:hover {
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
   background-color: #38658d;
+}
+
+.prepared-proved .prepared-button:active {
+  -webkit-transform: translateY(2px);
+          transform: translateY(2px);
 }
 
 .prepared-proved .signature-render {
@@ -3084,6 +3125,24 @@ input:checked + .slider:before {
 
 .prepared-proved .signature-render .close-button:hover {
   color: #cc4040;
+}
+
+.creatable-design {
+  width: 100%;
+}
+
+.canvas-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.canvas-container .signCanvas {
+  background-color: white;
+  border-radius: 5px;
 }
 
 @media only screen and (max-width: 800px) {
@@ -3267,11 +3326,25 @@ input:checked + .slider:before {
   font-weight: 600;
 }
 
-.regular-tab-component {
-  margin: 0px 20px;
+.container-vacant-position {
+  margin: 10px 20px;
 }
 
-.regular-tab-component .reg-tab-container {
+.container-vacant-position .button-vacant {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  margin-bottom: -20px;
+}
+
+.container-vacant-position .regular-tab-component {
+  width: 100%;
+}
+
+.container-vacant-position .regular-tab-component .reg-tab-container {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -3280,7 +3353,7 @@ input:checked + .slider:before {
   gap: 12px;
 }
 
-.regular-tab-component .reg-tab-container .reg-tab {
+.container-vacant-position .regular-tab-component .reg-tab-container .reg-tab {
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -3290,7 +3363,7 @@ input:checked + .slider:before {
   border-bottom: 3px solid transparent;
 }
 
-.regular-tab-component .reg-tab-container .reg-tab:hover {
+.container-vacant-position .regular-tab-component .reg-tab-container .reg-tab:hover {
   float: inline-end;
   -webkit-transition: 0.3s;
   transition: 0.3s;
@@ -3299,7 +3372,7 @@ input:checked + .slider:before {
   z-index: 1;
 }
 
-.regular-tab-component .reg-tab-container .reg-tab-activate {
+.container-vacant-position .regular-tab-component .reg-tab-container .reg-tab-activate {
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -3308,6 +3381,13 @@ input:checked + .slider:before {
   color: #1da1f2;
   border-bottom: 3px solid #1da1f2;
   z-index: 1;
+}
+
+.square-notification {
+  padding: 1px 5px;
+  border-radius: 2px;
+  background-color: white;
+  color: #063158;
 }
 
 @media only screen and (max-width: 800px) {
@@ -3332,7 +3412,11 @@ input:checked + .slider:before {
   }
 }
 
-.for-position-modal .position-modal-container-1 {
+.position-modal-container-1 {
+  margin: 10px 0px 0px 0px;
+}
+
+.position-modal-container-2 {
   margin: 10px 0px 0px 0px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3341,18 +3425,23 @@ input:checked + .slider:before {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 
-.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-plus {
-  color: #2fd12f;
-}
-
-.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-minus {
-  color: #cc4040;
-}
-
-.for-position-modal .position-modal-container-2 {
-  margin: 10px 0px 0px 0px;
+.position-modal-container-3 {
+  margin: 3px 0px 0px 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
 }
 
 .blue-div {

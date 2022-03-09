@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { BsArrowDown, BsArrowUp, BsPencilFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useTable, useSortBy } from "react-table";
 import { API_HOST } from "../../../../../helpers/global/global_config";
@@ -17,26 +18,20 @@ import {
   apiModeCreationModalInputItem,
 } from "../../static/input_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
+import AddPlantillaItemDutiesAndRespoModal from "../plantilla_info_modals/add_duties_respo_modal";
 
 const PlantillaItemInformation = () => {
   const { item } = useParams();
-  const { renderBusy, renderFailed } = usePopUpHelper();
+  const { refresh } = useSelector((state) => state.popupResponse);
+  const { renderFailed } = usePopUpHelper();
   const [plantilla, setPosition] = useState();
   const [dtyResponsibility, setDtyResponsibility] = useState();
-  let [toggleAddPlantillaItem, setTogglePlantillaItem] =
+  const [toggleAddPlantillaItem, setTogglePlantillaItem] =
     useToggleService(false);
+  const [toggleAddDtyItem, setToggleAddDtyItem] = useToggleService(false);
 
-  const itemInformation = async (item) => {
-    renderBusy(true);
-    await axios
-      .get(API_HOST + "plantilla-itm-detail/" + item)
-      .then((res) => {
-        setPosition(res.data.data);
-      })
-      .catch((err) => {
-        renderFailed({ content: err.message });
-      });
-
+  const itemInformation = async () => {
+    const id = plantilla?.position?.pos_id;
     await axios
       .get(API_HOST + "plantilla-duties-responsibility/" + item)
       .then((res) => {
@@ -45,24 +40,41 @@ const PlantillaItemInformation = () => {
       .catch((err) => {
         renderFailed({ content: err.message });
       });
+  };
 
-    renderBusy(false);
+  const plantillaDetail = async () => {
+    await axios
+      .get(API_HOST + "plantilla-itm-detail/" + item)
+      .then((res) => {
+        setPosition(res.data.data);
+      })
+      .catch((err) => {
+        renderFailed({ content: err.message });
+      });
   };
 
   useEffect(() => {
-    itemInformation(item);
-  }, []);
+    itemInformation();
+    plantillaDetail();
+  }, [refresh]);
+
   return (
     <React.Fragment>
       <AddPlantillaItemModal
         isDisplay={toggleAddPlantillaItem}
         onClose={() => setTogglePlantillaItem()}
         plantillaData={plantilla}
+        plantillaID={item}
+      />
+      <AddPlantillaItemDutiesAndRespoModal
+        isDisplay={toggleAddDtyItem}
+        onClose={() => setToggleAddDtyItem()}
+        dtyData={dtyResponsibility}
+        dty_id={plantilla?.position.pos_id}
       />
       <BreadcrumbComponent
         list={plantillaItemsInfoBreadCramp}
         change={plantilla?.itm_no}
-        className=""
       />
 
       <PositionTableView data={plantilla} />
@@ -77,16 +89,14 @@ const PlantillaItemInformation = () => {
       </div>
 
       <br />
-      <DutiesAndRespoView
-        plotData={dtyResponsibility}
-        itemNumber={plantilla?.itm_no}
-      />
+      <DutiesAndRespoView plotData={dtyResponsibility} />
       <div
         style={{ margin: "10px 20px", display: "flex", justifyContent: "end" }}
       >
         <ButtonComponent
           buttonLogoStart={<BsPencilFill size={13} />}
           buttonName="Edit"
+          onClick={() => setToggleAddDtyItem()}
         />
       </div>
     </React.Fragment>
@@ -153,9 +163,9 @@ const PositionTableView = ({ data }) => {
           <tr>
             <th className="main-header">Area Code and Type</th>
             <td>
-              {data?.office?.ofc_area_code +
+              {(data?.office?.ofc_area_code ?? "") +
                 " - " +
-                data?.office?.ofc_area_type}
+                data?.office?.ofc_area_type ?? ""}
             </td>
             <th className="main-header">Source of Found</th>
             <td></td>
@@ -178,7 +188,15 @@ const PositionTableView = ({ data }) => {
   );
 };
 
-export const DutiesAndRespoView = ({ plotData = [] }) => {
+const DutiesAndRespoView = ({ plotData }) => {
+  const [dataArr, setDataArr] = useState([]);
+
+  useEffect(() => {
+    if (plotData) {
+      setDataArr(plotData);
+    }
+  }, [plotData]);
+
   const columns = useMemo(
     () => [
       {
@@ -206,7 +224,7 @@ export const DutiesAndRespoView = ({ plotData = [] }) => {
     []
   );
 
-  const data = useMemo(() => plotData, []);
+  const data = useMemo(() => dataArr, [dataArr]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable(
