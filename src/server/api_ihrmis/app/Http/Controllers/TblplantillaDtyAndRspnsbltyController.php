@@ -12,7 +12,7 @@ class TblplantillaDtyAndRspnsbltyController extends Controller
         $request->validate([
             "dty_respo" => "required"
         ]);
-        // var_dump($request->dty_respo[0]["dty_itm_order"]);
+
         $counter = 0;
         $dtyResFindQry = TblplantillaDutiesRspnsblts::where("dty_itm_id", $id)->get();
         if($dtyResFindQry){
