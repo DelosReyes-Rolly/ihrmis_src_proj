@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonComponent from "../../common/button_component/button_component.js";
 
 const CompensationView = () => {
   return (

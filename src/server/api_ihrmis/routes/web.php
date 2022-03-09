@@ -1,6 +1,8 @@
 <?php
 
 // use App\Http\Controllers\PdfEmailGeneratorController;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +25,6 @@ Route::get('/send-email', function () {
 });
 
 // Route::get('/send-email-pdf', [PdfEmailGeneratorController::class, 'index']);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

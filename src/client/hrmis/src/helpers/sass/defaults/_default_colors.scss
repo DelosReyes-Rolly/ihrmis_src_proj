@@ -1,10 +1,29 @@
 //MAIN COLORS
 $primary-color: #4276a4;
+$login-color: #004e87;
+
+$primaryColor: (
+  regular: rgba(66, 118, 164, 1),
+  800: rgba(66, 118, 164, 0.8),
+  600: rgba(66, 118, 164, 0.6),
+  400: rgba(66, 118, 164, 0.4),
+  200: rgba(66, 118, 164, 0.2),
+);
+
+$blackColor: (
+  regular: rgba(70, 70, 70, 1),
+  800: rgba(70, 70, 70, 0.8),
+  600: rgba(70, 70, 70, 0.6),
+  400: rgba(70, 70, 70, 0.4),
+  200: rgba(70, 70, 70, 0.2),
+);
 
 //BACKGROUND COLORS
 
 //TEXTS COLORS
 //$fontMainColor: red;
+$plantillaTabColor: rgba(29, 161, 242, 1);
+
 $fontSecondaryColor: rgba(70, 70, 70, 0.8);
 
 $errorColor: rgb(204, 64, 64);

@@ -31,7 +31,6 @@ export const plantillaVacantBreadCramp = [
     link: "#",
   },
 ];
-
 export const employeeItemsBreadCramp = [
   {
     name: "Home",

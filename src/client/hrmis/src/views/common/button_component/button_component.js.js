@@ -23,7 +23,9 @@ const ButtonComponent = (props) => {
       >
         {props.buttonLogoStart}
       </span>
+
       <span className="bc-logo-component">{props.buttonName}</span>
+
       <span
         className="bc-logo-component"
         style={
@@ -34,6 +36,8 @@ const ButtonComponent = (props) => {
       >
         {props.buttonLogoEnd}
       </span>
+
+      {props.children}
     </button>
   );
 };

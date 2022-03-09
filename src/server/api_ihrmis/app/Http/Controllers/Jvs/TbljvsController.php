@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Jvs;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Jvscrw\JvscrwMainResources;
+use App\Models\Tbljvs;
 use App\Models\TbljvsCompetencies;
 use App\Models\TbljvsDutiesRspnsblts;
 use App\Models\TblplantillaItems;
@@ -27,9 +28,15 @@ class TbljvsController extends Controller
         return new JvscrwMainResources($item_query); 
     }
 
-    public function addCompenencyAndRating($id, $order = null, Request $request)
+    public function allJvsVersion($itemId)
+    {
+      $readQuery = Tbljvs::where('jvs_itm_id', $itemId)->get();
+      return CommonResource::collection($readQuery);
+    }
+
+    public function addCompetencyAndRating(Request $request, $id)
     {  
-        $output = $this->appService->updateOrCreateCmpntncyRtng($request, $id, $order);
+        $output = $this->appService->updateOrCreateCmpntncyRtng($request, $id);
         return response()->json([
             "status" => $output
         ]);
@@ -62,7 +69,7 @@ class TbljvsController extends Controller
 
     public function savePreparedBy($id, $request){
         $request->validate(["prepared_by" => "mimes:jpeg,png|max:5120"]);
-        $output = $this->appService->uploadImage($id, $request);
+        $output = $this->appService->updateOrCreateCmpntncyRtng($id, $request);
         return $output;
     }
 }

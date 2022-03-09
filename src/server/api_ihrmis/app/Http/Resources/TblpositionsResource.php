@@ -17,7 +17,11 @@ class TblpositionsResource extends JsonResource
     {
     
         return [
-            "pos_short_name" => $this->pos_short_name
+            'pos_id' => $this->pos_id,
+            "pos_title" => $this->pos_title,
+            "pos_short_name" => $this->pos_short_name,
+            "pos_category" => $this->pos_category,
+            "pos_salary_grade" => $this->pos_salary_grade
         ];
     }
 }

@@ -25,6 +25,10 @@ import JvsCrwPageComponentView from "../views/rsp_module/plantilla/page_componen
 import CompensationView from "../views/rsp_module/compensation/compensation_view";
 import RequestView from "../views/rsp_module/request/request_view";
 import PlantillaVacantPageComponent from "../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
+import LoginView from "../views/authentication/login_view";
+import PlantillaItemInformation from "../views/rsp_module/plantilla/page_component/plantilla_item_info_pc/plantilla_item_info";
+import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
+
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
   const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
@@ -38,7 +42,8 @@ const MainRouter = () => {
         <BrowserRouter basename="/ihrmis">
           {/* basename="" */}
           <Routes>
-            <Route exact path="/" element={<MainPageLayout />}>
+            <Route exact path="/" element={<LoginView />} />
+            <Route exact path="/rsp" element={<MainPageLayout />}>
               {/* RSP MODULE ROUTES */}
               <Route index element={<Navigate to="/rsp/dashboard" />} />
               <Route path="/rsp/dashboard" element={<DashboardView />} />
@@ -60,6 +65,11 @@ const MainRouter = () => {
                 <Route
                   path="/rsp/plantilla/plantilla-items/jvs-crw"
                   element={<JvsCrwPageComponentView />}
+                />
+
+                <Route
+                  path="/rsp/plantilla/plantilla-items/info/:item"
+                  element={<PlantillaItemInformation />}
                 />
               </Route>
               <Route
@@ -126,7 +136,7 @@ const MainRouter = () => {
               path="*"
               element={
                 <React.Fragment>
-                  <h1>404 Not Found</h1>
+                  <FourOfourPage />
                 </React.Fragment>
               }
             />

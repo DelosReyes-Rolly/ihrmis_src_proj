@@ -14,7 +14,10 @@ class TblofficesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'ofc_acronym' => $this->ofc_acronym
+            'ofc_id' => $this->ofc_id,
+            'ofc_acronym' => $this->ofc_acronym,
+            'ofc_area_code' => $this->ofc_area_code,
+            'ofc_area_type' => $this->ofc_area_type
         ];
     }
 }
