@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommonResource;
 use App\Models\TblplantillaItems;
 use App\Http\Resources\Plantilla\TblplantillaItemsResource;
 
@@ -10,7 +9,7 @@ use App\Http\Resources\Plantilla\TblplantillaItemsResource;
 /**
  * Description of TblplantillaItemsVacantPositionController
  *
- * @author Administrator
+ * @author legee
  */
 class TblplantillaItemsVacantPositionController extends Controller {
 
