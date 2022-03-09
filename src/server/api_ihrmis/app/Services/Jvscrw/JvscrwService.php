@@ -1,62 +1,27 @@
 <?php
 namespace App\Services\Jvscrw;
 
+use App\Http\Resources\CommonResource;
+use App\Models\Tbljvs;
 use App\Models\TbljvsCompetencies;
 use App\Models\TbljvsCompetencyRatings;
 use App\Models\TbljvsDutiesRspnsblts;
 
 class JvscrwService {
-  public function updateOrCreateCmpntncyRtng($request, $id, $order=null)
-  {
-    $competencyQry = TbljvsCompetencies::where('com_type', $request->com_type)->where('com_jvs_id', $id)->first();
-    $output = "";
+ 
+  public function updateOrCreateCmpntncyRtng($request, $id){
 
-    if(isset($competencyQry)){
-        
-        TbljvsCompetencies::where('com_type', $request->com_type)->where('com_jvs_id', $id)->update([
-            'com_jvs_id' => $id,
-            'com_type' => $request->com_type,
-            'com_specific' => $request->com_specific,
-        ]);
-        $this->createRating($request, $id, $order);
-        $output = "update";
+    $output = $request;
+    foreach ($request->competencies as $value) {
+      $this->addCompetencies($value);
     }
-
-    if(!isset($competencyQry)){
-        
-        $create = new TbljvsCompetencies();
-        $create->com_jvs_id = $id;
-        $create->com_type = $request->com_type;
-        $create->com_specific = $request->com_specific;
-        $create->save();
-        $this->createRating($request, $id);
-        $output = "create";
-    }
-
     return $output;
   }
 
 
-  private function createRating($request, $id, $order = null)
+  public function findJvsVersion($request, $itemID)
   {
-
-    $getSequenceQry = TbljvsCompetencyRatings::where('rtg_com_type', $request->com_type)->where('rtg_id', $id)->get();
-    if($order == null){
-      $createQry = new TbljvsCompetencyRatings();
-      $createQry->rtg_id = $id;
-      $createQry->rtg_com_type = $request->com_type;
-      $createQry->rtg_seq_order = count($getSequenceQry)+1;
-      $createQry->rtg_factor = $request->rtg_factor;
-      $createQry->rtg_percent = $request->rtorderg_percent;
-      $createQry->save();
-    }
-
-    if($order != null){
-      TbljvsCompetencyRatings::where('rtg_seq_order', $order)->where('rtg_com_type', $request->com_type)->where('rtg_id', $id)->update([
-        'rtg_factor' => $request->rtg_factor,
-        'rtg_percent' => $request->rtg_percent
-      ]);
-    }
+    # code...
   }
 
   public function deleteRating($id, $order, $type){
@@ -94,7 +59,86 @@ class JvscrwService {
     }
   }
 
-  public function uploadImage($id, $request){
-    
+  private function addCompetencies($competencies){
+   
+      $competencyQry = TbljvsCompetencies::where('com_type', $competencies['com_type'])->where('com_jvs_id', $competencies['com_jvs_id'])->first();
+      
+      if(isset($competencyQry)){
+        TbljvsCompetencies::where('com_type', $competencies['com_type'])->where('com_jvs_id', $competencies['com_jvs_id'])->update([
+            'com_jvs_id' => $competencies['com_jvs_id'],
+            'com_type' => $competencies['com_type'],
+            'com_specific' => $competencies['com_specific'],
+        ]);
+        $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+      } else {
+        $create = new TbljvsCompetencies();
+        $create->com_jvs_id = $competencies['com_jvs_id'];
+        $create->com_type = $competencies['com_type'];
+        $create->com_specific = $competencies['com_specific'];
+        $create->save();
+        $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+        
+      }
+      
+  }
+
+  private function arrayRating($ratings, $id ,$type){
+    $count = 0;
+    TbljvsCompetencyRatings::where('rtg_id', $id)->where('rtg_com_type', $type)->delete();
+    foreach ($ratings as $value) {
+      $count = $count + 1;
+      $createQry = new TbljvsCompetencyRatings();
+      $createQry->rtg_id = $id;
+      $createQry->rtg_com_type = $value['rtg_com_type'];
+      $createQry->rtg_seq_order = $count;
+      $createQry->rtg_factor = $value['rtg_factor'];
+      $createQry->rtg_percent = $value['rtg_percent'];
+      $createQry->save();
+    }
   }
 }
+
+
+ // if(isset($competencyQry)){
+        
+    //     TbljvsCompetencies::where('com_type', $request->com_type)->where('com_jvs_id', $id)->update([
+    //         'com_jvs_id' => $id,
+    //         'com_type' => $request->com_type,
+    //         'com_specific' => $request->com_specific,
+    //     ]);
+    //     $this->createRating($request, $id, $order);
+    //     $output = "update";
+    // }
+
+    // if(!isset($competencyQry)){
+        
+        // $create = new TbljvsCompetencies();
+        // $create->com_jvs_id = $id;
+        // $create->com_type = $request->com_type;
+        // $create->com_specific = $request->com_specific;
+        // $create->save();
+        // $this->createRating($request, $id);
+    // }
+
+
+    // private function createRating($request, $id, $order = null)
+  // {
+
+  //   $getSequenceQry = TbljvsCompetencyRatings::where('rtg_com_type', $request->com_type)->where('rtg_id', $id)->get();
+  //   if($order == null){
+  //     $createQry = new TbljvsCompetencyRatings();
+  //     $createQry->rtg_id = $id;
+  //     $createQry->rtg_com_type = $request->com_type;
+  //     $createQry->rtg_seq_order = count($getSequenceQry)+1;
+  //     $createQry->rtg_factor = $request->rtg_factor;
+  //     $createQry->rtg_percent = $request->rtorderg_percent;
+  //     $createQry->save();
+  //   }
+
+  //   if($order != null){
+  //     TbljvsCompetencyRatings::where('rtg_seq_order', $order)->where('rtg_com_type', $request->com_type)->where('rtg_id', $id)->update([
+  //       'rtg_factor' => $request->rtg_factor,
+  //       'rtg_percent' => $request->rtg_percent
+  //     ]);
+  //   }
+  // }

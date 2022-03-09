@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetOfficesPositionResource;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
@@ -9,7 +10,7 @@ use Illuminate\Http\Request;
 class TblpositionsController extends Controller
 {
     public function index(){
-        return GetOfficesPositionResource::collection(Tblpositions::with('tbloffices'));
+        return CommonResource::collection(Tblpositions::with('tbloffices'));
     }
 
     public function store(Request $request)

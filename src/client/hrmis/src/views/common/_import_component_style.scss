@@ -1,16 +1,17 @@
 //THIS WILL BE GLOBAL COMPONENT IMPORT
 //import all the components styles here
-@import './badge_component/badge';
-@import './breadcrumb_component/breadcrumb';
-@import './button_component/button_component';
-@import './dropdown_menu_custom_component/dropdown_view';
-@import './footer_components/footer';
-@import './input_component/import_input_components';
-@import './navbar_component/navbar';
-@import './sidebar_component/sidebar';
-@import './modal_component/modal_component';
-@import './toggle_switch_component/toggle_switch';
-@import './loader_component/loader_component';
-@import './response_component/success_response_component/success_response_component';
-@import './response_component//fail_response_component/fail_response_component';
-@import './response_component/validation_component/validation_component';
+@import "./badge_component/badge";
+@import "./breadcrumb_component/breadcrumb";
+@import "./button_component/button_component";
+@import "./dropdown_menu_custom_component/dropdown_view";
+@import "./footer_components/footer";
+@import "./input_component/import_input_components";
+@import "./navbar_component/navbar";
+@import "./sidebar_component/sidebar";
+@import "./modal_component/modal_component";
+@import "./toggle_switch_component/toggle_switch";
+@import "./loader_component/loader_component";
+@import "./response_component/success_response_component/success_response_component";
+@import "./response_component//fail_response_component/fail_response_component";
+@import "./response_component/validation_component/validation_component";
+@import "./response_component/404_page/fourofour_page.scss";

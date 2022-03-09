@@ -1,78 +1,70 @@
-import React, { useEffect } from "react";
+import React, { useRef } from "react";
 import ButtonComponent from "../../../../../common/button_component/button_component.js";
 import { AiFillPrinter } from "react-icons/ai";
 import ModalComponent from "../../../../../common/modal_component/modal_component.js";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setRemarksImg } from "../../../../../../features/reducers/jvscrw_slice.js";
+import { MdClose } from "react-icons/md";
+import axios from "axios";
 import {
-  setRefreh,
-  setRemarksImg,
-} from "../../../../../../features/reducers/jvscrw_slice.js";
-import useSessionStorage from "../../../../../../helpers/use_hooks/session_storage.js";
-import { MdClose, MdHeight } from "react-icons/md";
+  API_HOST,
+  axiosConfig,
+} from "../../../../../../helpers/global/global_config.js";
+import { usePopUpHelper } from "../../../../../../helpers/use_hooks/popup_helper";
+import { useNavigate } from "react-router-dom";
+import SignatureCanvas from "react-signature-canvas";
+import Creatable from "react-select/creatable";
+import dataURLtoBlob from "blueimp-canvas-to-blob";
+import { useUploadImageHelper } from "../../../../../../helpers/use_hooks/upload_image_helper.js";
 
 const OBJECTKEY = {
+  preName: "preName",
+  appName: "appName",
   preparedBy: "preparedBy",
   approvedBy: "approvedBy",
 };
 
-const RemarksForm = () => {
+const RemarksForm = ({ jvsId }) => {
   const [preparedBy, setPreparedBy] = useState(false);
   const [approvedBy, setApprovedBy] = useState(false);
+  const navigate = useNavigate();
+  const { competencies, dtyResContainer, remarksImg } = useSelector(
+    (state) => state.jvsform
+  );
 
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const dataStructure = {
-    id: 1,
-    com_education: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_writtenExam: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_computationSKills: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_oralExam: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_creativeWork: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_analyticalSkills: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_training: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_others: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
-    com_experience: {
-      com_type: "",
-      com_specific: "",
-      rating: [],
-    },
+    jvs_id: jvsId,
+    competencies: [
+      competencies?.com_education,
+      competencies?.com_writtenExam,
+      competencies?.com_computationSKills,
+      competencies?.com_oralExam,
+      competencies?.com_creativeWork,
+      competencies?.com_analyticalSkills,
+      competencies?.com_training,
+      competencies?.com_others,
+      competencies?.com_experience,
+    ],
+    dty_res_item: dtyResContainer,
+    app_name: remarksImg.appName,
+    pre_name: remarksImg.preName,
+    app_sign: remarksImg.approvedBy,
+    pre_sign: remarksImg.preparedBy,
   };
 
-  const onSubmitForm = () => {};
+  const handleSubmit = async (subType = "") => {
+    renderBusy(true);
+    await axios
+      .post(API_HOST + "jvscrw-competency-rating" + subType, dataStructure)
+      .then((res) => renderSucceed({}))
+      .catch((err) => renderFailed({ content: err.message }));
+
+    renderBusy(false);
+  };
 
   const onNewVersion = () => {};
-
   const onExit = () => {};
 
   return (
@@ -81,13 +73,17 @@ const RemarksForm = () => {
         <PreparedProved
           title="PREPARED BY"
           objectKey={OBJECTKEY.preparedBy}
+          name={OBJECTKEY.preName}
           upload={setPreparedBy}
+          id={jvsId}
         />
         <br />
         <PreparedProved
           title="APPROVED BY"
           objectKey={OBJECTKEY.approvedBy}
+          name={OBJECTKEY.appName}
           upload={setApprovedBy}
+          id={jvsId}
         />
         <br />
       </div>
@@ -103,11 +99,28 @@ const RemarksForm = () => {
           <ButtonComponent
             className="on-save"
             buttonName="Save as New Version"
+            onClick={() => {
+              handleSubmit("/new");
+            }}
           />
-          <ButtonComponent className="on-exit" buttonName="Exit" />
-          <ButtonComponent className="on-submit" buttonName="Submit" />
+          <ButtonComponent
+            className="on-exit"
+            buttonName="Exit"
+            onClick={() => {
+              navigate("/rsp/plantilla/plantilla-items");
+            }}
+          />
+
+          <ButtonComponent
+            className="on-submit"
+            buttonName="Submit"
+            onClick={() => {
+              handleSubmit("/save");
+            }}
+          />
         </div>
       </div>
+
       <PreparedProvedModal
         isDisplay={preparedBy}
         objectKey={OBJECTKEY.preparedBy}
@@ -124,53 +137,128 @@ const RemarksForm = () => {
 
 export default RemarksForm;
 
-const PreparedProved = ({ title, upload, objectKey }) => {
-  const { remarksImg, refresh } = useSelector((state) => state.jvsform);
-  const image = sessionStorage.getItem(objectKey);
+const customStyles = {
+  option: (provided) => ({
+    ...provided,
+    padding: 3,
+    paddingLeft: 5,
+    paddingRight: 5,
+    margin: 3,
+    marginLeft: 5,
+    borderRadius: 5,
+    width: "100%",
+  }),
+
+  control: (provided, state) => ({
+    ...provided,
+    width: "100%",
+    backgroundColor: "white",
+    padding: 0,
+    borderRadius: "5px 0px 0px 5px",
+    fontSize: "small",
+    backgroundColor: "white",
+    border: state.isFocused
+      ? "1px solid 	#A9A9A9 !important"
+      : "1px solid #DCDCDC !important",
+
+    fontSize: "small",
+    boxShadow: "none",
+  }),
+
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = "opacity 300ms";
+    return {
+      ...provided,
+      opacity,
+      transition,
+    };
+  },
+};
+
+const PreparedProved = ({ title, upload, objectKey, id, name = null }) => {
+  const { remarksImg } = useSelector((state) => state.jvsform);
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  const uploadImageRef = useRef();
   const dispatch = useDispatch();
-  const [state, setstate] = useState(JSON.parse(image));
-
-  const checkImage = () => {
-    if (image === null) {
-      setstate(null);
-    } else {
-      dispatch(setRemarksImg({ key: objectKey, value: JSON.parse(image) }));
-    }
+  const [state, setState] = useState(false);
+  const { imageState, reader64 } = useUploadImageHelper();
+  const handleChange = (e) => {
+    reader64(e.target.files);
+    dispatch(setRemarksImg({ key: objectKey, value: imageState[0] }));
   };
 
-  useEffect(() => {
-    checkImage();
-    dispatch(setRefreh());
-  }, []);
+  const handleSubmit = async (type) => {
+    const blob = dataURLtoBlob(remarksImg[objectKey]);
+    const formData = new FormData();
+    formData.append("name", remarksImg[name]);
+    formData.append("signature", blob, "signature.png");
 
-  const clearSignature = () => {
-    sessionStorage.removeItem(objectKey);
-    setstate(undefined);
-    dispatch(setRemarksImg({ key: objectKey, value: undefined }));
-    dispatch(setRefreh());
+    renderBusy(true);
+    await axios
+      .post(
+        API_HOST + "jvscrw-sign-upload/" + id + "/type/" + type,
+        formData,
+        axiosConfig
+      )
+      .then(() => {
+        renderSucceed({});
+      })
+      .catch((err) => {
+        renderFailed({ content: err.message });
+      });
+    renderBusy(false);
   };
 
-  useEffect(() => {}, [refresh]);
+  const clearSignatureDisplay = () => {
+    dispatch(setRemarksImg({ key: objectKey, value: null }));
+  };
 
+  const options = [{ value: "Sean Pogy", label: "Tezada" }];
   return (
     <React.Fragment>
       <h5 style={{ marginBottom: "5px" }}>{title ?? "TITLE"}</h5>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <select className="select-component">
-          <option defaultValue="1">Default</option>
-        </select>
-        <button className="button-1">Sign</button>
-        <button className="button-2" onClick={() => upload(true)}>
+        <Creatable
+          name="tags_input"
+          options={options}
+          styles={customStyles}
+          className="creatable-design"
+          isClearable={true}
+          placeholder={state ? "" : "Name"}
+          onChange={(e) =>
+            dispatch(setRemarksImg({ key: name, value: e?.value }))
+          }
+          onFocus={() => setState(true)}
+          onBlur={() => setState(false)}
+        />
+        <button className="button-1" onClick={() => upload(true)}>
+          Sign
+        </button>
+        <input
+          hidden
+          type="file"
+          accept="image/*"
+          ref={uploadImageRef}
+          onChange={handleChange}
+        />
+        <button
+          className="button-2"
+          onClick={() => {
+            uploadImageRef.current.click();
+          }}
+        >
           Upload
         </button>
       </div>
       <br />
       <div>
-        {remarksImg[objectKey] == undefined || remarksImg[objectKey] === "" ? (
-          false
-        ) : (
+        {remarksImg[objectKey] && (
           <div className="prepared-proved">
-            <div className="signature-render">
+            <div
+              className="signature-render"
+              style={{ backgroundColor: "white", borderRadius: "5px" }}
+            >
               <div>
                 <img
                   src={remarksImg[objectKey]}
@@ -180,7 +268,7 @@ const PreparedProved = ({ title, upload, objectKey }) => {
               </div>
 
               <div
-                onClick={() => clearSignature()}
+                onClick={() => clearSignatureDisplay()}
                 style={{ cursor: "pointer" }}
                 className="close-button"
               >
@@ -188,7 +276,16 @@ const PreparedProved = ({ title, upload, objectKey }) => {
               </div>
             </div>
             <div>
-              <button className="prepared-button">Save</button>
+              <button
+                className="prepared-button"
+                onClick={() => {
+                  handleSubmit(
+                    objectKey == "preparedBy" ? "prepared" : "approved"
+                  );
+                }}
+              >
+                Save
+              </button>
             </div>
           </div>
         )}
@@ -198,91 +295,41 @@ const PreparedProved = ({ title, upload, objectKey }) => {
 };
 
 const PreparedProvedModal = (props) => {
+  const reference = useRef();
+  const { remarksImg } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
-
-  const [storeImg, setStoreImg] = useSessionStorage(
-    props.objectKey ?? undefined,
-    undefined
-  );
-
-  const storeImage = (e) => {
-    const imagePath = e.target.files[0];
-    const reader = new FileReader();
-    reader.addEventListener(
-      "load",
-      () => {
-        setStoreImg(reader.result);
-      },
-      false
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      setRemarksImg({
+        key: props.objectKey,
+        value: reference.current.getTrimmedCanvas().toDataURL("image/png"),
+      })
     );
-    if (imagePath) {
-      reader.readAsDataURL(imagePath);
-    }
-  };
-
-  const handleSubmit = () => {
-    dispatch(setRemarksImg({ key: props.objectKey, value: storeImg }));
     props.onClose(false);
   };
-
-  const { refresh } = useSelector((state) => state.jvsform);
-
-  useEffect(() => {
-    if (storeImg === OBJECTKEY.PreparedProved) {
-      sessionStorage.removeItem(OBJECTKEY.PreparedProved);
-      setStoreImg("");
-    } else if (storeImg === OBJECTKEY.PreparedProved) {
-      sessionStorage.removeItem(OBJECTKEY.PreparedProved);
-      setStoreImg("");
-    }
-  }, [refresh]);
 
   return (
     <React.Fragment>
       <ModalComponent
         onClose={() => props.onClose(false)}
+        onPressed={() => reference.current.clear()}
         onSubmit={handleSubmit}
         isDisplay={props.isDisplay}
         onSubmitType="Submit"
         title={props.title ?? "Signiture Pad"}
+        onCloseName="Clear"
       >
-        <div style={{ boxSizing: "border-box" }}>
-          {storeImg === "" || storeImg == undefined ? null : (
-            <img
-              src={storeImg}
-              alt={props.altName ?? "approvedBy"}
-              style={{ boxSizing: "border-box", width: "100%" }}
-            />
-          )}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <label
-            style={{
-              padding: "10px 15px",
-              color: "white",
-              background: "#4276a4",
-              borderRadius: "5px",
-              margin: "20px",
+        <div className="canvas-container">
+          <SignatureCanvas
+            ref={reference}
+            penColor="black"
+            clearOnResize="true"
+            canvasProps={{
+              width: 700,
+              height: 300,
+              className: "signCanvas",
             }}
-            htmlFor="signature-uploader"
-          >
-            {storeImg != "" ? (
-              <strong>Change Signature</strong>
-            ) : (
-              <strong>Upload Image</strong>
-            )}
-          </label>
-          <input
-            id="signature-uploader"
-            type="file"
-            hidden
-            onChange={storeImage}
           />
         </div>
       </ModalComponent>

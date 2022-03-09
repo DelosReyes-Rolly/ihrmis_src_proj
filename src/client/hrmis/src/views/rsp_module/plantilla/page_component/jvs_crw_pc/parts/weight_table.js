@@ -6,6 +6,8 @@ import ButtonComponent from "../../../../../common/button_component/button_compo
 import CalibratedScaleModal from "./calibrated_scale_modal.js";
 import { useToggleHelper } from "../../../../../../helpers/use_hooks/toggle_helper";
 import { setRefreh } from "../../../../../../features/reducers/jvscrw_slice.js";
+import axios from "axios";
+import { API_HOST } from "../../../../../../helpers/global/global_config.js";
 
 const WeightingTable = ({ title, type, jvsId, data, specific }) => {
   const dispatch = useDispatch();

@@ -14,45 +14,96 @@ import {
 import { useFormHelper } from "../../../../../helpers/use_hooks/form_helper";
 import axios from "axios";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
 
-const AddPlantillaItemModal = (props) => {
-  // ==========================================
-  // ERROR HANDLING
-  // ==========================================
+const AddPlantillaItemModal = ({
+  type,
+  isDisplay,
+  onClose,
+  plantillaData,
+  plantillaID = null,
+}) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  let token = document.head.querySelector('meta[name="csrf-token"]');
+  let dispatch = useDispatch();
+  const endpointId = plantillaID === null ? "/0" : "/" + plantillaID;
+  // ==========================================
+  // FORMIK FORM
+  // ==========================================
+  const plantillaForm = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      itm_no: plantillaData?.itm_no ?? "",
+      itm_status: plantillaData?.itm_status ?? "",
+      itm_pos_id: plantillaData?.position?.pos_id ?? "",
+      itm_ofc_id: plantillaData?.office?.ofc_id ?? "",
+      itm_basis: plantillaData?.itm_basis ?? "",
+      itm_level: plantillaData?.itm_level ?? "",
+      itm_category: plantillaData?.itm_category ?? "",
+      itm_function: plantillaData?.itm_function ?? "",
+      itm_creation: plantillaData?.itm_creation ?? "",
+      itm_regular: type ?? plantillaData?.itm_regular,
+    },
+    validationSchema: Yup.object({
+      itm_no: Yup.string()
+        .required("This field is required")
+        .max(255, "Invalid input"),
 
-  // ==========================================
-  // CUSTOM HOOKS
-  // ==========================================
-  const [dataToSubmit, setDataToSubmit, setHidden, setter] = useFormHelper();
+      itm_status: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
 
-  // ==========================================
-  // REDUX STATE MANAGEMENT
-  // ==========================================
+      itm_pos_id: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
 
-  // ==========================================
-  // SUBMIT HANDLER
-  // ==========================================
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    renderBusy(true);
-    await axios
-      .post(API_HOST + "plantilla-items", dataToSubmit)
-      .then(() => {
-        e.target.reset();
-        setter(null);
-        renderSucceed();
-      })
-      .catch((err) => {
-        renderFailed({});
-        console.log(err.response);
-      });
-    renderBusy(false);
-  };
+      itm_ofc_id: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
 
-  // ==========================================
-  // GETTING POSITION AND OFFICE VALUE
-  // ==========================================
+      itm_basis: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
+
+      itm_level: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
+
+      itm_category: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
+
+      itm_function: Yup.string()
+        .required("This field is required")
+        .max(255, "Invalid input"),
+
+      itm_creation: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
+    }),
+    onSubmit: async (value, { resetForm }) => {
+      renderBusy(true);
+      await axios
+        .post(API_HOST + "plantilla-items" + endpointId, value, {
+          headers: { "X-CSRF-TOKEN": token.content },
+        })
+        .then(() => {
+          renderSucceed({});
+          dispatch(setRefresh());
+          resetForm();
+        })
+        .catch((err) => {
+          renderFailed({});
+        });
+      renderBusy(false);
+
+      onClose();
+    },
+  });
+
   const [officePositionState, setOfficePositionState] = useState();
 
   const getPositionAndOffice = () => {
@@ -60,13 +111,13 @@ const AddPlantillaItemModal = (props) => {
       .get(API_HOST + "office-position")
       .then((response) => {
         setOfficePositionState(response.data.data);
+        console.log(response.data.data);
       })
       .catch((error) => {});
   };
 
   useEffect(() => {
     getPositionAndOffice();
-    setHidden("itm_regular", props.regularValue);
   }, []);
 
   return (
@@ -75,27 +126,41 @@ const AddPlantillaItemModal = (props) => {
         title="Plantilla Items"
         onSubmitName="Save"
         onCloseName="Delete"
-        isDisplay={props.isDisplay}
-        onSubmit={submitHandler}
+        isDisplay={isDisplay}
+        onSubmit={plantillaForm.handleSubmit}
         onSubmitType="submit"
-        onClose={props.onClose}
+        onClose={onClose}
       >
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-1">
             <label>Item No.</label>
             <InputComponent
               name="itm_no"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_no}
+              onChange={plantillaForm.handleChange}
               maxLength="30"
             />
+            {plantillaForm.touched.itm_no && plantillaForm.errors.itm_no ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_no}
+              </p>
+            ) : null}
           </span>
           <span className="right-input item-modal-2">
             <label>Employment Status</label>
             <SelectComponent
               name="itm_status"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_status}
+              onChange={plantillaForm.handleChange}
               itemList={apiEmploymentStatModalInputItem}
             />
+
+            {plantillaForm.touched.itm_status &&
+            plantillaForm.errors.itm_status ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_status}
+              </p>
+            ) : null}
           </span>
         </div>
 
@@ -106,7 +171,8 @@ const AddPlantillaItemModal = (props) => {
               className="select-component"
               style={{ marginTop: "3px" }}
               name="itm_pos_id"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_pos_id}
+              onChange={plantillaForm.handleChange}
             >
               <option className="option-component" value="">
                 Default
@@ -117,13 +183,20 @@ const AddPlantillaItemModal = (props) => {
                     <option
                       className="option-component"
                       key={key}
-                      value={item.pos_id}
+                      value={parseInt(item.pos_id)}
                     >
                       {item.pos_title}
                     </option>
                   );
                 })}
             </select>
+
+            {plantillaForm.touched.itm_pos_id &&
+            plantillaForm.errors.itm_pos_id ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_pos_id}
+              </p>
+            ) : null}
           </span>
 
           <span className="right-input item-modal-2">
@@ -132,7 +205,8 @@ const AddPlantillaItemModal = (props) => {
               className="select-component"
               style={{ marginTop: "3px" }}
               name="itm_ofc_id"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_ofc_id}
+              onChange={plantillaForm.handleChange}
             >
               <option className="option-component" value="">
                 Default
@@ -150,6 +224,13 @@ const AddPlantillaItemModal = (props) => {
                   );
                 })}
             </select>
+
+            {plantillaForm.touched.itm_ofc_id &&
+            plantillaForm.errors.itm_ofc_id ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_ofc_id}
+              </p>
+            ) : null}
           </span>
         </div>
         <div className="add-plantilla-item-modal">
@@ -157,25 +238,46 @@ const AddPlantillaItemModal = (props) => {
             <label>Employment Basis</label>
             <SelectComponent
               name="itm_basis"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_basis}
+              onChange={plantillaForm.handleChange}
               itemList={apiEmploymentBasisModalInputItem}
             />
+            {plantillaForm.touched.itm_basis &&
+            plantillaForm.errors.itm_basis ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_basis}
+              </p>
+            ) : null}
           </span>
           <span className="middle-input item-modal-3">
             <label>Category Service</label>
             <SelectComponent
               name="itm_category"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_category}
+              onChange={plantillaForm.handleChange}
               itemList={apiCategoryServiceModalInputItem}
             />
+            {plantillaForm.touched.itm_category &&
+            plantillaForm.errors.itm_category ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_category}
+              </p>
+            ) : null}
           </span>
           <span className="right-input item-modal-4">
             <label>Level of Position</label>
             <SelectComponent
               name="itm_level"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_level}
+              onChange={plantillaForm.handleChange}
               itemList={apiLevelPositionModalInputItem}
             />
+            {plantillaForm.touched.itm_level &&
+            plantillaForm.errors.itm_level ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_level}
+              </p>
+            ) : null}
           </span>
         </div>
 
@@ -184,9 +286,16 @@ const AddPlantillaItemModal = (props) => {
             <label>Description of Position Function</label>
             <TextareaComponent
               name="itm_function"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_function}
+              onChange={plantillaForm.handleChange}
               maxLength="255"
             />
+            {plantillaForm.touched.itm_function &&
+            plantillaForm.errors.itm_function ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_function}
+              </p>
+            ) : null}
           </span>
         </div>
 
@@ -195,9 +304,16 @@ const AddPlantillaItemModal = (props) => {
             <label>Mode of Creation</label>
             <SelectComponent
               name="itm_creation"
-              onChange={(e) => setDataToSubmit(e)}
+              value={plantillaForm.values.itm_creation}
+              onChange={plantillaForm.handleChange}
               itemList={apiModeCreationModalInputItem}
             />
+            {plantillaForm.touched.itm_creation &&
+            plantillaForm.errors.itm_creation ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_creation}
+              </p>
+            ) : null}
           </span>
           <span className="right-input item-modal-1">
             <label>Source of Fund</label>

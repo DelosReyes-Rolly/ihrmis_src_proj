@@ -11,8 +11,7 @@ class TblplantillaDutiesRspnsblts extends Model
 
     protected $table = 'tblplantilla_duties_rspnsblts';
 
-    protected $primary = 'dty_itm_id';
-
+    protected $primaryKey = 'dty_itm_id';
     protected $fillable = [
         'dty_itm_order',
         'dty_itm_desc',
