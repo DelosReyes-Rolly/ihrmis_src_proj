@@ -13,12 +13,14 @@ class TblplantillaDutiesRspnsblts extends Model
 
     protected $primaryKey = 'dty_itm_id';
     protected $fillable = [
+        'dty_itm_id',
         'dty_itm_order',
         'dty_itm_desc',
         'dty_itm_percent',
         'dty_itm_cmptncy'
     ];
 
+    public $timestamps = false;
     public function tblplantillaItems(){
         return $this->belongsTo(TblplantillaItems::class, 'dty_itm_id', 'itm_id');
     }

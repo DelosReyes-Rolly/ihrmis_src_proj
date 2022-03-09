@@ -14,6 +14,7 @@ use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\TblofficesController;
+use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
@@ -101,13 +102,16 @@ Route::post('jvscrw-competency-rating/{id}', [TbljvsController::class, "addCompe
 
 Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
 
-
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);
 // Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
 
+
+//=======================================================================================
+// PLANTILLA ENDPOINTSDEPLOYMENT OF IHRMIS RSP
+//=======================================================================================
+Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
 Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
-
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
 
