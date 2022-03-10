@@ -19,30 +19,32 @@ class TblplantillaItemsController extends Controller
         return TblplantillaItemsResource::collection($item_query);
     }
 
-    public function store(Request $request)
+    public function addPlantillaItem(Request $request, $id)
     {   
-
-        // $request->validate([
-        //     'itm_no'=> 'max:30|required',
-        //     'itm_function'=> 'required|max:255',
-        // ]);
-
-        TblplantillaItems::create([
-            'itm_regular' => $request->itm_regular,
-            'itm_no'=> $request->itm_no,
-            'itm_pos_id'=> $request->itm_pos_id,
-            'itm_ofc_id'=> $request->itm_ofc_id,
-            'itm_status'=> $request->itm_status, 
-            'itm_basis'=> $request->itm_basis,
-            'itm_category'=> $request->itm_category,
-            'itm_level'=> $request->itm_level,
-            'itm_function'=> $request->itm_function,
-            'itm_creation'=> $request->itm_creation,
-            'itm_source'=> $request->itm_source ?? 0,
-            'itm_supv1_itm_id'=> $request->itm_supv1_itm_id ?? 0,
-            'itm_supv2_itm_id'=> $request->itm_supv2_itm_id ?? 0,
-            'itm_state'=> $request->itm_state ?? 0,
-        ]);
+       
+        try {
+          
+            $plantillaQry = TblplantillaItems::firstOrNew(["itm_id" => $id]);
+            $plantillaQry->itm_regular = $request->itm_regular;
+            $plantillaQry->itm_no = $request->itm_no;
+            $plantillaQry->itm_pos_id = $request->itm_pos_id;
+            $plantillaQry->itm_ofc_id = $request->itm_ofc_id;
+            $plantillaQry->itm_status = $request->itm_status;
+            $plantillaQry->itm_basis = $request->itm_basis;
+            $plantillaQry->itm_category = $request->itm_category;
+            $plantillaQry->itm_level = $request->itm_level;
+            $plantillaQry->itm_function = $request->itm_function;
+            $plantillaQry->itm_creation = $request->itm_creation;
+            $plantillaQry->itm_source = $request->itm_source ?? 0;
+            $plantillaQry->itm_supv1_itm_id = $request->itm_supv1_itm_id ?? 0;
+            $plantillaQry->itm_supv2_itm_id = $request->itm_supv2_itm_id ?? 0;
+            $plantillaQry->itm_state = $request->itm_state ?? 0;
+            $plantillaQry->save();
+        
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+            
         return response()->json([
             'status' => 200,
             'message' => "Added Successfully",

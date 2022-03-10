@@ -98,30 +98,51 @@ Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRat
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 
-Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
-Route::post('jvscrw-competency-rating/{id}', [TbljvsController::class, "addCompetencyAndRating"]);
 
-Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
-
+Route::post('jvscrw-competency-rating/{type}', [TbljvsController::class, "addCompetencyAndRating"]);
+Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class, "saveSignature"]);
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);
 // Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
-
+// Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
+// Competency
+// Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
+// SIGNATURE UPLOAD
 
 //=======================================================================================
-// PLANTILLA ENDPOINTSDEPLOYMENT OF IHRMIS RSP
+// POSITION AND OFFICE END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
 //=======================================================================================
-Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
+
+Route::post('create-position', [TblpositionsController::class, "addPosition"]); 
+Route::get('get-position/{id}', [TblpositionsController::class, "getPosition"]); 
+Route::get('get-info-position/{id}',[TblpositionsController::class, "getPositionWithCsc"]);
+
+//=======================================================================================
+// PLANTILLA ITEM END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
 Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
-Route::get('get-info-position/{id}',[TblpositionsController::class, "getPositionWithCsc"]);
+Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
+//=======================================================================================
+// PLANTILLA DTY RESPONSIBILITY
+//=======================================================================================
+Route::get('get-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "getDtyRspnsblty"]);
+Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
+Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
+//=======================================================================================
+// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
+Route::post('login', [AuthenticationController::class, "loginUser"]);
+Route::post('register', [AuthenticationController::class, "registerUser"]);
 
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
+
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
+
