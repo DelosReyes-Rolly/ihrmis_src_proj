@@ -131,6 +131,7 @@ Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPla
 Route::get('get-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "getDtyRspnsblty"]);
 Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
 Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
+
 //=======================================================================================
 // AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
 //=======================================================================================

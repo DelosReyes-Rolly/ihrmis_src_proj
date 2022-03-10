@@ -7,13 +7,15 @@ import SelectComponent from "../../../../common/input_component/select_component
 import {
   categoryInputCategory,
   educationInputItem,
-} from "../../static/input_items";
+} from "../../../library/static/input_items";
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
 import Creatable from "react-select/creatable";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
 
 const customStyles = {
   option: (provided, state) => ({
@@ -38,7 +40,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const [arrayValues, setArrayValues] = useState([]); // Object value
   const [officeStandard, setOfficeStandard] = useState();
-
+  const dispatch = useDispatch();
   const getEditOfficeCscStandard = async () => {
     if (id !== null) {
       await axios
@@ -111,6 +113,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
         .then((res) => {
           renderSucceed({});
           setArrayValues([]);
+          dispatch(setRefresh());
           resetForm();
           onClose();
         })
@@ -122,8 +125,10 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
   });
 
   useEffect(() => {
-    getEditOfficeCscStandard();
-  }, []);
+    if (id) {
+      getEditOfficeCscStandard();
+    }
+  }, [id]);
 
   return (
     <React.Fragment>
@@ -132,7 +137,8 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
         isDisplay={isDisplay}
         onClose={onClose}
         onSubmit={positionFormik.handleSubmit}
-        onSubmitType="submit"
+        // onSubmitType="submit"
+        onClickSubmit={positionFormik.handleSubmit}
       >
         <div className="position-modal-container-1">
           <label>Title</label>
@@ -241,9 +247,8 @@ export default PositionModal;
 
 const EligibilityInput = ({ formik }) => {
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "Csc Professional", label: "Board Exam Passer" },
+    { value: "Board Exam Passer", label: "Csc Professional" },
   ];
 
   return (
