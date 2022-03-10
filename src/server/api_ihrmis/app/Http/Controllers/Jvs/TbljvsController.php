@@ -61,11 +61,11 @@ class TbljvsController extends Controller
         return CommonResource::collection($output);
     }
 
-    public function addDutiesAndResponsibilities($id, Request $request)
-    {
-        $output = $this->appService->deleteDutiesResponsibilities($id, $request);
-        return $output;
-    }
+    // public function addDutiesAndResponsibilities($id, Request $request)
+    // {
+    //     $output = $this->appService->deleteDutiesResponsibilities($id, $request);
+    //     return $output;
+    // }
 
     public function savePreparedBy($id, $request){
         $request->validate(["prepared_by" => "mimes:jpeg,png|max:5120"]);

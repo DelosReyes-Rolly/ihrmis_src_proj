@@ -1,11 +1,10 @@
 <?php
 namespace App\Services\Jvscrw;
-
-use App\Http\Resources\CommonResource;
-use App\Models\Tbljvs;
 use App\Models\TbljvsCompetencies;
 use App\Models\TbljvsCompetencyRatings;
 use App\Models\TbljvsDutiesRspnsblts;
+
+use function PHPUnit\Framework\isEmpty;
 
 class JvscrwService {
  
@@ -13,7 +12,10 @@ class JvscrwService {
 
     $output = $request;
     foreach ($request->competencies as $value) {
-      $this->addCompetencies($value);
+        if(!empty($value)){
+          $this->addCompetencies($value);
+        }
+        
     }
     return $output;
   }
@@ -29,38 +31,11 @@ class JvscrwService {
     return "Rating was removed";
   }
 
-  public function deleteDutiesResponsibilities($id, $request){
-    $count = 0;
-    $read = TbljvsDutiesRspnsblts::where('dty_jvs_id', $id)->get();
-    
-    try {
-      $read = TbljvsDutiesRspnsblts::where('dty_jvs_id', $id)->delete();
-      
-      foreach ($request->dty_res_item as $value) {
-        $add = new TbljvsDutiesRspnsblts();
-        $count = $count + 1;
-        $add->dty_jvs_id = $id;
-        $add->dty_jvs_order = $count;
-        $add->dty_jvs_desc = $value['description'];
-        $add->save();
-      }
-      return "Successfully updated";
 
-    } catch (\Throwable $th) {
-      foreach ($read as $value) {
-        $add = new TbljvsDutiesRspnsblts();
-        $count = $count + 1;
-        $add->dty_jvs_id = $id;
-        $add->dty_jvs_order = $count;
-        $add->dty_jvs_desc = $value->dty_jvs_desc;
-        $add->save();
-      }
-      throw $th;
-    }
-  }
 
   private function addCompetencies($competencies){
-   
+
+      
       $competencyQry = TbljvsCompetencies::where('com_type', $competencies['com_type'])->where('com_jvs_id', $competencies['com_jvs_id'])->first();
       
       if(isset($competencyQry)){
@@ -69,14 +44,19 @@ class JvscrwService {
             'com_type' => $competencies['com_type'],
             'com_specific' => $competencies['com_specific'],
         ]);
-        $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+        if(!empty($competencies['tbl_com_type'])){
+          $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+        }
+        
       } else {
         $create = new TbljvsCompetencies();
         $create->com_jvs_id = $competencies['com_jvs_id'];
         $create->com_type = $competencies['com_type'];
         $create->com_specific = $competencies['com_specific'];
         $create->save();
-        $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+        if(!empty($competencies['tbl_com_type'])){
+          $this->arrayRating($competencies['tbl_com_type'], $competencies['com_jvs_id'], $competencies['com_type']);
+        }
         
       }
       
@@ -140,5 +120,37 @@ class JvscrwService {
   //       'rtg_factor' => $request->rtg_factor,
   //       'rtg_percent' => $request->rtg_percent
   //     ]);
+  //   }
+  // }
+
+
+
+    // public function deleteDutiesResponsibilities($id, $request){
+  //   $count = 0;
+  //   $read = TbljvsDutiesRspnsblts::where('dty_jvs_id', $id)->get();
+    
+  //   try {
+  //     $read = TbljvsDutiesRspnsblts::where('dty_jvs_id', $id)->delete();
+      
+  //     foreach ($request->dty_res_item as $value) {
+  //       $add = new TbljvsDutiesRspnsblts();
+  //       $count = $count + 1;
+  //       $add->dty_jvs_id = $id;
+  //       $add->dty_jvs_order = $count;
+  //       $add->dty_jvs_desc = $value['description'];
+  //       $add->save();
+  //     }
+  //     return "Successfully updated";
+
+  //   } catch (\Throwable $th) {
+  //     foreach ($read as $value) {
+  //       $add = new TbljvsDutiesRspnsblts();
+  //       $count = $count + 1;
+  //       $add->dty_jvs_id = $id;
+  //       $add->dty_jvs_order = $count;
+  //       $add->dty_jvs_desc = $value->dty_jvs_desc;
+  //       $add->save();
+  //     }
+  //     throw $th;
   //   }
   // }

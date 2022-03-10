@@ -18,6 +18,7 @@ use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
+use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -114,6 +115,7 @@ Route::get('office-position', [TblplantillaItemsController::class, "officePositi
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
+Route::get('get-info-position/{id}',[TblpositionsController::class, "getPositionWithCsc"]);
 
 
 Route::resource('plantilla-items', TblplantillaItemsController::class);

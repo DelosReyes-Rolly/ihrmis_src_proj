@@ -55,6 +55,7 @@ const RemarksForm = ({ jvsId }) => {
   };
 
   const handleSubmit = async (subType = "") => {
+    console.log(dataStructure);
     renderBusy(true);
     await axios
       .post(API_HOST + "jvscrw-competency-rating" + subType, dataStructure)
