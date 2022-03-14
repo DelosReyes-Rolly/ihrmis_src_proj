@@ -215,7 +215,9 @@ const PreparedProved = ({ title, upload, objectKey, id, name = null }) => {
     dispatch(setRemarksImg({ key: objectKey, value: null }));
   };
 
-  const options = [{ value: "Sean Pogy", label: "Tezada" }];
+  const options = [
+    { value: "Sean Terrence Calzada", label: "Sean Terrence Calzada" },
+  ];
   return (
     <React.Fragment>
       <h5 style={{ marginBottom: "5px" }}>{title ?? "TITLE"}</h5>

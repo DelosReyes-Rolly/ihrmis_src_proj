@@ -123,6 +123,7 @@ Route::get('office-position', [TblplantillaItemsController::class, "officePositi
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
+Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
 //=======================================================================================

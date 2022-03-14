@@ -4458,6 +4458,7 @@ ul.breadcrumb {
 ul.breadcrumb li {
   display: inline;
   font-size: 14px;
+  cursor: pointer;
 }
 
 /* Add a slash symbol (/) before/behind each list item */
@@ -4468,13 +4469,13 @@ ul.breadcrumb li + li:before {
 }
 
 /* Add a color to all links inside the list */
-ul.breadcrumb li a {
+ul.breadcrumb li span {
   color: #0275d8;
   text-decoration: none;
 }
 
 /* Add a color on mouse-over */
-ul.breadcrumb li a:hover {
+ul.breadcrumb li span:hover {
   color: #01447e;
   text-decoration: underline;
 }
@@ -4682,6 +4683,10 @@ ul.breadcrumb li a:hover {
   padding: 5px 8px;
 }
 
+.select-component .default-option {
+  color: rgba(70, 70, 70, 0.2) !important;
+}
+
 .select-component .option-component {
   background-color: white;
 }
@@ -4768,6 +4773,117 @@ ul.breadcrumb li a:hover {
 
 .textarea-component:focus {
   border: 1px solid #55555599;
+}
+
+.upload-input-design {
+  margin: 5px 0px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.upload-input-design .div-file-container {
+  width: 90%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: white;
+  border-radius: 5px 0px 0px 5px;
+  border: 1px solid rgba(70, 70, 70, 0.4);
+}
+
+.upload-input-design .div-file-container .file-holder {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0px 3px;
+}
+
+.upload-input-design .div-file-container .file-holder .container-file {
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0px 2px;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 2px;
+  padding: 2px 7px;
+  background-color: rgba(70, 70, 70, 0.2);
+}
+
+.upload-input-design .div-file-container .file-holder .container-file p {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.upload-input-design .div-file-container .clear-div {
+  text-align: center;
+  padding: 5px;
+  color: #4276a4;
+  cursor: pointer;
+}
+
+.upload-input-design .div-file-container .clear-div:active {
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px);
+}
+
+.upload-input-design label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 10%;
+  padding: 7px 0px;
+  color: white;
+  font-weight: 500;
+  background-color: #4276a4;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.upload-input-design label:active {
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px);
 }
 
 /* START NAVBAR STYLE */
@@ -7293,6 +7409,22 @@ input:checked + .slider:before {
   color: #063158;
 }
 
+.email-modal-plantilla {
+  background-color: white;
+  border: 1px solid rgba(70, 70, 70, 0.2);
+  border-radius: 5px;
+  color: black;
+}
+
+.email-modal-plantilla:focus-within {
+  border: 1px solid rgba(70, 70, 70, 0.4);
+}
+
+.editor-class {
+  background-color: white;
+  padding: 0px 7px;
+}
+
 @media only screen and (max-width: 800px) {
   .add-plantilla-item-modal {
     -webkit-box-orient: vertical;
@@ -7472,5 +7604,9 @@ input:checked + .slider:before {
   .blue-div .image-dost {
     width: 90%;
   }
+}
+
+.dashborad-view {
+  margin: 10px 20px;
 }
 /*# sourceMappingURL=styles.css.map */

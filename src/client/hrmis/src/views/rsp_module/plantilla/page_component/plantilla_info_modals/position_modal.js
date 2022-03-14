@@ -61,8 +61,8 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
       pos_short_name: officeStandard?.pos_short_name ?? "",
       pos_salary_grade: officeStandard?.pos_salary_grade ?? "",
       pos_category: officeStandard?.pos_category ?? "",
-      eligibility: officeStandard?.csc?.std_keyword ?? [],
-      eli_specify: officeStandard?.csc?.std_specifics ?? [],
+      eligibility: officeStandard?.csc?.std_keyword ?? "",
+      eli_specify: officeStandard?.csc?.std_specifics ?? "",
 
       education: officeStandard?.education?.std_keyword ?? [],
 
@@ -84,6 +84,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
       pos_salary_grade: Yup.string().required("This field is required"),
       pos_category: Yup.string().required("This field is required"),
       eligibility: Yup.array().required("This field is required"),
+      // eligibility: Yup.array().required("This field is required"),
       eli_specify: Yup.string().required("This field is required"),
 
       education: Yup.array(),
@@ -257,8 +258,9 @@ const EligibilityInput = ({ formik }) => {
       <br />
       <div className="">
         <Creatable
-          clearValue
+          isClearable
           value={formik?.values?.eligibility}
+          error={formik?.errors?.eligibility}
           name="eligibility"
           simpleValue
           options={options}

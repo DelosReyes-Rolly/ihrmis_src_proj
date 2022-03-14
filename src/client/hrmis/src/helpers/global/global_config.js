@@ -26,3 +26,42 @@ export const yesterday = new Date(Date.now() - 86400000);
 export const axiosConfig = {
   "content-type": "multipart/form-data",
 };
+
+export const customStyles = {
+  option: (provided) => ({
+    ...provided,
+    padding: 3,
+    paddingLeft: 5,
+    paddingRight: 5,
+    margin: 3,
+    marginLeft: 5,
+    borderRadius: 5,
+    width: "100%",
+  }),
+
+  control: (provided, state) => ({
+    ...provided,
+    width: "100%",
+    backgroundColor: "white",
+    padding: 0,
+    borderRadius: "5px 5px 5px 5px",
+    fontSize: "small",
+    backgroundColor: "white",
+    border: state.isFocused
+      ? "1px solid 	#A9A9A9 !important"
+      : "1px solid #DCDCDC !important",
+
+    fontSize: "small",
+    boxShadow: "none",
+  }),
+
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = "opacity 300ms";
+    return {
+      ...provided,
+      opacity,
+      transition,
+    };
+  },
+};

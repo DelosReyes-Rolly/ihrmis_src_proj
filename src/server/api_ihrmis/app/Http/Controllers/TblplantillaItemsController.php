@@ -70,4 +70,10 @@ class TblplantillaItemsController extends Controller
         return CommonResource::collection($item_qry);
     }
 
+    public function getPlantillaItemByOffice($id)
+    {
+       $item_query = TblplantillaItems::where("itm_ofc_id", $id)->get();
+       return CommonResource::collection($item_query);
+    }
+
 }

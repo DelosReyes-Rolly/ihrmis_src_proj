@@ -79,7 +79,7 @@ const PositionInfoModal = ({ isDisplay, onClose, pos_id }) => {
                 </th>
               </tr>
               <tr>
-                <td colSpan="2"></td>
+                <td colSpan="2">{dataPosition?.education}</td>
               </tr>
               <tr>
                 <th className="main-header cell-color-one" colSpan="2">

@@ -1,0 +1,63 @@
+.upload-input-design {
+  margin: 5px 0px;
+  width: 100%;
+  @include containerFlexRow(true);
+  .div-file-container {
+    width: 90%;
+    @include containerFlexRow(true);
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 5px 0px 0px 5px;
+    border: 1px solid map-get($blackColor, 400);
+    .file-holder {
+      @include containerFlexRow(true);
+      width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0px 3px;
+      .container-file {
+        cursor: pointer;
+        display: flex;
+        margin: 0px 2px;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 2px;
+        padding: 2px 7px;
+        background-color: map-get($blackColor, 200);
+        p {
+          max-width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .clear-div {
+      text-align: center;
+      padding: 5px;
+      color: map-get($primaryColor, regular);
+      cursor: pointer;
+    }
+    .clear-div:active {
+      transform: translateY(1px);
+    }
+  }
+
+  label {
+    @include containerFlexRow(true);
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+    padding: 7px 0px;
+    color: white;
+    font-weight: 500;
+    background-color: map-get($primaryColor, regular);
+    border-radius: 0px 5px 5px 0px;
+  }
+  label:active {
+    transform: translateY(1px);
+  }
+}
