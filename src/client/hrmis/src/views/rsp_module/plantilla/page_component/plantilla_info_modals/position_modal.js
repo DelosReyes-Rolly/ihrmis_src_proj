@@ -47,7 +47,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
         .get(API_HOST + "get-position/" + id)
         .then((res) => {
           setOfficeStandard(res.data.data);
-          setArrayValues(res.data.data.education.std_keyword);
+          setArrayValues(res.data.data.education.std_keyword ?? []);
         })
         .catch((err) => {});
     }
@@ -90,11 +90,11 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
       education: Yup.array(),
 
       edu_level: Yup.string().when("education", {
-        is: (education) => education.length === 0,
+        is: (education) => education?.length === 0,
         then: Yup.string().required("This field is required"),
       }),
       edu_keyword: Yup.string().when("education", {
-        is: (education) => education.length === 0,
+        is: (education) => education?.length === 0,
         then: Yup.string().required("This field is required"),
       }),
       edu_specify: Yup.string().required("This field is required"),
@@ -290,13 +290,16 @@ const EligibilityInput = ({ formik }) => {
   );
 };
 
-const EducationInput = ({ formik, values, setValues }) => {
+const EducationInput = ({ formik, values, setValues, stataValue }) => {
   const [keyword, setKeyword] = useState(""); // Formik keyword value
   const [level, setLevel] = useState(""); // Formik Level value
 
   const setOrAddValue = () => {
     if (keyword != "") {
       if (level != "") {
+        // arrHolder = []
+        // arrHolder.push({ keyword, level });
+        // setValues(arrHolder);
         setValues((prev) => [...prev, { keyword, level }]);
         setKeyword("");
         setLevel("");

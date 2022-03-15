@@ -121,6 +121,10 @@ const AddPlantillaItemModal = ({
         setOfficePositionState(response.data.data);
       })
       .catch((error) => {});
+
+    // if (plantillaForm.values.itm_ofc_id !== "") {
+    //   getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
+    // }
   };
   //
   const [plantillaByOfc, setPlantillaByOfc] = useState([]);
@@ -144,6 +148,11 @@ const AddPlantillaItemModal = ({
     getPositionAndOffice();
   }, []);
 
+  useEffect(() => {
+    if (plantillaForm.values.itm_ofc_id !== "") {
+      getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
+    }
+  }, [plantillaForm.values.itm_ofc_id]);
   return (
     <React.Fragment>
       <ModalComponent
@@ -188,7 +197,6 @@ const AddPlantillaItemModal = ({
             ) : null}
           </span>
         </div>
-
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-1">
             <label>Position</label>

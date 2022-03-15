@@ -15,7 +15,8 @@ class TblplantillaDtyAndRspnsbltyController extends Controller
 
         $counter = 0;
         $dtyResFindQry = TblplantillaDutiesRspnsblts::where("dty_itm_id", $id)->get();
-        if($dtyResFindQry){
+
+        if(!empty($dtyResFindQry)){
             TblplantillaDutiesRspnsblts::where("dty_itm_id", $id)->delete();
             foreach ($request->dty_respo as $value) {
                 $counter++;

@@ -73,7 +73,7 @@ const PlantillaItemInformation = () => {
         isDisplay={toggleAddDtyItem}
         onClose={() => setToggleAddDtyItem()}
         dtyData={dtyResponsibility}
-        dty_id={plantilla?.position.pos_id}
+        dty_id={item}
       />
       <BreadcrumbComponent
         list={plantillaItemsInfoBreadCramp}
@@ -210,11 +210,11 @@ const PositionTableView = ({ data, pos_id }) => {
               </th>
               <td rowSpan="2">{data?.itm_function}</td>
               <th className="main-header">Position of Immediate Supervisor</th>
-              <td></td>
+              <td>{data?.itm_supv1_display}</td>
             </tr>
             <tr>
               <th className="main-header">Position of Next Supervisor</th>
-              <td></td>
+              <td>{data?.itm_supv2_display}</td>
             </tr>
           </tbody>
         </table>
