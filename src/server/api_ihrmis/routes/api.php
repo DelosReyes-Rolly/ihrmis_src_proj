@@ -14,9 +14,11 @@ use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\TblofficesController;
+use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
+use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -96,21 +98,45 @@ Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRat
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 
-Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
-Route::post('jvscrw-competency-rating/{id}', [TbljvsController::class, "addCompetencyAndRating"]);
 
-Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
-
-
+Route::post('jvscrw-competency-rating/{type}', [TbljvsController::class, "addCompetencyAndRating"]);
+Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class, "saveSignature"]);
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);
 // Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
+// Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
+// Competency
+// Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
+// SIGNATURE UPLOAD
 
+//=======================================================================================
+// POSITION AND OFFICE END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
+
+Route::post('create-position', [TblpositionsController::class, "addPosition"]); 
+Route::get('get-position/{id}', [TblpositionsController::class, "getPosition"]); 
+Route::get('get-info-position/{id}',[TblpositionsController::class, "getPositionWithCsc"]);
+
+//=======================================================================================
+// PLANTILLA ITEM END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
 Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
-
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
+Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
+Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
+//=======================================================================================
+// PLANTILLA DTY RESPONSIBILITY
+//=======================================================================================
+Route::get('get-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "getDtyRspnsblty"]);
+Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
+
+//=======================================================================================
+// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
+Route::post('login', [AuthenticationController::class, "loginUser"]);
+Route::post('register', [AuthenticationController::class, "registerUser"]);
 
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
@@ -123,3 +149,4 @@ Route::post('register', [AuthenticationController::class, "registerUser"]);
 //legee updates
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
+

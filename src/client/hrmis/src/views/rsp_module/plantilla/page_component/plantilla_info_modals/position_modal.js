@@ -7,13 +7,15 @@ import SelectComponent from "../../../../common/input_component/select_component
 import {
   categoryInputCategory,
   educationInputItem,
-} from "../../static/input_items";
+} from "../../../library/static/input_items";
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
 import Creatable from "react-select/creatable";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
 
 const customStyles = {
   option: (provided, state) => ({
@@ -38,14 +40,14 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const [arrayValues, setArrayValues] = useState([]); // Object value
   const [officeStandard, setOfficeStandard] = useState();
-
+  const dispatch = useDispatch();
   const getEditOfficeCscStandard = async () => {
     if (id !== null) {
       await axios
         .get(API_HOST + "get-position/" + id)
         .then((res) => {
           setOfficeStandard(res.data.data);
-          setArrayValues(res.data.data.education.std_keyword);
+          setArrayValues(res.data.data.education.std_keyword ?? []);
         })
         .catch((err) => {});
     }
@@ -59,8 +61,8 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
       pos_short_name: officeStandard?.pos_short_name ?? "",
       pos_salary_grade: officeStandard?.pos_salary_grade ?? "",
       pos_category: officeStandard?.pos_category ?? "",
-      eligibility: officeStandard?.csc?.std_keyword ?? [],
-      eli_specify: officeStandard?.csc?.std_specifics ?? [],
+      eligibility: officeStandard?.csc?.std_keyword ?? "",
+      eli_specify: officeStandard?.csc?.std_specifics ?? "",
 
       education: officeStandard?.education?.std_keyword ?? [],
 
@@ -82,16 +84,17 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
       pos_salary_grade: Yup.string().required("This field is required"),
       pos_category: Yup.string().required("This field is required"),
       eligibility: Yup.array().required("This field is required"),
+      // eligibility: Yup.array().required("This field is required"),
       eli_specify: Yup.string().required("This field is required"),
 
       education: Yup.array(),
 
       edu_level: Yup.string().when("education", {
-        is: (education) => education.length === 0,
+        is: (education) => education?.length === 0,
         then: Yup.string().required("This field is required"),
       }),
       edu_keyword: Yup.string().when("education", {
-        is: (education) => education.length === 0,
+        is: (education) => education?.length === 0,
         then: Yup.string().required("This field is required"),
       }),
       edu_specify: Yup.string().required("This field is required"),
@@ -111,6 +114,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
         .then((res) => {
           renderSucceed({});
           setArrayValues([]);
+          dispatch(setRefresh());
           resetForm();
           onClose();
         })
@@ -122,8 +126,10 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
   });
 
   useEffect(() => {
-    getEditOfficeCscStandard();
-  }, []);
+    if (id) {
+      getEditOfficeCscStandard();
+    }
+  }, [id]);
 
   return (
     <React.Fragment>
@@ -132,7 +138,8 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
         isDisplay={isDisplay}
         onClose={onClose}
         onSubmit={positionFormik.handleSubmit}
-        onSubmitType="submit"
+        // onSubmitType="submit"
+        onClickSubmit={positionFormik.handleSubmit}
       >
         <div className="position-modal-container-1">
           <label>Title</label>
@@ -241,9 +248,8 @@ export default PositionModal;
 
 const EligibilityInput = ({ formik }) => {
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "Csc Professional", label: "Board Exam Passer" },
+    { value: "Board Exam Passer", label: "Csc Professional" },
   ];
 
   return (
@@ -252,8 +258,9 @@ const EligibilityInput = ({ formik }) => {
       <br />
       <div className="">
         <Creatable
-          clearValue
+          isClearable
           value={formik?.values?.eligibility}
+          error={formik?.errors?.eligibility}
           name="eligibility"
           simpleValue
           options={options}
@@ -283,13 +290,16 @@ const EligibilityInput = ({ formik }) => {
   );
 };
 
-const EducationInput = ({ formik, values, setValues }) => {
+const EducationInput = ({ formik, values, setValues, stataValue }) => {
   const [keyword, setKeyword] = useState(""); // Formik keyword value
   const [level, setLevel] = useState(""); // Formik Level value
 
   const setOrAddValue = () => {
     if (keyword != "") {
       if (level != "") {
+        // arrHolder = []
+        // arrHolder.push({ keyword, level });
+        // setValues(arrHolder);
         setValues((prev) => [...prev, { keyword, level }]);
         setKeyword("");
         setLevel("");

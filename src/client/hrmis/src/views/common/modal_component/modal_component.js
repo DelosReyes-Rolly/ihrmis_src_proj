@@ -26,22 +26,28 @@ const ModalComponent = (props) => {
           <div className="mcf-body">{props.children}</div>
           <hr style={{ border: "1px solid rgba(70, 70, 70, 0.1)" }} />
           <div className="mcf-footer">
-            <div>
-              <ButtonComponent
-                className="ft-button"
-                type="button"
-                bgColor="rgb(230, 230, 230)"
-                border="1px solid rgba(70, 70, 70, 0.8)"
-                onClick={
-                  props.onPressed != null ? props.onPressed : props.onClose
-                }
-                buttonName={props.onCloseName}
-              />
-            </div>
+            {props.onPressedHidden ? (
+              ""
+            ) : (
+              <div>
+                <ButtonComponent
+                  className="ft-button"
+                  type="button"
+                  bgColor="rgb(230, 230, 230)"
+                  border="1px solid rgba(70, 70, 70, 0.8)"
+                  onClick={
+                    props.onPressed != null ? props.onPressed : props.onClose
+                  }
+                  buttonName={props.onCloseName}
+                />
+              </div>
+            )}
+
             <div className="margin-left-1">
               <ButtonComponent
                 type={props.onSubmitType}
                 buttonName={props.onSubmitName}
+                onClick={props.onClickSubmit ?? null}
               />
             </div>
           </div>

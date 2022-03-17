@@ -40,7 +40,6 @@ const JvsFormOne = ({ itemId }) => {
     training,
     experience,
     competencies,
-    isEmptyCompetency,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
 
@@ -72,7 +71,6 @@ const JvsFormOne = ({ itemId }) => {
       .get(API_HOST + "jvscrw-duty-responsibility/1")
       .then((res) => {
         dispatch(setDutyResponsibility(res.data.data));
-        // console.log(res.data.data);
       })
       .catch((err) => console.log(err.message));
 

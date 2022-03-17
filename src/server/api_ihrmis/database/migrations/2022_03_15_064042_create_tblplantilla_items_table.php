@@ -30,6 +30,7 @@ class CreateTblplantillaItemsTable extends Migration
             $table->unsignedInteger('itm_supv2_itm_id')->index('itm_supv2_itm_id')->comment('Position of next higher supervisor.');
             $table->unsignedInteger('is_vacant')->index('is_vacant')->comment('0= means vacant, 1=position is occupied');
             $table->unsignedTinyInteger('itm_state')->comment('Define the state of the plantilla position.');
+            $table->integer('itm_is_vacant')->default(0)->comment('Identifies the plantilla item if it is vacant or not vacant; vacant = 1, vacant = 0');
             $table->timestamps();
         });
     }

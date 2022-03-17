@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { BsArrowDown, BsArrowUp, BsPencilFill } from "react-icons/bs";
+import { MdInfo } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useTable, useSortBy } from "react-table";
@@ -19,6 +20,8 @@ import {
 } from "../../static/input_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
 import AddPlantillaItemDutiesAndRespoModal from "../plantilla_info_modals/add_duties_respo_modal";
+import ReactTooltip from "react-tooltip";
+import PositionInfoModal from "../plantilla_info_modals/position_info_modal";
 
 const PlantillaItemInformation = () => {
   const { item } = useParams();
@@ -70,14 +73,14 @@ const PlantillaItemInformation = () => {
         isDisplay={toggleAddDtyItem}
         onClose={() => setToggleAddDtyItem()}
         dtyData={dtyResponsibility}
-        dty_id={plantilla?.position.pos_id}
+        dty_id={item}
       />
       <BreadcrumbComponent
         list={plantillaItemsInfoBreadCramp}
         change={plantilla?.itm_no}
       />
-
-      <PositionTableView data={plantilla} />
+      <br />
+      <PositionTableView data={plantilla} pos_id={plantilla?.position.pos_id} />
       <div
         style={{ margin: "10px 20px", display: "flex", justifyContent: "end" }}
       >
@@ -102,10 +105,9 @@ const PlantillaItemInformation = () => {
     </React.Fragment>
   );
 };
-
 export default PlantillaItemInformation;
 
-const PositionTableView = ({ data }) => {
+const PositionTableView = ({ data, pos_id }) => {
   const dataValue = (number, data) => {
     let value = "";
     data.forEach((element) => {
@@ -114,77 +116,110 @@ const PositionTableView = ({ data }) => {
       }
     });
     return value;
-    //apiLevelPositionModalInputItem
   };
+  const [toogleModal, setToogleModal] = useToggleService(false);
   return (
-    <div className="default-table">
-      <table>
-        <tbody>
-          <tr>
-            <th className="main-header">Item No.</th>
-            <td>{data?.itm_no}</td>
-            <th className="main-header">Salary Grade</th>
-            <td>{data?.position?.pos_salary_grade}</td>
-          </tr>
-          <tr>
-            <th className="main-header" rowSpan="2">
-              Position Title
-            </th>
-            <td rowSpan="2">{data?.position?.pos_title}</td>
-            <th className="main-header">Nature of employment</th>
-            <td>
-              {dataValue(data?.itm_status, apiEmploymentStatModalInputItem)}
-            </td>
-          </tr>
-          <tr>
-            <th className="main-header">Employment Basis</th>
-            <td>
-              {dataValue(data?.itm_basis, apiEmploymentBasisModalInputItem)}
-            </td>
-          </tr>
-          <tr>
-            <th className="main-header">Level of Position</th>
-            <td>
-              {dataValue(data?.itm_level, apiLevelPositionModalInputItem)}
-            </td>
-            <th className="main-header">Category Service</th>
-            <td>
-              {dataValue(data?.itm_category, apiCategoryServiceModalInputItem)}
-            </td>
-          </tr>
-          <tr>
-            <th className="main-header">Place of Assignment</th>
-            <td>{data?.office?.ofc_acronym}</td>
-            <th className="main-header">Mode of Creation</th>
-            <td>
-              {dataValue(data?.itm_creation, apiModeCreationModalInputItem)}
-            </td>
-          </tr>
-          <tr>
-            <th className="main-header">Area Code and Type</th>
-            <td>
-              {(data?.office?.ofc_area_code ?? "") +
-                " - " +
-                data?.office?.ofc_area_type ?? ""}
-            </td>
-            <th className="main-header">Source of Found</th>
-            <td></td>
-          </tr>
-          <tr>
-            <th className="main-header" rowSpan="2">
-              Description of Position Function
-            </th>
-            <td rowSpan="2">{data?.itm_function}</td>
-            <th className="main-header">Position of Immediate Supervisor</th>
-            <td></td>
-          </tr>
-          <tr>
-            <th className="main-header">Position of Next Supervisor</th>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <React.Fragment>
+      <PositionInfoModal
+        isDisplay={toogleModal}
+        onClose={setToogleModal}
+        pos_id={pos_id}
+      />
+      <div className="default-table">
+        <table>
+          <tbody>
+            <tr>
+              <th className="main-header">Item No.</th>
+              <td>{data?.itm_no}</td>
+              <th className="main-header">Salary Grade</th>
+              <td>{data?.position?.pos_salary_grade}</td>
+            </tr>
+            <tr>
+              <th className="main-header" rowSpan="2">
+                Position Title
+              </th>
+              <td rowSpan="2">
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <p>{data?.position?.pos_title}</p>
+                  <div>
+                    <div
+                      data-tip
+                      data-for="registerTip"
+                      onClick={setToogleModal}
+                    >
+                      <MdInfo size="20" />
+                    </div>
+
+                    <ReactTooltip id="registerTip" place="top" effect="solid">
+                      View Info
+                    </ReactTooltip>
+                  </div>
+                </div>
+              </td>
+              <th className="main-header">Nature of employment</th>
+              <td>
+                {dataValue(data?.itm_status, apiEmploymentStatModalInputItem)}
+              </td>
+            </tr>
+            <tr>
+              <th className="main-header">Employment Basis</th>
+              <td>
+                {dataValue(data?.itm_basis, apiEmploymentBasisModalInputItem)}
+              </td>
+            </tr>
+            <tr>
+              <th className="main-header">Level of Position</th>
+              <td>
+                {dataValue(data?.itm_level, apiLevelPositionModalInputItem)}
+              </td>
+              <th className="main-header">Category Service</th>
+              <td>
+                {dataValue(
+                  data?.itm_category,
+                  apiCategoryServiceModalInputItem
+                )}
+              </td>
+            </tr>
+            <tr>
+              <th className="main-header">Place of Assignment</th>
+              <td>{data?.office?.ofc_acronym}</td>
+              <th className="main-header">Mode of Creation</th>
+              <td>
+                {dataValue(data?.itm_creation, apiModeCreationModalInputItem)}
+              </td>
+            </tr>
+            <tr>
+              <th className="main-header">Area Code and Type</th>
+              <td>
+                {(data?.office?.ofc_area_code ?? "") +
+                  " - " +
+                  data?.office?.ofc_area_type ?? ""}
+              </td>
+              <th className="main-header">Source of Found</th>
+              <td></td>
+            </tr>
+            <tr>
+              <th className="main-header" rowSpan="2">
+                Description of Position Function
+              </th>
+              <td rowSpan="2">{data?.itm_function}</td>
+              <th className="main-header">Position of Immediate Supervisor</th>
+              <td>{data?.itm_supv1_display}</td>
+            </tr>
+            <tr>
+              <th className="main-header">Position of Next Supervisor</th>
+              <td>{data?.itm_supv2_display}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </React.Fragment>
   );
 };
 

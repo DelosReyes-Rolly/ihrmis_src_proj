@@ -129,16 +129,14 @@ const AddPlantillaItemDutiesAndRespoModal = ({
   };
 
   const handleRemove = (item_id) => {
-    setDataState([
-      ...dataState.filter((item) => item.dty_itm_order !== item_id),
-    ]);
+    setDataState(dataState.filter((item) => item.dty_itm_order !== item_id));
   };
 
   useEffect(() => {
     if (dtyData) {
       setDataState(dtyData);
     }
-  }, [dtyData]);
+  }, [dtyData, isDisplay]);
 
   return (
     <React.Fragment>

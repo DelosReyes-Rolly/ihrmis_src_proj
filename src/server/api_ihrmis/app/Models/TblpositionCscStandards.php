@@ -11,6 +11,7 @@ class TblpositionCscStandards extends Model
 
     protected $primaryKey = 'std_pos_id';
     protected $fillable=[
+        'std_pos_id',
         'std_type',
         'std_quantity',
         'std_keyword',

@@ -11,7 +11,7 @@ const SelectComponent = (props) => {
       readOnly={props.readOnly}
       name={props.name}
     >
-      <option className="option-component" style={{ color: "gray" }} value="">
+      <option className="option-component default-option" value="">
         {props.defaultTitle}
       </option>
       {props.itemList.map((item) => {
