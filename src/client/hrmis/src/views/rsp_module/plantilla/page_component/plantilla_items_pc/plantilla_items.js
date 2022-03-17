@@ -38,7 +38,9 @@ const PlantillaItemPageComponentView = () => {
               buttonLogoStart={<IoIosPaperPlane />}
               buttonName="Vacant"
               buttonLogoEnd={<SquareNotification />}
-              onClick={() => navigate("")}
+              onClick={() =>
+                navigate("/rsp/plantilla/plantilla-items/vacantpositions")
+              }
             />
           </div>
           <div className="regular-tab-component">

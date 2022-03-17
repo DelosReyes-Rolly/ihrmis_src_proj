@@ -2,48 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\Plantilla\GetVacantPositionsResource;
+use Barryvdh\DomPDF\Facade as PDF;
 
-class TblplantillaVacantPositions extends Model
+class TblplantillaVacantPositions extends TblplantillaItems
 {
-    use HasFactory;
 
-    protected $primaryKey = 'itm_id';
-    protected $table = 'tblplantilla_items';
+  /**
+   * getVacantPositions
+   * Todo get vacant positions by 
+   */
+  public function getVacantPositions($type) {
+
+    $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->where('itm_is_vacant', $type)->get();
+    return GetVacantPositionsResource::collection($item_query);
+
+  }
     
-    protected $fillable=[
-        'itm_regular',
-        'itm_no',
-        'itm_pos_id',
-        'itm_ofc_id',
-        'itm_status', 
-        'itm_basis',
-        'itm_category',
-        'itm_level',
-        'itm_function',
-        'itm_creation',
-        'itm_source',
-        'itm_supv1_itm_id',
-        'itm_supv2_itm_id',
-        'itm_state',
-    ];
-
-    public $timestamps = false;
-
-    public function tbloffices(){
-        return $this->hasOne(Tbloffices::class, 'ofc_id', 'itm_ofc_id');
-    }
-
-    public function tblpositions(){
-        return $this->hasOne(Tblpositions::class, 'pos_id', 'itm_pos_id');
-    }
+    /**
+     * generatePdf
+     * Todo this function will generate report in PDF form
+     */
+    public function generatePdf()
+    {
     
-    public function tbljvs(){
-        return $this->hasMany(Tbljvs::class, 'jvs_itm_id' ,'itm_id');
+      date_default_timezone_set('Asia/Manila'); //define local time
+      
+      $data = $this->getVacantPositions(1);
+
+      $new_data = [];
+      $new_data['vacantpositions'] = $data->collection;
+      $date = date('m/d/Y'); 
+      $pdf = PDF::loadView('vacantPositionsPdf', $new_data);
+      $pdf->setPaper('a4', 'landscape')->setWarnings(false)
+      ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
+      return $pdf->stream('DOST-CO Vacant Position_'.$date.'.pdf');
     }
 
-    public function tbldtyresponsibility(){
-        return $this->hasMany(TblplantillaDutiesRspnsblts::class, 'dty_itm_id' ,'itm_id');
-    }
 }

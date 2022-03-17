@@ -116,6 +116,10 @@ Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
-Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
+
+//legee updates
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
