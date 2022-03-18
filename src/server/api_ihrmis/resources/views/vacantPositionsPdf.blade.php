@@ -65,14 +65,17 @@
             </tr>
         </thead>
         <tbody >
-            @foreach($vacantpositions ?? '' as $data)
+            @foreach( $vacantpositions ?? '' as $data)
                 <tr>
-                    <th scope="row">{{ $data->id }}</th>
-                    <td>{{ $data->office->ofc_name }}</td>
-                    <td>{{ $data->position->pos_salary_grade }}</td>
+
+                    <td>{{ $data->office_name }}</td>
+                    <td>{{ $data->position_title }}</td>
                     <td>{{ $data->itm_no }}</td>
                     <td>{{ $data->itm_no }}</td>
                     <td>{{ $data->itm_no }}</td>
+                    <td>{{ $data->itm_no }}</td>
+                    <td>{{ $data->itm_no }}</td>
+                    <td>{{ $data->itm_function }}</td>
                     <td>{{ $data->itm_no }}</td>
                 </tr>
             @endforeach 

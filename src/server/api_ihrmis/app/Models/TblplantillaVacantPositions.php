@@ -31,8 +31,10 @@ class TblplantillaVacantPositions extends TblplantillaItems
       $data = $this->getVacantPositions(1);
 
       $new_data = [];
-      $new_data['vacantpositions'] = $data->collection;
-      $date = date('m/d/Y'); 
+
+      $new_data['vacantpositions'] = $data;
+      
+      $date = date('m/d/Y');
       $pdf = PDF::loadView('vacantPositionsPdf', $new_data);
       $pdf->setPaper('a4', 'landscape')->setWarnings(false)
       ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
