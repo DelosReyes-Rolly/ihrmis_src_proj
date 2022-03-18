@@ -98,8 +98,10 @@
 .secondary-headers {
   background-color: rgba(1, 6, 15, 0.03);
 }
-
-//NEW TABLE DESIGN HERE
+// =======================================================
+//  NEW TABLE DESIGN HERE.
+// =======================================================
+// Use this as standard default design
 .default-table {
   margin: 10px 20px;
   table {
@@ -119,6 +121,7 @@
     border: 1px solid map-get($blackColor, 200);
     padding: 10px;
   }
+
   td {
     border: 1px solid map-get($blackColor, 200);
     padding: 10px;
@@ -135,6 +138,13 @@
   }
 
   .trHoverBody:hover {
+    background-color: map-get($blackColor, 200);
+  }
+
+  .cell-color-one {
+    background-color: map-get($blackColor, 100);
+  }
+  .cell-color-two {
     background-color: map-get($blackColor, 200);
   }
 }

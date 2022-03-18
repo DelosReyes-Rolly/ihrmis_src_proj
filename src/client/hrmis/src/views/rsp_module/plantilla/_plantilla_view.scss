@@ -137,6 +137,22 @@
   color: #063158;
 }
 
+.email-modal-plantilla {
+  background-color: white;
+  border: 1px solid map-get($blackColor, 200);
+  border-radius: 5px;
+  color: black;
+}
+
+.email-modal-plantilla:focus-within {
+  border: 1px solid map-get($blackColor, 400);
+}
+
+.editor-class {
+  background-color: white;
+  padding: 0px 7px;
+}
+
 @media only screen and (max-width: 800px) {
   .add-plantilla-item-modal {
     flex-direction: column;

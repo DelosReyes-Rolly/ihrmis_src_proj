@@ -45,6 +45,8 @@ const AddPlantillaItemModal = ({
       itm_category: plantillaData?.itm_category ?? "",
       itm_function: plantillaData?.itm_function ?? "",
       itm_creation: plantillaData?.itm_creation ?? "",
+      itm_supv1_itm_id: plantillaData?.itm_supv1_itm_id ?? "",
+      itm_supv2_itm_id: plantillaData?.itm_supv2_itm_id ?? "",
       itm_regular: type ?? plantillaData?.itm_regular,
     },
     validationSchema: Yup.object({
@@ -83,6 +85,12 @@ const AddPlantillaItemModal = ({
       itm_creation: Yup.number()
         .typeError("Must be a number")
         .required("This field is required"),
+      itm_supv1_itm_id: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
+      itm_supv2_itm_id: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
     }),
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
@@ -111,7 +119,27 @@ const AddPlantillaItemModal = ({
       .get(API_HOST + "office-position")
       .then((response) => {
         setOfficePositionState(response.data.data);
-        console.log(response.data.data);
+      })
+      .catch((error) => {});
+
+    // if (plantillaForm.values.itm_ofc_id !== "") {
+    //   getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
+    // }
+  };
+  //
+  const [plantillaByOfc, setPlantillaByOfc] = useState([]);
+
+  const getPlantillasByOffice = async (officeId) => {
+    await axios
+      .get(API_HOST + "get-plantilla-by-office/" + officeId ?? 0)
+      .then((response) => {
+        let arrHolder = [];
+        const data = response.data.data;
+        data?.forEach((element) => {
+          arrHolder.push({ id: element.itm_id, title: element.itm_no });
+        });
+        setPlantillaByOfc(arrHolder);
+        console.log(arrHolder);
       })
       .catch((error) => {});
   };
@@ -120,6 +148,11 @@ const AddPlantillaItemModal = ({
     getPositionAndOffice();
   }, []);
 
+  useEffect(() => {
+    if (plantillaForm.values.itm_ofc_id !== "") {
+      getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
+    }
+  }, [plantillaForm.values.itm_ofc_id]);
   return (
     <React.Fragment>
       <ModalComponent
@@ -149,6 +182,7 @@ const AddPlantillaItemModal = ({
           <span className="right-input item-modal-2">
             <label>Employment Status</label>
             <SelectComponent
+              defaultTitle="Status"
               name="itm_status"
               value={plantillaForm.values.itm_status}
               onChange={plantillaForm.handleChange}
@@ -163,7 +197,6 @@ const AddPlantillaItemModal = ({
             ) : null}
           </span>
         </div>
-
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-1">
             <label>Position</label>
@@ -175,7 +208,7 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
             >
               <option className="option-component" value="">
-                Default
+                Positions
               </option>
               {officePositionState &&
                 officePositionState.positions.map((item, key) => {
@@ -206,10 +239,13 @@ const AddPlantillaItemModal = ({
               style={{ marginTop: "3px" }}
               name="itm_ofc_id"
               value={plantillaForm.values.itm_ofc_id}
-              onChange={plantillaForm.handleChange}
+              onChange={(e) => {
+                plantillaForm.handleChange(e);
+                getPlantillasByOffice(e.target.value);
+              }}
             >
               <option className="option-component" value="">
-                Default
+                Offices
               </option>
               {officePositionState &&
                 officePositionState.offices.map((item, key) => {
@@ -237,6 +273,7 @@ const AddPlantillaItemModal = ({
           <span className="left-input item-modal-3">
             <label>Employment Basis</label>
             <SelectComponent
+              defaultTitle="Employment"
               name="itm_basis"
               value={plantillaForm.values.itm_basis}
               onChange={plantillaForm.handleChange}
@@ -252,6 +289,7 @@ const AddPlantillaItemModal = ({
           <span className="middle-input item-modal-3">
             <label>Category Service</label>
             <SelectComponent
+              defaultTitle="Category"
               name="itm_category"
               value={plantillaForm.values.itm_category}
               onChange={plantillaForm.handleChange}
@@ -267,6 +305,7 @@ const AddPlantillaItemModal = ({
           <span className="right-input item-modal-4">
             <label>Level of Position</label>
             <SelectComponent
+              defaultTitle="Level of Position"
               name="itm_level"
               value={plantillaForm.values.itm_level}
               onChange={plantillaForm.handleChange}
@@ -303,6 +342,7 @@ const AddPlantillaItemModal = ({
           <span className="left-input item-modal-2">
             <label>Mode of Creation</label>
             <SelectComponent
+              defaultTitle="Creation"
               name="itm_creation"
               value={plantillaForm.values.itm_creation}
               onChange={plantillaForm.handleChange}
@@ -324,14 +364,38 @@ const AddPlantillaItemModal = ({
         <div className="add-plantilla-item-modal">
           <span className="item-modal-5">
             <label>Position of Immediate Supervisor</label>
-            <SelectComponent />
+            <SelectComponent
+              defaultTitle="Immediate Supervisor"
+              name="itm_supv1_itm_id"
+              value={plantillaForm.values.itm_supv1_itm_id}
+              onChange={plantillaForm.handleChange}
+              itemList={plantillaByOfc}
+            />
+            {plantillaForm.touched.itm_supv1_itm_id &&
+            plantillaForm.errors.itm_supv1_itm_id ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_supv1_itm_id}
+              </p>
+            ) : null}
           </span>
         </div>
 
         <div className="add-plantilla-item-modal">
           <span className="item-modal-5">
             <label>Position of Next Higher Supervisor</label>
-            <SelectComponent />
+            <SelectComponent
+              defaultTitle="Higher Supervisor"
+              name="itm_supv2_itm_id"
+              value={plantillaForm.values.itm_supv2_itm_id}
+              onChange={plantillaForm.handleChange}
+              itemList={plantillaByOfc}
+            />
+            {plantillaForm.touched.itm_supv2_itm_id &&
+            plantillaForm.errors.itm_supv2_itm_id ? (
+              <p className="error-validation-styles">
+                {plantillaForm.errors.itm_supv2_itm_id}
+              </p>
+            ) : null}
           </span>
         </div>
         <br />

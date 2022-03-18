@@ -38,7 +38,7 @@ const PlantillaItemPageComponentView = () => {
               buttonLogoStart={<IoIosPaperPlane />}
               buttonName="Vacant"
               buttonLogoEnd={<SquareNotification />}
-              onClick={() => navigate("")}
+              onClick={() => navigate("vacantpositions")}
             />
           </div>
           <div className="regular-tab-component">
@@ -61,7 +61,6 @@ const PlantillaItemPageComponentView = () => {
             <hr className="solid" />
           </div>
         </div>
-
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
           <PlantillaDataTableDisplay type={1} />
         </div>

@@ -5,7 +5,7 @@ import ButtonComponent from "../common/button_component/button_component.js.js";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { API_HOST } from "../../helpers/global/global_config";
+import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
 import { usePopUpHelper } from "../../helpers/use_hooks/popup_helper";
 import { useNavigate } from "react-router-dom";
 
@@ -31,16 +31,10 @@ const LoginView = () => {
     onSubmit: async (values) => {
       renderBusy(true);
       await axios
-        .get("http://localhost:8000/sanctum/csrf-cookie", {
-          withCredentials: true,
-        })
+        .get(SANCTUM + "sanctum/csrf-cookie")
         .then((response) => {
-          console.log(response.data);
           axios
-            .post(API_HOST + "login", values, {
-              withCredentials: true,
-              headers: {},
-            })
+            .post(API_HOST + "login", values)
             .then((res) => {
               renderSucceed({
                 content: res.data.message,

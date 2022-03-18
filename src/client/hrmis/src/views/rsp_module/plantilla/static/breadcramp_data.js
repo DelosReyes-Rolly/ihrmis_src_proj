@@ -13,6 +13,24 @@ export const plantillaItemsBreadCramp = [
   },
 ];
 
+export const plantillaVacantBreadCramp = [
+  {
+    name: "Home",
+    link: "./",
+  },
+  {
+    name: "Plantilla",
+    link: "#",
+  },
+  {
+    name: "Plantilla Items",
+    link: "#",
+  },
+  {
+    name: "Vacant Positions",
+    link: "#",
+  },
+];
 export const employeeItemsBreadCramp = [
   {
     name: "Home",

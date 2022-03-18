@@ -376,14 +376,14 @@ const jvscrwSlice = createSlice({
       arrayData.forEach((element, i, arr) => {
         let arraHolder = [];
 
-        if (element != undefined) {
+        if (element !== undefined) {
           element?.forEach((arrData) => {
             arraHolder.push(parseInt(arrData.rtg_percent));
           });
 
           arraHolder = bubbleSort(arraHolder);
 
-          if (arraHolder.length != 0) {
+          if (arraHolder.length !== 0) {
             totalArray.push(arraHolder);
             length++;
             max += arraHolder[arraHolder.length - 1];

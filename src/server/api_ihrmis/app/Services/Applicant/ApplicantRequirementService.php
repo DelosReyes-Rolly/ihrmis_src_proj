@@ -141,6 +141,6 @@ class ApplicantRequirementService{
         $saveReqQry->req_app_file = $stringFileName;
         $saveReqQry->save();
         
-        return $stringFileName ;
+        return $stringFileName;
     }
 }
