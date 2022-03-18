@@ -33,6 +33,6 @@ class VerifyApplicantMail extends Mailable
     
         $pdf = PDF::loadView('verifyEmailPdf', $this->someDetails);
         return $this->from($this->someDetails['from_email'], $this->someDetails['recruiter'])->subject($this->someDetails['subject'])
-                    ->view('verifyEmail')->attachData($pdf->output(), "verify-email.pdf");;
+                    ->view('verifyEmail');
     }
 }

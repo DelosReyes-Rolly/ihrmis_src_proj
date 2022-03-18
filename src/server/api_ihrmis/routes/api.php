@@ -41,6 +41,7 @@ Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "creat
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
+Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
 Route::get('new-children/{id}',[TblapplicantChildrenController::class, "getChildrenRecord"]);
@@ -110,6 +111,11 @@ Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPl
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
 
+
+Route::get('office', [TblofficesController::class, "office"]);
+Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
+Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
+Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);
 
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
