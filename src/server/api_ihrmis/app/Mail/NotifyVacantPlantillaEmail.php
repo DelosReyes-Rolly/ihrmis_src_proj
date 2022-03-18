@@ -33,7 +33,10 @@ class NotifyVacantPlantillaEmail extends Mailable
         $mail = $this->details;
         $email = $this->from(env("MAIL_FROM_ADDRESS"))->subject($mail['message_type'])->view('mail.notifyVacantPlantillaEmail');
         foreach ($mail['file'] as $value) { 
-            $email->attachData($value, $value->getClientOriginalName());
+            $email->attach($value->getRealPath(), [
+                'as' => $value->getClientOriginalName(), 
+                'mime' => $value->getMimeType()
+            ]);
         }
         return $email;
     }
