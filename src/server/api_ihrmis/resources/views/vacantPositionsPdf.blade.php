@@ -68,7 +68,7 @@
             @foreach( $vacantpositions ?? '' as $data)
                 <tr>
 
-                    <td>{{ $data->office_name }}</td>
+                    <td>{{ $data->office_name }}</td> 
                     <td>{{ $data->position_title }}</td>
                     <td>{{ $data->itm_no }}</td>
                     <td>{{ $data->itm_no }}</td>
