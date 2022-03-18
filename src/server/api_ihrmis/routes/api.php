@@ -13,6 +13,7 @@ use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -138,12 +139,22 @@ Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class,
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
 
+//=======================================================================================
+// OTHER RESOURCES
+//=======================================================================================
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
 
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
-Route::post('login', [AuthenticationController::class, "loginUser"]);
-Route::post('register', [AuthenticationController::class, "registerUser"]);
+
+//=======================================================================================
+// MAIL CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('mail-types', [MailController::class, "getMailType"]);
+Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
+
+
+
 

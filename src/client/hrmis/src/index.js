@@ -7,10 +7,10 @@ import MainRouter from "./router/router";
 import "./config/axios_config";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <Provider store={store}>
       <MainRouter />
     </Provider>
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById("root")
 );
