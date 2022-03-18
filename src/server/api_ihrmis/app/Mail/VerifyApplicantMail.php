@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -30,9 +29,8 @@ class VerifyApplicantMail extends Mailable
      */
     public function build()
     {
-    
         $pdf = PDF::loadView('verifyEmailPdf', $this->someDetails);
         return $this->from($this->someDetails['from_email'], $this->someDetails['recruiter'])->subject($this->someDetails['subject'])
-                    ->view('verifyEmail');
+            ->view('verifyEmail')->attachData($pdf->output(), "verify-email.pdf");
     }
 }

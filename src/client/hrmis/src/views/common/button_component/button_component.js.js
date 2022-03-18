@@ -36,6 +36,8 @@ const ButtonComponent = (props) => {
       >
         {props.buttonLogoEnd}
       </span>
+
+      {props.children}
     </button>
   );
 };

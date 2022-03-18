@@ -8,16 +8,22 @@ import { API_HOST } from "../../../../../helpers/global/global_config";
 import { statusDisplay } from "../../static/display_option";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
+import { IoIosPaperPlane } from "react-icons/io";
 import React, { useLayoutEffect, useMemo, useState } from "react";
 import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 
 import axios from "axios";
+import { useSelector } from "react-redux";
+import ButtonComponent from "../../../../common/button_component/button_component.js";
+import { useNavigate } from "react-router-dom";
 
 const PlantillaItemPageComponentView = () => {
   const [toggleState, setToggleState] = useState(1);
   const toggleTab = (index) => {
     setToggleState(index);
   };
+
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -26,26 +32,35 @@ const PlantillaItemPageComponentView = () => {
           <BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
         </div>
 
-        <div className="regular-tab-component">
-          <div className="reg-tab-container">
-            <button
-              onClick={() => toggleTab(1)}
-              className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
-            >
-              Regular
-            </button>
-
-            <button
-              onClick={() => toggleTab(2)}
-              className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
-            >
-              Non-Regular
-            </button>
+        <div className="container-vacant-position">
+          <div className="button-vacant">
+            <ButtonComponent
+              buttonLogoStart={<IoIosPaperPlane />}
+              buttonName="Vacant"
+              buttonLogoEnd={<SquareNotification />}
+              onClick={() => navigate("vacantpositions")}
+            />
           </div>
+          <div className="regular-tab-component">
+            <div className="reg-tab-container">
+              <button
+                onClick={() => toggleTab(1)}
+                className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Regular
+              </button>
 
-          <hr className="solid" />
+              <button
+                onClick={() => toggleTab(2)}
+                className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Non-Regular
+              </button>
+            </div>
+
+            <hr className="solid" />
+          </div>
         </div>
-
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
           <PlantillaDataTableDisplay type={1} />
         </div>
@@ -62,6 +77,7 @@ const PlantillaItemPageComponentView = () => {
 export default PlantillaItemPageComponentView;
 
 export const PlantillaDataTableDisplay = ({ type }) => {
+  const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
   const plantillaItemApi = async () => {
     await axios
@@ -89,7 +105,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 
   useLayoutEffect(() => {
     plantillaItemApi();
-  }, []);
+  }, [refresh]);
 
   let data = useMemo(() => plotData, [plotData]);
 
@@ -264,3 +280,7 @@ const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
     </React.Fragment>
   );
 };
+
+const SquareNotification = ({ number = 0 }) => (
+  <div className="square-notification">{number}</div>
+);

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { bubbleSort } from "../../helpers/bubble_sort_helper";
 
 const TYPE = [
   "com_education",
@@ -57,15 +58,23 @@ const jvscrwSlice = createSlice({
       com_others: {},
       com_experience: {},
     },
-
     remarksImg: {
-      preparedBy: undefined,
-      approvedBy: undefined,
+      prepName: null,
+      appName: null,
+      preparedBy: null,
+      approvedBy: null,
     },
-
     refresh: false,
+
     isEmptyCompetency: [],
+
     dtyResContainer: [],
+
+    totalMinMaxData: {
+      min: 0,
+      max: 0,
+      total: 0,
+    },
   },
 
   reducers: {
@@ -142,8 +151,9 @@ const jvscrwSlice = createSlice({
         com_others,
         com_experience,
       };
-    },
 
+      jvscrwSlice.caseReducers.setTotalWeight(state);
+    },
     addCompetency(state, action) {
       let { rtg_com_type } = action.payload;
 
@@ -180,6 +190,7 @@ const jvscrwSlice = createSlice({
             ...state.competencies,
             [com_type]: {
               ...state.competencies[com_type],
+              com_specific: com_specific,
               tbl_com_type: [
                 ...state.competencies[com_type].tbl_com_type,
                 {
@@ -214,8 +225,9 @@ const jvscrwSlice = createSlice({
       } else if (rtg_com_type === "EX") {
         state.competencies = competenciesStateStructure(state, TYPE[8], action);
       }
-    },
 
+      jvscrwSlice.caseReducers.setTotalWeight(state);
+    },
     removeCompetency(state, action) {
       let { rtg_com_type } = action.payload;
       const competenciesStateStructure = (state, com_type, action) => {
@@ -251,8 +263,9 @@ const jvscrwSlice = createSlice({
       } else if (rtg_com_type === "EX") {
         state.competencies = competenciesStateStructure(state, TYPE[8], action);
       }
-    },
 
+      jvscrwSlice.caseReducers.setTotalWeight(state);
+    },
     editCompetency(state, action) {
       let { rtg_com_type } = action.payload;
 
@@ -261,6 +274,7 @@ const jvscrwSlice = createSlice({
           ...state.competencies,
           [com_type]: {
             ...state.competencies[com_type],
+            com_specific: action.payload.com_specific,
             tbl_com_type: [
               ...state.competencies[com_type].tbl_com_type.map((comp) =>
                 comp.rtg_seq_order === action.payload.rtg_seq_order
@@ -291,8 +305,9 @@ const jvscrwSlice = createSlice({
       } else if (rtg_com_type === "EX") {
         state.competencies = competenciesStateStructure(state, TYPE[8], action);
       }
-    },
 
+      jvscrwSlice.caseReducers.setTotalWeight(state);
+    },
     setRefreh: (state) => {
       state.refresh = !state.refresh;
     },
@@ -327,6 +342,84 @@ const jvscrwSlice = createSlice({
       const { key, value } = action.payload;
       state.remarksImg = { ...state.remarksImg, [key]: value };
     },
+
+    setTotalWeight: (state) => {
+      const {
+        com_education,
+        com_analyticalSkills,
+        com_computationSKills,
+        com_creativeWork,
+        com_experience,
+        com_oralExam,
+        com_others,
+        com_training,
+        com_writtenExam,
+      } = state.competencies;
+
+      let arrayData = [
+        com_education.tbl_com_type,
+        com_analyticalSkills.tbl_com_type,
+        com_computationSKills.tbl_com_type,
+        com_creativeWork.tbl_com_type,
+        com_experience.tbl_com_type,
+        com_oralExam.tbl_com_type,
+        com_others.tbl_com_type,
+        com_training.tbl_com_type,
+        com_writtenExam.tbl_com_type,
+      ];
+
+      let max = 0;
+      let min = 0;
+      let length = 0;
+      let totalArray = [];
+
+      arrayData.forEach((element, i, arr) => {
+        let arraHolder = [];
+
+        if (element !== undefined) {
+          element?.forEach((arrData) => {
+            arraHolder.push(parseInt(arrData.rtg_percent));
+          });
+
+          arraHolder = bubbleSort(arraHolder);
+
+          if (arraHolder.length !== 0) {
+            totalArray.push(arraHolder);
+            length++;
+            max += arraHolder[arraHolder.length - 1];
+            min += arraHolder[0];
+          }
+        }
+      });
+      let totalLength = 0;
+      let totalValue = 0;
+      totalArray.forEach((element) => {
+        element?.forEach((arr) => {
+          totalLength++;
+          totalValue += arr;
+        });
+      });
+
+      state.totalMinMaxData = {
+        ...state.totalMinMaxData,
+        max: parseFloat((max / length).toFixed(2)),
+        min: parseFloat((min / length).toFixed(2)),
+        total: parseFloat((totalValue / totalLength).toFixed(2)),
+      };
+    },
+
+    setRatingFactor: (state, action) => {
+      const { skills, com_specific, com_type, com_jvs_id } = action.payload;
+      state.competencies = {
+        ...state.competencies,
+        [skills]: {
+          ...state.competencies[skills],
+          com_jvs_id,
+          com_type,
+          com_specific,
+        },
+      };
+    },
   },
 });
 
@@ -349,6 +442,8 @@ export const {
   addCompetency,
   removeCompetency,
   editCompetency,
+  setTotalWeight,
+  setRatingFactor,
 } = jvscrwSlice.actions;
 
 export default jvscrwSlice.reducer;

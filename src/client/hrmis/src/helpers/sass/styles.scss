@@ -6,6 +6,7 @@
 @import "./defaults/default_scrollbar";
 @import "./defaults/default_table";
 @import "./defaults/default_percent";
+@import "./defaults/animate.min";
 
 * {
   margin: 0px;
@@ -126,5 +127,10 @@ body {
 @import "./../../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
 @import "./../../views/rsp_module/plantilla/plantilla_view";
 @import "./../../views/rsp_module/library/library";
+@import "./../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
 @import "./../../views/authentication/login_view";
+<<<<<<< HEAD
 @import "./../../views/rsp_module/dashboard/office";
+=======
+@import "./../../views/rsp_module/dashboard/dashboard_view";
+>>>>>>> origin/main

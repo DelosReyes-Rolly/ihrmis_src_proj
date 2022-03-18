@@ -19,7 +19,7 @@ class CreateTblplantillaDutiesRspnsbltsTable extends Migration
             $table->string('dty_itm_desc')->comment('Description of the duty or responsibility.');
             $table->unsignedTinyInteger('dty_itm_percent')->comment('Percentage of working time in integer format.');
             $table->string('dty_itm_cmptncy', 50)->comment('Level of competency.');
-            $table->primary(['dty_itm_id', 'dty_itm_order']);
+            $table->index(['dty_itm_id', 'dty_itm_order'], 'dty_itm_id');
         });
     }
 

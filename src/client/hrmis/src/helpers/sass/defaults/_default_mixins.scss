@@ -6,3 +6,11 @@
     flex-direction: column;
   }
 }
+
+@mixin zoomInEffect() {
+  cursor: default;
+  transition: transform 0.2s;
+  -ms-transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}

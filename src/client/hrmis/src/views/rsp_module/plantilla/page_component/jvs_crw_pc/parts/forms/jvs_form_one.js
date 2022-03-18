@@ -17,11 +17,13 @@ import {
   setOffice,
   setPlantilla,
   setPosition,
+  setTotalWeight,
   setTraining,
   setWorkExp,
 } from "../../../../../../../features/reducers/jvscrw_slice";
 import { setBusy } from "../../../../../../../features/reducers/popup_response";
 import DutiesResponsibilityTable from "../duties_responsibility_table";
+import { bubbleSort } from "../../../../../../../helpers/bubble_sort_helper";
 
 // TODO: change jvsId to actual value
 
@@ -38,9 +40,6 @@ const JvsFormOne = ({ itemId }) => {
     training,
     experience,
     competencies,
-    refresh,
-    isEmptyCompetency,
-    dtyResContainer,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
 
@@ -72,9 +71,10 @@ const JvsFormOne = ({ itemId }) => {
       .get(API_HOST + "jvscrw-duty-responsibility/1")
       .then((res) => {
         dispatch(setDutyResponsibility(res.data.data));
-        console.log(res.data.data);
       })
       .catch((err) => console.log(err.message));
+
+    dispatch(setTotalWeight());
   };
 
   //COMPETENCY RATING RECORDS
@@ -153,7 +153,6 @@ const JvsFormOne = ({ itemId }) => {
     fetchJvsDutiesResponsibityOnLoad();
     fetchCscQualificationOnLoad();
     fetchCompetenciesOnLoad();
-    console.log(competencies);
   }, []);
 
   return (
@@ -286,12 +285,12 @@ const JvsFormOne = ({ itemId }) => {
         </table>
       </div>
       <br />
-      {console.log(competencies)}
+
       <WeightingTable
         title="EDUCATION"
         type="ED"
         jvsId="1"
-        data={competencies.com_education?.tbl_com_type}
+        data={competencies.com_education.tbl_com_type}
       />
       <br />
       <WeightingTable
@@ -325,7 +324,6 @@ const JvsFormOne = ({ itemId }) => {
         type="WE"
         jvsId="1"
         data={competencies.com_writtenExam}
-        isEmpty={isEmptyCompetency["WE"]}
       />
       <CheckJobCompetency
         title="Oral Exam"
@@ -359,6 +357,26 @@ const JvsFormOne = ({ itemId }) => {
       />
       <br />
       <br />
+      <TotalCalculation />
+      <br />
+      <br />
+      <DutiesResponsibilityTable jvsId="1" />
+      <br />
+      <br />
+      <RemarksForm jvsId="1" />
+      <br />
+      <br />
+    </React.Fragment>
+  );
+};
+
+export default JvsFormOne;
+
+const TotalCalculation = () => {
+  const { totalMinMaxData } = useSelector((state) => state.jvsform);
+
+  return (
+    <React.Fragment>
       <div className="scoring-div">
         <div>
           <h6
@@ -366,7 +384,7 @@ const JvsFormOne = ({ itemId }) => {
           >
             Total Minimum Factor Weight (%):
             <span>
-              <strong>22</strong>
+              <strong>{totalMinMaxData?.min ?? 0}</strong>
             </span>
           </h6>
         </div>
@@ -376,31 +394,21 @@ const JvsFormOne = ({ itemId }) => {
           >
             Total Maximum Factor Weight (%):
             <span>
-              <strong>38</strong>
+              <strong>{totalMinMaxData?.max ?? 0}</strong>
             </span>
           </h6>
         </div>
       </div>
       <div className="scoring-div">
         <div>
-          <h6 style={{}}>
+          <h6>
             TOTAL OVERALL FACTOR WEIGHT (%):
             <span>
-              <strong>38</strong>
+              <strong>{totalMinMaxData?.total}</strong>
             </span>
           </h6>
         </div>
       </div>
-      <br />
-      <br />
-      <DutiesResponsibilityTable jvsId="1" />
-      <br />
-      <br />
-      <RemarksForm />
-      <br />
-      <br />
     </React.Fragment>
   );
 };
-
-export default JvsFormOne;

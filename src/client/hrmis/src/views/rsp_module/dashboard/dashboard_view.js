@@ -8,6 +8,9 @@ import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useSelectValueCon } from "../../../helpers/use_hooks/select_value_cons.js";
+import BreadcrumbConfig, {
+  crumbSecondLevel,
+} from "../../../router/breadcrumb_config";
 import {
   apiGetPositions,
   apiModelOffices,
@@ -162,6 +165,13 @@ const DashboardView = (props) => {
 
   return (
     <div style={{ margin: "20px" }}>
+      <BreadcrumbConfig array={getSecondLevel(1)} />
+      <div className="dashborad-view">
+        <div className="header-account-name">
+          Welcome <strong>Jessica Moral!</strong>
+        </div>
+        <br />
+      </div>
       <h1>JC</h1>
       <br />
       <ButtonComponent
@@ -245,5 +255,4 @@ const DashboardView = (props) => {
     </div>
   );
 };
-
 export default DashboardView;

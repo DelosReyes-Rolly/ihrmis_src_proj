@@ -6,6 +6,7 @@ const popupResponseSlice = createSlice({
     isBusy: false,
     isSuccess: false,
     isFail: false,
+    refresh: false,
     message: {
       title: "",
       content: "",
@@ -13,6 +14,9 @@ const popupResponseSlice = createSlice({
     isRefresh: false,
   },
   reducers: {
+    setRefresh: (state) => {
+      state.refresh = !state.refresh;
+    },
     setBusy: (state, action) => {
       state.isBusy = action.payload;
     },

@@ -34,9 +34,9 @@ class TbljvsController extends Controller
       return CommonResource::collection($readQuery);
     }
 
-    public function addCompetencyAndRating(Request $request, $id)
+    public function addCompetencyAndRating(Request $request, $type)
     {  
-        $output = $this->appService->updateOrCreateCmpntncyRtng($request, $id);
+        $output = $this->appService->updateOrCreateCmpntncyRtng($request, $type);
         return response()->json([
             "status" => $output
         ]);
@@ -48,28 +48,44 @@ class TbljvsController extends Controller
         return CommonResource::collection($data);
     }
 
-    public function removeCompetencyRating($id, $type, $order){
-        $output = $this->appService->deleteRating($id, $type, $order);
-        return response()->json([
-            "status" => $output
-        ]);
-    }
-
     public function readDutiesAndResponsibilities($id)
     {
         $output = TbljvsDutiesRspnsblts::where('dty_jvs_id', $id)->get();
         return CommonResource::collection($output);
     }
 
-    public function addDutiesAndResponsibilities($id, Request $request)
+
+    public function saveSignature(Request $request, $id, $signType)
     {
-        $output = $this->appService->deleteDutiesResponsibilities($id, $request);
-        return $output;
+        $output = $this->appService->uploadImage($request, $id, $signType);
+        return response()->json([
+            "message" => $output 
+        ]);
     }
 
-    public function savePreparedBy($id, $request){
-        $request->validate(["prepared_by" => "mimes:jpeg,png|max:5120"]);
-        $output = $this->appService->updateOrCreateCmpntncyRtng($id, $request);
-        return $output;
-    }
+        // public function addDutiesAndResponsibilities($id, Request $request)
+    // {
+    //     $output = $this->appService->deleteDutiesResponsibilities($id, $request);
+    //     return $output;
+    // }
+
+
+    // public function addDutiesAndResponsibilities($id, Request $request)
+    // {
+    //     $output = $this->appService->dutiesResponsibilities($id, $request);
+    //     return $output;
+    // }
+
+    // public function savePreparedBy($id, $request){
+    //     $request->validate(["prepared_by" => "mimes:jpeg,png|max:5120"]);
+    //     $output = $this->appService->updateOrCreateCmpntncyRtng($id, $request);
+    //     return $output;
+    // }
+
+    // public function removeCompetencyRating($id, $type, $order){
+    //     $output = $this->appService->deleteRating($id, $type, $order);
+    //     return response()->json([
+    //         "status" => $output
+    //     ]);
+    // }
 }

@@ -14,8 +14,6 @@ import TextAreaComponent from "../../../../../common/input_component/textarea_in
 import ModalComponent from "../../../../../common/modal_component/modal_component.js";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { MdMenu } from "react-icons/md";
-import { API_HOST } from "../../../../../../helpers/global/global_config.js";
-import axios from "axios";
 
 const DutiesResponsibilityTable = ({ jvsId }) => {
   const [toggle, setToggle] = useToggleHelper();
@@ -70,18 +68,8 @@ const DutiesResponsibilityModal = ({ onClose, isDisplay, jvsId }) => {
     initialValues: {
       dty_res_item: dtyResContainer,
     },
-    onSubmit: async (values) => {
-      await axios
-        .post(API_HOST + "jvscrw-duty-responsibility/" + jvsId, {
-          dty_res_item: dtyResContainer,
-        })
-        .then(() => {
-          console.log("Success");
-          onClose();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    onSubmit: async () => {
+      onClose();
     },
   });
 
@@ -100,13 +88,12 @@ const DutiesResponsibilityModal = ({ onClose, isDisplay, jvsId }) => {
   };
 
   const handleDragEnd = (result) => {
-    console.log(result);
+    if (!result.destination) return;
     if (dtyResContainer.length !== 1) {
       const items = Array.from(dtyResContainer);
       const [recorded] = items.splice(result.source.index, 1);
       items.splice(result.destination.index, 0, recorded);
       dispatch(resetOrder(items));
-      console.log(items);
     }
   };
 
@@ -158,6 +145,7 @@ const DutiesResponsibilityModal = ({ onClose, isDisplay, jvsId }) => {
                                 dispatch(removeDutyResponsibility(id));
                               }}
                               style={{ color: "red", paddingLeft: "5px" }}
+                              className="button-add-remove"
                               size="22px"
                             />
                           </div>
@@ -172,7 +160,6 @@ const DutiesResponsibilityModal = ({ onClose, isDisplay, jvsId }) => {
           </Droppable>
         </DragDropContext>
         <div
-          className=""
           style={{ display: "flex", alignItems: "center", marginTop: "15px" }}
         >
           <TextAreaComponent
@@ -182,6 +169,7 @@ const DutiesResponsibilityModal = ({ onClose, isDisplay, jvsId }) => {
           <AiOutlinePlusCircle
             onClick={() => addValue()}
             style={{ color: "green", paddingLeft: "5px" }}
+            className="button-add-remove"
             size="22px"
           />
         </div>
