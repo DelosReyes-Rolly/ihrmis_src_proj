@@ -11,7 +11,6 @@ const popupResponseSlice = createSlice({
       title: "",
       content: "",
     },
-    isRefresh: false,
   },
   reducers: {
     setRefresh: (state) => {
@@ -29,14 +28,6 @@ const popupResponseSlice = createSlice({
     setMessage: (state, action) => {
       const { title, content } = action.payload;
       state.message = { title, content };
-    },
-    setRefresh: (state) => {
-      if (state.isRefresh === false) {
-        state.isRefresh = true;
-      } else {
-        state.isRefresh = false;
-      }
-      // state.isRefresh = !state.isRefresh;
     },
   },
 });
