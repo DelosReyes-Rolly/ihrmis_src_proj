@@ -45,7 +45,6 @@ Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "creat
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
-Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
 Route::get('new-children/{id}',[TblapplicantChildrenController::class, "getChildrenRecord"]);
@@ -160,7 +159,3 @@ Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantil
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
 
-Route::get('office', [TblofficesController::class, "office"]);
-Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
-Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
-Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);

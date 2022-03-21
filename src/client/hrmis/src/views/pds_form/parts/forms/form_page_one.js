@@ -62,17 +62,15 @@ const FormPageOne = () => {
   const [verifyCapcha, setVerifyCaptcha] = useState(false); // Use for determining if user successfully finish the captcha
 
   const getApplicantRecord = async () => {
-    if (item != null) {
-      await axios.get(API_HOST + `get-new-applicant/${item}`).then((res) => {
-        const data = res ? res.data.data : null;
-        console.log(data);
-        getResCity(data ? data.res_province : "");
-        getResBrgy(data ? data.res_municipality : "");
-        getPerCity(data.per_province ?? "");
-        getPerBrgy(data.per_municipality ?? "");
-        setgetApplicantData({ ...data });
-      });
-    }
+    await axios.get(API_HOST + `get-new-applicant/${item}`).then((res) => {
+      const data = res ? res.data.data : null;
+      console.log(data);
+      getResCity(data ? data.res_province : "");
+      getResBrgy(data ? data.res_municipality : "");
+      getPerCity(data.per_province ?? "");
+      getPerBrgy(data.per_municipality ?? "");
+      setgetApplicantData({ ...data });
+    });
   };
 
   const checkItemIfNull = () => {
