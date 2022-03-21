@@ -4,6 +4,7 @@ namespace App\Models\Applicants;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PDO;
 
 class TblapplicantsProfile extends Model
 {
@@ -48,7 +49,27 @@ class TblapplicantsProfile extends Model
 
     public $timestamps = false;
 
-    public function tblapplicantChildren(){
-        return $this->hasMany(TblapplicantChildren::class, 'chi_app_id' ,'app_id');
+    public function tblapplicantChildren()
+    {
+        return $this->hasMany(TblapplicantChildren::class, 'chi_app_id', 'app_id');
+    }
+
+    public function tblapplicantEligibility()
+    {
+        return $this->hasMany(TblapplicantCseligibilities::class, 'cse_app_id', 'app_id');
+    }
+
+    public function tblapplicantEducation()
+    {
+        return $this->hasMany(TblapplicantEducations::class, 'edu_app_id', 'app_id');
+    }
+
+    public function tblapplicantExperience()
+    {
+        return $this->hasMany(TblapplicantExperiences::class, 'exp_app_id', 'app_id');
+    }
+    public function tblapplicantsStatus()
+    {
+        return $this->hasMany(TblapplicantsStatus::class, 'sts_app_id', 'app_id');
     }
 }

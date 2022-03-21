@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TblplantillaItems;
-use App\Http\Resources\Plantilla\TblplantillaItemsResource;
+use App\Http\Resources\Plantilla\GetVacantPositionsResource;
+use App\Services\PlantillaItems\PlantillaItemsService;
 
 
 /**
@@ -13,9 +13,27 @@ use App\Http\Resources\Plantilla\TblplantillaItemsResource;
  */
 class TblplantillaItemsVacantPositionController extends Controller {
 
-    public function getVacantPositions( $type) {
+    public function __construct() {
 
-        $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->where('is_vacant', $type)->get();
-        return TblplantillaItemsResource::collection($item_query);
+        $this->tblPantillaVacantPos = new PlantillaItemsService();
+    }
+
+    /**
+     * getVacantPositions
+     * Todo get all vacant positions fro Plantilla Items
+     */
+    public function getVacantPositions( $type) {
+        
+        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos::getVacantPositions($type)) ;
+
+    }
+
+    /**
+     * generatePdf
+     * Todo generate PDF file
+     */
+    public function generatePdf()
+    {
+        return $this->tblPantillaVacantPos->generatePdf();
     }
 }

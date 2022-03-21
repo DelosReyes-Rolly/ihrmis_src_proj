@@ -75,6 +75,10 @@ const TableOne = () => {
       .get(API_HOST + `new-education/${item}`)
       .then((response) => {
         setEducationRecord(response.data.data);
+        console.log(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {});
   };
@@ -149,12 +153,15 @@ const TableOne = () => {
               // ===========================================
           */}
           <thead>
-            <tr className="fixed-label-table main-headers">
+            <tr
+              className="fixed-label-table main-headers"
+              onClick={() => setShowData()}
+            >
               <th colSpan="12">
                 <span style={{ float: "left" }}>
                   III. EDUCATIONAL BACKGROUND
                 </span>
-                <span style={{ float: "right" }} onClick={() => setShowData()}>
+                <span style={{ float: "right" }}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -285,6 +292,9 @@ const TableTwo = () => {
       .get(API_HOST + `new-csc-eleigibility/${item}`)
       .then((response) => {
         setCselibilityRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -358,12 +368,15 @@ const TableTwo = () => {
                 // =========================================== 
             */}
           <thead>
-            <tr className="fixed-label-table main-headers">
+            <tr
+              className="fixed-label-table main-headers"
+              onClick={() => setShowData()}
+            >
               <th colSpan="12">
                 <span style={{ float: "left" }}>
                   IV. CIVIL SERVICE ELIGIBILITY
                 </span>
-                <span style={{ float: "right" }} onClick={() => setShowData()}>
+                <span style={{ float: "right" }}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -506,6 +519,9 @@ const TableThree = () => {
       .get(API_HOST + `new-work-experience/${item}`)
       .then((response) => {
         setWorkExperienceRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -589,10 +605,13 @@ const TableThree = () => {
                 // =========================================== 
             */}
           <thead>
-            <tr className="fixed-label-table main-headers">
+            <tr
+              className="fixed-label-table main-headers"
+              onClick={() => setShowData()}
+            >
               <th colSpan="12">
                 <span style={{ float: "left" }}>III. WORK EXPERIENCE</span>
-                <span style={{ float: "right" }} onClick={() => setShowData()}>
+                <span style={{ float: "right" }}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -725,6 +744,9 @@ const TableFour = () => {
       .get(API_HOST + `new-voluntary-work/${item}`)
       .then((response) => {
         setVoluntaryRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -802,11 +824,11 @@ const TableFour = () => {
           <thead>
             <tr className="fixed-label-table main-headers">
               <th colSpan="12">
-                <span style={{ float: "left" }}>
+                <span style={{ float: "left" }} onClick={() => setShowData()}>
                   III. VOLUNTARY WORK OR INVOLVEMENT IN
                   CIVIC/NON-GOVERNMENT/PEOPLE/VOLUNTARY ORGANIZATION
                 </span>
-                <span style={{ float: "right" }} onClick={() => setShowData()}>
+                <span style={{ float: "right" }}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -936,6 +958,9 @@ const TableFive = () => {
       .get(API_HOST + `new-training/${item}`)
       .then((response) => {
         setTrainingRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -1013,11 +1038,11 @@ const TableFive = () => {
           <thead>
             <tr className="fixed-label-table main-headers">
               <th colSpan="12">
-                <span style={{ float: "left" }}>
+                <span style={{ float: "left" }} onClick={() => setShowData()}>
                   VII. LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS
                   ATTENDED
                 </span>
-                <span style={{ float: "right" }} onClick={() => setShowData()}>
+                <span style={{ float: "right" }}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
