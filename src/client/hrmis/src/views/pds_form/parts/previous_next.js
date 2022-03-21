@@ -21,7 +21,7 @@ export const SuccessEmailConfirmation = () => {
               className="back-color"
               buttonName="Previous"
               onClick={() =>
-                navigate(`/ihrmis/pds-applicant/form-page-one/${item}`)
+                navigate(`/pds-applicant/form-page-one/${item}`)
               }
             />
           </div>
@@ -30,7 +30,7 @@ export const SuccessEmailConfirmation = () => {
               className="next-color"
               buttonName="Next step"
               onClick={() =>
-                navigate(`/ihrmis/pds-applicant/form-page-two/${item}`)
+                navigate(`/pds-applicant/form-page-two/${item}`)
               }
             />
           </div>

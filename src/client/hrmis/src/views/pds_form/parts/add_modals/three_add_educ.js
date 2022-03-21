@@ -146,7 +146,9 @@ const ThreeAddEducationModal = (props) => {
             <div className="from">
               <label>From</label>
               <InputComponent
-                maxLenght="4"
+                type="number"
+                max={new Date().getFullYear()}
+                min="1900"
                 name="edu_app_from"
                 value={educationPdsForm.values.edu_app_from}
                 onChange={educationPdsForm.handleChange}
@@ -162,7 +164,9 @@ const ThreeAddEducationModal = (props) => {
             <div className="to">
               <label>To</label>
               <InputComponent
-                maxLenght="4"
+                type="number"
+                max={new Date().getFullYear()}
+                min="1900"
                 name="edu_app_to"
                 value={educationPdsForm.values.edu_app_to}
                 onChange={educationPdsForm.handleChange}
@@ -180,7 +184,9 @@ const ThreeAddEducationModal = (props) => {
             <div className="yearend">
               <label>Year Graduated</label>
               <InputComponent
-                maxLenght="50"
+                type="number"
+                max={new Date().getFullYear()}
+                min="1900"
                 name="edu_app_graduated"
                 value={educationPdsForm.values.edu_app_graduated}
                 onChange={educationPdsForm.handleChange}
