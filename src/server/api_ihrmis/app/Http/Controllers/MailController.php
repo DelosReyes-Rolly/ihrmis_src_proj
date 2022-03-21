@@ -35,7 +35,7 @@ class MailController extends Controller
         
         $arrFiles=[];
 
-        if(empty($request->file(['image_upload']))){
+        if(!empty($request->file(['image_upload']))){
             foreach ($request->file(['image_upload']) as $value) {
                 array_push($arrFiles, $value);
             }    
