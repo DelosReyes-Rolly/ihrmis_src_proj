@@ -2,6 +2,7 @@
 
 // use App\Http\Controllers\PdfEmailGeneratorController;
 
+use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,3 +29,5 @@ Route::get('/send-email', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);

@@ -4223,7 +4223,8 @@ hr.solid {
 * {
   margin: 0px;
   padding: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+ Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .app {
@@ -6295,15 +6296,12 @@ input:checked + .slider:before {
   transition: 0.3s;
   background-color: #38658d;
 }
-<<<<<<< HEAD
-=======
 
 .prepared-proved .prepared-button:active {
   -webkit-transform: translateY(2px);
           transform: translateY(2px);
 }
 
->>>>>>> origin/main
 .prepared-proved .signature-render {
   position: relative;
 }
@@ -6438,9 +6436,6 @@ input:checked + .slider:before {
 .container-vacant-position {
   margin: 10px 20px;
 }
-<<<<<<< HEAD
-.regular-tab-component .reg-tab-container {
-=======
 
 .container-vacant-position .button-vacant {
   display: -webkit-box;
@@ -6459,17 +6454,12 @@ input:checked + .slider:before {
 .container-vacant-position .regular-tab-component .reg-tab-container {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
->>>>>>> origin/main
   display: inline-flex;
   flex-wrap: wrap;
   gap: 12px;
 }
-<<<<<<< HEAD
-.regular-tab-component .reg-tab-container .reg-tab {
-=======
 
 .container-vacant-position .regular-tab-component .reg-tab-container .reg-tab {
->>>>>>> origin/main
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -6478,24 +6468,16 @@ input:checked + .slider:before {
   color: rgba(70, 70, 70, 0.6);
   border-bottom: 3px solid transparent;
 }
-<<<<<<< HEAD
-.regular-tab-component .reg-tab-container .reg-tab:hover {
-=======
 
 .container-vacant-position .regular-tab-component .reg-tab-container .reg-tab:hover {
->>>>>>> origin/main
   float: inline-end;
   transition: 0.3s;
   color: #1da1f2;
   border-bottom: 3px solid #1da1f2;
   z-index: 1;
 }
-<<<<<<< HEAD
-.regular-tab-component .reg-tab-container .reg-tab-activate {
-=======
 
 .container-vacant-position .regular-tab-component .reg-tab-container .reg-tab-activate {
->>>>>>> origin/main
   font-size: 15px;
   font-weight: 600;
   border: none;
@@ -6547,30 +6529,14 @@ input:checked + .slider:before {
     margin-bottom: 5px;
   }
 }
-<<<<<<< HEAD
-.for-position-modal .position-modal-container-1 {
-=======
 
 .position-modal-container-1 {
   margin: 10px 0px 0px 0px;
 }
 
 .position-modal-container-2 {
->>>>>>> origin/main
   margin: 10px 0px 0px 0px;
   display: flex;
-<<<<<<< HEAD
-  flex-direction: row;
-}
-.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-plus {
-  color: #2fd12f;
-}
-.for-position-modal .position-modal-container-1 .pmc-hover-over-icon-minus {
-  color: #cc4040;
-}
-.for-position-modal .position-modal-container-2 {
-  margin: 10px 0px 0px 0px;
-=======
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
@@ -6604,11 +6570,14 @@ input:checked + .slider:before {
   padding: 0px 20px;
 }
 
+.vacant-position-filter {
+  margin: 0px 20px;
+}
+
 @media only screen and (max-width: 800px) {
   .three-idiot {
     padding-right: 10px;
   }
->>>>>>> origin/main
 }
 
 .blue-div {
@@ -6691,6 +6660,7 @@ input:checked + .slider:before {
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 .add-office-modal {
   display: flex;
   margin-bottom: 10px;
@@ -6723,10 +6693,10 @@ input:checked + .slider:before {
 .add-office-modal .item-modal-6 {
   width: 50%;
 }/*# sourceMappingURL=styles.css.map */
-=======
 
 .dashborad-view {
   margin: 10px 20px;
 }
 /*# sourceMappingURL=styles.css.map */
->>>>>>> origin/main
+
+/*# sourceMappingURL=styles.css.map */
