@@ -26,9 +26,13 @@ class GetVacantPositionsResource extends JsonResource
             'itm_basis' => $this->itm_basis,
             'itm_category' => $this->itm_category,
             'itm_creation' => $this->itm_creation,
+            
             //RELATIONSHIP
             'position' => new CommonResource($this->tblpositions),
             'office' => new CommonResource($this->tbloffices),
+            
         ];
     }
+
+    
 }
