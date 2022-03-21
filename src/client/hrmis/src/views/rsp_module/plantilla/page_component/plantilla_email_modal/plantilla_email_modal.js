@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
-import { Editor } from "react-draft-wysiwyg";
-import { ContentState, EditorState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SelectComponent from "../../../../common/input_component/select_component/select_component";
-import { convertToHTML } from "draft-convert";
 import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
@@ -13,10 +10,13 @@ import { API_HOST } from "../../../../../helpers/global/global_config";
 import * as Yup from "yup";
 import axios from "axios";
 import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
+import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 
 const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
   //TYPE LOGIC
   const [mType, setmType] = useState([]);
+
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 
   const selectedType = (value) => {
     // mType?.forEach((element) => {
@@ -85,22 +85,31 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
       sender: Yup.string().required("This field is required"),
       image_upload: Yup.string().required("This field is required"),
     }),
-    onSubmit: async (value) => {
+    onSubmit: async (value, { resetForm }) => {
+      renderBusy(true);
       const formData = new FormData();
       formData.append("recepient", value.recepient);
       formData.append("message_type", value.message_type);
       formData.append("message", value.message);
       formData.append("sender", value.sender);
-      imageValue.forEach((element, index) => {
-        formData.append("image_upload[" + index + "]", element);
-      });
+
+      if (imageValue != null) {
+        for (let index = 0; index < imageValue.length; index++) {
+          formData.append("image_upload[]", imageValue[index]);
+        }
+      }
 
       await axios
         .post(API_HOST + "notify-vacant-office", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then()
-        .catch();
+        .then((res) => {
+          renderSucceed({ content: "Email Sent" });
+        })
+        .catch((err) => {
+          renderFailed({ content: "Failed" });
+        });
+      renderBusy(false);
     },
   });
 
@@ -171,6 +180,7 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
         <div>
           <label>Sender:</label>
           <TextAreaComponent
+            style={{ whiteSpace: "pre-line" }}
             name="sender"
             value={emailFormik.values.sender}
             onChange={emailFormik.handleChange}
@@ -191,7 +201,7 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
             isMulti={true}
             onChange={(e) => {
               const files = Array.prototype.slice.call(e.target.files);
-              setImageValue(files);
+              setImageValue(e.target.files);
             }}
           />
           {emailFormik.touched.image_upload &&
