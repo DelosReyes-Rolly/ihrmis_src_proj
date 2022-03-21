@@ -1,16 +1,20 @@
 import React, { useRef, useState } from "react";
 
 const UploadAttachmentComponent = ({
-  onChange = null,
+  formik,
   name,
   isMulti = false,
   type,
+  accept,
+  value,
+  onChange,
 }) => {
   const [files, setFiles] = useState([]);
   const fileRef = useRef();
 
   const removeFile = () => {
     fileRef.current.value = null;
+    formik.setFieldValue(name, "");
     setFiles([]);
   };
 
@@ -26,7 +30,7 @@ const UploadAttachmentComponent = ({
     <React.Fragment>
       <div className="upload-input-design">
         <div className="div-file-container">
-          <div className="file-holder">
+          <div className="file-holder" onClick={() => fileRef.current.click()}>
             {Array.from(files)?.map((value, id) => {
               return (
                 <div key={id}>
@@ -50,11 +54,14 @@ const UploadAttachmentComponent = ({
       <input
         ref={fileRef}
         name={name}
+        value={value}
         multiple={isMulti}
         id="upload-attachment"
         type={type ?? "file"}
         hidden
+        accept={accept}
         onChange={(e) => {
+          formik.handleChange(e);
           if (onChange !== null) {
             onChange(e);
           }

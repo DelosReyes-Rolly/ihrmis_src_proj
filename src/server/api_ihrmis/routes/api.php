@@ -13,6 +13,7 @@ use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -133,18 +134,26 @@ Route::get('get-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, 
 Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
 
 //=======================================================================================
-// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+// OTHER RESOURCES
 //=======================================================================================
-Route::post('login', [AuthenticationController::class, "loginUser"]);
-Route::post('register', [AuthenticationController::class, "registerUser"]);
-
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
 
+//=======================================================================================
+// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
+
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+
+//=======================================================================================
+// MAIL CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('mail-types', [MailController::class, "getMailType"]);
+Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 
 //legee updates
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);

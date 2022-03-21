@@ -13,6 +13,9 @@
     .file-holder {
       @include containerFlexRow(true);
       width: 90%;
+      height: 100%;
+      // background: black;
+      align-items: center;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
