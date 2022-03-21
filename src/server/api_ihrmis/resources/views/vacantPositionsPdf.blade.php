@@ -68,15 +68,18 @@
             @foreach( $vacantpositions ?? '' as $data)
                 <tr>
 
-                    <td>{{ $data->office_name }}</td> 
-                    <td>{{ $data->position_title }}</td>
+                    <td>{{ $data->tbloffices->ofc_name }}</td> 
+                    <td>{{ $data->tblpositions->pos_title .' Salary Grade ' 
+                        . $data->tblpositions->pos_salary_grade	
+                        }}
+                    </td>
                     <td>{{ $data->itm_no }}</td>
-                    <td>{{ $data->itm_no }}</td>
-                    <td>{{ $data->itm_no }}</td>
-                    <td>{{ $data->itm_no }}</td>
-                    <td>{{ $data->itm_no }}</td>
+                    <td>{{ $data->positionswithcscstandards->education }}</td>
+                    <td>{{ $data->positionswithcscstandards->experience }}</td>
+                    <td>{{ $data->positionswithcscstandards->training }}</td>
+                    <td>{{ $data->positionswithcscstandards->eligibility }}</td>
                     <td>{{ $data->itm_function }}</td>
-                    <td>{{ $data->itm_no }}</td>
+                    <td>{{ "Todo: Lorem Epsum" }}</td>
                 </tr>
             @endforeach 
         </tbody>

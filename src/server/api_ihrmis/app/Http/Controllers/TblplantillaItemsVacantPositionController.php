@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TblplantillaItems;
-use App\Models\TblplantillaVacantPositions;
+use App\Http\Resources\Plantilla\GetVacantPositionsResource;
+use App\Services\PlantillaItems\PlantillaItemsService;
 
 
 /**
@@ -15,7 +15,7 @@ class TblplantillaItemsVacantPositionController extends Controller {
 
     public function __construct() {
 
-        $this->tblPantillaVacantPos = new TblplantillaVacantPositions();
+        $this->tblPantillaVacantPos = new PlantillaItemsService();
     }
 
     /**
@@ -24,7 +24,7 @@ class TblplantillaItemsVacantPositionController extends Controller {
      */
     public function getVacantPositions( $type) {
         
-        return $this->tblPantillaVacantPos->getVacantPositions($type) ;
+        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos::getVacantPositions($type)) ;
 
     }
 
