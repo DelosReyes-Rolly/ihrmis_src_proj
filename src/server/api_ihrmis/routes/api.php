@@ -134,18 +134,18 @@ Route::get('get-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, 
 Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class, "addDutiesAndResponsibilities"]);
 
 //=======================================================================================
-// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
-//=======================================================================================
-Route::post('login', [AuthenticationController::class, "loginUser"]);
-Route::post('register', [AuthenticationController::class, "registerUser"]);
-
-//=======================================================================================
 // OTHER RESOURCES
 //=======================================================================================
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
+
+//=======================================================================================
+// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+//=======================================================================================
+Route::post('login', [AuthenticationController::class, "loginUser"]);
+Route::post('register', [AuthenticationController::class, "registerUser"]);
 
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 
@@ -155,6 +155,7 @@ Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::
 Route::get('mail-types', [MailController::class, "getMailType"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 
-
-
+//legee updates
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
 
