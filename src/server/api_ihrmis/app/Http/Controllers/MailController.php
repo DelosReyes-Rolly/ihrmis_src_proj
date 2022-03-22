@@ -6,6 +6,7 @@ use App\Http\Resources\CommonResource;
 use App\Http\Resources\Email\GetEmailTypeResource;
 use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\TblemailType;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -33,10 +34,13 @@ class MailController extends Controller
     {
         
         $arrFiles=[];
-        foreach ($request['image_upload'] as $value) {
-            array_push($arrFiles, $value);
+
+        if(!empty($request->file(['image_upload']))){
+            foreach ($request->file(['image_upload']) as $value) {
+                array_push($arrFiles, $value);
+            }    
         }
-        
+
         // Getting all the email where to send to
         $rawRecepient = explode(",", $request->recepient);
 
@@ -44,10 +48,13 @@ class MailController extends Controller
         foreach ($rawRecepient as $value) {
             array_push($arrHolder, trim($value, " "));
             $data = [
+                "from" => env("MAIL_FROM_RECUITER"),
+                "email_from" => env("MAIL_FROM_ADDRESS"),
                 "email_to" => trim($value, " "),
+                "date" => Carbon::now(),
                 "message_type" => $request->message_type,
                 "message" => $request->message,
-                "sender" => $request->sender,
+                "sender" => nl2br($request->sender),
                 "file" => $arrFiles
             ];
             Mail::to(trim($value," "))->send(new NotifyVacantPlantillaEmail($data));
