@@ -1,10 +1,10 @@
 .button-components {
-  padding: 5px 12px 5px 12px;
+  padding: 7px 15px 7px 15px;
   border: none;
   color: white;
-  background: #4276a4;
+  background: map-get($primaryColor, regular);
   border-radius: 5px;
-  border: 1px solid #4276a4;
+  border: 1px solid map-get($primaryColor, regular);
   font-weight: 600;
   display: flex;
   flex-direction: row;

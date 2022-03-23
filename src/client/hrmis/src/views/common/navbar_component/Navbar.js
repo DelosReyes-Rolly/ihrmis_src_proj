@@ -12,10 +12,9 @@ import { openSideBar } from "../../../features/reducers/mobile_view_slice";
 import { useToggleService } from "../../../services/toggle_service";
 import BadgeComponents from "../badge_component/Badge";
 
-const NavbarComponent = (props) => {
+const NavbarComponent = ({}) => {
   let [dropState, updateDropState] = useToggleService(false);
   let dispatch = useDispatch();
-  let today = new Date();
   const [timeDataState, setTimeDataState] = useState();
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const NavbarComponent = (props) => {
     <div className="navbar-div">
       <nav>
         <h1>
-          <span className="navbar-span-1 margin-right-1">HRMiS</span>
+          <span className="navbar-span-1 margin-right-1">iHRMiS</span>
           <span className="navbar-span-2">
             <p>&copy; 2021 DOST</p>
           </span>
@@ -83,7 +82,6 @@ const NavbarComponent = (props) => {
             </span>
             <span className="user-name-display">Juan Dela Cruz </span>
             <span className="user-drop-arrow">
-              {" "}
               <AiFillCaretDown size="12px" />
             </span>
             <ul

@@ -4,72 +4,69 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: #4880B3;
+  background-color: $navbar-color;
   padding: 0px 10px;
 }
-  
+//#4880B3
 .navbar-div nav {
   display: flex;
   justify-content: space-between;
   align-self: center;
   padding: 5px 10px;
 }
-  
-  .navbar-div nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
-  }
-  
-  .navbar-div nav ul {
-    display: flex;
-    justify-content: center !important;
-    align-self: center;
-    list-style: none;
-  }
-  
-  .navbar-div nav ul li {
-    color: aliceblue;
-    display: flex;
-    text-align: center;
-  }
-  
-  .navbar-div nav ul li span {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .navbar-div nav h1 {
-    display: flex;
-    align-items: baseline;
-  }
-  
-  .navbar-div nav h1 .navbar-span-1 {
-    color: aliceblue;
-    margin: 0px 10px 0px 0px;
-    letter-spacing: 2px;
-    font-weight: 900;
-  }
 
-  .navbar-div nav h1 .navbar-span-2 {
-    margin: 0px 50px 0px 0px;
-    font-size: 10px;
-    color: rgba(255, 255, 255, 0.5);
-  }
+.navbar-div nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+}
 
+.navbar-div nav ul {
+  display: flex;
+  justify-content: center !important;
+  align-self: center;
+  list-style: none;
+}
 
-  .navbar-div nav h1 .navbar-span-3 {
-    
-    font-size: 12px;
-    font-weight: 600;
-    color: white;
+.navbar-div nav ul li {
+  color: aliceblue;
+  display: flex;
+  text-align: center;
+}
 
-  }
-  
+.navbar-div nav ul li span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-div nav h1 {
+  display: flex;
+  align-items: baseline;
+}
+
+.navbar-div nav h1 .navbar-span-1 {
+  color: aliceblue;
+  margin: 0px 10px 0px 0px;
+  letter-spacing: 2px;
+  font-weight: 900;
+}
+
+.navbar-div nav h1 .navbar-span-2 {
+  margin: 0px 50px 0px 0px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-div nav h1 .navbar-span-3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
 /* NOTIFICATION DISPLAY STARTS HERE  */
-.notification{
+.notification {
   position: relative !important;
   display: inline-block !important;
   padding: 7px;
@@ -77,11 +74,11 @@
 }
 
 .notification:hover {
-  transition-duration: .3s;
-  background-color: rgba(0, 0, 0, .2);
+  transition-duration: 0.3s;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
-.add-style-badge{
+.add-style-badge {
   /* display: inline-block;
   justify-content: center;
   align-items: center; */
@@ -92,15 +89,14 @@
   background-color: crimson; */
   position: absolute;
   top: -2px;
-  left  : -5px;
+  left: -5px;
 }
 
 /* NOTIFICATION DISPLAY ENDS HERE  */
 
-
 /* USER DROPDOWN DISPAY STARTS HERE  */
 
-.user-dropdown{
+.user-dropdown {
   display: inline-flex;
   justify-content: space-between;
   align-items: center;
@@ -108,12 +104,12 @@
   border-radius: 7px;
 }
 
-.user-dropdown:hover{
-  transition-duration: .3s;
-  background-color: rgba(0, 0, 0, .2);
+.user-dropdown:hover {
+  transition-duration: 0.3s;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
-.user-name-display{
+.user-name-display {
   font-size: 14px;
   margin: 0px 5px;
 }
@@ -125,7 +121,7 @@
   border-radius: 50%;
 }
 
-.user-drop-option{
+.user-drop-option {
   top: 43px;
   right: 20px;
   position: absolute !important;
@@ -136,16 +132,16 @@
   box-shadow: 0px 0px 20px #00000022;
 }
 
-.user-arrow-up{
-  top: -9px; 
+.user-arrow-up {
+  top: -9px;
   right: 10px;
-  color: white; 
+  color: white;
   position: absolute !important;
 }
 
-.user-drop-option li a{
+.user-drop-option li a {
   /* margin: 10px 15px; */
-  color: rgba(0, 0, 0, .7) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
   width: 100%;
   justify-content: start;
   text-align: start;
@@ -153,27 +149,27 @@
   text-decoration: none;
 }
 
-.user-drop-option li a:hover{
-  transition-duration: .3s;
+.user-drop-option li a:hover {
+  transition-duration: 0.3s;
   background-color: rgba(0, 110, 255, 0.1);
 }
 
-.menu-on-mobile{
+.menu-on-mobile {
   display: none !important;
 }
 
 /* USER DROPDOWN DISPAY ENDS HERE  */
 
-
-@media only screen and (max-width: 800px){
-  .navbar-span-3, .navbar-span-2{
+@media only screen and (max-width: 800px) {
+  .navbar-span-3,
+  .navbar-span-2 {
     display: none;
   }
 
-  .menu-on-mobile{
+  .menu-on-mobile {
     display: block !important;
   }
-  .user-dropdown{
+  .user-dropdown {
     display: none !important;
   }
 }

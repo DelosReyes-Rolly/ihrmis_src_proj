@@ -7,6 +7,7 @@ const TextAreaComponent = (props) => {
       className="textarea-component"
       ref={props.ref}
       id={props.id}
+      styles={props.styles}
       name={props.name}
       onChange={props.onChange}
       maxLength={props.maxLength}

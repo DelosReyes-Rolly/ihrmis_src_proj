@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
@@ -58,9 +58,9 @@ function DropdownViewComponent({
 export default DropdownViewComponent;
 
 /**
- * itemList is an Object containing;
+ * itemList is an array of object where each Object contains these keys;
  * - label
- * - link = ""
+ * - link
  */
 
 const DropList = ({ itemList = [], display = "none", onClick }) => {
