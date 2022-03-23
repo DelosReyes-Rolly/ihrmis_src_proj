@@ -23,22 +23,26 @@ class AuthenticationController extends Controller
             'password' => 'required|string|min:8',
         ]);
     
-                $user = User::create([
-                    'user' => $validatedData['user'],
-                    'email' => $validatedData['email'],
-                    'password' => Hash::make($validatedData['password']),
-                ]);
-    
-            $token = $user->createToken('auth_token')->plainTextToken;
-    
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
+        $user = User::create([
+            'user' => $validatedData['user'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 
     public function loginUser(Request $request)
     {
+        return response()->json([
+            "request" => $request
+        ]);
+        
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
             'message' => 'Invalid login details'

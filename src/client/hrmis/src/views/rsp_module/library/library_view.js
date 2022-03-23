@@ -11,7 +11,16 @@ import TagsInputComponent from "../../common/input_component/tags_input_componen
 import { useToggleService } from "../../../services/toggle_service.js";
 import PlantillaEmailModal from "../plantilla/page_component/plantilla_email_modal/plantilla_email_modal.js";
 import PositionModal from "../plantilla/page_component/plantilla_info_modals/position_modal";
+import DropdownViewComponent from "../../common/dropdown_menu_custom_component/Dropdown_view.js";
+import { MdMoreHoriz } from "react-icons/md";
 //Main Component
+
+const data = [
+  { label: "asdfasdfasd", link: "dhezsd" },
+  { label: "dfas", link: "" },
+  { label: "asdfasddfdsfasd", link: "" },
+];
+
 const LibraryView = () => {
   //STATES/HOOK
   const [showModal, setShowModal] = useToggleService(false); //SHOW MODAL HOOK
@@ -39,6 +48,16 @@ const LibraryView = () => {
 
       <br />
       <TagsInputComponent />
+
+      <br />
+      <div style={{ float: "right" }}>
+        <DropdownViewComponent
+          className="sadfasdf"
+          itemList={data}
+          alignItems="end"
+          title={<MdMoreHoriz />}
+        />
+      </div>
     </div>
   );
 };

@@ -1,86 +1,79 @@
-.sidebar-menu{
-    position: fixed;
-    width: 250px;
-    height: 100%;
-    background: #305778;
-    transition: 0.5s;
-    overflow: hidden;
-    // box-sizing: border-box;
-    color: whitesmoke;
-    font-size: 14px;
-    z-index: 100;
+/*  | NEW COMPONENT STYLE
+    | By: Terrence Calzada
+    | MARCH 23, 2021
+*/
+.sidebar-component-style-second {
+  width: 250px;
 }
+.sidebar-component-style {
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  background: $login-color;
+  color: whitesmoke;
+  font-size: 14px;
+  z-index: 100;
 
-ul{
-    list-style: none;
-}
+  .sidebar-menu-items {
+    margin: 20px 0px;
+    .list-of-items {
+      .items {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 10px;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s;
+        div {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          align-items: center;
+        }
+      }
+      .items:hover {
+        background-color: $navbar-color;
+        color: white;
+      }
 
-ul .item-list{
-    display: flex;
-    align-items: center; 
-}
-
-ul .item-list:hover, .item-list-activate{
-    transition: .2s;
-    color: rgba(0, 0, 0, .8);
-    background-color: #A9C4EB;
-}
-
-.item-list-activate{
-    color: rgba(0, 0, 0, .8);
-    background-color: #A9C4EB;
-}
-
-.parag-link{
-    margin-top: 6px;
-    margin-left: 30px;
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, .5);
-}
-
-.sub-menu-list{
-    display: block;
-    color: rgba(255, 255, 255, .7);
-}
-
-.sub-menu-list-close{
-    display: none;
-    color: rgba(255, 255, 255, .7);
-}
-
-.sub-menu-list li{
-    /* margin-top: 4px; */
-    color: rgba(255, 255, 255, .7);
-    padding-left: 53px;
-}
-
-.sub-menu-list li:hover{
-    transition: .2s;
-    color: whitesmoke;
-    background-color: #4276A4;
-}
-
-.router-link{
-    text-decoration: none;
-    color: white;
-}
-
-.router-link-1{
-    text-decoration: none;
-    color: rgba(0, 0, 0, .8);
-}
-
-
-@media only screen and (max-width: 800px){
-    .sidebar-menu{
-        display: none;
-        
+      .sub-item {
+        color: white;
+        padding: 8px 10px;
+        box-sizing: border-box;
+        width: 100%;
+        cursor: pointer;
+        transition: 0.5s;
+      }
+      .sub-item:hover {
+        background-color: map-get($blackColor, 600);
+        color: white;
+      }
     }
+  }
+}
 
-    .display-mobile-menu{
-        display: block;
-        z-index: 10000000;
-        position: fixed;
-    }
+@media only screen and (max-width: 800px) {
+  .sidebar-component-style-second {
+    width: 0px;
+  }
+}
+
+.rotateArrow-enter {
+  transform: rotate(-180deg);
+  transition: transform 300ms;
+}
+.rotateArrow-enter-active {
+  transform: rotate(0deg);
+  transition: transform 300ms;
+}
+.rotateArrow-exit {
+  transform: rotate(180deg);
+}
+.rotateArrow-exit-active {
+  transform: rotate(0deg);
+  transition: transform 300ms;
 }

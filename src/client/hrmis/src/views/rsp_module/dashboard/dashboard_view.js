@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useLayoutEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import ButtonComponent from "../../common/button_component/button_component.js.js";
 import { useToggleService } from "../../../services/toggle_service.js";
 import AddOfficeModal from "./AddOfficeModal.js";
@@ -18,12 +18,12 @@ import {
   apiModelOfficeAreaType,
 } from "./static/input_items.js";
 
-const DashboardView = (props) => {
+const DashboardView = ({}) => {
   let [toggleOfficeModal, setToggleOfficeModal] = useToggleService(false);
-  const {getSecondLevel } = crumbSecondLevel();
+  const { getSecondLevel } = crumbSecondLevel();
   const [plotOfficeData, setOfficeData] = useState([]);
   const { isRefresh } = useSelector((state) => state.popupResponse);
-  const { trueValue, displayData } = useSelectValueCon();
+  const { trueValue } = useSelectValueCon();
   const offceDataApi = async () => {
     await axios
       .get(API_HOST + "getOffices")
@@ -59,6 +59,7 @@ const DashboardView = (props) => {
       })
       .catch((error) => {});
   };
+
   useEffect(() => {
     offceDataApi();
   }, [isRefresh]);
@@ -126,6 +127,7 @@ const DashboardView = (props) => {
     ],
     []
   );
+
   const initialState = {
     hiddenColumns: [
       "ofc_type",
@@ -136,6 +138,7 @@ const DashboardView = (props) => {
       "ofc_area_type",
     ],
   };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -155,29 +158,31 @@ const DashboardView = (props) => {
     useGlobalFilter,
     useSortBy
   );
+
   const [dataState, setDataState] = useState();
   const passModalData = (param) => {
     setDataState(param);
     setToggleOfficeModal();
   };
 
-  const { globalFilter } = state;
+  // const { globalFilter } = state;
 
   return (
-    <div style={{ margin: "20px" }}>
+    <div>
       <BreadcrumbConfig array={getSecondLevel(1)} />
-      <div className="dashborad-view">
-        <div className="header-account-name">
+      <div style={{ margin: 20 }}>
+        <div className="">
           Welcome <strong>Jessica Moral!</strong>
         </div>
         <br />
+        <h1>JC</h1>
+        <br />
+        <ButtonComponent
+          onClick={() => setToggleOfficeModal()}
+          buttonName="Office"
+        />
       </div>
-      <h1>JC</h1>
-      <br />
-      <ButtonComponent
-        onClick={() => setToggleOfficeModal()}
-        buttonName="Office"
-      />
+
       <AddOfficeModal
         isDisplay={toggleOfficeModal}
         onClose={() => {
@@ -186,6 +191,7 @@ const DashboardView = (props) => {
         }}
         officeData={dataState}
       />
+
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
           <thead>
