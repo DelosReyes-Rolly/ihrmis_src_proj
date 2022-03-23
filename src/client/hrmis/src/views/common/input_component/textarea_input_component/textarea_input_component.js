@@ -14,7 +14,9 @@ const TextAreaComponent = (props) => {
       placeholder={props.placeHolder}
       value={props.value}
       readOnly={props.readOnly}
-    ></textarea>
+    >
+      {props.defaultValue}
+    </textarea>
   );
 };
 

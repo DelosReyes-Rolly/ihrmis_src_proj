@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
-import { Editor } from "react-draft-wysiwyg";
-import { ContentState, EditorState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SelectComponent from "../../../../common/input_component/select_component/select_component";
-import { convertToHTML } from "draft-convert";
 import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
@@ -17,7 +14,6 @@ import RichTextEditorComponent from "../../../../common/rich_text_editor_compone
 const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
   //TYPE LOGIC
   const [mType, setmType] = useState([]);
-
   const selectedType = (value) => {
     // mType?.forEach((element) => {
     //   if (value === element.title) {
@@ -172,7 +168,11 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
           <label>Sender:</label>
           <TextAreaComponent
             name="sender"
-            value={emailFormik.values.sender}
+            value={
+              emailFormik.values.sender == ""
+                ? "Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City"
+                : emailFormik.values.sender
+            }
             onChange={emailFormik.handleChange}
           />
           {emailFormik.touched.sender && emailFormik.errors.sender ? (

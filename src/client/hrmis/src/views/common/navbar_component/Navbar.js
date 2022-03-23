@@ -19,7 +19,7 @@ const NavbarComponent = (props) => {
   const [timeDataState, setTimeDataState] = useState();
 
   useEffect(() => {
-    setInterval(() => {
+    const timer = setInterval(() => {
       setTimeDataState(
         new Date().toLocaleString("en-US", {
           weekday: "long",
@@ -35,6 +35,10 @@ const NavbarComponent = (props) => {
         })
       );
     }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   return (
