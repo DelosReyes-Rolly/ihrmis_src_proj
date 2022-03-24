@@ -12,7 +12,12 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import FilterPlantillaItems from "./filter_plantilla_items";
-import SelectTableComponent from "./select_table_component.js";
+import {
+	plantillaItemsVacantPosMenuItems,
+	tableHeaderColumnName,
+} from "../../static/plantilla_vacant_positions_data";
+import { MdMoreHoriz } from "react-icons/md";
+import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
 
 /**
  * PlantillaDataTableDisplay
@@ -22,6 +27,7 @@ import SelectTableComponent from "./select_table_component.js";
 export const PlantillaDataTableDisplay = ({ type }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
+
 	const plantillaItemApi = async () => {
 		await axios
 			.get(API_HOST + "vacantpositions/" + type)
@@ -56,35 +62,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 
 	let data = useMemo(() => plotData, [plotData]);
 
-	const columns = useMemo(
-		() => [
-			{
-				Header: "Item ID.",
-				accessor: "itm_id", // accessor is the "key" in the data
-			},
-			{
-				Header: "Item No.",
-				accessor: "itm_no", // accessor is the "key" in the data
-			},
-			{
-				Header: "Position",
-				accessor: "pos_short_name",
-			},
-			{
-				Header: "Office",
-				accessor: "ofc_acronym",
-			},
-			{
-				Header: "Status",
-				accessor: "itm_status",
-			},
-			{
-				Header: "Category",
-				accessor: "pos_category",
-			},
-		],
-		[]
-	);
+	const columns = useMemo(() => tableHeaderColumnName, []);
 
 	const initialState = { hiddenColumns: ["pos_category", "itm_id"] };
 
@@ -152,7 +130,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 			);
 		}
 	);
-
+	let countId = 0;
 	return (
 		<React.Fragment>
 			<FilterPlantillaItems
@@ -192,13 +170,35 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 					</thead>
 
 					<tbody {...getTableBodyProps()}>
-						{rows.map((row) => {
+						{rows.map((row, i) => {
 							prepareRow(row);
 							return (
-								<tr className="trHoverBody" {...row.getRowProps()}>
-									{row.cells.map((cell) => {
+								<tr className="trHoverBody" {...row.getRowProps()} key={i}>
+									{row.cells.map((cell, index, arr) => {
+										if (index === arr.length - 1) {
+											countId++;
+											return (
+												<td {...cell.getCellProps()}>
+													<div
+														style={{
+															display: "flex",
+															justifyContent: "space-between",
+														}}
+													>
+														<div>{cell.render("Cell")}</div>
+														<DropdownViewComponent
+															itemList={plantillaItemsVacantPosMenuItems}
+															title={<MdMoreHoriz size="15" />}
+															alignItems="end"
+														/>
+													</div>
+												</td>
+											);
+										}
 										return (
-											<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+											<td {...cell.getCellProps()} key={i}>
+												{cell.render("Cell")}
+											</td>
 										);
 									})}
 								</tr>

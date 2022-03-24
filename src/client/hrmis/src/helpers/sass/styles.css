@@ -4530,12 +4530,12 @@ ul.breadcrumb li span:hover {
   width: max-content;
   background-color: white;
   padding: 4px 0px;
-  top: 26px;
-  right: -3px;
+  top: 17px;
   -webkit-box-shadow: 0 0px 20px #00000011;
           box-shadow: 0 0px 20px #00000011;
   text-decoration: none;
   z-index: 1;
+  border-radius: 2px;
 }
 
 .ul-menu-item {
@@ -4549,7 +4549,7 @@ ul.breadcrumb li span:hover {
 .ul-menu-item-arrow {
   margin: 0;
   position: absolute;
-  top: -9px;
+  top: -11px;
   right: 4px;
   color: white;
 }
