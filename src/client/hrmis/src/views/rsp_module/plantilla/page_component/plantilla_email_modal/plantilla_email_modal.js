@@ -15,9 +15,7 @@ import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
   //TYPE LOGIC
   const [mType, setmType] = useState([]);
-
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-
   const selectedType = (value) => {
     // mType?.forEach((element) => {
     //   if (value === element.title) {
@@ -182,7 +180,11 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
           <TextAreaComponent
             style={{ whiteSpace: "pre-line" }}
             name="sender"
-            value={emailFormik.values.sender}
+            value={
+              emailFormik.values.sender == ""
+                ? "Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City"
+                : emailFormik.values.sender
+            }
             onChange={emailFormik.handleChange}
           />
           {emailFormik.touched.sender && emailFormik.errors.sender ? (
