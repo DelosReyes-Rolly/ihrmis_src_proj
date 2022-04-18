@@ -13,8 +13,6 @@ const CheckJobCompetency = ({ data, title, jvsId, type, isEmpty }) => {
 
   const changeStateFunc = (value) => {
     setSpecify(value);
-    if (type === "ED") {
-    }
     switch (type) {
       case "ED":
         dispatch(

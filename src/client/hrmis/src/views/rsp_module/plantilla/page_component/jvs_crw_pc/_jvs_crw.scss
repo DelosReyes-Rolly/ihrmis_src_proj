@@ -12,13 +12,16 @@
   }
 }
 
-/* select vertion */
+/* select version */
 .version-dropdown {
-  text-align: right;
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
 }
 
 .select-version {
-  padding: 5px 10px;
+  padding: 7px 10px;
   color: rgba(4, 17, 32, 0.8);
   background-color: white;
   border-radius: 5px;

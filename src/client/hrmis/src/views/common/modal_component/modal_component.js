@@ -6,6 +6,7 @@ const ModalComponent = (props) => {
   const modalViewFunction = () => {
     return (
       <div className="modal-component-div">
+        {props.addElement}
         <form onSubmit={props.onSubmit}>
           <div className="mcf-header">
             <h3>{props.title}</h3>
@@ -42,8 +43,8 @@ const ModalComponent = (props) => {
                 />
               </div>
             )}
-
-            <div className="margin-left-1">
+            {props.addExtraButton}
+            <div className="">
               <ButtonComponent
                 type={props.onSubmitType}
                 buttonName={props.onSubmitName}

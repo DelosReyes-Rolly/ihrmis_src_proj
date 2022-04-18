@@ -2,12 +2,7 @@ import React, { useRef, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
-function DropdownViewComponent({
-  title,
-  className,
-  itemList,
-  alignItems = "start",
-}) {
+function DropdownViewComponent({ title, className, itemList, alignItems = "start" }) {
   const [dropable, setDropable] = useState(false);
   const timerRef = useRef();
   const navigate = useNavigate();
@@ -44,13 +39,7 @@ function DropdownViewComponent({
       >
         {title}
       </button>
-      {itemList && (
-        <DropList
-          itemList={itemList}
-          display={dropable ? "block" : "none"}
-          onClick={selectedProperty}
-        />
-      )}
+      {itemList && <DropList itemList={itemList} display={dropable ? "block" : "none"} onClick={selectedProperty} />}
     </div>
   );
 }
@@ -72,11 +61,7 @@ const DropList = ({ itemList = [], display = "none", onClick }) => {
         </div>
         {itemList?.map((element, key) => {
           return (
-            <li
-              className="ul-menu-item"
-              onClick={() => onClick(element.link)}
-              key={key}
-            >
+            <li className="ul-menu-item" onClick={() => onClick(element.link)} key={key}>
               {element.label}
             </li>
           );

@@ -14,16 +14,19 @@ import {
   setEducation,
   setEligibility,
   setIsEmptyCompetency,
+  setMinimumRequirement,
   setOffice,
   setPlantilla,
   setPosition,
   setTotalWeight,
   setTraining,
+  setVersionSelected,
   setWorkExp,
 } from "../../../../../../../features/reducers/jvscrw_slice";
 import { setBusy } from "../../../../../../../features/reducers/popup_response";
 import DutiesResponsibilityTable from "../duties_responsibility_table";
-import { bubbleSort } from "../../../../../../../helpers/bubble_sort_helper";
+import { useParams } from "react-router-dom";
+import ButtonComponent from "../../../../../../common/button_component/button_component.js";
 
 // TODO: change jvsId to actual value
 
@@ -40,13 +43,25 @@ const JvsFormOne = ({ itemId }) => {
     training,
     experience,
     competencies,
+    minimum_req,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
+  const { item } = useParams();
 
+  const [itemJvsVersions, setItemJvsVersions] = useState();
+  const [version, setVersions] = useState([]); // ALL VERSIONS ARE RECORDED
+  // const [verSelected, setVerSelected] = useState(); // THIS IS THE CURRENT VERSION SELECTED
+
+  const [jvscrwID, setJvscrwID] = useState(); // THIS IS FOR ACQUIRING JVS ID
+
+  const versionSelectedFetch = (jvs_id) => {
+    fetchJvsDutiesResponsibityOnLoad(jvs_id);
+    fetchCompetenciesOnLoad(jvs_id);
+  };
   // FETCH COMPETENCY TYPES
   const fetchCscQualificationOnLoad = async () => {
     dispatch(setBusy(true));
-    await axios.get(API_HOST + "jvscrw/1").then((res) => {
+    await axios.get(API_HOST + "jvscrw/" + item).then((res) => {
       dispatch(setPlantilla(res.data.data.itm_no));
       dispatch(setPosition(res.data.data.position));
       dispatch(setOffice(res.data.data.office));
@@ -66,9 +81,9 @@ const JvsFormOne = ({ itemId }) => {
     dispatch(setBusy(false));
   };
 
-  const fetchJvsDutiesResponsibityOnLoad = async () => {
+  const fetchJvsDutiesResponsibityOnLoad = async (jvsId) => {
     await axios
-      .get(API_HOST + "jvscrw-duty-responsibility/1")
+      .get(API_HOST + "jvscrw-duty-responsibility/" + jvsId)
       .then((res) => {
         dispatch(setDutyResponsibility(res.data.data));
       })
@@ -85,9 +100,9 @@ const JvsFormOne = ({ itemId }) => {
     };
   };
 
-  const fetchCompetenciesOnLoad = async () => {
+  const fetchCompetenciesOnLoad = async (jvsId) => {
     await axios
-      .get(API_HOST + "jvscrw-rating/1")
+      .get(API_HOST + "jvscrw-rating/" + jvsId)
       .then((res) => {
         let data = res.data.data;
         let com_education = {},
@@ -149,21 +164,70 @@ const JvsFormOne = ({ itemId }) => {
       .catch((err) => console.log(err));
   };
 
+  const fetchJvsAllVersion = () => {
+    axios
+      .get(API_HOST + "jvscrw-get-jvs-ver/" + item)
+      .then((res) => {
+        const dataVersion = res.data.data;
+        setItemJvsVersions(dataVersion);
+        let verJvs = [];
+        dataVersion.forEach((element) => {
+          verJvs.push({
+            value: element.jvs_version,
+            label: element.jvs_version,
+          });
+        });
+        setJvscrwID(dataVersion[0].jvs_id);
+        setVersions(verJvs);
+      })
+      .catch((err) => {});
+  };
+
+  const jvsVersionOnChange = (e) => {
+    itemJvsVersions?.forEach((element) => {
+      if (e.target.value == element.jvs_version) {
+        setJvscrwID(element.jvs_id);
+        dispatch(setVersionSelected(element.jvs_version));
+      }
+    });
+  };
+
   useEffect(() => {
-    fetchJvsDutiesResponsibityOnLoad();
+    fetchJvsAllVersion();
     fetchCscQualificationOnLoad();
-    fetchCompetenciesOnLoad();
   }, []);
+
+  useEffect(() => {
+    if (jvscrwID) {
+      versionSelectedFetch(jvscrwID);
+    }
+  }, [jvscrwID]);
+
+  useEffect(() => {
+    if (version) {
+      console.log(version);
+      dispatch(setVersionSelected(version[0]?.value));
+    }
+  }, [version]);
 
   return (
     <React.Fragment>
       <div className="form-header">
-        <br />
-        <img src={dostLogo} width="50px" height="50px" alt="dost-logo" />
-        <h3>Department of Science and Technology</h3>
-        <p>General Santos Avenue, Bicutan Taguig City</p> <br />
-        <br />
-        <h2>JOB VACANCY SPECIFICATION & CRITERIA RATING FORM</h2>
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
+          <img src={dostLogo} width="50px" height="50px" alt="dost-logo" />
+          <h3>Department of Science and Technology</h3>
+          <p>General Santos Avenue, Bicutan Taguig City</p> <br />
+          <h2>JOB VACANCY SPECIFICATION & CRITERIA RATING FORM</h2>
+        </div>
       </div>
       <br />
       <br />
@@ -171,13 +235,25 @@ const JvsFormOne = ({ itemId }) => {
       <div className="version-dropdown">
         <span>Version</span>
         <span className="margin-left-1">
-          <select defaultValue={"DEFAULT"} className="select-version">
+          <select
+            // value={version_selected}
+            className="select-version"
+            onChange={(e) => jvsVersionOnChange(e)}
+          >
             <option value="DEFAULT" disabled>
               Select version
             </option>
-            <option value="1">1</option>
-            <option value="2">2</option>
+            {version?.map((element) => {
+              return (
+                <option key={element.value} value={element.value}>
+                  {element.label}
+                </option>
+              );
+            })}
           </select>
+        </span>
+        <span className="margin-left-1">
+          <ButtonComponent buttonName="New" />
         </span>
       </div>
       <br />
@@ -289,21 +365,21 @@ const JvsFormOne = ({ itemId }) => {
       <WeightingTable
         title="EDUCATION"
         type="ED"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_education.tbl_com_type}
       />
       <br />
       <WeightingTable
         title="RELEVANT TRAINING"
         type="TR"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_training.tbl_com_type}
       />
       <br />
       <WeightingTable
         title="RELEVANT EXPERIENCE"
         type="EX"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_experience.tbl_com_type}
       />
       <br />
@@ -312,7 +388,14 @@ const JvsFormOne = ({ itemId }) => {
         REQUIRED JOB COMPETENCY
       </h3>
       <div style={{ marginBottom: "5px" }}>
-        <TextAreaComponent row="2" />
+        <TextAreaComponent
+          value={minimum_req}
+          onChange={(e) => {
+            dispatch(setMinimumRequirement(e.target.value));
+            console.log(minimum_req);
+          }}
+          row="2"
+        />
       </div>
       <span
         style={{ color: "#4276A4", fontSize: "12px", fontWeight: "normal" }}
@@ -322,37 +405,37 @@ const JvsFormOne = ({ itemId }) => {
       <CheckJobCompetency
         title="Written Exam"
         type="WE"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_writtenExam}
       />
       <CheckJobCompetency
         title="Oral Exam"
         type="OE"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_oralExam}
       />
       <CheckJobCompetency
         title="Creative Work"
         type="CW"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_creativeWork}
       />
       <CheckJobCompetency
         title="Analytical Skills"
         type="AS"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_analyticalSkills}
       />
       <CheckJobCompetency
         title="Computation Skills"
         type="CS"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_computationSKills}
       />
       <CheckJobCompetency
         title="Others"
         type="OT"
-        jvsId="1"
+        jvsId={jvscrwID}
         data={competencies.com_others}
       />
       <br />
@@ -360,10 +443,10 @@ const JvsFormOne = ({ itemId }) => {
       <TotalCalculation />
       <br />
       <br />
-      <DutiesResponsibilityTable jvsId="1" />
+      <DutiesResponsibilityTable jvsId={jvscrwID} />
       <br />
       <br />
-      <RemarksForm jvsId="1" />
+      <RemarksForm jvsId={jvscrwID} />
       <br />
       <br />
     </React.Fragment>
@@ -384,7 +467,7 @@ const TotalCalculation = () => {
           >
             Total Minimum Factor Weight (%):
             <span>
-              <strong>{totalMinMaxData?.min ?? 0}</strong>
+              <strong>{totalMinMaxData?.min ? totalMinMaxData?.min : 0}</strong>
             </span>
           </h6>
         </div>
@@ -394,7 +477,7 @@ const TotalCalculation = () => {
           >
             Total Maximum Factor Weight (%):
             <span>
-              <strong>{totalMinMaxData?.max ?? 0}</strong>
+              <strong>{totalMinMaxData?.max ? totalMinMaxData?.max : 0}</strong>
             </span>
           </h6>
         </div>
@@ -404,7 +487,9 @@ const TotalCalculation = () => {
           <h6>
             TOTAL OVERALL FACTOR WEIGHT (%):
             <span>
-              <strong>{totalMinMaxData?.total}</strong>
+              <strong>
+                {totalMinMaxData?.total ? totalMinMaxData?.total : 0}
+              </strong>
             </span>
           </h6>
         </div>

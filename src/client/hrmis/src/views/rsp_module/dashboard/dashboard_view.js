@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect, useState } from "react";
 import ButtonComponent from "../../common/button_component/button_component.js.js";
-import { useToggleService } from "../../../services/toggle_service.js";
 import AddOfficeModal from "./AddOfficeModal.js";
 import axios from "axios";
 import { API_HOST } from "../../../helpers/global/global_config.js";
@@ -17,9 +16,10 @@ import {
   apiModelOfficeType,
   apiModelOfficeAreaType,
 } from "./static/input_items.js";
+import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper.js";
 
 const DashboardView = ({}) => {
-  let [toggleOfficeModal, setToggleOfficeModal] = useToggleService(false);
+  let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
   const { getSecondLevel } = crumbSecondLevel();
   const [plotOfficeData, setOfficeData] = useState([]);
   const { isRefresh } = useSelector((state) => state.popupResponse);

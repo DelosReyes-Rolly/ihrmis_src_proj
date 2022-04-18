@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Applicants\Tblapplicants;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -45,5 +46,9 @@ class TblplantillaItems extends Model
 
     public function tbldtyresponsibility(){
         return $this->hasMany(TblplantillaDutiesRspnsblts::class, 'dty_itm_id' ,'itm_id');
+    }
+
+    public function applicant(){
+        return $this->belongsTo(Tblapplicants::class, 'itm_id' ,'app_itm_id');
     }
 }

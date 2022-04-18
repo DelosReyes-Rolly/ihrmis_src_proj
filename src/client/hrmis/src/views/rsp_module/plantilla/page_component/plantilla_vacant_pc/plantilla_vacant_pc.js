@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import IconComponent from "../../../../common/icon_component/icon";
 import { API_HOST } from "../../../../../helpers/global/global_config";
@@ -13,8 +13,7 @@ import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 import axios from "axios";
 import { AiFillPrinter } from "react-icons/ai";
 import { plantillaVacantBreadCramp } from "../../static/breadcramp_data";
-import { useDispatch, useSelector } from "react-redux";
-import { useToggleService } from "../../../../../services/toggle_service";
+import { useSelector } from "react-redux";
 import { plantillaItemSelectFilter } from "../../static/filter_items";
 // eslint-disable-next-line
 // import { BreadCrumbsData } from "../../static/breadcramp_data";

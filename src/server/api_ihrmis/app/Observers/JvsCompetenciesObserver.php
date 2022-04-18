@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Models\Tbljvs;
 use App\Models\TbljvsCompetencies;
 use App\Models\TbljvsCompetencyRatings;
 

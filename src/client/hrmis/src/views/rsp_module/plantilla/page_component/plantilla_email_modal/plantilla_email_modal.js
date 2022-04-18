@@ -11,53 +11,36 @@ import * as Yup from "yup";
 import axios from "axios";
 import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
+import { EditorState, ContentState } from "draft-js";
+import { convertFromHTML } from "draft-convert";
 
 const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
   //TYPE LOGIC
   const [mType, setmType] = useState([]);
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  const [selectedMsg, setSelectedMsg] = useState(null);
+
   const selectedType = (value) => {
-    // mType?.forEach((element) => {
-    //   if (value === element.title) {
-    //     if (element.data_id === 1) {
-    //       setEditorState(
-    //         EditorState.createWithContent(
-    //           ContentState.createFromText(
-    //             element.message[0] +
-    //               " Information Technology Officer, SG 15, " +
-    //               element.message[1] +
-    //               " EXR-DSF-2021 " +
-    //               element.message[2]
-    //           )
-    //         )
-    //       );
-    //     } else {
-    //       setEditorState(
-    //         EditorState.createWithContent(
-    //           ContentState.createFromText(element.message[0] ?? "")
-    //         )
-    //       );
-    //     }
-    //   } else {
-    //     setEditorState(
-    //       EditorState.createWithContent(ContentState.createFromText(""))
-    //     );
-    //   }
-    // });
+    mType?.forEach((element) => {
+      if (value === element.title) {
+        setSelectedMsg(element.message);
+      }
+    });
   };
 
   const getMessageType = async () => {
     await axios
-      .get(API_HOST + "mail-types")
+      .get(API_HOST + "mail-template")
       .then((res) => {
         let arrHolder = [];
         const dataMType = res?.data?.data;
         dataMType.forEach((element) => {
+          console.log(element);
           arrHolder.push({
-            id: element.mail_title,
-            title: element.mail_title,
-            message: element.mail_message,
-            data_id: element.mail_id,
+            id: element.eml_name,
+            title: element.eml_name,
+            message: element.eml_message,
+            data_id: element.eml_id,
           });
         });
         setmType(arrHolder);
@@ -164,7 +147,7 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
           <div className="email-modal-plantilla">
             <RichTextEditorComponent
               setFieldValue={(val) => emailFormik.setFieldValue("message", val)}
-              value={emailFormik.values.message}
+              value={selectedMsg}
             />
           </div>
           {emailFormik.touched.message && emailFormik.errors.message ? (

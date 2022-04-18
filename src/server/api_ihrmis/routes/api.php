@@ -14,6 +14,7 @@ use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -91,18 +92,21 @@ Route::post('new-profile-image/{id}', [TblapplicantProfileController::class, "ad
 Route::post('new-requirement/{id}', [TblapplicantRequirementsController::class, "addDocuments"]);
 
 //=======================================================================================
-// JVSCRW ENDPOINTSDEPLOYMENT OF IHRMIS RSP JVSCRW
+// JVSCRW END POINTS
 //=======================================================================================
-// Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
-// Route::post('jvscrw-competency-rating/{id}/sequence/{order?}', [TbljvsController::class, "addCompenencyAndRating"]);
 Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
+Route::get('get-signature-image/{id}', [TbljvsController::class, "getSignatureDisplay"]);
 
-
+Route::post('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
 Route::post('jvscrw-competency-rating/{type}', [TbljvsController::class, "addCompetencyAndRating"]);
 Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class, "saveSignature"]);
+
+
+// Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
+// Route::post('jvscrw-competency-rating/{id}/sequence/{order?}', [TbljvsController::class, "addCompenencyAndRating"]);
 // Route::resource('jvscrw/{id}', JvscrwMainController::class);
 // Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
 // Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
@@ -111,7 +115,7 @@ Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class,
 // SIGNATURE UPLOAD
 
 //=======================================================================================
-// POSITION AND OFFICE END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+// POSITION AND OFFICE END POINTS
 //=======================================================================================
 
 Route::post('create-position', [TblpositionsController::class, "addPosition"]); 
@@ -119,14 +123,18 @@ Route::get('get-position/{id}', [TblpositionsController::class, "getPosition"]);
 Route::get('get-info-position/{id}',[TblpositionsController::class, "getPositionWithCsc"]);
 
 //=======================================================================================
-// PLANTILLA ITEM END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+// PLANTILLA ITEM END POINTS
 //=======================================================================================
 Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
+
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
+Route::get('get-next-rank/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
+
+Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
 
 //=======================================================================================
 // PLANTILLA DTY RESPONSIBILITY
@@ -143,17 +151,17 @@ Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
 
 //=======================================================================================
-// AUTH END POINTS DEPLOYMENT OF IHRMIS RSP JVSCRW
+// AUTH END POINTS
 //=======================================================================================
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
-
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('mail-types', [MailController::class, "getMailType"]);
+Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
+Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 
 //legee updates
@@ -164,3 +172,11 @@ Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);
+
+
+//=======================================================================================
+// MAIL CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('get-notification', [NotificationController::class, "getNotification"]);
+Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotification"]);
+

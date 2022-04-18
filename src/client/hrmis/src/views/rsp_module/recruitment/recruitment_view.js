@@ -8,16 +8,13 @@ import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 
 import { MdAdd } from "react-icons/md";
 // import { BsArrowUpDown } from 'react-icons/bs'
-import {
-  recruitmentMenuItem,
-  recruitmentSelectItem,
-} from "./static/menu_items";
+import { recruitmentMenuItem, recruitmentSelectItem } from "./static/menu_items";
 import { API_HOST } from "../../../helpers/global/global_config.js";
 import axios from "axios";
 import { recruitmentSelectFilter } from "./static/filter_items";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 
-const RecruitmentView = (props) => {
+const RecruitmentView = () => {
   const [toggleState, setToggleState] = useState(1);
   const toggleTab = (index) => {
     setToggleState(index);
@@ -43,22 +40,13 @@ const RecruitmentView = (props) => {
         </div>
 
         <div className="tab-button">
-          <button
-            onClick={() => toggleTab(1)}
-            className={
-              toggleState === 1 ? "tab-tap tab-tap-activate" : "tab-tap"
-            }
-          >
+          <button onClick={() => toggleTab(1)} className={toggleState === 1 ? "tab-tap tab-tap-activate" : "tab-tap"}>
             Qualified
           </button>
           <BadgeComponent className="tab-badge-add-style" value={"1"} />
           <button
             onClick={() => toggleTab(2)}
-            className={
-              toggleState === 2
-                ? "tab-tap tab-tap-activate margin-left-1"
-                : "tab-tap margin-left-1"
-            }
+            className={toggleState === 2 ? "tab-tap tab-tap-activate margin-left-1" : "tab-tap margin-left-1"}
           >
             Disqualified
           </button>
@@ -81,11 +69,7 @@ const RecruitmentView = (props) => {
                   </option>
                   {recruitmentSelectFilter.map((item) => {
                     return (
-                      <option
-                        className="options"
-                        key={item.value}
-                        defaultValue={item.value}
-                      >
+                      <option className="options" key={item.value} defaultValue={item.value}>
                         {item.title}
                       </option>
                     );
@@ -99,11 +83,7 @@ const RecruitmentView = (props) => {
                   </option>
                   {recruitmentSelectItem.map((item) => {
                     return (
-                      <option
-                        className="options"
-                        key={item.value}
-                        defaultValue={item.value}
-                      >
+                      <option className="options" key={item.value} defaultValue={item.value}>
                         {item.title}
                       </option>
                     );
@@ -126,9 +106,7 @@ const RecruitmentView = (props) => {
           </div>
 
           {/* TAB SECOND NON REGULAR */}
-          <div className={toggleState === 2 ? "current-tab" : "show-none"}>
-            {/* <RecruitmentTable type={0} /> */}
-          </div>
+          <div className={toggleState === 2 ? "current-tab" : "show-none"}>{/* <RecruitmentTable type={0} /> */}</div>
         </div>
       </div>
     </React.Fragment>
@@ -195,24 +173,16 @@ const RecruitmentTable = ({ type }) => {
     []
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    setGlobalFilter,
-    setFilter,
-  } = useTable(
-    {
-      columns,
-      data,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, state, setGlobalFilter, setFilter } =
+    useTable(
+      {
+        columns,
+        data,
+      },
+      useFilters,
+      useGlobalFilter,
+      useSortBy
+    );
 
   const { globalFilter } = state;
 
@@ -229,23 +199,10 @@ const RecruitmentTable = ({ type }) => {
         <table className="table-design" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr
-                className="main-header"
-                {...headerGroup.getHeaderGroupProps()}
-              >
+              <tr className="main-header" {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <BsArrowDown />
-                        ) : (
-                          <BsArrowUp />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
+                    <span>{column.isSorted ? column.isSortedDesc ? <BsArrowDown /> : <BsArrowUp /> : ""}</span>
                     {column.render("Header")}
                   </th>
                 ))}
@@ -259,9 +216,7 @@ const RecruitmentTable = ({ type }) => {
               return (
                 <tr className="trHoverBody" {...row.getRowProps()}>
                   {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
+                    return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                   })}
                 </tr>
               );
