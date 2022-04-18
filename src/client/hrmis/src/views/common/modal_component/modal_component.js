@@ -36,9 +36,7 @@ const ModalComponent = (props) => {
                   type="button"
                   bgColor="rgb(230, 230, 230)"
                   border="1px solid rgba(70, 70, 70, 0.8)"
-                  onClick={
-                    props.onPressed != null ? props.onPressed : props.onClose
-                  }
+                  onClick={props.onPressed != null ? props.onPressed : props.onClose}
                   buttonName={props.onCloseName}
                 />
               </div>
@@ -57,11 +55,7 @@ const ModalComponent = (props) => {
     );
   };
 
-  return (
-    <React.Fragment>
-      {props.isDisplay ? modalViewFunction() : null}
-    </React.Fragment>
-  );
+  return <React.Fragment>{props.isDisplay ? modalViewFunction() : null}</React.Fragment>;
 };
 
 ModalComponent.defaultProps = {

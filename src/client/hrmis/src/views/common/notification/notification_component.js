@@ -4,7 +4,6 @@ import { AiFillCaretUp, AiOutlineBell } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setRefresh } from "../../../features/reducers/popup_response";
 import { API_HOST } from "../../../helpers/global/global_config";
-import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper";
 
 const NotificationComponent = () => {
   const { refresh } = useSelector((state) => state.popupResponse);
@@ -44,6 +43,12 @@ const NotificationComponent = () => {
   useEffect(() => {
     getNotification();
   }, [refresh]);
+
+  useEffect(() => {
+    if (tog === true) {
+      getNotification();
+    }
+  }, [tog]);
 
   useEffect(() => {
     unreadMsg();
@@ -87,7 +92,12 @@ const NotificationComponent = () => {
                   {itemList?.map((item, key) => {
                     return (
                       <div key={key} onClick={() => setMarkAsRead(item.noti_read, item.noti_id)}>
-                        <NotificationCard title={item.noti_title} msg={item.noti_message} mark={item.noti_read} />
+                        <NotificationCard
+                          title={item.noti_title}
+                          msg={item.noti_message}
+                          mark={item.noti_read}
+                          date={item.date}
+                        />
                       </div>
                     );
                   })}
@@ -103,7 +113,7 @@ const NotificationComponent = () => {
 
 export default React.memo(NotificationComponent);
 
-const NotificationCard = ({ title = "Noti Title", msg, mark }) => {
+const NotificationCard = ({ title = "Noti Title", msg, mark, date }) => {
   return (
     <React.Fragment>
       <div className="noti-card-style" style={mark === 1 ? { color: "grey" } : null}>
@@ -112,11 +122,12 @@ const NotificationCard = ({ title = "Noti Title", msg, mark }) => {
         </div>
         <div
           className="message"
-          style={{ fontWeight: "400", fontSize: "12px", marginBottom: "5px", textAlign: "start" }}
+          style={{ fontWeight: "400", fontSize: "11px", marginBottom: "5px", textAlign: "start" }}
         >
           {msg ??
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
         </div>
+        <div style={{ fontWeight: "bold", fontSize: "10px", marginBottom: "2px" }}>{date ?? "1 sec ago."}</div>
       </div>
     </React.Fragment>
   );
