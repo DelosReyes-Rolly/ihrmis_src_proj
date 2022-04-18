@@ -30,58 +30,29 @@
 }
 
 .next-rank-modal-container {
-  .nrm-header {
-    font-weight: 600;
-    color: #4880b3;
-    @include containerFlexRow(true);
-
-    .check-box-alignment {
-      @include containerFlexRow(true);
-      align-items: center;
-
-      span {
-        @include containerFlexRow(true);
+  .next-rank-table {
+    width: 100%;
+    th {
+      color: map-get($primaryColor, regular);
+      padding: 10px 0px;
+      border-bottom: 1px solid map-get($blackColor, 400);
+      div {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
+        .span-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .span-icon:active {
+          transform: translateY(1px);
+        }
       }
     }
-    .container-1 {
-      width: 40%;
+    td {
+      padding: 3px 0px;
     }
-    .container-2 {
-      width: 40%;
-    }
-    .container-3 {
-      width: 20%;
-    }
-  }
-
-  .nrm-body {
-    font-weight: 400;
-    @include containerFlexRow(true);
-    .check-box-alignment {
-      @include containerFlexRow(true);
-      align-items: center;
-
-      span {
-        @include containerFlexRow(true);
-        align-items: center;
-        justify-content: center;
-      }
-    }
-    .container-1 {
-      width: 40%;
-    }
-    .container-2 {
-      width: 40%;
-    }
-    .container-3 {
-      width: 20%;
-    }
-  }
-
-  .bold-selected {
-    font-weight: 600;
   }
 }
 

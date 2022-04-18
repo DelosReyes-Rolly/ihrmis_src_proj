@@ -20,18 +20,14 @@ export const SuccessEmailConfirmation = () => {
             <ButtonComponent
               className="back-color"
               buttonName="Previous"
-              onClick={() =>
-                navigate(`/pds-applicant/form-page-one/${item}`)
-              }
+              onClick={() => navigate(`/pds-applicant/form-page-one/${item}`)}
             />
           </div>
           <div>
             <ButtonComponent
               className="next-color"
               buttonName="Next step"
-              onClick={() =>
-                navigate(`/pds-applicant/form-page-two/${item}`)
-              }
+              onClick={() => navigate(`/pds-applicant/form-page-two/${item}`)}
             />
           </div>
         </div>
@@ -54,9 +50,11 @@ export const SentEmailConfirmation = () => {
         <div className="header-confirmation">
           <img src={dostLogo} width="50px" height="50px" alt="dost-logo" />
           <h3>Department of Science and Technology</h3>
-          <p>General Santos Avenue, Bicutan Taguig City</p> <br />
-          <br />
-          <h2>VERIFY YOUR EMAIL ACCOUNT TO CONTINUE</h2>
+          <p>General Santos Avenue, Bicutan Taguig City</p>
+
+          <h2 style={{ margin: "25px 0px" }}>
+            VERIFY YOUR EMAIL ACCOUNT TO CONTINUE
+          </h2>
           <br />
           <br />
         </div>

@@ -5348,6 +5348,7 @@ ul.breadcrumb li span:hover {
       -ms-flex-align: center;
           align-items: center;
   padding: 15px 20px 5px 20px;
+  gap: 10px;
 }
 
 .modal-component-div form .mcf-footer .ft-button {
@@ -5727,6 +5728,153 @@ input:checked + .slider:before {
 .four-o-four-page .descript-design {
   font-size: 30px;
   color: #464646;
+}
+
+.noti-badge {
+  position: absolute;
+  top: -9px;
+  left: -13px;
+  font-size: 10px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: crimson;
+  border-radius: 30%;
+  color: white;
+  font-weight: 900;
+  padding: 2px 6px;
+}
+
+.noti-span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: relative;
+}
+
+.noti-container {
+  cursor: pointer;
+  position: relative !important;
+  display: inline-block !important;
+  padding: 7px 8px;
+  border-radius: 20%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.noti-container:hover {
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.noti-dropboard {
+  z-index: 1000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  position: absolute;
+  top: 38px;
+  right: 0px;
+  border-radius: 5px;
+  height: 400px;
+  width: 350px;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 20px #00000022;
+          box-shadow: 0px 0px 20px #00000022;
+  overflow: hidden;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.notification-style {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.noti-card-style {
+  border-top: 1px solid #00000022;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.noti-card-style:hover {
+  background-color: #00000022;
 }
 
 .pds-profile-main-view {
@@ -6943,13 +7091,25 @@ input:checked + .slider:before {
   text-align: center;
 }
 
-/* select vertion */
+/* select version */
 .version-dropdown {
-  text-align: right;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .select-version {
-  padding: 5px 10px;
+  padding: 7px 10px;
   color: rgba(4, 17, 32, 0.8);
   background-color: white;
   border-radius: 5px;
@@ -7332,113 +7492,47 @@ input:checked + .slider:before {
   width: 100%;
 }
 
-.next-rank-modal-container .nrm-header {
-  font-weight: 600;
-  color: #4880b3;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+.next-rank-modal-container .next-rank-table {
+  width: 100%;
 }
 
-.next-rank-modal-container .nrm-header .check-box-alignment {
+.next-rank-modal-container .next-rank-table th {
+  color: #004e87;
+  padding: 10px 0px;
+  border-bottom: 1px solid rgba(70, 70, 70, 0.4);
+}
+
+.next-rank-modal-container .next-rank-table th div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
 }
 
-.next-rank-modal-container .nrm-header .check-box-alignment span {
+.next-rank-modal-container .next-rank-table th div .span-icon {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-}
-
-.next-rank-modal-container .nrm-header .container-1 {
-  width: 40%;
-}
-
-.next-rank-modal-container .nrm-header .container-2 {
-  width: 40%;
-}
-
-.next-rank-modal-container .nrm-header .container-3 {
-  width: 20%;
-}
-
-.next-rank-modal-container .nrm-body {
-  font-weight: 400;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-}
-
-.next-rank-modal-container .nrm-body .check-box-alignment {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
 }
 
-.next-rank-modal-container .nrm-body .check-box-alignment span {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+.next-rank-modal-container .next-rank-table th div .span-icon:active {
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px);
 }
 
-.next-rank-modal-container .nrm-body .container-1 {
-  width: 40%;
-}
-
-.next-rank-modal-container .nrm-body .container-2 {
-  width: 40%;
-}
-
-.next-rank-modal-container .nrm-body .container-3 {
-  width: 20%;
-}
-
-.next-rank-modal-container .bold-selected {
-  font-weight: 600;
+.next-rank-modal-container .next-rank-table td {
+  padding: 3px 0px;
 }
 
 .container-vacant-position {

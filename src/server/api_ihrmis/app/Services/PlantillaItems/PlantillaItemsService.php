@@ -5,7 +5,7 @@ namespace App\Services\PlantillaItems;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
-use Barryvdh\DomPDF\Facade as PDF;
+use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class PlantillaItemsService {
 
@@ -20,10 +20,8 @@ class PlantillaItemsService {
    * Todo get vacant positions by 
    */
   public function getVacantPositions($type) {
-
     $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->where('itm_state', $type)->get();
     return $item_query;
-
   }
     
   /**
@@ -47,10 +45,10 @@ class PlantillaItemsService {
     $new_data['vacantpositions'] = $data;
     
     $date = date('m/d/Y');
-    $pdf = PDF::loadView('vacantPositionsPdf',$new_data);
-    $pdf->setPaper('a4', 'landscape')->setWarnings(false)
-    ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
-    return $pdf->stream('DOST-CO Vacant Position_'.$date.'.pdf');
+    // $pdf = PDF::loadView('vacantPositionsPdf',$new_data);
+    // $pdf->setPaper('a4', 'landscape')->setWarnings(false)
+    // ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
+    // return $pdf->stream('DOST-CO Vacant Position_'.$date.'.pdf');
   }
 
 }

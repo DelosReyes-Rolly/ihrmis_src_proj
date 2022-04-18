@@ -4,13 +4,17 @@ export const plantillaItemSlice = createSlice({
   name: "user",
   initialState: {
     plantilla_item: [],
+    selectAgency: false,
   },
   reducers: {
-    setPlantillaItem: (state, action) => {
-      state.plantilla_item = action.payload;
+    // setPlantillaItem: (state, action) => {
+    //   state.plantilla_item = action.payload;
+    // },
+    setSelectAgency: (state) => {
+      state.selectAgency = !state.selectAgency;
     },
   },
 });
 
-export const { setPlantillaItem } = plantillaItemSlice.actions;
+export const { setSelectAgency } = plantillaItemSlice.actions;
 export default plantillaItemSlice.reducer;

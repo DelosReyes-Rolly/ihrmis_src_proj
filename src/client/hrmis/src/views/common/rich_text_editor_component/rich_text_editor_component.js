@@ -1,6 +1,6 @@
 import { ContentState, convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
 import draftToHtml from "draftjs-to-html";
@@ -26,6 +26,12 @@ const RichTextEditorComponent = ({ value = "", setFieldValue }) => {
     }
     setEditorState(state);
   };
+
+  useEffect(() => {
+    if (value) {
+      prepareDraft(value);
+    }
+  }, [value]);
 
   return (
     <React.Fragment>

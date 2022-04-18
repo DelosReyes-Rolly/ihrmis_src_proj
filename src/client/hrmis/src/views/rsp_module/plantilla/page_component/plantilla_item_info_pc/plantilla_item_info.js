@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import { useTable, useSortBy } from "react-table";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
-import { useToggleService } from "../../../../../services/toggle_service";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import ButtonComponent from "../../../../common/button_component/button_component.js";
 import { plantillaItemsInfoBreadCramp } from "../../static/breadcramp_data";
@@ -22,6 +21,7 @@ import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_ite
 import AddPlantillaItemDutiesAndRespoModal from "../plantilla_info_modals/add_duties_respo_modal";
 import ReactTooltip from "react-tooltip";
 import PositionInfoModal from "../plantilla_info_modals/position_info_modal";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
 
 const PlantillaItemInformation = () => {
   const { item } = useParams();
@@ -30,8 +30,8 @@ const PlantillaItemInformation = () => {
   const [plantilla, setPosition] = useState();
   const [dtyResponsibility, setDtyResponsibility] = useState();
   const [toggleAddPlantillaItem, setTogglePlantillaItem] =
-    useToggleService(false);
-  const [toggleAddDtyItem, setToggleAddDtyItem] = useToggleService(false);
+    useToggleHelper(false);
+  const [toggleAddDtyItem, setToggleAddDtyItem] = useToggleHelper(false);
 
   const itemInformation = async () => {
     const id = plantilla?.position?.pos_id;
@@ -117,7 +117,7 @@ const PositionTableView = ({ data, pos_id }) => {
     });
     return value;
   };
-  const [toogleModal, setToogleModal] = useToggleService(false);
+  const [toogleModal, setToogleModal] = useToggleHelper(false);
   return (
     <React.Fragment>
       <PositionInfoModal
