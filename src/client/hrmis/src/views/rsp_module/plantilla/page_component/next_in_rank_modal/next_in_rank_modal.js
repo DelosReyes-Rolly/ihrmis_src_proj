@@ -6,6 +6,7 @@ import ButtonComponent from "../../../../common/button_component/button_componen
 import { useToggleHelper } from ".././../../../../helpers/use_hooks/toggle_helper";
 import SelectAgencyModal from "./select_agency_modal";
 import { useDispatch } from "react-redux";
+import { setNextRank, setRankEmail, setSelectAgency } from "../../../../../features/reducers/plantilla_item_slice";
 /**
  * NOTES:
  * This table modal style is in _plantilla_view.scss
@@ -45,7 +46,7 @@ const NextInRankModal = (props) => {
   );
 
   const [selectedItems, setSelectedItems] = useState([]);
-
+  const dispatch = useDispatch();
   return (
     <React.Fragment>
       <ModalComponent
@@ -54,15 +55,20 @@ const NextInRankModal = (props) => {
         onCloseName="Memo"
         isDisplay={props.isDisplay}
         onClose={props.onClose}
-        addExtraButton={<ButtonComponent buttonName="Notify" />}
+        onSubmitType="button"
+        addExtraButton={
+          <ButtonComponent
+            type="button"
+            buttonName="Notify"
+            onClick={() => {
+              dispatch(setNextRank());
+              dispatch(setRankEmail());
+            }}
+          />
+        }
       >
         <div className="next-rank-modal-container">
-          <NextInRankTable
-            data={data}
-            columns={columns}
-            selectedFunc={setSelectedItems}
-            closeParent={props.onClose}
-          />
+          <NextInRankTable data={data} columns={columns} selectedFunc={setSelectedItems} closeParent={props.onClose} />
         </div>
       </ModalComponent>
     </React.Fragment>
@@ -71,7 +77,7 @@ const NextInRankModal = (props) => {
 
 export default NextInRankModal;
 
-const NextInRankTable = ({ data, columns, selectedFunc, closeParent }) => {
+const NextInRankTable = ({ data, columns, selectedFunc }) => {
   const {
     getTableProps,
     getTableBodyProps,
@@ -115,15 +121,13 @@ const NextInRankTable = ({ data, columns, selectedFunc, closeParent }) => {
   }, [selectedFlatRows]);
 
   const dispatch = useDispatch();
+
   return (
     <Fragment>
       <table className="next-rank-table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
-            <tr
-              style={{ textAlign: "left", border: "1px solid black" }}
-              {...headerGroup.getHeaderGroupProps()}
-            >
+            <tr style={{ textAlign: "left", border: "1px solid black" }} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => {
                 if (column.render("Header") === "Office") {
                   return (
@@ -133,8 +137,8 @@ const NextInRankTable = ({ data, columns, selectedFunc, closeParent }) => {
                         <span
                           className="span-icon"
                           onClick={() => {
-                            dispatch(setShowAgencyModal());
-                            closeParent();
+                            dispatch(setNextRank());
+                            dispatch(setSelectAgency());
                           }}
                         >
                           <IoAddCircleOutline size={20} />
@@ -158,9 +162,7 @@ const NextInRankTable = ({ data, columns, selectedFunc, closeParent }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
+                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
                 })}
               </tr>
             );
@@ -173,19 +175,17 @@ const NextInRankTable = ({ data, columns, selectedFunc, closeParent }) => {
   );
 };
 
-const TableCheckboxComponent = React.forwardRef(
-  ({ indeterminate, ...rest }, ref) => {
-    const defaultRef = React.useRef();
-    const resolvedRef = ref || defaultRef;
+const TableCheckboxComponent = React.forwardRef(({ indeterminate, ...rest }, ref) => {
+  const defaultRef = React.useRef();
+  const resolvedRef = ref || defaultRef;
 
-    React.useEffect(() => {
-      resolvedRef.current.indeterminate = indeterminate;
-    }, [resolvedRef, indeterminate]);
+  React.useEffect(() => {
+    resolvedRef.current.indeterminate = indeterminate;
+  }, [resolvedRef, indeterminate]);
 
-    return (
-      <>
-        <input type="checkbox" ref={resolvedRef} {...rest} />
-      </>
-    );
-  }
-);
+  return (
+    <>
+      <input type="checkbox" ref={resolvedRef} {...rest} />
+    </>
+  );
+});

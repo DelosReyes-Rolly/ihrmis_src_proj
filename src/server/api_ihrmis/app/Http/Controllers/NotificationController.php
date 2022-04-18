@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CommonResource;
+use App\Http\Resources\NotificationResource;
 use App\Models\Tblnotification;
 use Illuminate\Http\Request;
 
@@ -10,7 +10,7 @@ class NotificationController extends Controller
 {
     public function getNotification() {
         $query = Tblnotification::orderBy('created_at', 'DESC')->paginate(10);
-        return new CommonResource($query);
+        return NotificationResource::collection($query);
     }
 
     public function markAsReadNotification($id) {

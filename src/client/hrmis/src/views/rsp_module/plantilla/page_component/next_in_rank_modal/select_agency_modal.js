@@ -9,6 +9,8 @@ const SelectAgencyModal = ({ isDisplay, onClose }) => {
         title="Select Agency"
         isDisplay={isDisplay}
         onClose={onClose}
+        onPressedHidden={true}
+        onSubmitName="Save"
       ></ModalComponent>
     </React.Fragment>
   );
