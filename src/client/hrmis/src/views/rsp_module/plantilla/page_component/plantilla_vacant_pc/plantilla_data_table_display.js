@@ -27,7 +27,7 @@ import DropdownViewComponent from "../../../../common/dropdown_menu_custom_compo
 export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
-
+	const [filters, setFiltersTable] = useState([]);
 	const plantillaItemApi = async () => {
 		await axios
 			.get(API_HOST + "getAllPositions")
@@ -185,6 +185,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 				globalFilter={state.globalFilter}
 				setGlobalFilter={setGlobalFilter}
 				setAllFilters={setAllFilters}
+				setFiltersTable={setFiltersTable}
 			/>
 			{/* <SelectTableComponent list={plotData} /> */}
 			<div className="default-table">
@@ -236,6 +237,8 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 															itemList={plantillaItemsVacantPosMenuItems}
 															title={<MdMoreHoriz size="15" />}
 															alignItems="end"
+															toolTipId="other-actions"
+															textHelper="Click to view other actions"
 														/>
 													</div>
 												</td>

@@ -1,3 +1,8 @@
+import {
+	printVacantPositions,
+	printNoticeOFVacany,
+} from "../../../../router/outside_routes";
+
 /**
  *  tableHeaderColumnName
  *  @description static data
@@ -66,11 +71,11 @@ export const plantillaItemsReportsMenuItems = [
 	{
 		id: 2,
 		label: "DOST-CO Vacant Position",
-		link: "showmenureports",
+		link: printVacantPositions,
 	},
 	{
 		id: 3,
 		label: "Notice of Vacancy",
-		link: "#",
+		link: printNoticeOFVacany,
 	},
 ];

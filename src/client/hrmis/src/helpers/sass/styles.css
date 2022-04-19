@@ -4627,6 +4627,26 @@ ul.breadcrumb li span:hover {
   text-decoration: none;
 }
 
+.unstyled-button {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.button-icon {
+  color: #4276a4;
+}
+
+.button-icon:hover {
+  cursor: default;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
 .footer {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;

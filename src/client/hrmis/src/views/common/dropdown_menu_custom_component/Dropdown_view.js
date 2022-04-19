@@ -1,12 +1,17 @@
 import React, { useRef, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import ReactTooltip from "react-tooltip";
 
 const DropdownViewComponent = ({
 	title = {},
 	className,
 	itemList,
 	alignItems = "start",
+	toolTipId,
+	textHelper,
+	position = "top",
+	effect = "solid",
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const timerRef = useRef();
@@ -35,7 +40,15 @@ const DropdownViewComponent = ({
 			}}
 			onBlur={() => selectedProperty()}
 		>
+			{toolTipId && (
+				<ReactTooltip id={toolTipId} place={position} effect={effect}>
+					{textHelper}
+				</ReactTooltip>
+			)}
+
 			<button
+				data-tip
+				data-for={toolTipId}
 				className={className}
 				style={{ width: "max-content" }}
 				onClick={() => {
@@ -57,7 +70,15 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = "none", onClick }) => {
+const DropList = ({ itemList = [], display = "none" }) => {
+	const navigate = useNavigate();
+
+	const linkDetector = (item) => {
+		if (typeof item === "string" || item instanceof String)
+			return navigate(item);
+		item();
+	};
+
 	return (
 		<React.Fragment>
 			<ul className="ul-dropdown-container" style={{ display: display }}>
@@ -67,8 +88,9 @@ const DropList = ({ itemList = [], display = "none", onClick }) => {
 				{itemList?.map((element, key) => {
 					return (
 						<li
+							style={{ listStyle: "none" }}
 							className="ul-menu-item"
-							onClick={() => onClick(element.link)}
+							onClick={() => linkDetector(element.link)}
 							key={key}
 						>
 							{element.label}

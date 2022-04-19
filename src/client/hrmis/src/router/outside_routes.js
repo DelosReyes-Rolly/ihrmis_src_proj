@@ -1,9 +1,4 @@
-/**
- * Print Vacant Positions
- * @author legee
- */
-
-import { API_HOST } from "../../../../../helpers/global/global_config";
+import { API_HOST } from "../helpers/global/global_config";
 
 export const printMemoOnPostingOfVpForDost = () => {
 	window.open(API_HOST + "generate-MemoOnPostingVPForDost", "_tab");

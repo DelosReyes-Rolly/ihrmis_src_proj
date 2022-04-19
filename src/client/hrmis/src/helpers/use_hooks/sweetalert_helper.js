@@ -13,7 +13,6 @@ const useSweetAlertHelper = () => {
 		html,
 		icon,
 		showCancelButton,
-		willOpenCallback,
 		confirm,
 		confirmCallback
 	) => {
@@ -25,9 +24,6 @@ const useSweetAlertHelper = () => {
 			confirmButtonColor: "#3085d6",
 			cancelButtonColor: "#d33",
 			confirmButtonText: "OK",
-			willOpen: () => {
-				willOpenCallback();
-			},
 			preConfirm: () => {
 				return confirm();
 			},
@@ -50,6 +46,7 @@ const useSweetAlertHelper = () => {
 			toast: true,
 			position: "top-end",
 			showConfirmButton: false,
+			showCloseButton: true,
 			timer: 2000,
 			timerProgressBar: true,
 			didOpen: (toast) => {

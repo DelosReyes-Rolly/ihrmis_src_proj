@@ -1,7 +1,6 @@
 import React from "react";
 import ReactTooltip from "react-tooltip";
 import { plantillaItemsReportsMenuItems } from "../../rsp_module/plantilla/static/plantilla_vacant_positions_data";
-import DropdownViewComponent from "../dropdown_menu_custom_component/Dropdown_view";
 
 const IconComponent = ({
 	id,
@@ -32,10 +31,6 @@ const IconComponent = ({
 			>
 				{icon}
 			</span>
-			{/* <DropdownViewComponent
-				itemList={plantillaItemsReportsMenuItems}
-				alignItems="end"
-			/> */}
 		</React.Fragment>
 	);
 };

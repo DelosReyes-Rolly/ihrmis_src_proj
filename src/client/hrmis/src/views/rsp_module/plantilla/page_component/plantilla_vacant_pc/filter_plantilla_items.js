@@ -8,6 +8,11 @@ import { useAsyncDebounce } from "react-table";
  * @param search,
  * @param setSearch,
  * @param statusFilter
+ * @param preFilteredRows,
+ * @param globalFilter,
+ * @param setGlobalFilter,
+ * @param setAllFilters,
+ * @param setSelectedFilter,
  * @returns
  */
 export const FilterPlantillaItems = ({
@@ -19,12 +24,14 @@ export const FilterPlantillaItems = ({
 	globalFilter,
 	setGlobalFilter,
 	setAllFilters,
+	setFiltersTable,
 }) => {
 	const [selected, setSelected] = useState({
 		value: 0,
 	});
 
 	const [value, setValue] = useState(globalFilter);
+
 	const handleChange = useAsyncDebounce((tvalue) => {
 		// console.log("selected: " + selected.value);
 
@@ -38,6 +45,10 @@ export const FilterPlantillaItems = ({
 
 		console.log(selected.value);
 		console.log(preFilteredRows);
+	});
+
+	useLayoutEffect(() => {
+		setFiltersTable(selected);
 	});
 
 	return (
