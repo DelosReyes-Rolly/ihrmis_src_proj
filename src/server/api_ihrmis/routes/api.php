@@ -134,6 +134,8 @@ Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, 
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 Route::get('get-next-rank/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
 
+Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
+
 Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
 
 //=======================================================================================
@@ -167,6 +169,7 @@ Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantil
 //legee updates
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
 Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
+Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
 
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);

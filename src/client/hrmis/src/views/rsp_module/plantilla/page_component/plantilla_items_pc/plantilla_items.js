@@ -8,7 +8,7 @@ import { statusDisplay } from "../../static/display_option";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
 import { IoIosPaperPlane } from "react-icons/io";
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 
 import axios from "axios";
@@ -22,8 +22,22 @@ const PlantillaItemPageComponentView = () => {
   const toggleTab = (index) => {
     setToggleState(index);
   };
+  const [number, setNumber] = useState(0);
 
   const navigate = useNavigate();
+
+  const getTotalVacantPosition = async () => {
+    await axios
+      .get(API_HOST + "get-vacant-plantilla")
+      .then((res) => {
+        setNumber(res.data.total_vacant);
+      })
+      .catch((err) => {});
+  };
+
+  useEffect(() => {
+    getTotalVacantPosition();
+  }, []);
 
   return (
     <React.Fragment>
@@ -31,13 +45,12 @@ const PlantillaItemPageComponentView = () => {
         <div className="container-plantilla">
           <BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
         </div>
-
         <div className="container-vacant-position">
           <div className="button-vacant">
             <ButtonComponent
               buttonLogoStart={<IoIosPaperPlane />}
               buttonName="Vacant"
-              buttonLogoEnd={<SquareNotification />}
+              buttonLogoEnd={<SquareNotification number={number} />}
               onClick={() => navigate("vacantpositions")}
             />
           </div>
@@ -64,7 +77,6 @@ const PlantillaItemPageComponentView = () => {
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
           <PlantillaDataTableDisplay type={1} />
         </div>
-
         {/* TAB SECOND NON REGULAR */}
         <div className={toggleState === 2 ? "current-tab" : "show-none"}>
           <PlantillaDataTableDisplay type={0} />

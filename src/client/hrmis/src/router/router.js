@@ -73,6 +73,7 @@ const MainRouter = () => {
                   element={<PlantillaItemInformation />}
                 />
               </Route>
+
               <Route
                 exact
                 path="/rsp/plantilla/plantilla-items/vacantpositions"

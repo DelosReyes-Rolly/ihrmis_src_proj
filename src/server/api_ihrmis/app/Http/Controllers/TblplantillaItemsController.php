@@ -82,8 +82,15 @@ class TblplantillaItemsController extends Controller
 
     public function getNextInRank($id)
     {
-        $itemQry = TblplantillaItems::with('applicant.employee')->find($id);
-        return new CommonResource($itemQry);
+        $item_qry = TblplantillaItems::with('applicant.employee')->find($id);
+        return new CommonResource($item_qry);
+    }
+
+    public function getAllVacantPlantillaItems(){
+        $item_qry = TblplantillaItems::where("itm_state", 0)->get();
+        return response()->json([
+            "total_vacant" => count($item_qry)
+        ]);
     }
 
 }
