@@ -5,7 +5,8 @@ namespace App\Services\PlantillaItems;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
-use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
+use Mpdf\Mpdf as MPDF;
+// use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class PlantillaItemsService {
 
@@ -49,6 +50,13 @@ class PlantillaItemsService {
     // $pdf->setPaper('a4', 'landscape')->setWarnings(false)
     // ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
     // return $pdf->stream('DOST-CO Vacant Position_'.$date.'.pdf');
+  }
+
+
+  public function generateVacantMemoPdf($data){
+    $report = new MPDF();
+    $report->writeHTML(view('reports/vacantMemoReportPdf', $data));
+    return $report->output();
   }
 
 }

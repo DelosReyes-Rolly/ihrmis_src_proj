@@ -6,7 +6,11 @@ import ButtonComponent from "../../../../common/button_component/button_componen
 import { useToggleHelper } from ".././../../../../helpers/use_hooks/toggle_helper";
 import SelectAgencyModal from "./select_agency_modal";
 import { useDispatch } from "react-redux";
-import { setNextRank, setRankEmail, setSelectAgency } from "../../../../../features/reducers/plantilla_item_slice";
+import {
+  setNextRank,
+  setRankEmail,
+  setSelectAgency,
+} from "../../../../../features/reducers/plantilla_item_slice";
 /**
  * NOTES:
  * This table modal style is in _plantilla_view.scss
@@ -68,7 +72,12 @@ const NextInRankModal = (props) => {
         }
       >
         <div className="next-rank-modal-container">
-          <NextInRankTable data={data} columns={columns} selectedFunc={setSelectedItems} closeParent={props.onClose} />
+          <NextInRankTable
+            data={data}
+            columns={columns}
+            selectedFunc={setSelectedItems}
+            closeParent={props.onClose}
+          />
         </div>
       </ModalComponent>
     </React.Fragment>
@@ -127,7 +136,10 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
       <table className="next-rank-table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
-            <tr style={{ textAlign: "left", border: "1px solid black" }} {...headerGroup.getHeaderGroupProps()}>
+            <tr
+              style={{ textAlign: "left", border: "1px solid black" }}
+              {...headerGroup.getHeaderGroupProps()}
+            >
               {headerGroup.headers.map((column) => {
                 if (column.render("Header") === "Office") {
                   return (
@@ -162,7 +174,9 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
                 })}
               </tr>
             );
@@ -175,17 +189,19 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
   );
 };
 
-const TableCheckboxComponent = React.forwardRef(({ indeterminate, ...rest }, ref) => {
-  const defaultRef = React.useRef();
-  const resolvedRef = ref || defaultRef;
+const TableCheckboxComponent = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
 
-  React.useEffect(() => {
-    resolvedRef.current.indeterminate = indeterminate;
-  }, [resolvedRef, indeterminate]);
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
-  return (
-    <>
-      <input type="checkbox" ref={resolvedRef} {...rest} />
-    </>
-  );
-});
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    );
+  }
+);

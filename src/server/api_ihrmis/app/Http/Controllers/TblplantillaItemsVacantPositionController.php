@@ -36,4 +36,8 @@ class TblplantillaItemsVacantPositionController extends Controller {
     {
         return $this->tblPantillaVacantPos->generatePdf();
     }
+
+    public function generateVacantMemoPdf(){
+        return $this->tblPantillaVacantPos->generateVacantMemoPdf(["hello" => "world"]);
+    }
 }
