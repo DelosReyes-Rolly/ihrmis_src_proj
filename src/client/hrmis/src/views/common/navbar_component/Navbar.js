@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { AiFillCaretDown, AiFillCaretUp, AiOutlineQuestionCircle, AiOutlineBell, AiOutlineMenu } from "react-icons/ai";
+import {
+  AiFillCaretDown,
+  AiFillCaretUp,
+  AiOutlineQuestionCircle,
+  AiOutlineBell,
+  AiOutlineMenu,
+} from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import dostLogo from "../../../assets/images/logo.png";
 import { openSideBar } from "../../../features/reducers/mobile_view_slice";
@@ -48,7 +54,14 @@ const NavbarComponent = ({}) => {
           </span>
           {/* Monday 04 January 2021 | 08:00:00 AM */}
         </h1>
-        <ul style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 5 }}>
+        <ul
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
           <li className="">
             <NotificationComponent />
           </li>
@@ -71,7 +84,11 @@ const NavbarComponent = ({}) => {
             </span>
           </li>
 
-          <li onClick={() => updateDropState()} className="user-dropdown" style={{ cursor: "pointer" }}>
+          <li
+            onClick={() => updateDropState()}
+            className="user-dropdown"
+            style={{ cursor: "pointer" }}
+          >
             <span className="user-avatar">
               <img src={dostLogo} width="20" height="20" alt="avatar" />
             </span>
@@ -79,7 +96,10 @@ const NavbarComponent = ({}) => {
             <span className="user-drop-arrow">
               <AiFillCaretDown size="12px" />
             </span>
-            <ul className="user-drop-option" style={{ display: dropState ? "block" : "none" }}>
+            <ul
+              className="user-drop-option"
+              style={{ display: dropState ? "block" : "none" }}
+            >
               <span className="user-arrow-up">
                 <AiFillCaretUp size="15px" />
               </span>

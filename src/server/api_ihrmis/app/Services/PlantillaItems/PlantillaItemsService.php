@@ -10,6 +10,7 @@ use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mpdf\Mpdf;
 use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 
 class PlantillaItemsService {
@@ -67,18 +68,10 @@ class PlantillaItemsService {
 	
 		$date = date('m/d/Y');
 
-		$pdf = new LaravelMpdf();
-		$pdf =  $pdf->loadView('vacantPositionsPdf',$new_data,[], [
-		'title'				=> 	'DOST-CO Vacant Position',
-		'margin_left'     	=> 10,
-		'margin_right'      => 10,
-		'margin_top'        => 10,
-		'margin_bottom'     => 10,
-		'orientation'       => 'L',
-		'format' => 'A4'
-		]);
+		$pdf = new MPDF();
+		$pdf->writeHTML(view('vacantPositionsPdf',$new_data));
 	
-		return $pdf->stream('Vacant Positions_'.$date.'.pdf');
+		return $pdf->output();
   	}
 
 	
@@ -285,5 +278,12 @@ class PlantillaItemsService {
 		//assign $separator = "_";
 		//concatinate $last_emp_no + 1 . "_" . $item_source . "_" . $current_year	
 	}
+
+
+  public function generateVacantMemoPdf($data){
+    $report = new MPDF();
+    $report->writeHTML(view('reports/vacantMemoReportPdf', $data));
+    return $report->output();
+  }
 
 }

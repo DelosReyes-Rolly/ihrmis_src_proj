@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Applicants\Tblapplicants;
+use App\Models\Applicants\TblapplicantsProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
