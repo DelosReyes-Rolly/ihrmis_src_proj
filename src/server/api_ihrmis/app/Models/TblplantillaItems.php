@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Applicants\Tblapplicants;
-use App\Models\Applicants\TblapplicantsProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -62,5 +61,6 @@ class TblplantillaItems extends Model
             'itm_id', // Local key on the plnatillaitems table...
             'app_id' // Local key on the applicants table...
         );
+
     }
 }

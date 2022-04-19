@@ -83,6 +83,30 @@
 	.bold-selected {
 		font-weight: 600;
 	}
+  .next-rank-table {
+    width: 100%;
+    th {
+      color: map-get($primaryColor, regular);
+      padding: 10px 0px;
+      border-bottom: 1px solid map-get($blackColor, 400);
+      div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .span-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .span-icon:active {
+          transform: translateY(1px);
+        }
+      }
+    }
+    td {
+      padding: 3px 0px;
+    }
+  }
 }
 
 .container-vacant-position {

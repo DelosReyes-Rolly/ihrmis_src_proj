@@ -19,13 +19,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
 
-const AddPlantillaItemModal = ({
-  type,
-  isDisplay,
-  onClose,
-  plantillaData,
-  plantillaID = null,
-}) => {
+const AddPlantillaItemModal = ({ type, isDisplay, onClose, plantillaData, plantillaID = null }) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   let token = document.head.querySelector('meta[name="csrf-token"]');
   let dispatch = useDispatch();
@@ -50,64 +44,39 @@ const AddPlantillaItemModal = ({
       itm_regular: type ?? plantillaData?.itm_regular,
     },
     validationSchema: Yup.object({
-      itm_no: Yup.string()
-        .required("This field is required")
-        .max(255, "Invalid input"),
+      itm_no: Yup.string().required("This field is required").max(255, "Invalid input"),
 
-      itm_status: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_status: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_pos_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_pos_id: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_ofc_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_ofc_id: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_basis: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_basis: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_level: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_level: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_category: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_category: Yup.number().typeError("Must be a number").required("This field is required"),
 
-      itm_function: Yup.string()
-        .required("This field is required")
-        .max(255, "Invalid input"),
+      itm_function: Yup.string().required("This field is required").max(255, "Invalid input"),
 
-      itm_creation: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
-      itm_supv1_itm_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
-      itm_supv2_itm_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_creation: Yup.number().typeError("Must be a number").required("This field is required"),
+      itm_supv1_itm_id: Yup.number().typeError("Must be a number").required("This field is required"),
+      itm_supv2_itm_id: Yup.number().typeError("Must be a number").required("This field is required"),
     }),
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
       await axios
-        .post(API_HOST + "plantilla-items" + endpointId, value, {
-          headers: { "X-CSRF-TOKEN": token.content },
-        })
+        .post(API_HOST + "plantilla-items" + endpointId, value)
         .then(() => {
           renderSucceed({});
-          dispatch(setRefresh());
           resetForm();
         })
         .catch((err) => {
           renderFailed({});
         });
       renderBusy(false);
-
+      dispatch(setRefresh());
       onClose();
     },
   });
@@ -174,9 +143,7 @@ const AddPlantillaItemModal = ({
               maxLength="30"
             />
             {plantillaForm.touched.itm_no && plantillaForm.errors.itm_no ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_no}
-              </p>
+              <p className="error-validation-styles">{plantillaForm.errors.itm_no}</p>
             ) : null}
           </span>
           <span className="right-input item-modal-2">
@@ -189,11 +156,8 @@ const AddPlantillaItemModal = ({
               itemList={apiEmploymentStatModalInputItem}
             />
 
-            {plantillaForm.touched.itm_status &&
-            plantillaForm.errors.itm_status ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_status}
-              </p>
+            {plantillaForm.touched.itm_status && plantillaForm.errors.itm_status ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_status}</p>
             ) : null}
           </span>
         </div>
@@ -213,22 +177,15 @@ const AddPlantillaItemModal = ({
               {officePositionState &&
                 officePositionState.positions.map((item, key) => {
                   return (
-                    <option
-                      className="option-component"
-                      key={key}
-                      value={parseInt(item.pos_id)}
-                    >
+                    <option className="option-component" key={key} value={parseInt(item.pos_id)}>
                       {item.pos_title}
                     </option>
                   );
                 })}
             </select>
 
-            {plantillaForm.touched.itm_pos_id &&
-            plantillaForm.errors.itm_pos_id ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_pos_id}
-              </p>
+            {plantillaForm.touched.itm_pos_id && plantillaForm.errors.itm_pos_id ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_pos_id}</p>
             ) : null}
           </span>
 
@@ -250,22 +207,15 @@ const AddPlantillaItemModal = ({
               {officePositionState &&
                 officePositionState.offices.map((item, key) => {
                   return (
-                    <option
-                      className="option-component"
-                      key={key}
-                      value={item.ofc_id}
-                    >
+                    <option className="option-component" key={key} value={item.ofc_id}>
                       {item.ofc_name}
                     </option>
                   );
                 })}
             </select>
 
-            {plantillaForm.touched.itm_ofc_id &&
-            plantillaForm.errors.itm_ofc_id ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_ofc_id}
-              </p>
+            {plantillaForm.touched.itm_ofc_id && plantillaForm.errors.itm_ofc_id ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_ofc_id}</p>
             ) : null}
           </span>
         </div>
@@ -279,11 +229,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={apiEmploymentBasisModalInputItem}
             />
-            {plantillaForm.touched.itm_basis &&
-            plantillaForm.errors.itm_basis ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_basis}
-              </p>
+            {plantillaForm.touched.itm_basis && plantillaForm.errors.itm_basis ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_basis}</p>
             ) : null}
           </span>
           <span className="middle-input item-modal-3">
@@ -295,11 +242,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={apiCategoryServiceModalInputItem}
             />
-            {plantillaForm.touched.itm_category &&
-            plantillaForm.errors.itm_category ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_category}
-              </p>
+            {plantillaForm.touched.itm_category && plantillaForm.errors.itm_category ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_category}</p>
             ) : null}
           </span>
           <span className="right-input item-modal-4">
@@ -311,11 +255,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={apiLevelPositionModalInputItem}
             />
-            {plantillaForm.touched.itm_level &&
-            plantillaForm.errors.itm_level ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_level}
-              </p>
+            {plantillaForm.touched.itm_level && plantillaForm.errors.itm_level ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_level}</p>
             ) : null}
           </span>
         </div>
@@ -329,11 +270,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               maxLength="255"
             />
-            {plantillaForm.touched.itm_function &&
-            plantillaForm.errors.itm_function ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_function}
-              </p>
+            {plantillaForm.touched.itm_function && plantillaForm.errors.itm_function ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_function}</p>
             ) : null}
           </span>
         </div>
@@ -348,11 +286,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={apiModeCreationModalInputItem}
             />
-            {plantillaForm.touched.itm_creation &&
-            plantillaForm.errors.itm_creation ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_creation}
-              </p>
+            {plantillaForm.touched.itm_creation && plantillaForm.errors.itm_creation ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_creation}</p>
             ) : null}
           </span>
           <span className="right-input item-modal-1">
@@ -371,11 +306,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={plantillaByOfc}
             />
-            {plantillaForm.touched.itm_supv1_itm_id &&
-            plantillaForm.errors.itm_supv1_itm_id ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_supv1_itm_id}
-              </p>
+            {plantillaForm.touched.itm_supv1_itm_id && plantillaForm.errors.itm_supv1_itm_id ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_supv1_itm_id}</p>
             ) : null}
           </span>
         </div>
@@ -390,11 +322,8 @@ const AddPlantillaItemModal = ({
               onChange={plantillaForm.handleChange}
               itemList={plantillaByOfc}
             />
-            {plantillaForm.touched.itm_supv2_itm_id &&
-            plantillaForm.errors.itm_supv2_itm_id ? (
-              <p className="error-validation-styles">
-                {plantillaForm.errors.itm_supv2_itm_id}
-              </p>
+            {plantillaForm.touched.itm_supv2_itm_id && plantillaForm.errors.itm_supv2_itm_id ? (
+              <p className="error-validation-styles">{plantillaForm.errors.itm_supv2_itm_id}</p>
             ) : null}
           </span>
         </div>

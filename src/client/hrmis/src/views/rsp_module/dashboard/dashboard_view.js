@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect, useState } from "react";
 import ButtonComponent from "../../common/button_component/button_component.js.js";
-import { useToggleService } from "../../../services/toggle_service.js";
 import AddOfficeModal from "./AddOfficeModal.js";
 import axios from "axios";
 import { API_HOST } from "../../../helpers/global/global_config.js";
@@ -17,21 +16,22 @@ import {
 	apiModelOfficeType,
 	apiModelOfficeAreaType,
 } from "./static/input_items.js";
+import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper.js";
 
 const DashboardView = ({}) => {
-	let [toggleOfficeModal, setToggleOfficeModal] = useToggleService(false);
-	const { getSecondLevel } = crumbSecondLevel();
-	const [plotOfficeData, setOfficeData] = useState([]);
-	const { isRefresh } = useSelector((state) => state.popupResponse);
-	const { trueValue } = useSelectValueCon();
-	const offceDataApi = async () => {
-		await axios
-			.get(API_HOST + "getOffices")
-			.then((response) => {
-				let data = response.data ?? [];
-				let dataPlot = [];
-				data.map((data) => {
-					// console.log(apiModelOfficeType);
+  let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
+  const { getSecondLevel } = crumbSecondLevel();
+  const [plotOfficeData, setOfficeData] = useState([]);
+  const { isRefresh } = useSelector((state) => state.popupResponse);
+  const { trueValue } = useSelectValueCon();
+  const offceDataApi = async () => {
+    await axios
+      .get(API_HOST + "getOffices")
+      .then((response) => {
+        let data = response.data ?? [];
+        let dataPlot = [];
+        data.map((data) => {
+          // console.log(apiModelOfficeType);
 
 					let values = {
 						ofc_id: data.ofc_id,

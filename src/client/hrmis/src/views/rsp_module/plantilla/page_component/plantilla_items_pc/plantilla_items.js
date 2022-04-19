@@ -3,7 +3,6 @@ import { plantillaItemsBreadCramp } from "../../static/breadcramp_data";
 import SearchComponent from "../../../../common/input_component/search_input/search_input";
 import { plantillaItemSelectFilter } from "../../static/filter_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
-import { useToggleService } from "../../../../../services/toggle_service";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { statusDisplay } from "../../static/display_option";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
@@ -16,6 +15,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import ButtonComponent from "../../../../common/button_component/button_component.js";
 import { useNavigate } from "react-router-dom";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
 
 const PlantillaItemPageComponentView = () => {
 	const [toggleState, setToggleState] = useState(1);
@@ -227,23 +227,22 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 };
 
 const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
-	let [toggleAddPlantillaItem, setTogglePlantillaItem] =
-		useToggleService(false);
-	return (
-		<React.Fragment>
-			<div className="selector-buttons">
-				<div className="selector-container">
-					<span className="selector-span-1">
-						<button onClick={() => setTogglePlantillaItem()}>
-							<MdAdd size="14" />
-							<span>Plantilla Item</span>
-						</button>
-					</span>
-					<AddPlantillaItemModal
-						isDisplay={toggleAddPlantillaItem}
-						onClose={() => setTogglePlantillaItem()}
-						type={type}
-					/>
+  let [toggleAddPlantillaItem, setTogglePlantillaItem] = useToggleHelper(false);
+  return (
+    <React.Fragment>
+      <div className="selector-buttons">
+        <div className="selector-container">
+          <span className="selector-span-1">
+            <button onClick={() => setTogglePlantillaItem()}>
+              <MdAdd size="14" />
+              <span>Plantilla Item</span>
+            </button>
+          </span>
+          <AddPlantillaItemModal
+            isDisplay={toggleAddPlantillaItem}
+            onClose={() => setTogglePlantillaItem()}
+            type={type}
+          />
 
 					<span className="margin-left-1 selector-span-1">
 						<select

@@ -2,22 +2,22 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { useToggleService } from "../../../../../services/toggle_service";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import PositionModal from "./position_modal";
 
 const PositionInfoModal = ({ isDisplay, onClose, pos_id }) => {
-	const { refresh } = useSelector((state) => state.popupResponse);
-	const [dataPosition, setDataPosition] = useState();
-	const [toggleModal, setToggleModal] = useToggleService();
-	const getPositionInfo = async (id) => {
-		await axios
-			.get(API_HOST + "get-info-position/" + id)
-			.then((res) => {
-				setDataPosition(res.data.data);
-			})
-			.catch((err) => {});
-	};
+  const { refresh } = useSelector((state) => state.popupResponse);
+  const [dataPosition, setDataPosition] = useState();
+  const [toggleModal, setToggleModal] = useToggleHelper();
+  const getPositionInfo = async (id) => {
+    await axios
+      .get(API_HOST + "get-info-position/" + id)
+      .then((res) => {
+        setDataPosition(res.data.data);
+      })
+      .catch((err) => {});
+  };
 
 	useEffect(() => {
 		if (pos_id) {

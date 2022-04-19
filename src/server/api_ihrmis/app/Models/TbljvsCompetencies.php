@@ -25,7 +25,6 @@ class TbljvsCompetencies extends Model
         return $this->belongsTo(Tbljvs::class, 'jvs_id', 'com_jvs_id');
     }
 
-
     public function tblComType()
     {
         return $this->hasMany(TbljvsCompetencyRatings::class, 'rtg_com_type', 'com_type');

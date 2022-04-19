@@ -2,6 +2,7 @@
 
 namespace App\Models\Applicants;
 
+use App\Models\Employee\Tblemployees;
 use App\Models\TblplantillaItems;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class Tblapplicants extends Model
     protected $table = 'tblapplicants';
     protected $primaryKey = 'app_id';
     protected $fillable = [
+        'app_id',
         'app_itm_id',
         'app_emp_id',
         'app_sts_time',
@@ -22,8 +24,11 @@ class Tblapplicants extends Model
 
     public $timestamps = false;
 
-    public function tblapplicantChildren(){
-        return $this->hasMany(TblapplicantChildren::class, 'chi_app_id' ,'app_id');
+    public function plantillaItems(){
+        return $this->hasOne(TblplantillaItems::class, 'itm_id', 'app_itm_id');
+    }
+    public function employee(){
+        return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }
 
     public function applicant(){

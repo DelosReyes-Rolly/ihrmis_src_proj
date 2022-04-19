@@ -30,7 +30,7 @@ class TbljvsController extends Controller
 
     public function allJvsVersion($itemId)
     {
-      $readQuery = Tbljvs::where('jvs_itm_id', $itemId)->get();
+      $readQuery = Tbljvs::where('jvs_itm_id', $itemId)->orderBy('jvs_version', 'DESC')->get();
       return CommonResource::collection($readQuery);
     }
 
@@ -44,7 +44,9 @@ class TbljvsController extends Controller
 
     public function readCompenencyAndRating($id)
     {
-        $data = TbljvsCompetencies::with('tblComType')->where('com_jvs_id', $id)->get();
+        $data = TbljvsCompetencies::where('com_jvs_id', $id)->with(['tblComType' => function ($query) use ($id){
+            $query->where('rtg_id', $id);
+        }])->get();
         return CommonResource::collection($data);
     }
 
@@ -54,7 +56,6 @@ class TbljvsController extends Controller
         return CommonResource::collection($output);
     }
 
-
     public function saveSignature(Request $request, $id, $signType)
     {
         $output = $this->appService->uploadImage($request, $id, $signType);
@@ -63,29 +64,33 @@ class TbljvsController extends Controller
         ]);
     }
 
-        // public function addDutiesAndResponsibilities($id, Request $request)
-    // {
-    //     $output = $this->appService->deleteDutiesResponsibilities($id, $request);
-    //     return $output;
-    // }
+    public function getSignatureDisplay($id)
+    {
+        $output = $this->appService->getImageSaved($id);
+        return $output;
+    }
 
+    public function generatedPdf($id){
+        return $this->appService->generateFile($id);
+    }
 
-    // public function addDutiesAndResponsibilities($id, Request $request)
-    // {
-    //     $output = $this->appService->dutiesResponsibilities($id, $request);
-    //     return $output;
-    // }
+    public function newVersion ($item) {
+        try {
+            $newVersion = $this->appService->createNewJvsVersion($item);
+            return response()->json([
+                "message" => $newVersion,
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+               "message" => "Creation Failed",
+               "error" => $th
+            ], 500);
+        }
+    }
 
-    // public function savePreparedBy($id, $request){
-    //     $request->validate(["prepared_by" => "mimes:jpeg,png|max:5120"]);
-    //     $output = $this->appService->updateOrCreateCmpntncyRtng($id, $request);
-    //     return $output;
-    // }
-
-    // public function removeCompetencyRating($id, $type, $order){
-    //     $output = $this->appService->deleteRating($id, $type, $order);
-    //     return response()->json([
-    //         "status" => $output
-    //     ]);
-    // }
+    public function removeImage ($id) {
+        $jvsQry = Tbljvs::find($id);
+        
+    }
 }

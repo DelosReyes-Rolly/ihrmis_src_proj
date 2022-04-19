@@ -28,6 +28,7 @@ import PlantillaVacantPageComponent from "../views/rsp_module/plantilla/page_com
 import LoginView from "../views/authentication/login_view";
 import PlantillaItemInformation from "../views/rsp_module/plantilla/page_component/plantilla_item_info_pc/plantilla_item_info";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
+import JvscrsForm from "../views/jvs_form/jvscrw_form";
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -75,64 +76,81 @@ const MainRouter = () => {
 								path="/rsp/plantilla/plantilla-items/vacantpositions"
 								element={<PlantillaVacantPageComponent />}
 							/>
-
-							<Route path="/rsp/library" element={<LibraryView />} />
-							<Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
-							<Route path="/rsp/recruitment" element={<RecruitmentView />} />
-							<Route path="/rsp/request" element={<RequestView />} />
-							<Route path="/rsp/compensation" element={<CompensationView />} />
-							{/* OTHER MODULE ROUTES */}
 						</Route>
 
-						{/* PDS FORM APPLICANT ROUTES */}
-						<Route path="/pds-applicant">
+						<Route path="/rsp/plantilla" element={<PlantillaView />}>
+							<Route
+								path="/rsp/plantilla/"
+								element={<EmployeePageComponentView />}
+							/>
+							<Route
+								path="/rsp/plantilla/employee"
+								element={<EmployeePageComponentView />}
+							/>
+							<Route
+								exact
+								path="/rsp/plantilla/plantilla-items"
+								element={<PlantillaItemPageComponentView />}
+							/>
+							<Route
+								path="/rsp/plantilla/plantilla-items/jvs-crw/:item"
+								element={<JvsCrwPageComponentView />}
+							/>
+
+							{/* PDS FORM APPLICANT ROUTES */}
 							<Route path="/pds-applicant">
+								<Route path="/pds-applicant">
+									<Route
+										exact
+										path="/pds-applicant/form-page-one/:item"
+										element={<FormPageOne />}
+									/>
+									<Route
+										exact
+										path="/pds-applicant/"
+										element={<FormPageOne />}
+									/>
+								</Route>
+
 								<Route
-									exact
-									path="/pds-applicant/form-page-one/:item"
-									element={<FormPageOne />}
+									path="/pds-applicant/form-page-two/:item"
+									element={<FormPageTwo />}
 								/>
-								<Route exact path="/pds-applicant/" element={<FormPageOne />} />
+								<Route
+									path="/pds-applicant/form-page-three/:item"
+									element={<FormPageThree />}
+								/>
+								<Route
+									path="/pds-applicant/form-page-four/:item"
+									element={<FormPageFour />}
+								/>
+								<Route
+									path="/pds-applicant/form-page-five/:item"
+									element={<FormPageFive />}
+								/>
+								<Route
+									path="/pds-applicant/form-page-six/:item"
+									element={<FormPageSix />}
+								/>
+								<Route
+									path="/pds-applicant/email-confirmation/:email"
+									element={<SentEmailConfirmation />}
+								/>
+								<Route
+									path="/pds-applicant/success-confirmation/:item"
+									element={<SuccessEmailConfirmation />}
+								/>
 							</Route>
 
 							<Route
-								path="/pds-applicant/form-page-two/:item"
-								element={<FormPageTwo />}
-							/>
-							<Route
-								path="/pds-applicant/form-page-three/:item"
-								element={<FormPageThree />}
-							/>
-							<Route
-								path="/pds-applicant/form-page-four/:item"
-								element={<FormPageFour />}
-							/>
-							<Route
-								path="/pds-applicant/form-page-five/:item"
-								element={<FormPageFive />}
-							/>
-							<Route
-								path="/pds-applicant/form-page-six/:item"
-								element={<FormPageSix />}
-							/>
-							<Route
-								path="/pds-applicant/email-confirmation/:email"
-								element={<SentEmailConfirmation />}
-							/>
-							<Route
-								path="/pds-applicant/success-confirmation/:item"
-								element={<SuccessEmailConfirmation />}
+								path="*"
+								element={
+									<React.Fragment>
+										<FourOfourPage />
+									</React.Fragment>
+								}
 							/>
 						</Route>
-
-						<Route
-							path="*"
-							element={
-								<React.Fragment>
-									<FourOfourPage />
-								</React.Fragment>
-							}
-						/>
 					</Routes>
 				</BrowserRouter>
 			</div>

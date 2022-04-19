@@ -206,7 +206,12 @@ const FormPageOne = () => {
         renderBusy(true);
         await useAxiosHelper
           .post(values, "new-applicant", item)
-          .then(() => renderSucceed({ content: "Form submitted" }))
+          .then(() => {
+            renderSucceed({ content: "Form submitted" });
+            navigate(
+              "/pds-applicant/email-confirmation/" + values.app_email_addr
+            );
+          })
           .catch((err) => renderFailed({ content: err.message }));
         renderBusy(false);
       } else {

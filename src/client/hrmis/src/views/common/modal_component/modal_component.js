@@ -6,6 +6,7 @@ const ModalComponent = (props) => {
   const modalViewFunction = () => {
     return (
       <div className="modal-component-div">
+        {props.addElement}
         <form onSubmit={props.onSubmit}>
           <div className="mcf-header">
             <h3>{props.title}</h3>
@@ -35,15 +36,13 @@ const ModalComponent = (props) => {
                   type="button"
                   bgColor="rgb(230, 230, 230)"
                   border="1px solid rgba(70, 70, 70, 0.8)"
-                  onClick={
-                    props.onPressed != null ? props.onPressed : props.onClose
-                  }
+                  onClick={props.onPressed != null ? props.onPressed : props.onClose}
                   buttonName={props.onCloseName}
                 />
               </div>
             )}
-
-            <div className="margin-left-1">
+            {props.addExtraButton}
+            <div className="">
               <ButtonComponent
                 type={props.onSubmitType}
                 buttonName={props.onSubmitName}
@@ -56,11 +55,7 @@ const ModalComponent = (props) => {
     );
   };
 
-  return (
-    <React.Fragment>
-      {props.isDisplay ? modalViewFunction() : null}
-    </React.Fragment>
-  );
+  return <React.Fragment>{props.isDisplay ? modalViewFunction() : null}</React.Fragment>;
 };
 
 ModalComponent.defaultProps = {

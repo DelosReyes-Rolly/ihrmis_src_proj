@@ -12,6 +12,7 @@
         "carlos-meneses/laravel-mpdf": "^2.1",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "iio/libmergepdf": "^4.0",
         "laravel/framework": "^8.54",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.5",

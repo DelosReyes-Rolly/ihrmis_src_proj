@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import IconComponent from "../../../../common/icon_component/icon";
-import {
-	BsFillAspectRatioFill,
-	BsFillCheckCircleFill,
-	BsGlobe,
-} from "react-icons/bs";
+import { BsFillCheckCircleFill, BsGlobe } from "react-icons/bs";
 import { AiFillPrinter } from "react-icons/ai";
 import { plantillaVacantBreadCramp } from "../../static/breadcramp_data";
 import { PlantillaDataTableDisplay } from "./plantilla_data_table_display";

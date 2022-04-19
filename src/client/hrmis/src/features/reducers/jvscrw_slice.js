@@ -17,6 +17,8 @@ const jvscrwSlice = createSlice({
   name: "jvsform",
 
   initialState: {
+    minimum_req: "",
+    version_selected: "",
     plantilla_item: "",
 
     office: {
@@ -420,10 +422,17 @@ const jvscrwSlice = createSlice({
         },
       };
     },
+    setMinimumRequirement: (state, action) => {
+      state.minimum_req = action.payload;
+    },
+    setVersionSelected: (state, action) => {
+      state.version_selected = action.payload;
+    },
   },
 });
 
 export const {
+  setMinimumRequirement,
   setEligibility,
   setEducation,
   setWorkExp,
@@ -444,6 +453,7 @@ export const {
   editCompetency,
   setTotalWeight,
   setRatingFactor,
+  setVersionSelected,
 } = jvscrwSlice.actions;
 
 export default jvscrwSlice.reducer;

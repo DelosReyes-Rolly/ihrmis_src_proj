@@ -164,7 +164,7 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
 					<div className="email-modal-plantilla">
 						<RichTextEditorComponent
 							setFieldValue={(val) => emailFormik.setFieldValue("message", val)}
-							value={emailFormik.values.message}
+							value={selectedMsg}
 						/>
 					</div>
 					{emailFormik.touched.message && emailFormik.errors.message ? (

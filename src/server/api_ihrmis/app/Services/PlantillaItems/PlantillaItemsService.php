@@ -2,17 +2,15 @@
 
 namespace App\Services\PlantillaItems;
 
-use App\Http\Resources\Applicant\ApplicantProfileResource;
-use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Employees\TblEmployees;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
-use Mpdf\Mpdf as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 
 class PlantillaItemsService {
 
@@ -54,46 +52,33 @@ class PlantillaItemsService {
 	public function generateVacantPositionsReport()
 	{
 
-		//$pdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4-L']);
-  
-		// date_default_timezone_set('Asia/Manila'); //define local time
+		date_default_timezone_set('Asia/Manila'); //define local time
 		
-		// $data = $this->getVacantPositions(1);
+		$data = $this->getVacantPositions(1);
 
-		// $new_data = [];
+		$new_data = [];
 
-		// foreach($data as $itm){
-		// 	$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
-		// 	$itm->positionswithcscstandards = $positionswithcscstandards;
-		// }
+		foreach($data as $itm){
+			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
+			$itm->positionswithcscstandards = $positionswithcscstandards;
+		}
 	
-		// $new_data['vacantpositions'] = $data;
+		$new_data['vacantpositions'] = $data;
 	
-		// $date = date('m/d/Y');
+		$date = date('m/d/Y');
 
-		// // Setup a filename 
-        // $documentFileName = "DOST-CO Vacant Position_".$date.".pdf";
-
-		// $pdf = PDF::loadHTML('vacantPositionsPdf',$new_data,[], [
-		// 'title'				=> 	'DOST-CO Vacant Position',
-		// 'margin_left'     	=> 10,
-		// 'margin_right'      => 10,
-		// 'margin_top'        => 10,
-		// 'margin_bottom'     => 10,
-		// 'orientation'       => 'L',
-		// 'format' => 'A4'
-		// ]);
-		
-		// //Set some header informations for output
-        // $header = [
-        //     'Content-Type' => 'application/pdf',
-        //     'Content-Disposition' => 'inline; filename="'.$documentFileName.'"'
-        // ];
-
-
-		$pdf = new \Mpdf\Mpdf(['format' => 'Legal']);
-
-		$pdf->WriteHTML('Hello World');
+		$pdf = new LaravelMpdf();
+		$pdf =  $pdf->loadView('vacantPositionsPdf',$new_data,[], [
+		'title'				=> 	'DOST-CO Vacant Position',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'L',
+		'format' => 'A4'
+		]);
+	
+		return $pdf->stream('Vacant Positions_'.$date.'.pdf');
   	}
 
 	
@@ -118,11 +103,18 @@ class PlantillaItemsService {
 	
 		$new_data['vacantpositions'] = $data;
 		
+		$pdf = new LaravelMpdf();
 		$date = date('m/d/Y');
-		$pdf = PDF::loadView('noticeOnVacantPosition',$new_data);
-		$pdf->setPaper('margin', '1')->setWarnings(false)
-		->setPaper('a4', 'portrait')
-		->setOptions(['dpi' => 600, 'defaultFont' => 'Arial']);
+		$pdf = $pdf->loadView('noticeOnVacantPosition',$new_data,[], [
+		'title'				=> 	'Notice of Vacancy',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'L',
+		'format' => 'A4'
+		]);
+
 		return $pdf->stream('Notice of Vacancy_'.$date.'.pdf');
   	}
 
@@ -146,11 +138,20 @@ class PlantillaItemsService {
 		}
 	
 		$new_data['vacantpositions'] = $data;
-		
 		$date = date('m/d/Y');
-		$pdf = PDF::loadView('memoOnPostingVPForCsc',$new_data);
-		$pdf->setPaper('a4', 'portrait')->setWarnings(false)
-		->setOptions(['dpi' => 600, 'defaultFont' => 'Arial']);
+
+		$pdf = new LaravelMpdf();
+		
+		$pdf = $pdf->loadView('memoOnPostingVPForCsc',$new_data,[], [
+		'title'				=> 	'Notice of Vacancy',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'P',
+		'format' => 'A4'
+		]);
+
 		return $pdf->stream('Memo On Posting Vacant Position For CSC_'.$date.'.pdf');
   	}
 	  
@@ -176,9 +177,18 @@ class PlantillaItemsService {
 		$new_data['vacantpositions'] = $data;
 		
 		$date = date('m/d/Y');
-		$pdf = PDF::loadView('memoOnPostingVpForDostAgencies',$new_data);
-		$pdf->setPaper('a4', 'portrait')->setWarnings(false)
-		->setOptions(['dpi' => 600, 'defaultFont' => 'Arial']);
+
+		$pdf = new LaravelMpdf();
+		$pdf = $pdf->loadView('memoOnPostingVpForDostAgencies',$new_data,[], [
+		'title'				=> 	'Notice of Vacancy',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'P',
+		'format' => 'A4'
+		]);
+
 		return $pdf->stream('Memo On Posting Vacant Position For DOST Agencies_'.$date.'.pdf');
   	} 
 

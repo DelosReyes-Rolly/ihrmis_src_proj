@@ -1,10 +1,13 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import ButtonComponent from "../../../../../common/button_component/button_component.js";
 import { AiFillPrinter } from "react-icons/ai";
 import ModalComponent from "../../../../../common/modal_component/modal_component.js";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setRemarksImg } from "../../../../../../features/reducers/jvscrw_slice.js";
+import {
+  setMinimumRequirement,
+  setRemarksImg,
+} from "../../../../../../features/reducers/jvscrw_slice.js";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
 import {
@@ -17,6 +20,7 @@ import SignatureCanvas from "react-signature-canvas";
 import Creatable from "react-select/creatable";
 import dataURLtoBlob from "blueimp-canvas-to-blob";
 import { useUploadImageHelper } from "../../../../../../helpers/use_hooks/upload_image_helper.js";
+import isBase64 from "../../../../../../helpers/base64_checker.js";
 
 const OBJECTKEY = {
   preName: "preName",
@@ -29,9 +33,15 @@ const RemarksForm = ({ jvsId }) => {
   const [preparedBy, setPreparedBy] = useState(false);
   const [approvedBy, setApprovedBy] = useState(false);
   const navigate = useNavigate();
-  const { competencies, dtyResContainer, remarksImg } = useSelector(
-    (state) => state.jvsform
-  );
+  const {
+    competencies,
+    dtyResContainer,
+    remarksImg,
+    minimum_req,
+    version_selected,
+  } = useSelector((state) => state.jvsform);
+
+  const dispatch = useDispatch();
 
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const dataStructure = {
@@ -48,25 +58,66 @@ const RemarksForm = ({ jvsId }) => {
       competencies?.com_experience,
     ],
     dty_res_item: dtyResContainer,
+    min_com_desc: minimum_req,
+    jvs_version: version_selected,
     app_name: remarksImg.appName,
     pre_name: remarksImg.preName,
-    app_sign: remarksImg.approvedBy,
-    pre_sign: remarksImg.preparedBy,
   };
 
   const handleSubmit = async (subType = "") => {
-    console.log(dataStructure);
+    const form = new FormData();
+    form.append("app_name", remarksImg.appName);
+    form.append("pre_name", remarksImg.preName);
+    form.append("app_sign", remarksImg.approvedBy);
+    form.append("pre_sign", remarksImg.preparedBy);
+
     renderBusy(true);
     await axios
       .post(API_HOST + "jvscrw-competency-rating" + subType, dataStructure)
-      .then((res) => renderSucceed({}))
+      .then((res) => {
+        // axios
+        // .post(API_HOST, form, {
+        //   headers: { "content-type": "multipart/form-data" },
+        // })
+        // .then(() => renderSucceed({}));
+      })
       .catch((err) => renderFailed({ content: err.message }));
+    // await axios
+    //   .post(API_HOST, form, {
+    //     headers: { "content-type": "multipart/form-data" },
+    //   })
+    //   .then((res) => renderSucceed({}))
+    //   .catch((err) => renderFailed({ content: err.message }));
 
     renderBusy(false);
   };
 
-  const onNewVersion = () => {};
-  const onExit = () => {};
+  useEffect(async () => {
+    if (jvsId) {
+      await axios.get(API_HOST + "get-signature-image/" + jvsId).then((res) => {
+        const data = res.data;
+        dispatch(
+          setRemarksImg({ key: OBJECTKEY.preparedBy, value: data.prepared })
+        );
+        dispatch(
+          setRemarksImg({
+            key: OBJECTKEY.preName,
+            value: data.prepared_name,
+          })
+        );
+        dispatch(
+          setRemarksImg({ key: OBJECTKEY.approvedBy, value: data.approved })
+        );
+        dispatch(
+          setRemarksImg({
+            key: OBJECTKEY.appName,
+            value: data.approved_name,
+          })
+        );
+        dispatch(setMinimumRequirement(data.requirement));
+      });
+    }
+  }, [jvsId]);
 
   return (
     <React.Fragment>
@@ -98,10 +149,9 @@ const RemarksForm = ({ jvsId }) => {
         />
         <div>
           <ButtonComponent
-            className="on-save"
-            buttonName="Save as New Version"
+            buttonName="Save Worksheet"
             onClick={() => {
-              handleSubmit("/new");
+              handleSubmit("/save");
             }}
           />
           <ButtonComponent
@@ -178,62 +228,78 @@ const customStyles = {
 };
 
 const PreparedProved = ({ title, upload, objectKey, id, name = null }) => {
-  const { remarksImg } = useSelector((state) => state.jvsform);
-  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const uploadImageRef = useRef();
   const dispatch = useDispatch();
-  const [state, setState] = useState(false);
+  const [blurStyle, setBlurStyle] = useState(false);
   const { imageState, reader64 } = useUploadImageHelper();
-  const handleChange = (e) => {
-    reader64(e.target.files);
-    dispatch(setRemarksImg({ key: objectKey, value: imageState[0] }));
-  };
+
+  const { remarksImg } = useSelector((state) => state.jvsform);
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 
   const handleSubmit = async (type) => {
-    const blob = dataURLtoBlob(remarksImg[objectKey]);
-    const formData = new FormData();
-    formData.append("name", remarksImg[name]);
-    formData.append("signature", blob, "signature.png");
+    if (isBase64(remarksImg[objectKey])) {
+      const blob = dataURLtoBlob(remarksImg[objectKey]);
+      const formData = new FormData();
+      formData.append("name", remarksImg[name]);
+      formData.append("signature", blob, "signature.png");
 
-    renderBusy(true);
-    await axios
-      .post(
-        API_HOST + "jvscrw-sign-upload/" + id + "/type/" + type,
-        formData,
-        axiosConfig
-      )
-      .then(() => {
-        renderSucceed({});
-      })
-      .catch((err) => {
-        renderFailed({ content: err.message });
-      });
-    renderBusy(false);
+      renderBusy(true);
+      await axios
+        .post(
+          API_HOST + "jvscrw-sign-upload/" + id + "/type/" + type,
+          formData,
+          axiosConfig
+        )
+        .then(() => {
+          renderSucceed({});
+        })
+        .catch((err) => {
+          renderFailed({ content: err.message });
+        });
+      renderBusy(false);
+    }
   };
 
-  const clearSignatureDisplay = () => {
+  const clearSignatureDisplay = async () => {
     dispatch(setRemarksImg({ key: objectKey, value: null }));
+    const data = {
+      jvs_id: id,
+      key: objectKey,
+    };
+    // await axios.post(API_HOST + "clear-signature/" + id, data);
   };
 
   const options = [
     { value: "Sean Terrence Calzada", label: "Sean Terrence Calzada" },
   ];
+
+  useEffect(() => {
+    console.log(imageState);
+    if (remarksImg) {
+      dispatch(setRemarksImg({ key: objectKey, value: imageState[0] }));
+    }
+  }, [imageState]);
+
   return (
     <React.Fragment>
       <h5 style={{ marginBottom: "5px" }}>{title ?? "TITLE"}</h5>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Creatable
           name="tags_input"
+          value={{
+            label: remarksImg[name] ?? "",
+            value: remarksImg[name] ?? "",
+          }}
           options={options}
           styles={customStyles}
           className="creatable-design"
           isClearable={true}
-          placeholder={state ? "" : "Name"}
+          placeholder={blurStyle ? "" : "Name"}
           onChange={(e) =>
             dispatch(setRemarksImg({ key: name, value: e?.value }))
           }
-          onFocus={() => setState(true)}
-          onBlur={() => setState(false)}
+          onFocus={() => setBlurStyle(true)}
+          onBlur={() => setBlurStyle(false)}
         />
         <button className="button-1" onClick={() => upload(true)}>
           Sign
@@ -243,7 +309,7 @@ const PreparedProved = ({ title, upload, objectKey, id, name = null }) => {
           type="file"
           accept="image/*"
           ref={uploadImageRef}
-          onChange={handleChange}
+          onChange={(e) => reader64(e.target.files)}
         />
         <button
           className="button-2"
@@ -299,7 +365,6 @@ const PreparedProved = ({ title, upload, objectKey, id, name = null }) => {
 
 const PreparedProvedModal = (props) => {
   const reference = useRef();
-  const { remarksImg } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -327,7 +392,7 @@ const PreparedProvedModal = (props) => {
           <SignatureCanvas
             ref={reference}
             penColor="black"
-            clearOnResize="true"
+            clearOnResize={true}
             canvasProps={{
               width: 700,
               height: 300,
@@ -338,4 +403,4 @@ const PreparedProvedModal = (props) => {
       </ModalComponent>
     </React.Fragment>
   );
-};
+}; 
