@@ -46,7 +46,6 @@ Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "creat
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
-Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
 Route::get('new-children/{id}',[TblapplicantChildrenController::class, "getChildrenRecord"]);
@@ -157,8 +156,6 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 //=======================================================================================
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
-Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
-
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -166,11 +163,22 @@ Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
 Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 
-//legee updates
-Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
-Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
+//=======================================================================================
+// VACANT POSITIONS CONTROLLER ENDPOINTS
+//=======================================================================================
 Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
 
+Route::get('getAllPositions',[TblplantillaItemsVacantPositionController::class,"getAllPositions"]);
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
+Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
+Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
+
+//=======================================================================================
+// MAIL CONTROLLER ENDPOINTS
+//=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);

@@ -8,10 +8,7 @@ import {
   setMessageError,
   setObjectError,
 } from "../../../../features/reducers/error_handler_slice";
-import {
-  setBusy,
-  setRefresh,
-} from "../../../../features/reducers/popup_response";
+import { setBusy } from "../../../../features/reducers/popup_response";
 import { API_HOST } from "../../../../helpers/global/global_config";
 import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
 import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
@@ -24,14 +21,11 @@ import ValidationComponent from "../../../common/response_component/validation_c
 import FourAddReferenceModal from "../add_modals/five_add_reference";
 import DostHeader from "../dost_header";
 import PrevNextSubButtons from "../prev_next_sub_buttons";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 
 const FormPageFive = () => {
   useScrollToTop();
 
   const [dataState, dataInput, customDataInput, setter] = useFormHelper();
-  const [inputState, inputStateSetter] = useState();
   const dispatch = useDispatch();
   let imageIncompleteLinkStr =
     "http://localhost:8000/storage/applicant/passport-img/";
@@ -39,95 +33,59 @@ const FormPageFive = () => {
   let navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState(null);
 
-  const [fileState, setFileState] = useState();
-
   const uploadFileHandler = (e) => {
     const image = e.target.files[0];
-    let files = Array.from(e.target.files);
     let blob = new Blob([image], { type: "image/jpg" });
     setImgUrl(URL.createObjectURL(blob));
-    setFileState(image);
     customDataInput(e.target.name, e.target.files[0]);
   };
 
   ///HANDLER FOR SUBMIT
-  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  const { renderFail, renderSuccess } = usePopUpHelper();
   const errorObj = useSelector((state) => state.error.objectError);
   const errorMsg = useSelector((state) => state.error.messageError);
 
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    dispatch(setBusy(true));
+    await useAxiosRequestHelper
+      .post(dataState, "new-profile", item, true)
+      .then(() => {
+        renderSuccess();
+        dispatch(setObjectError({}));
+        dispatch(setMessageError(undefined));
+      })
+      .catch((error) => {
+        renderFail();
+        if (typeof error === "object") {
+          dispatch(setObjectError(error));
+          dispatch(setMessageError("Unprocessable Entity"));
+        } else {
+          dispatch(setObjectError({}));
+          dispatch(setMessageError(error));
+        }
+      });
+    dispatch(setBusy(false));
+  };
+
   const getApplcntGvrnmntIdRecord = async () => {
     await axios.get(API_HOST + "get-new-applicant/" + item).then((response) => {
-      inputStateSetter(response.data.data);
+      setter({
+        app_id_issued: response.data.data
+          ? response.data.data.app_id_issued
+          : "",
+        app_id_no: response.data.data ? response.data.data.app_id_no : "",
+        app_id_dateplace: response.data.data
+          ? response.data.data.app_id_dateplace
+          : "",
+        app_photo: response.data.data
+          ? response.data.data.app_photo === imageIncompleteLinkStr
+            ? ""
+            : response.data.data.app_photo
+          : "",
+      });
     });
   };
-  useEffect(() => {
-    getApplcntGvrnmntIdRecord();
-  }, []);
-
-  const governmentForm = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      app_id_issued: inputState?.app_id_no ?? "",
-      app_id_no: inputState?.app_id_no ?? "",
-      app_id_dateplace: inputState?.app_id_dateplace ?? "",
-      app_photo: "",
-      app_agree: inputState ?? "1",
-    },
-    validationSchema: Yup.object({
-      app_id_issued: Yup.string()
-        .required("This field is required")
-        .max(90, "Invalid input"),
-    }),
-    onSubmit: async (value) => {
-      renderBusy(true);
-      let data = new FormData();
-      data.append("app_agree", value.app_agree);
-      data.append("app_id_dateplace", value.app_agree);
-      data.append("app_id_issued", value.app_agree);
-      data.append("app_id_no", value.app_agree);
-      data.append("app_photo", fileState, fileState.name);
-      await axios
-        .post(API_HOST + "new-profile/" + item, data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          renderSucceed({});
-          // console.log(response.data.data);
-        })
-        .catch((err) => {
-          renderFailed({});
-          console.log(err);
-        });
-      renderBusy(false);
-
-      const upload = () => {};
-    },
-  });
-
-  // const submitHandler = async (e) => {
-  //   e.preventDefault();
-  //   dispatch(setBusy(true));
-  //   await useAxiosRequestHelper
-  //     .post(dataState, "new-profile", item, true)
-  //     .then(() => {
-  //       renderSucceed();
-  //       dispatch(setObjectError({}));
-  //       dispatch(setMessageError(undefined));
-  //     })
-  //     .catch((error) => {
-  //       renderFailed();
-  //       if (typeof error === "object") {
-  //         dispatch(setObjectError(error));
-  //         dispatch(setMessageError("Unprocessable Entity"));
-  //       } else {
-  //         dispatch(setObjectError({}));
-  //         dispatch(setMessageError(error));
-  //       }
-  //     });
-  //   dispatch(setBusy(false));
-  // };
 
   useEffect(() => {
     console.log(imgUrl);
@@ -142,11 +100,7 @@ const FormPageFive = () => {
         <div>
           <ReferenceTable />
         </div>
-        <br />
-        <form
-          onSubmit={governmentForm.handleSubmit}
-          encType="multipart/form-data"
-        >
+        <form onSubmit={submitHandler} encType="multipart/form-data">
           <div className="form-4-div">
             <div className="form-4-input-div">
               <div className="id-containers">
@@ -162,8 +116,8 @@ const FormPageFive = () => {
                     <InputComponent
                       maxLenght="50"
                       name="app_id_issued"
-                      value={governmentForm.values.app_id_issued}
-                      onChange={governmentForm.handleChange}
+                      value={dataState ? dataState.app_id_issued : undefined}
+                      onChange={(e) => dataInput(e)}
                     />
                   </div>
                   <div>
@@ -174,8 +128,8 @@ const FormPageFive = () => {
                     <InputComponent
                       maxLenght="20"
                       name="app_id_no"
-                      value={governmentForm.values.app_id_no}
-                      onChange={governmentForm.handleChange}
+                      value={dataState ? dataState.app_id_no : undefined}
+                      onChange={(e) => dataInput(e)}
                     />
                   </div>
                   <div>
@@ -186,15 +140,22 @@ const FormPageFive = () => {
                     <InputComponent
                       maxLenght="50"
                       name="app_id_dateplace"
-                      value={governmentForm.values.app_id_dateplace}
-                      onChange={governmentForm.handleChange}
+                      value={dataState ? dataState.app_id_dateplace : undefined}
+                      onChange={(e) => dataInput(e)}
                     />
                   </div>
                 </div>
                 <div className="upload-image-container">
                   <UploadImageComponent
-                    imgServer={governmentForm.app_photo}
-                    imgUrl={inputState?.app_photo}
+                    //  == ? undefined :
+                    imgServer={
+                      dataState
+                        ? dataState.app_photo === ""
+                          ? undefined
+                          : dataState.app_photo
+                        : undefined
+                    }
+                    imgUrl={imgUrl}
                     onChange={(e) => uploadFileHandler(e)}
                     error={errorObj ? errorObj.app_photo : ""}
                   />
@@ -210,10 +171,9 @@ const FormPageFive = () => {
                 <CheckboxComponent
                   name="app_agree"
                   value="1"
-                  onChange={governmentForm.handleChange}
-                  // onChange={(e) =>
-                  //   customDataInput("app_agree", e.target.value, true)
-                  // }
+                  onChange={(e) =>
+                    customDataInput("app_agree", e.target.value, true)
+                  }
                 />
               </div>
 

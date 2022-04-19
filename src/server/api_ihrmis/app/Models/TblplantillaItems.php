@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Applicants\Tblapplicants;
+use App\Models\Applicants\TblapplicantsProfile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,7 @@ class TblplantillaItems extends Model
     protected $primaryKey = 'itm_id';
     protected $table = 'tblplantilla_items';
     
-    protected $fillable=[
+    protected $fillable = [
         'itm_regular',
         'itm_no',
         'itm_pos_id',
@@ -48,7 +49,19 @@ class TblplantillaItems extends Model
         return $this->hasMany(TblplantillaDutiesRspnsblts::class, 'dty_itm_id' ,'itm_id');
     }
 
-    public function applicant(){
-        return $this->belongsTo(Tblapplicants::class, 'itm_id' ,'app_itm_id');
+    public function tblapplicants(){
+        return $this->hasMany(Tblapplicants::class, 'app_itm_id' ,'itm_id');
+    }
+
+    public function tblapplicant_profile(){
+        return $this->hasManyThrough(
+            TblapplicantsProfile::class,
+            Tblapplicants::class,
+            'app_itm_id', // Foreign key on the aplicants table...
+            'app_id', // Foreign key on the profile table...
+            'itm_id', // Local key on the plnatillaitems table...
+            'app_id' // Local key on the applicants table...
+        );
+
     }
 }

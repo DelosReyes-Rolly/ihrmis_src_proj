@@ -4347,7 +4347,7 @@ hr.solid {
 * {
   margin: 0px;
   padding: 0px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .app {
@@ -4606,8 +4606,8 @@ ul.breadcrumb li span:hover {
 }
 
 .ul-menu-item {
-  cursor: pointer;
   padding: 7px 20px;
+  cursor: pointer;
 }
 
 .ul-menu-item:hover {
@@ -4617,9 +4617,34 @@ ul.breadcrumb li span:hover {
 .ul-menu-item-arrow {
   margin: 0;
   position: absolute;
-  top: -9px;
+  top: -11px;
   right: 4px;
   color: white;
+}
+
+.link-class {
+  color: black;
+  text-decoration: none;
+}
+
+.unstyled-button {
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.button-icon {
+  color: #4276a4;
+}
+
+.button-icon:hover {
+  cursor: default;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .footer {
@@ -7072,6 +7097,7 @@ input:checked + .slider:before {
   }
 }
 
+@use "../../../../../helpers/sass/defaults/_default_colors.scss" as *;
 /* START OF THE JVS/CRW */
 .jvs-crw-container {
   margin: 10px 20px 30px 20px;
@@ -7490,6 +7516,115 @@ input:checked + .slider:before {
 
 .add-plantilla-item-modal .item-modal-5 {
   width: 100%;
+}
+
+.next-rank-modal-container .nrm-header {
+  font-weight: 600;
+  color: #4880b3;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.next-rank-modal-container .nrm-header .check-box-alignment {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.next-rank-modal-container .nrm-header .check-box-alignment span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.next-rank-modal-container .nrm-header .container-1 {
+  width: 40%;
+}
+
+.next-rank-modal-container .nrm-header .container-2 {
+  width: 40%;
+}
+
+.next-rank-modal-container .nrm-header .container-3 {
+  width: 20%;
+}
+
+.next-rank-modal-container .nrm-body {
+  font-weight: 400;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.next-rank-modal-container .nrm-body .check-box-alignment {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.next-rank-modal-container .nrm-body .check-box-alignment span {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.next-rank-modal-container .nrm-body .container-1 {
+  width: 40%;
+}
+
+.next-rank-modal-container .nrm-body .container-2 {
+  width: 40%;
+}
+
+.next-rank-modal-container .nrm-body .container-3 {
+  width: 20%;
+}
+
+.next-rank-modal-container .bold-selected {
+  font-weight: 600;
 }
 
 .next-rank-modal-container .next-rank-table {
