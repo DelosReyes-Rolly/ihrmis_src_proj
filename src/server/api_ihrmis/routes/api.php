@@ -146,16 +146,28 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 //=======================================================================================
 Route::post('login', [AuthenticationController::class, "loginUser"]);
 Route::post('register', [AuthenticationController::class, "registerUser"]);
-
-Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
-
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('mail-types', [MailController::class, "getMailType"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 
-//legee updates
-Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
-Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
+//=======================================================================================
+// VACANT POSITIONS CONTROLLER ENDPOINTS
+//=======================================================================================
 
+Route::get('getAllPositions',[TblplantillaItemsVacantPositionController::class,"getAllPositions"]);
+Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
+Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
+Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
+Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
+
+//=======================================================================================
+// MAIL CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('office', [TblofficesController::class, "office"]);
+Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
+Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
+Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);

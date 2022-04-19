@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Applicants\TblapplicantsProfile;
+use App\Models\Employees\TblEmployees;
 use App\Models\Second\SecApplicantProfile;
 use App\Models\TbljvsCompetencies;
 use App\Observers\ApplicantObservers\ApplicantProfileObserver;
+use App\Observers\EmployeeObservers\EmployeeObserver;
 use App\Observers\JvsCompetenciesObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -35,5 +37,6 @@ class EventServiceProvider extends ServiceProvider
         //
         TbljvsCompetencies::observe(JvsCompetenciesObserver::class);
         TblapplicantsProfile::observe(ApplicantProfileObserver::class);
+        TblEmployees::observe(EmployeeObserver::class);
     }
 }

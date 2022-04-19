@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import BreadcrumbConfig, {
-  crumbSecondLevel,
-} from "../../../router/breadcrumb_config";
-=======
 import React, { useMemo, useEffect, useState } from "react";
 import ButtonComponent from "../../common/button_component/button_component.js.js";
 import { useToggleService } from "../../../services/toggle_service.js";
@@ -172,16 +166,9 @@ const DashboardView = ({}) => {
   };
 
   // const { globalFilter } = state;
->>>>>>> upstream/development
 
-const DashboardView = () => {
-  const { getSecondLevel } = crumbSecondLevel();
   return (
-<<<<<<< HEAD
-    <React.Fragment>
-=======
     <div>
->>>>>>> upstream/development
       <BreadcrumbConfig array={getSecondLevel(1)} />
       <div style={{ margin: 20 }}>
         <div className="">
@@ -195,9 +182,6 @@ const DashboardView = () => {
           buttonName="Office"
         />
       </div>
-<<<<<<< HEAD
-    </React.Fragment>
-=======
 
       <AddOfficeModal
         isDisplay={toggleOfficeModal}
@@ -275,8 +259,6 @@ const DashboardView = () => {
         </p>
       </div>
     </div>
->>>>>>> upstream/development
   );
 };
-
 export default DashboardView;

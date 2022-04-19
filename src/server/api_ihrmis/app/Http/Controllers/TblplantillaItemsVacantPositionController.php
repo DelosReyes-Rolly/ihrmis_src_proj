@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Plantilla\GetVacantPositionsResource;
+use App\Models\TblplantillaItems;
 use App\Services\PlantillaItems\PlantillaItemsService;
-
+use Illuminate\Http\Request;
 
 /**
  * Description of TblplantillaItemsVacantPositionController
@@ -29,11 +30,53 @@ class TblplantillaItemsVacantPositionController extends Controller {
     }
 
     /**
+     * getVacantPositions
+     * Todo get all positions fro Plantilla Items
+     */
+    public function getAllPositions() {
+        
+        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos::getAllPlantillaItems()) ;
+
+    }
+
+    /**
      * generatePdf
      * Todo generate PDF file
      */
-    public function generatePdf()
+    public function generateVpReport()
     {
-        return $this->tblPantillaVacantPos->generatePdf();
+        return $this->tblPantillaVacantPos->generateVacantPositionsReport();
+    }
+
+    /**
+     * generateNoticeVpReport
+     * Todo generate PDF file
+     */
+    public function generateNoticeVpReport()
+    {
+        return $this->tblPantillaVacantPos->generateNoticeofVacancyReports();
+    }
+
+    /**
+     * generateMemoOnPostingVPForCsc
+     * Todo generate PDF file
+     */
+    public function generateMemoOnPostingVPForCsc()
+    {
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVpReport();
+    }
+
+     /**
+     * generateMemoOnPostingVPForDostAgencies
+     * Todo generate PDF file
+     */
+    public function generateMemoOnPostingVPForDostAgencies()
+    {
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport();
+    }
+
+    public function closeSelectedVacantPositions(Request $request){
+        
+        return $this->tblPantillaVacantPos->closeVacantPositions($request); 
     }
 }

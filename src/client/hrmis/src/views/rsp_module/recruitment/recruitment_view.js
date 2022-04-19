@@ -1,20 +1,11 @@
-<<<<<<< HEAD
-=======
-import React, { useMemo, useEffect, useState } from "react";
->>>>>>> upstream/development
 import BreadcrumbComponent from "../../common/breadcrumb_component/Breadcrumb";
 import SearchComponent from "../../common/input_component/search_input/search_input";
 import BadgeComponent from "../../common/badge_component/Badge";
 import { recruitmentBreadCramp } from "./static/breadcramp_item";
-<<<<<<< HEAD
 import { recruitmentTableData } from "./fake_data/table_data";
 import { MdAdd, MdMoreHoriz } from "react-icons/md";
-=======
+import DropdownViewComponent from "../../common/dropdown_menu_custom_component/Dropdown_view";
 // import { recruitmentTableData } from "./fake_data/table_data";
-import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
-
-import { MdAdd } from "react-icons/md";
->>>>>>> upstream/development
 // import { BsArrowUpDown } from 'react-icons/bs'
 import React, { useState } from "react";
 import {

@@ -13,7 +13,7 @@ export const tableHeaderColumnName = [
 	},
 	{
 		Header: "Position",
-		accessor: "pos_short_name",
+		accessor: "pos_title",
 	},
 	{
 		Header: "Office",
@@ -27,6 +27,10 @@ export const tableHeaderColumnName = [
 		Header: "Category",
 		accessor: "pos_category",
 	},
+	{
+		Header: "Item State",
+		accessor: "itm_state",
+	},
 ];
 
 //Initialized or assigned menu items and links
@@ -37,7 +41,7 @@ export const plantillaItemsVacantPosMenuItems = [
 		link: "#",
 	},
 	{
-		id: 4,
+		id: 2,
 		label: "Next-in-rank",
 		link: "#",
 	},
@@ -49,6 +53,24 @@ export const plantillaItemsVacantPosMenuItems = [
 	{
 		id: 4,
 		label: "History",
+		link: "#",
+	},
+];
+
+export const plantillaItemsReportsMenuItems = [
+	{
+		id: 1,
+		label: "Memo on Posting of Vacancy",
+		link: "#",
+	},
+	{
+		id: 2,
+		label: "DOST-CO Vacant Position",
+		link: "showmenureports",
+	},
+	{
+		id: 3,
+		label: "Notice of Vacancy",
 		link: "#",
 	},
 ];

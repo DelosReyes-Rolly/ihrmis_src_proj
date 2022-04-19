@@ -35,7 +35,7 @@ export const employeeSelectFilter = [
 
 export const plantillaItemSelectFilter = [
 	{
-		value: "0",
+		value: "",
 		title: "All",
 	},
 	{
@@ -43,7 +43,7 @@ export const plantillaItemSelectFilter = [
 		title: "Filled",
 	},
 	{
-		value: "2 ",
+		value: "0",
 		title: "Vacant",
 	},
 	{
