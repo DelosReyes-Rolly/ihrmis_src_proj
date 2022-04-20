@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetOfficesPositionResource;
 use App\Http\Resources\Plantilla\TblplantillaItemsResource;
+use App\Models\Applicants\Tblapplicants;
+use App\Models\Tblnotification;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaDutiesRspnsblts;
 use App\Models\TblplantillaItems;
@@ -40,6 +42,8 @@ class TblplantillaItemsController extends Controller
             $plantillaQry->itm_supv2_itm_id = $request->itm_supv2_itm_id ?? 0;
             $plantillaQry->itm_state = $request->itm_state ?? 0;
             $plantillaQry->save();
+
+            
         
         } catch (\Throwable $th) {
             throw $th;
@@ -58,7 +62,7 @@ class TblplantillaItemsController extends Controller
 
     public function officePosition(){
 
-        return new GetOfficesPositionResource([
+        return new CommonResource([
             'positions' => Tblpositions::get(), 
             'offices' => Tbloffices::get(),
         ]);
@@ -74,6 +78,19 @@ class TblplantillaItemsController extends Controller
     {
        $item_query = TblplantillaItems::where("itm_ofc_id", $id)->get();
        return CommonResource::collection($item_query);
+    }
+
+    public function getNextInRank($id)
+    {
+        $item_qry = TblplantillaItems::with('applicant.employee')->find($id);
+        return new CommonResource($item_qry);
+    }
+
+    public function getAllVacantPlantillaItems(){
+        $item_qry = TblplantillaItems::where("itm_state", 0)->get();
+        return response()->json([
+            "total_vacant" => count($item_qry)
+        ]);
     }
 
 }

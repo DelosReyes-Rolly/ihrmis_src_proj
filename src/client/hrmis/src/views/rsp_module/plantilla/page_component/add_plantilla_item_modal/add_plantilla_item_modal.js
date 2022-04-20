@@ -95,19 +95,16 @@ const AddPlantillaItemModal = ({
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
       await axios
-        .post(API_HOST + "plantilla-items" + endpointId, value, {
-          headers: { "X-CSRF-TOKEN": token.content },
-        })
+        .post(API_HOST + "plantilla-items" + endpointId, value)
         .then(() => {
           renderSucceed({});
-          dispatch(setRefresh());
           resetForm();
         })
         .catch((err) => {
           renderFailed({});
         });
       renderBusy(false);
-
+      dispatch(setRefresh());
       onClose();
     },
   });

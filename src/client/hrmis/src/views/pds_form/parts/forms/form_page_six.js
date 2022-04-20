@@ -96,7 +96,7 @@ const FormPageSix = () => {
 
   const { item } = useParams();
   const navigate = useNavigate();
-  const { renderFailed, renderSucceed } = usePopUpHelper();
+  const { renderFail, renderSuccess } = usePopUpHelper();
   const ref = useRef([]);
   const mapFilesToState = (name, files) => {
     setFileItems({ ...fileItems, [name]: Array.from(files) });
@@ -124,12 +124,12 @@ const FormPageSix = () => {
     await useAxiosRequestHelper
       .post(dataState, "new-requirement", item, true)
       .then(() => {
-        renderSucceed({});
+        renderSuccess();
         dispatch(setObjectError({}));
         dispatch(setMessageError(undefined));
       })
       .catch((error) => {
-        renderFailed({});
+        renderFail();
         console.log(error);
         if (typeof error === "object") {
           dispatch(setObjectError(error));

@@ -23,21 +23,19 @@ class GetPositionWithCscResource extends JsonResource
                 foreach($degree as $educValue){
                     $holder = explode(":",$educValue);
                     array_push($printArr, $EducType[$holder[0] - 1] . " Degree in " . $holder[1] . " is relevant to the job");
-                    // return $holder[0];
                 }
                 if(!empty($value["std_specifics"])){
                     $arrContainer["ed"] = implode(", ", $printArr) . " and or " . $value["std_specifics"];
                 } else {
                     $arrContainer["ed"] = implode(", ", $printArr) . ".";
-                }
-                
+                }   
             } else if ($value["std_type"] == "EX") {
                 $arrContainer["ex"] =  $value["std_quantity"] . " years of " . $value["std_keyword"] . " Experience";
             } else if ($value["std_type"] == "TR") {
                 $arrContainer["tr"] = $value["std_quantity"] . " hours of " . $value["std_keyword"];
             } else if ($value["std_type"] == "CS") {
                 $reArange = explode("|", $value["std_keyword"]);
-                $arrContainer["cs"] = implode(" / ",$reArange);
+                $arrContainer["cs"] = implode(" / ", $reArange);
             }
         }
 

@@ -9,17 +9,17 @@ import {
 import { useDispatch } from "react-redux";
 import dostLogo from "../../../assets/images/logo.png";
 import { openSideBar } from "../../../features/reducers/mobile_view_slice";
-import { useToggleService } from "../../../services/toggle_service";
+import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper";
 import BadgeComponents from "../badge_component/Badge";
+import NotificationComponent from "../notification/notification_component";
 
-const NavbarComponent = (props) => {
-  let [dropState, updateDropState] = useToggleService(false);
+const NavbarComponent = ({}) => {
+  let [dropState, updateDropState] = useToggleHelper(false);
   let dispatch = useDispatch();
-  let today = new Date();
   const [timeDataState, setTimeDataState] = useState();
 
   useEffect(() => {
-    setInterval(() => {
+    const timer = setInterval(() => {
       setTimeDataState(
         new Date().toLocaleString("en-US", {
           weekday: "long",
@@ -35,13 +35,17 @@ const NavbarComponent = (props) => {
         })
       );
     }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   return (
     <div className="navbar-div">
       <nav>
         <h1>
-          <span className="navbar-span-1 margin-right-1">HRMiS</span>
+          <span className="navbar-span-1 margin-right-1">iHRMiS</span>
           <span className="navbar-span-2">
             <p>&copy; 2021 DOST</p>
           </span>
@@ -50,19 +54,25 @@ const NavbarComponent = (props) => {
           </span>
           {/* Monday 04 January 2021 | 08:00:00 AM */}
         </h1>
-        <ul>
-          <li className="margin-right-1 notification">
-            <BadgeComponents className="add-style-badge" value={1} />
-            <span>
-              <AiOutlineBell size="20px" />
-            </span>
+        <ul
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 5,
+          }}
+        >
+          <li className="">
+            <NotificationComponent />
           </li>
+
           <li className="margin-right-1 notification">
             <BadgeComponents className="add-style-badge" value={1} />
             <span>
               <AiOutlineQuestionCircle size="20px" />
             </span>
           </li>
+
           <li
             className="notification menu-on-mobile"
             onClick={() => {
@@ -73,13 +83,17 @@ const NavbarComponent = (props) => {
               <AiOutlineMenu size="20px" />
             </span>
           </li>
-          <li onClick={() => updateDropState()} className="user-dropdown">
+
+          <li
+            onClick={() => updateDropState()}
+            className="user-dropdown"
+            style={{ cursor: "pointer" }}
+          >
             <span className="user-avatar">
               <img src={dostLogo} width="20" height="20" alt="avatar" />
             </span>
             <span className="user-name-display">Juan Dela Cruz </span>
             <span className="user-drop-arrow">
-              {" "}
               <AiFillCaretDown size="12px" />
             </span>
             <ul
@@ -107,3 +121,30 @@ const NavbarComponent = (props) => {
 };
 
 export default NavbarComponent;
+
+{
+  /* <li className="margin-right-1 notification">
+            <BadgeComponents className="add-style-badge" value={1} />
+            <span>
+              <AiOutlineQuestionCircle size="20px" />
+            </span>
+          </li> */
+}
+{
+  /* <li
+            className="notification menu-on-mobile"
+            onClick={() => {
+              dispatch(openSideBar());
+            }}
+          >
+            <span>
+              <AiOutlineMenu size="20px" />
+            </span>
+          </li> */
+}
+{
+  /* <BadgeComponents className="add-style-badge" value={1} />
+            <span>
+              <AiOutlineBell size="20px" />
+            </span> */
+}

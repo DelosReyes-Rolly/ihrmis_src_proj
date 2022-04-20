@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Email\GetEmailTypeResource;
 use App\Mail\NotifyVacantPlantillaEmail;
+use App\Models\TblemailTemplate;
 use App\Models\TblemailType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,22 +13,26 @@ use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
 {
-    public function getMailType()
+    public function getEmailTemplate()
     {
-        $mailQry = TblemailType::all();
-        return GetEmailTypeResource::collection($mailQry);
+        $mailQry = TblemailTemplate::all();
+        return CommonResource::collection($mailQry);
     }
 
-    public function addMailType()
+    public function addEmailTemplate(Request $request)
     {
-        $mailQry = TblemailType::all();
-        return CommonResource::collection($mailQry);
+        $mailQry = new TblemailTemplate();
+        $mailQry->eml_type = $request->eml_type;
+        $mailQry->eml_name = $request->eml_name;
+        $mailQry->eml_message = $request->eml_message;
+        $mailQry->eml_link = $request->eml_link;
+        $mailQry->save();
     }
 
     public function removeMailType()
     {
-        $mailQry = TblemailType::all();
-        return CommonResource::collection($mailQry);
+        // $mailQry = TblemailType::all();
+        // return CommonResource::collection($mailQry);
     }
     
     public function notifyVacantPlantillaEmail(Request $request)

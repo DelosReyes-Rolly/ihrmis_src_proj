@@ -11,8 +11,6 @@ const InputComponent = (props) =>{
             type={props.type} 
             maxLength={props.maxLength} 
             minLength={props.minLength}
-            max={props.max}
-            min={props.min}
             size={props.size} 
             placeholder={props.placeholder}
             readOnly={props.readOnly}

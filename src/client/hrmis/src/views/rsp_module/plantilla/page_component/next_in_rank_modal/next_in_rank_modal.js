@@ -1,47 +1,207 @@
-import React from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import ModalComponent from "./../../../../common/modal_component/modal_component";
-import CheckboxComponent from "../../../../common/input_component/checkbox_input_component/checkbox_input_component";
-import DataHolderModal from "./parts/data_holder_modal";
-import { nextInRankData } from "../../fake_data/next_in_rank_data";
-
+import { useRowSelect, useTable } from "react-table";
+import { IoAddCircleOutline } from "react-icons/io5";
+import ButtonComponent from "../../../../common/button_component/button_component.js";
+import { useToggleHelper } from ".././../../../../helpers/use_hooks/toggle_helper";
+import SelectAgencyModal from "./select_agency_modal";
+import { useDispatch } from "react-redux";
+import {
+  setNextRank,
+  setRankEmail,
+  setSelectAgency,
+} from "../../../../../features/reducers/plantilla_item_slice";
+/**
+ * NOTES:
+ * This table modal style is in _plantilla_view.scss
+ */
 const NextInRankModal = (props) => {
-    return(
-        <React.Fragment>
-            <ModalComponent
-            title="Next-in-Rank Employee"
-            onSubmitName="Notify"
-            onCloseName="Memo" 
-            isDisplay={props.isDisplay}
-            onClose={props.onClose}>
-                <div className="next-rank-modal-container">
-                    <div className="nrm-header">
-                        <div className="check-box-alignment container-1">
-                            <span className="margin-right-1"><CheckboxComponent/></span>
-                            <span>Name</span>
-                        </div>
-                        <div className="container-2">Position</div>
-                        <div className="container-3">Office</div>
-                    </div>
-                </div>
-                <hr style={{marginTop:"10px", border:"1px solid rgba(70, 70, 70, 0.1)"}}/>
-                <div className="next-rank-modal-container">
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Name",
+        accessor: "emp_name",
+      },
+      {
+        Header: "Position",
+        accessor: "pos_name",
+      },
+      {
+        Header: "Office",
+        accessor: "ofc_short_name",
+      },
+    ],
+    []
+  );
+  const data = useMemo(
+    () => [
+      {
+        emp_name: "Terrence Calzada",
+        pos_name: "ITO-1",
+        ofc_short_name: "ITD-CO",
+      },
+      {
+        emp_name: "First Hokage Legee",
+        pos_name: "ITO-1",
+        ofc_short_name: "ITD-CO",
+      },
+    ],
+    []
+  );
 
-                    {nextInRankData.map((item, key)=>{
-                        return (
-                            <DataHolderModal 
-                            key={key}
-                            name={item.name}
-                            position={item.position}
-                            office={item.office}
-                        />
-                        );
-                    })}
-
-                </div>
-
-            </ModalComponent>
-        </React.Fragment>
-    );
-}
+  const [selectedItems, setSelectedItems] = useState([]);
+  const dispatch = useDispatch();
+  return (
+    <React.Fragment>
+      <ModalComponent
+        title="Next-in-Rank Employee"
+        onSubmitName="Save"
+        onCloseName="Memo"
+        isDisplay={props.isDisplay}
+        onClose={props.onClose}
+        onSubmitType="button"
+        addExtraButton={
+          <ButtonComponent
+            type="button"
+            buttonName="Notify"
+            onClick={() => {
+              dispatch(setNextRank());
+              dispatch(setRankEmail());
+            }}
+          />
+        }
+      >
+        <div className="next-rank-modal-container">
+          <NextInRankTable
+            data={data}
+            columns={columns}
+            selectedFunc={setSelectedItems}
+            closeParent={props.onClose}
+          />
+        </div>
+      </ModalComponent>
+    </React.Fragment>
+  );
+};
 
 export default NextInRankModal;
+
+const NextInRankTable = ({ data, columns, selectedFunc }) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    selectedFlatRows,
+    state: { selectedRowIds },
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "selection",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <TableCheckboxComponent {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <TableCheckboxComponent {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
+
+  const [showAgencyModal, setShowAgencyModal] = useToggleHelper(false);
+
+  useEffect(() => {
+    if (selectedFlatRows) {
+      selectedFunc(selectedFlatRows.map((d) => d.original));
+    }
+  }, [selectedFlatRows]);
+
+  const dispatch = useDispatch();
+
+  return (
+    <Fragment>
+      <table className="next-rank-table" {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr
+              style={{ textAlign: "left", border: "1px solid black" }}
+              {...headerGroup.getHeaderGroupProps()}
+            >
+              {headerGroup.headers.map((column) => {
+                if (column.render("Header") === "Office") {
+                  return (
+                    <th style={{ color: "" }} {...column.getHeaderProps()}>
+                      <div>
+                        <span>{column.render("Header")}</span>
+                        <span
+                          className="span-icon"
+                          onClick={() => {
+                            dispatch(setNextRank());
+                            dispatch(setSelectAgency());
+                          }}
+                        >
+                          <IoAddCircleOutline size={20} />
+                        </span>
+                      </div>
+                    </th>
+                  );
+                }
+                return (
+                  <th style={{ color: "" }} {...column.getHeaderProps()}>
+                    {column.render("Header")}
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <br />
+      <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
+    </Fragment>
+  );
+};
+
+const TableCheckboxComponent = React.forwardRef(
+  ({ indeterminate, ...rest }, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef = ref || defaultRef;
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    );
+  }
+);
