@@ -12,6 +12,8 @@ import {
   validationRequiredNum,
   yesterday,
 } from "../../../../helpers/global/global_config";
+import Creatable from "react-select/creatable";
+import { eligibilityInputItems } from "../../static/input_items";
 
 const ThreeAddCivilServiceModal = (props) => {
   // ===========================================================
@@ -23,7 +25,27 @@ const ThreeAddCivilServiceModal = (props) => {
   // HANDLING ROUTES
   // ===================================
   const { item } = useParams();
-
+  const style = {
+    control: (provided, state) => ({
+      backgroundColor: "white",
+      border: state.isFocused
+        ? "1px solid 	#A9A9A9 !important"
+        : "1px solid #DCDCDC !important",
+      borderRadius: 5,
+      fontSize: "small",
+      ...provided,
+      boxShadow: "none",
+    }),
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
+      return {
+        ...provided,
+        opacity,
+        transition,
+      };
+    },
+  };
   // ===========================================================
   // SUBMIT HANDLER
   // ===========================================================
@@ -31,7 +53,7 @@ const ThreeAddCivilServiceModal = (props) => {
     enableReinitialize: true,
     initialValues: {
       item: props?.data?.cse_app_time ?? "",
-      cse_app_title: props?.data?.cse_app_title ?? "",
+      cse_app_title: props?.data?.cse_app_title ?? [],
       cse_app_date: props?.data?.cse_app_date ?? "",
       cse_app_place: props?.data?.cse_app_place ?? "",
       cse_app_rating: props?.data?.cse_app_rating ?? "",
@@ -39,7 +61,7 @@ const ThreeAddCivilServiceModal = (props) => {
       cse_app_validity: props?.data?.cse_app_validity ?? "",
     },
     validationSchema: Yup.object({
-      cse_app_title: validationRequired,
+      cse_app_title: Yup.array().required("This field is required"),
       cse_app_date: validationDate.max(yesterday, "Invalid Date"),
       cse_app_place: validationRequired,
       cse_app_rating: validationRequiredNum,
@@ -81,12 +103,25 @@ const ThreeAddCivilServiceModal = (props) => {
               Career Service/RA 1080 (Board Bar) Under Special Law/ CES/ CSEE
               Barangay Eligibility, Driver's License
             </label>
-            <InputComponent
+            <Creatable
+              isClearable
+              value={cscPdsForm.values.cse_app_title}
+              error={cscPdsForm?.errors?.cse_app_title}
+              name="cse_app_title"
+              simpleValue
+              options={eligibilityInputItems}
+              styles={style}
+              isMulti
+              onChange={(value) => {
+                cscPdsForm.setFieldValue("cse_app_title", value);
+              }}
+            />
+            {/* <InputComponent
               name="cse_app_title"
               maxLenght="150"
               value={cscPdsForm.values.cse_app_title}
               onChange={cscPdsForm.handleChange}
-            />
+            /> */}
             {cscPdsForm.touched.cse_app_title &&
             cscPdsForm.errors.cse_app_title ? (
               <span className="invalid-response">

@@ -32,7 +32,6 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
   useEffect(() => {
     getPlantillas(officeData?.ofc_id ?? "");
   }, [officeData?.ofc_id ]);
-  console.log(officeData);
   const officeForm = useFormik({
     enableReinitialize: true,
     
@@ -69,9 +68,9 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
       // ofc_oic_itm_id: Yup.number()
       //   .typeError("Must be a number")
       //   .required("This field is required"),
-      ofc_ofc_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      // ofc_ofc_id: Yup.number()
+      //   .typeError("Must be a number")
+      //   .required("This field is required"),
     }),
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);

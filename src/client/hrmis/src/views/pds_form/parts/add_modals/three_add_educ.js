@@ -5,7 +5,7 @@ import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../common/input_component/select_component/select_component";
 import ModalComponent from "../../../common/modal_component/modal_component";
-import { formThreeInput } from "../../static/input_items";
+import { educationInputItem, formThreeInput } from "../../static/input_items";
 import * as Yup from "yup";
 import {
   validationRequired,
@@ -90,14 +90,14 @@ const ThreeAddEducationModal = (props) => {
             <SelectComponent
               defaultTitle="Education Level"
               name="edu_app_level"
-              itemList={formThreeInput.add_educ_level}
-              value={educationPdsForm.values.edu_app_level}
+              itemList={educationInputItem}
+              value={educationPdsForm.values.educationInputItem}
               onChange={educationPdsForm.handleChange}
             />
-            {educationPdsForm.touched.edu_app_level &&
-            educationPdsForm.errors.edu_app_level ? (
+            {educationPdsForm.touched.educationInputItem &&
+            educationPdsForm.errors.educationInputItem ? (
               <span className="invalid-response">
-                {educationPdsForm.errors.edu_app_level}
+                {educationPdsForm.errors.educationInputItem}
               </span>
             ) : null}
           </div>

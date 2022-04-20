@@ -17,6 +17,9 @@ import { API_HOST } from "../../../helpers/global/global_config.js";
 import axios from "axios";
 import { recruitmentSelectFilter } from "./static/filter_items";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
+import { useSelectValueCon } from "../../../helpers/use_hooks/select_value_cons.js";
+import { civil_status } from "../plantilla/static/input_items";
+import { educationInputItem } from "../../pds_form/static/input_items";
 
 const RecruitmentView = (props) => {
   const [toggleState, setToggleState] = useState(1);
@@ -42,38 +45,37 @@ const RecruitmentView = (props) => {
         <div className="container-plantilla">
           <BreadcrumbComponent list={recruitmentBreadCramp} className="" />
         </div>
+        <div className="container-vacant-position">
+          <div className="regular-tab-component">
+            <div className="reg-tab-container">
+              <button
+                onClick={() => toggleTab(1)}
+                className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Qualified
+              </button>
 
-        <div className="tab-button">
-          <button
-            onClick={() => toggleTab(1)}
-            className={
-              toggleState === 1 ? "tab-tap tab-tap-activate" : "tab-tap"
-            }
-          >
-            Qualified
-          </button>
-          <BadgeComponent className="tab-badge-add-style" value={"1"} />
-          <button
-            onClick={() => toggleTab(2)}
-            className={
-              toggleState === 2
-                ? "tab-tap tab-tap-activate margin-left-1"
-                : "tab-tap margin-left-1"
-            }
-          >
-            Disqualified
-          </button>
-          <hr className="solid" />
+              <button
+                onClick={() => toggleTab(2)}
+                className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Disqualified
+              </button>
+            </div>
+
+            <hr className="solid" />
+          </div>
         </div>
+
         {/* TAB MENU STARTS HERE  */}
         <div className={toggleState === 1 ? "current-tab" : "show-none"}>
           <div className="selector-buttons">
             <div className="selector-container">
               <span className="selector-span-1">
-                <button>
+                <a className="button-components" href="/ihrmis/pds-applicant">
                   <MdAdd size="18" />
                   <span>Applicant</span>
-                </button>
+                </a>
               </span>
               <span className="margin-left-1 selector-span-1">
                 <select defaultValue={"DEFAULT"}>
@@ -140,27 +142,39 @@ export default RecruitmentView;
 
 const RecruitmentTable = ({ type }) => {
   const [plotApplicantData, setApplicantData] = useState([]);
+  const { trueValue, displayData } = useSelectValueCon();
 
   const applicantDataApi = async () => {
     await axios
       .get(API_HOST + "get-complete-applicant/" + type)
       .then((response) => {
-        let data = response.data.data;
+        const data = response.data.data;
         let dataPlot = [];
         data.map((data) => {
-          console.log(data);
-
+          let profile_message = data.profile_message
+            .split("\n")
+            .map((str, key) => <p key={key}>{str}</p>);
+          let qualification_message = data.qualification_message
+            .split("\n")
+            .map((str, key) => <p key={key}>{str}</p>);
+          let position_message =
+            data.tblpositions.pos_title + "\n" + data.tbloffices.ofc_acronym;
+          position_message = position_message
+            .split("\n")
+            .map((str, key) => <p key={key}>{str}</p>);
           let values = {
-            app_name: data.app_nm_last + ", " + data.app_nm_first ?? "ME",
-            app_profile: data.app_profile ?? "ME",
-            pos_applied: "i Dont Care" ?? "ME",
-            app_qualifications: data.app_profile ?? "ME",
-            sts_App_remarks: data.app_profile ?? "ME",
+            app_name:
+              data.tblapplicants_profile.app_nm_last +
+                ", " +
+                data.tblapplicants_profile.app_nm_first ?? "ME",
+            app_profile: profile_message ?? "ME",
+            pos_applied: position_message ?? "ME",
+            app_qualifications: qualification_message ?? "ME",
+            sts_App_remarks: "To be done",
           };
           dataPlot.push(values);
         });
         setApplicantData(dataPlot);
-        console.log();
       })
       .catch((error) => {});
   };
@@ -191,6 +205,10 @@ const RecruitmentTable = ({ type }) => {
       {
         Header: "Status",
         accessor: "sts_App_remarks",
+      },
+      {
+        Header: "",
+        accessor: "action",
       },
     ],
     []

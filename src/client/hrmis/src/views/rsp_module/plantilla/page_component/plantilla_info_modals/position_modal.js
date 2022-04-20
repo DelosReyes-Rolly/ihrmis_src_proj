@@ -16,6 +16,7 @@ import Creatable from "react-select/creatable";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
+import { eligibilityInputItems } from "../../static/input_items";
 
 const customStyles = {
   option: (provided, state) => ({
@@ -263,7 +264,7 @@ const EligibilityInput = ({ formik }) => {
           error={formik?.errors?.eligibility}
           name="eligibility"
           simpleValue
-          options={options}
+          options={eligibilityInputItems}
           styles={style}
           isMulti
           onChange={(value) => {

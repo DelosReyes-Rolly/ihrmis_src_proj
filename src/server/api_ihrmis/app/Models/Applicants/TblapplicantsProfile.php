@@ -68,8 +68,18 @@ class TblapplicantsProfile extends Model
     {
         return $this->hasMany(TblapplicantExperiences::class, 'exp_app_id', 'app_id');
     }
+    public function tblapplicantTrainings()
+    {
+        return $this->hasMany(TblapplicantTrainings::class, 'trn_app_id', 'app_id');
+    }
+
     public function tblapplicantsStatus()
     {
         return $this->hasMany(TblapplicantsStatus::class, 'sts_app_id', 'app_id');
+    }
+
+    public function tblapplicants()
+    {
+        return $this->hasOne(Tblapplicants::class, 'app_id', 'app_id');
     }
 }
