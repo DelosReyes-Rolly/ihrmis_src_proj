@@ -4572,8 +4572,7 @@ ul.breadcrumb li span:hover {
 .button-components:hover {
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  background: #38658d;
-  border: 1px 0px 0px 0px solid #4276a4bb;
+  background-color: #033e72;
 }
 
 .bc-logo-component {
@@ -7635,6 +7634,25 @@ input:checked + .slider:before {
     width: 100%;
     margin-bottom: 5px;
   }
+}
+
+.notify-button-color {
+  background-color: green;
+  border: 1px solid green;
+}
+
+.notify-button-color:hover {
+  background-color: #036103;
+}
+
+.delete-button-color {
+  color: white !important;
+  background-color: #cc4040 !important;
+  border: 1px solid #cc4040 !important;
+}
+
+.delete-button-color:hover {
+  background-color: #b91616 !important;
 }
 
 .position-modal-container-1 {

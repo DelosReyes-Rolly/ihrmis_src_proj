@@ -1,50 +1,34 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
-import ModalComponent from "./../../../../common/modal_component/modal_component";
-import { useRowSelect, useTable } from "react-table";
-import { IoAddCircleOutline } from "react-icons/io5";
-import ButtonComponent from "../../../../common/button_component/button_component.js";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setContextMenu,
-  setEmailRecepients,
-  setNextRank,
-  setRankEmail,
-} from "../../../../../features/reducers/plantilla_item_slice";
 import axios from "axios";
-import { API_HOST } from "../../../../../helpers/global/global_config";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRowSelect, useTable } from "react-table";
+import {
+  setNextRank,
+  setNextRankList,
+} from "../../../../../features/reducers/plantilla_item_slice";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
-/**
- * NOTES:
- * This table modal style is in _plantilla_view.scss
- */
-const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
-  const { refresh } = useSelector((state) => state.popupResponse);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [dataFetched, setDataFetched] = useState([]);
-  const fetch_id = plantilla ? plantilla?.itm_id : 1;
-  const getNextInRankVacant = async () => {
+import { API_HOST } from "../../../../../helpers/global/global_config";
+import ModalComponent from "../../../../common/modal_component/modal_component";
+
+const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
+  const dispath = useDispatch();
+
+  const getAgencyEmployees = async () => {
+    let arrHolder = [];
     await axios
-      .get(API_HOST + "get-next-rank-employees/" + fetch_id)
+      .get(API_HOST + "get-agency-employee/" + agencyID + "/" + 1)
       .then((res) => {
-        setDataFetched(res.data.data);
-      });
-  };
+        const rawData = res.data.data;
 
-  const onRemoveEmp = async () => {
-    if (selectedItems.length !== 0) {
-      await axios
-        .post(API_HOST + "remove-to-next-rank", { item_list: selectedItems })
-        .then((res) => {
-          dispatch(setRefresh());
-        })
-        .catch((err) => {
-          console.log(err);
+        rawData?.map((item) => {
+          arrHolder.push(item);
         });
-
-      return null;
-    }
-    console.log("not deleted");
+      })
+      .catch((err) => console.log(err));
+    setFetchData(arrHolder);
   };
+
+  const { refresh } = useSelector((state) => state.popupResponse);
 
   const columns = useMemo(
     () => [
@@ -84,49 +68,52 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
     []
   );
 
+  const [fetchData, setFetchData] = useState([]);
+
+  const data = useMemo(() => fetchData, [fetchData]);
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
   useEffect(() => {
-    getNextInRankVacant();
+    getAgencyEmployees();
   }, [refresh]);
 
-  const data = useMemo(() => dataFetched, [dataFetched]);
+  const returnPreviousModal = () => {
+    onClose();
+    dispath(setNextRank());
+  };
 
-  const onPressedNotify = () => {
-    if (selectedItems.length != 0) {
-      let arrHolder = [];
-      selectedItems?.forEach((element) => {
-        arrHolder.push(element.nir_email);
-      });
-      dispatch(setEmailRecepients(arrHolder));
-      dispatch(setRefresh());
-      dispatch(setNextRank());
-      dispatch(setRankEmail());
+  // const { next_rank_list } = useSelector((state) => state.plantillaItem);
+
+  const submitHandler = async () => {
+    if (selectedItems.length !== 0) {
+      await axios
+        .post(API_HOST + "add-to-next-rank", { emp_list: selectedItems })
+        .catch((err) => {
+          console.log(err);
+        });
+      dispath(setRefresh());
+      onClose();
+      dispath(setNextRank());
     }
   };
 
-  const dispatch = useDispatch();
   return (
     <React.Fragment>
       <ModalComponent
-        title="Next-in-Rank Employee"
-        onSubmitName="Notify"
-        onCloseName="Delete"
+        title="Agency Employees"
         isDisplay={isDisplay}
         onClose={onClose}
-        onPressed={onRemoveEmp}
-        onSubmitType="button"
-        onSubStyle="notify-button-color"
-        onPressStyle="delete-button-color"
-        onClickSubmit={() => onPressedNotify()}
-        addExtraButton={
-          <ButtonComponent type="button" buttonName="Memo" onClick={() => {}} />
-        }
+        onClickSubmit={submitHandler}
+        onPressed={returnPreviousModal}
+        onCloseName="Back"
+        onSubmitName="Add to Next in Rank"
       >
         <div className="next-rank-modal-container">
-          <NextInRankTable
+          <ListEmployeeTable
             data={data}
             columns={columns}
             selectedFunc={setSelectedItems}
-            closeParent={onClose}
           />
         </div>
       </ModalComponent>
@@ -134,9 +121,9 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   );
 };
 
-export default NextInRankModal;
+export default ContextMenuModal;
 
-const NextInRankTable = ({ data, columns, selectedFunc }) => {
+const ListEmployeeTable = ({ data = [], columns, selectedFunc }) => {
   const initialState = {
     hiddenColumns: [
       "nir_email",
@@ -187,10 +174,10 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
     }
   }, [selectedFlatRows]);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   return (
-    <Fragment>
+    <React.Fragment>
       <table className="next-rank-table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -199,24 +186,6 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
               {...headerGroup.getHeaderGroupProps()}
             >
               {headerGroup.headers.map((column) => {
-                if (column.render("Header") === "Office") {
-                  return (
-                    <th style={{ color: "" }} {...column.getHeaderProps()}>
-                      <div>
-                        <span>{column.render("Header")}</span>
-                        <span
-                          className="span-icon"
-                          onClick={() => {
-                            dispatch(setNextRank());
-                            dispatch(setContextMenu());
-                          }}
-                        >
-                          <IoAddCircleOutline size={20} />
-                        </span>
-                      </div>
-                    </th>
-                  );
-                }
                 return (
                   <th {...column.getHeaderProps()}>
                     {column.render("Header")}
@@ -243,7 +212,7 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
       </table>
       <br />
       <p>Selected Rows: {Object.keys(selectedRowIds).length}</p>
-    </Fragment>
+    </React.Fragment>
   );
 };
 

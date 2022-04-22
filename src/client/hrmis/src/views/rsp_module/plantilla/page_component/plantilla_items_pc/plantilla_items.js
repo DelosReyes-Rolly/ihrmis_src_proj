@@ -98,11 +98,12 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         let data = response.data.data ?? [];
 
         let dataPlot = [];
+
         data?.forEach((element) => {
           dataPlot.push({
             itm_no: element.itm_no,
-            pos_short_name: element.position.pos_short_name,
-            ofc_acronym: element.office.ofc_acronym,
+            pos_short_name: element?.position.pos_short_name,
+            ofc_acronym: element?.office?.ofc_acronym,
             itm_status: statusDisplay[element.itm_status],
             pos_category: element.position.pos_category,
           });

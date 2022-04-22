@@ -2,11 +2,18 @@ import React, { useRef, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
+export const ACTION_TYPE_ENUM = {
+  link: "link",
+  callback: "callback",
+};
+
 function DropdownViewComponent({
   title,
   className,
   itemList,
   alignItems = "start",
+  actionType = ACTION_TYPE_ENUM.link,
+  actionCallback = null,
 }) {
   const [dropable, setDropable] = useState(false);
   const timerRef = useRef();
