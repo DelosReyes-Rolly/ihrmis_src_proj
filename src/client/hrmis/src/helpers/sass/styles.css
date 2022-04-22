@@ -7814,6 +7814,16 @@ input:checked + .slider:before {
   padding: 0px 20px;
 }
 
+.plantilla-view .search-pane {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  padding: 0px 0px;
+}
+
 .vacant-position-filter {
   margin: 0px 20px;
 }

@@ -10,16 +10,10 @@ use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mpdf\Mpdf;
-use Meneses\LaravelMpdf\Facades\LaravelMpdf;
+use Mpdf\Mpdf as MPDF;
+// use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 
 class PlantillaItemsService {
-
-	public function getPositionWithCsc( $id)
-	{
-		$getQry = Tblpositions::where("pos_id", $id)->with("tblpositionCscStandards")->first();
-		return new GetPositionWithCscResource($getQry);
-	}
 
 	/**
 	 * getVacantPositions
@@ -33,18 +27,7 @@ class PlantillaItemsService {
 
 	}
 
-	/**
-	 * getVacantPositions
-	 * Todo get vacant positions by
-	 * return array 
-	 */
-	public function getVacantPositions($type) {
-
-		$item_query = TblplantillaItems::with('tbloffices', 'tblpositions','tblapplicant_profile')->where('itm_state', $type)->get();
-		return $item_query;
-
-	}
-    
+	
 	/**
 	 * generateVacantPositionsReport
 	 * Todo this function will generate DOST Vacant Position report in PDF form
@@ -55,23 +38,33 @@ class PlantillaItemsService {
 
 		date_default_timezone_set('Asia/Manila'); //define local time
 		
-		$data = $this->getVacantPositions(1);
-
+		//get vacant positions
+		$data = $this->getVacantPositions(0);
+		//sreturn $data;
+		
 		$new_data = [];
-
 		foreach($data as $itm){
 			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
 			$itm->positionswithcscstandards = $positionswithcscstandards;
 		}
-	
+
 		$new_data['vacantpositions'] = $data;
-	
-		$date = date('m/d/Y');
+
+	    // return $new_data['vacantpositions'];
 
 		$pdf = new MPDF();
-		$pdf->writeHTML(view('vacantPositionsPdf',$new_data));
-	
-		return $pdf->output();
+		$date = date('m/d/Y');
+		$pdf->AddPage('L');
+		$pdf->writeHTML(view('vacantPositionsPdf',$new_data,[], [
+		'title'				=> 'Vacant Positions',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'L',
+		'format' 			=> 'A4'
+		]));
+		return $pdf->output('Vacant Positions_'.$date.'.pdf',"I");
   	}
 
 	
@@ -84,8 +77,8 @@ class PlantillaItemsService {
 	{
   
 		date_default_timezone_set('Asia/Manila'); //define local time
-		
-		$data = $this->getVacantPositions(1);
+		//get vacant position
+		$data = $this->getVacantPositions(0);
 
 		$new_data = [];
 
@@ -96,19 +89,20 @@ class PlantillaItemsService {
 	
 		$new_data['vacantpositions'] = $data;
 		
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		$date = date('m/d/Y');
-		$pdf = $pdf->loadView('noticeOnVacantPosition',$new_data,[], [
+		
+		$pdf->writeHTML(view('noticeOnVacantPosition',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
 		'margin_right'      => 10,
 		'margin_top'        => 10,
 		'margin_bottom'     => 10,
-		'orientation'       => 'L',
+		'orientation'       => 'P',
 		'format' => 'A4'
-		]);
+		]));
 
-		return $pdf->stream('Notice of Vacancy_'.$date.'.pdf');
+		return $pdf->output('Notice of Vacancy_'.$date.'.pdf',"I");
   	}
 
 	/**
@@ -121,7 +115,7 @@ class PlantillaItemsService {
   
 		date_default_timezone_set('Asia/Manila'); //define local time
 		
-		$data = $this->getVacantPositions(1);
+		$data = $this->getVacantPositions(0);
 
 		$new_data = [];
 
@@ -133,7 +127,7 @@ class PlantillaItemsService {
 		$new_data['vacantpositions'] = $data;
 		$date = date('m/d/Y');
 
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		
 		$pdf = $pdf->loadView('memoOnPostingVPForCsc',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
@@ -171,7 +165,7 @@ class PlantillaItemsService {
 		
 		$date = date('m/d/Y');
 
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		$pdf = $pdf->loadView('memoOnPostingVpForDostAgencies',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
@@ -279,11 +273,27 @@ class PlantillaItemsService {
 		//concatinate $last_emp_no + 1 . "_" . $item_source . "_" . $current_year	
 	}
 
+	/**
+	 * getVacantPositions
+	 * Todo get vacant positions by
+	 * return array 
+	 */
+	public function getVacantPositions($type) {
 
-  public function generateVacantMemoPdf($data){
-    $report = new MPDF();
-    $report->writeHTML(view('reports/vacantMemoReportPdf', $data));
-    return $report->output();
-  }
+		$item_query = TblplantillaItems::with('tbloffices', 'tblpositions','tblapplicant_profile')->where('itm_state', $type)->get();
+		return $item_query;
 
+	}
+
+	public function generateVacantMemoPdf($data){
+		$report = new MPDF();
+		$report->writeHTML(view('reports/vacantMemoReportPdf', $data));
+		return $report->output();
+	}
+
+	public function getPositionWithCsc( $id)
+	{
+		$getQry = Tblpositions::where("pos_id", $id)->with("tblpositionCscStandards")->first();
+		return new GetPositionWithCscResource($getQry);
+	}
 }

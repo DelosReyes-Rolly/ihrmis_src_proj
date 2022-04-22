@@ -9,7 +9,7 @@ import {
 	useRowSelect,
 } from "react-table";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import FilterPlantillaItems from "./filter_plantilla_items";
 import {
@@ -17,7 +17,9 @@ import {
 	tableHeaderColumnName,
 } from "../../static/plantilla_vacant_positions_data";
 import { MdMoreHoriz } from "react-icons/md";
-import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
+import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
+import PlantillaEmailModal from "../plantilla_email_modal/plantilla_email_modal";
+import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
 
 /**
  * PlantillaDataTableDisplay
@@ -166,6 +168,15 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		selectedItems["positions"] = temp_selected;
 		selectedPlantillaItems(selectedItems);
 	};
+	const displayOtherAction = (data, item) => {
+		if (typeof item.link === "boolean" && item.link) {
+			if (item.label.includes("Notify")) {
+				data.setRankEmail(item.link);
+			} else if (item.label.includes("Next-in")) {
+				data.setNextRank(item.link);
+			}
+		}
+	};
 
 	useLayoutEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
@@ -173,6 +184,9 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		console.log(selectedFlatRowsData);
 		// console.log(setFilter);
 	}, [selectedFlatRows]);
+
+	const [rank_email, setRankEmail] = useState(false);
+	const [next_rank, setNextRank] = useState(false);
 
 	return (
 		<React.Fragment>
@@ -186,6 +200,12 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 				setGlobalFilter={setGlobalFilter}
 				setAllFilters={setAllFilters}
 				setFiltersTable={setFiltersTable}
+			/>
+			<SelectAction
+				next_rank={next_rank}
+				rank_email={rank_email}
+				setNextRank={setNextRank}
+				setRankEmail={setRankEmail}
 			/>
 			{/* <SelectTableComponent list={plotData} /> */}
 			<div className="default-table">
@@ -233,12 +253,19 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 														}}
 													>
 														<div>{cell.render("Cell")}</div>
-														<DropdownViewComponent
+														<DropdownMenu
 															itemList={plantillaItemsVacantPosMenuItems}
 															title={<MdMoreHoriz size="15" />}
 															alignItems="end"
-															toolTipId="other-actions"
-															textHelper="Click to view other actions"
+															tooltipData={{
+																toolTipId: "other-actions",
+																textHelper: "Click to view other actions",
+															}}
+															customData={{
+																setRankEmail: setRankEmail,
+																setNextRank: setNextRank,
+															}}
+															callback={displayOtherAction}
 														/>
 													</div>
 												</td>
@@ -266,3 +293,22 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		</React.Fragment>
 	);
 };
+
+const SelectAction = ({
+	next_rank = false,
+	rank_email = false,
+	setNextRank,
+	setRankEmail,
+}) => {
+	return (
+		<React.Fragment>
+			<NextInRankModal isDisplay={next_rank} onClose={() => setNextRank()} />
+			<PlantillaEmailModal
+				isDisplay={rank_email}
+				onClose={() => setRankEmail()}
+			/>
+		</React.Fragment>
+	);
+};
+
+export default SelectAction;

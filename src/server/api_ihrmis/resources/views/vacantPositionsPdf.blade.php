@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>Document</title>
-    <style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Notice of Vacancy.docx</title>
+    <meta name="author" content="User" />
+    <style type="text/css">
         .equal-width td{
             width: 50%;
             text-align: center;
@@ -45,7 +43,7 @@
     </p>
     <p>For specific guidelines, please see attached Annex.</p><br/>
  
-    <table class="equal-width">
+      <table>
         <thead>
             <tr>
                 <th rowspan="2">Office / Unit</th>

@@ -26,6 +26,5 @@ Route::get('/send-email', function () {
 });
 
 Route::get('/send-email-pdf', [PdfEmailGeneratorController::class, 'index']);
-Route::get('generate-pdf', [TblplantillaItemsVacantPositionController::class, 'generatePdf']);
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

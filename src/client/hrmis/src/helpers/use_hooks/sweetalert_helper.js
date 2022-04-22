@@ -13,19 +13,19 @@ const useSweetAlertHelper = () => {
 		html,
 		icon,
 		showCancelButton,
-		confirm,
+		preConfirm,
 		confirmCallback
 	) => {
 		MySwal.fire({
 			title: <span>{title}</span>,
-			html: <i>{html}</i>,
+			html: html,
 			icon: icon,
 			showCancelButton: showCancelButton,
 			confirmButtonColor: "#3085d6",
 			cancelButtonColor: "#d33",
 			confirmButtonText: "OK",
 			preConfirm: () => {
-				return confirm();
+				return preConfirm();
 			},
 		}).then((result) => {
 			if (result.isConfirmed) {

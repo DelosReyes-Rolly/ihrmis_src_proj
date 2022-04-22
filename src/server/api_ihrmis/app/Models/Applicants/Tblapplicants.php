@@ -35,9 +35,9 @@ class Tblapplicants extends Model
         return $this->hasOne(TblapplicantsProfile::class, 'app_id' ,'app_id');
     }
 
-    public function plantilla(){
-        return $this->hasOne(TblplantillaItems::class, 'itm_id' ,'app_itm_id');
-    }
+    // public function plantilla(){
+    //     return $this->hasOne(TblplantillaItems::class, 'itm_id' ,'app_itm_id');
+    // }
 
     
 

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import IconComponent from "../../../../common/icon_component/icon";
 import { BsFillCheckCircleFill, BsGlobe } from "react-icons/bs";
@@ -11,25 +11,24 @@ import { plantillaItemsReportsMenuItems } from "../../static/plantilla_vacant_po
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
 import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
-import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
-// eslint-disable-next-line
-// import { BreadCrumbsData } from "../../static/breadcramp_data";
-
-// let bc = BreadCrumbsData();
+import SelectAgencyModal from "../next_in_rank_modal/select_agency_modal";
+import PostingOnJobVacancyModal from "../../posting_job_vacancy/posting_job_vacancy";
+import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
 
 const PlantillaItemsVacantPositionComponentView = () => {
 	const dispatch = useDispatch();
-
 	const [selectedrowData, setSelectedRowData] = useState([]);
 	const [axiosCall] = useAxiosCallHelper();
 	const { sweetAlertConfirm, toastSuccessFailMessage } = useSweetAlertHelper();
+	const [select_agency, setSelectAgency] = useState(false);
+	const [posting_vacancy, setPostingJobVancy] = useState(false);
 
 	const closeSelectedVacantPostions = async () => {
 		// console.log(selectedrowData);
 		if (preConfirm()) {
 			sweetAlertConfirm(
 				"Confirmation Dialog",
-				"Click OK to confirm to close selected vacant position/s",
+				<i>Click OK to confirm to close selected vacant position/s</i>,
 				"question",
 				true,
 				preConfirm,
@@ -50,6 +49,14 @@ const PlantillaItemsVacantPositionComponentView = () => {
 			return false;
 		}
 		return true;
+	};
+
+	const displayDropDopdown = (data, item) => {
+		if (typeof item.link === "boolean" && item.link) {
+			if (item.label.includes("Memo on Posting")) {
+				data.setSelectAgency(item.link);
+			}
+		}
 	};
 
 	const confirmedAction = () => {
@@ -76,13 +83,14 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					<BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
 				</div>
 				<div className="three-idiot">
-					<DropdownViewComponent
+					<DropdownMenu
 						itemList={plantillaItemsReportsMenuItems}
 						title={<AiFillPrinter size="22" />}
 						alignItems="end"
 						className="button-icon unstyled-button"
-						toolTipId="pl-vp-printer"
-						textHelper="Print"
+						tooltipData={{ toolTipId: "pl-vp-printer", textHelper: "Print" }}
+						customData={{ setSelectAgency: setSelectAgency }}
+						callback={displayDropDopdown}
 					/>
 					<IconComponent
 						id="view_edit_vacantposition"
@@ -90,7 +98,9 @@ const PlantillaItemsVacantPositionComponentView = () => {
 						icon={<BsGlobe />}
 						toolTipId="pl-vp-view"
 						textHelper="View/Edit Selected 	 Position"
-						onClick={() => {}}
+						onClick={() => {
+							setPostingJobVancy(true);
+						}}
 					/>
 					<IconComponent
 						id="close_vacant_position"
@@ -108,6 +118,16 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					/>
 				</div>
 			</div>
+			<SelectAgencyModal
+				selectedrowData={selectedrowData}
+				isDisplay={select_agency}
+				onClose={() => setSelectAgency()}
+			/>
+			<PostingOnJobVacancyModal
+				selectedrowData={selectedrowData}
+				isDisplay={posting_vacancy}
+				onClose={() => setPostingJobVancy()}
+			/>
 		</React.Fragment>
 	);
 };

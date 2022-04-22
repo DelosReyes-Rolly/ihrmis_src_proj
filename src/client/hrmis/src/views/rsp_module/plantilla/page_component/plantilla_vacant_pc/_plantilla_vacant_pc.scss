@@ -1,17 +1,23 @@
 .plantilla-view {
-  .three-idiot {
-    display: flex;
-    justify-content: end;
-    padding: 0px 20px;
-  }
+	.three-idiot {
+		display: flex;
+		justify-content: end;
+		padding: 0px 20px;
+	}
+
+	.search-pane {
+		display: flex;
+		justify-content: end;
+		padding: 0px 0px;
+	}
 }
 
 .vacant-position-filter {
-  margin: 0px 20px;
+	margin: 0px 20px;
 }
 
 @media only screen and (max-width: 800px) {
-  .three-idiot {
-    padding-right: 10px;
-  }
+	.three-idiot {
+		padding-right: 10px;
+	}
 }

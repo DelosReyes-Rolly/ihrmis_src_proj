@@ -3,18 +3,18 @@ import { AiFillCaretUp } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 
-const DropdownViewComponent = ({
+const DropdownMenu = ({
 	title,
 	className,
 	itemList,
 	alignItems = "start",
-	toolTipId,
-	textHelper,
-	position = "top",
-	effect = "solid",
+	tooltipData = { position: "top", effect: "solid" },
+	customData,
+	callback,
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const timerRef = useRef();
+
 	const navigate = useNavigate();
 
 	const selectedProperty = (link = null) => {
@@ -40,15 +40,19 @@ const DropdownViewComponent = ({
 			}}
 			onBlur={() => selectedProperty()}
 		>
-			{toolTipId && (
-				<ReactTooltip id={toolTipId} place={position} effect={effect}>
-					{textHelper}
+			{tooltipData.toolTipId && (
+				<ReactTooltip
+					id={tooltipData.toolTipId}
+					place={tooltipData.position}
+					effect={tooltipData.effect}
+				>
+					{tooltipData.textHelper}
 				</ReactTooltip>
 			)}
 
 			<button
 				data-tip
-				data-for={toolTipId}
+				data-for={tooltipData.toolTipId}
 				className={className}
 				style={{ width: "max-content" }}
 				onClick={() => {
@@ -62,24 +66,33 @@ const DropdownViewComponent = ({
 					itemList={itemList}
 					display={dropable ? "block" : "none"}
 					onClick={selectedProperty}
+					customData={customData}
+					callback={callback}
 				/>
 			)}
 		</div>
 	);
 };
 
-export default DropdownViewComponent;
+export default DropdownMenu;
 
-const DropList = ({ itemList = [], display = "none" }) => {
+const DropList = ({
+	itemList = [],
+	display = "none",
+	customData,
+	callback,
+}) => {
 	const navigate = useNavigate();
 
 	const linkDetector = (item) => {
-		if (typeof item === "string" || item instanceof String)
-			return navigate(item);
-		else if (typeof item === "function") {
-			item();
+		let itemlink = item.link;
+		if (typeof itemlink === "string" || itemlink instanceof String)
+			return navigate(itemlink);
+		else if (typeof itemlink === "function") {
+			itemlink();
+		} else {
+			callback(customData, item);
 		}
-		console.log(item);
 	};
 
 	return (
@@ -93,7 +106,7 @@ const DropList = ({ itemList = [], display = "none" }) => {
 						<li
 							style={{ listStyle: "none" }}
 							className="ul-menu-item"
-							onClick={() => linkDetector(element.link)}
+							onClick={() => linkDetector(element)}
 							key={key}
 						>
 							{element.label}

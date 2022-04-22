@@ -2,7 +2,10 @@ import {
 	printVacantPositions,
 	printNoticeOFVacany,
 } from "../../../../router/outside_routes";
-
+import {
+	setNextRank,
+	setRankEmail,
+} from "../../../../features/reducers/plantilla_item_slice";
 /**
  *  tableHeaderColumnName
  *  @description static data
@@ -43,12 +46,12 @@ export const plantillaItemsVacantPosMenuItems = [
 	{
 		id: 1,
 		label: "Notify Office",
-		link: "#",
+		link: true,
 	},
 	{
 		id: 2,
 		label: "Next-in-rank",
-		link: "#",
+		link: true,
 	},
 	{
 		id: 3,
@@ -66,7 +69,7 @@ export const plantillaItemsReportsMenuItems = [
 	{
 		id: 1,
 		label: "Memo on Posting of Vacancy",
-		link: "#",
+		link: true,
 	},
 	{
 		id: 2,
