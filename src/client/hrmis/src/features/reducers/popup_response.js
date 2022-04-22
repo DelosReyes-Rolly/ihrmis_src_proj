@@ -32,5 +32,6 @@ const popupResponseSlice = createSlice({
   },
 });
 
-export const { setBusy, setSuccess, setFail, setMessage, setRefresh } = popupResponseSlice.actions;
+export const { setBusy, setSuccess, setFail, setMessage, setRefresh } =
+  popupResponseSlice.actions;
 export default popupResponseSlice.reducer;

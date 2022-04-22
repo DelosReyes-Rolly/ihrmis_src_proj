@@ -27,6 +27,7 @@ class Tblapplicants extends Model
     public function plantillaItems(){
         return $this->hasOne(TblplantillaItems::class, 'itm_id', 'app_itm_id');
     }
+    
     public function employee(){
         return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }

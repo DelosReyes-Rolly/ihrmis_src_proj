@@ -6,7 +6,7 @@ use App\Models\TblplantillaItems;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TblEmployees extends Model
+class Tblemployees extends Model
 {
     use HasFactory;
 
@@ -21,8 +21,8 @@ class TblEmployees extends Model
         'emp_title',
         'emp_ofc_email',
         'emp_itm_id',
-        'emp_appntmnt_start	',
-        'emp_appntmnt_end           '
+        'emp_appntmnt_start',
+        'emp_appntmnt_end'
     ];
 
     public $timestamps = false;

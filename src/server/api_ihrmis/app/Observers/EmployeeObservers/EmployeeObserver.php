@@ -1,7 +1,7 @@
 <?php
 namespace App\Observers\EmployeeObservers;
 
-use App\Models\Employees\TblEmployees;
+use App\Models\Employees\Tblemployees;
 
 class EmployeeObserver
 {
@@ -11,7 +11,7 @@ class EmployeeObserver
      * @param  \App\TblEmployees  $tblEmployees
      * @return void
      */
-    public function created(TblEmployees $tblEmployees)
+    public function created(Tblemployees $tblEmployees)
     {
         //
     }
@@ -22,7 +22,7 @@ class EmployeeObserver
      * @param  \App\TblEmployees  $tblEmployees
      * @return void
      */
-    public function updated(TblEmployees $tblEmployees)
+    public function updated(Tblemployees $tblEmployees)
     {
         //
     }
@@ -33,7 +33,7 @@ class EmployeeObserver
      * @param  \App\TblEmployees  $tblEmployees
      * @return void
      */
-    public function deleted(TblEmployees $tblEmployees)
+    public function deleted(Tblemployees $tblEmployees)
     {
         //
     }
@@ -44,7 +44,7 @@ class EmployeeObserver
      * @param  \App\TblEmployees  $tblEmployees
      * @return void
      */
-    public function restored(TblEmployees $tblEmployees)
+    public function restored(Tblemployees $tblEmployees)
     {
         //
     }
@@ -55,7 +55,7 @@ class EmployeeObserver
      * @param  \App\Post  $post
      * @return void
      */
-    public function forceDeleted(TblEmployees $TblEmployees)
+    public function forceDeleted(Tblemployees $TblEmployees)
     {
         //
     }

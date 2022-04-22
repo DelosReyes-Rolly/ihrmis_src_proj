@@ -5,13 +5,15 @@ namespace App\Services\PlantillaItems;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
-use App\Models\Employees\TblEmployees;
+use App\Models\Employees\Tblemployees;
+use App\Models\Employees\TblnextInRank;
+use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mpdf\Mpdf;
-use Meneses\LaravelMpdf\Facades\LaravelMpdf;
+use Mpdf\Mpdf as MPDF;
+// use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class PlantillaItemsService {
 
@@ -96,7 +98,7 @@ class PlantillaItemsService {
 	
 		$new_data['vacantpositions'] = $data;
 		
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		$date = date('m/d/Y');
 		$pdf = $pdf->loadView('noticeOnVacantPosition',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
@@ -133,7 +135,7 @@ class PlantillaItemsService {
 		$new_data['vacantpositions'] = $data;
 		$date = date('m/d/Y');
 
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		
 		$pdf = $pdf->loadView('memoOnPostingVPForCsc',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
@@ -171,7 +173,7 @@ class PlantillaItemsService {
 		
 		$date = date('m/d/Y');
 
-		$pdf = new LaravelMpdf();
+		$pdf = new MPDF();
 		$pdf = $pdf->loadView('memoOnPostingVpForDostAgencies',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
@@ -215,7 +217,7 @@ class PlantillaItemsService {
 						//return new ApplicantProfileResource($applicantDataQry);
 						//return $applicantDataQry;
 						if($applicantDataQry){
-							if(TblEmployees::where('emp_id', $tbl_applicant_query->app_emp_id)->exists()){
+							if(Tblemployees::where('emp_id', $tbl_applicant_query->app_emp_id)->exists()){
 								$is_save = $this->updateEmployeeProfile($tbl_applicant_query,$value);
 								DB::commit();
 							}else{
@@ -250,7 +252,7 @@ class PlantillaItemsService {
 	}
 
 	private function insertEmployeeProfile($data,$plantilladata){
-		$newemployee = new TblEmployees();
+		$newemployee = new Tblemployees();
 		$newemployee->emp_no = "";
 		$newemployee->emp_nm_last = $data->app_nm_last;
 		$newemployee->emp_nm_first = $data->app_nm_first;
@@ -265,7 +267,7 @@ class PlantillaItemsService {
 	}
 
 	private function updateEmployeeProfile($data,$plantilladata){
-		$employee = TblEmployees::find($data->app_id);
+		$employee = Tblemployees::find($data->app_id);
 		$employee->emp_itm_id = $plantilladata['itm_id'];
 		
 		return $employee->save();
@@ -280,10 +282,66 @@ class PlantillaItemsService {
 	}
 
 
-  public function generateVacantMemoPdf($data){
-    $report = new MPDF();
-    $report->writeHTML(view('reports/vacantMemoReportPdf', $data));
-    return $report->output();
+  public function generateVacantMemoPdf($type){
+    return Tbloffices::with(["plantillaItems" => function ($query) {
+      $query->where('itm_regular', 1);
+    }])->find(1);
   }
+
+  public function getAgencyEmployees($agency, $plantilla){
+    $itemQry = Tbloffices::where('ofc_agn_id', $agency)->with('plantillaItems.employee', 'plantillaItems.tblpositions')->get();
+    $nextRankQrt = TblnextInRank::where('nir_itm_id', $plantilla)->get();
+    $arrEmpIdHolder =[];
+    foreach($nextRankQrt as $value){
+      array_push($arrEmpIdHolder, $value->nir_emp_id);
+    }
+
+    $arrHolder = [];
+    foreach ($itemQry as $offices) {
+      foreach($offices->plantillaItems as $items){
+        if($items->employee != null){
+          if(!in_array($items->employee->emp_id, $arrEmpIdHolder)){
+            $name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
+            array_push($arrHolder, [
+            'nir_name' => $name,
+            'nir_email' =>  $items->employee->emp_ofc_email,
+            'nir_office' => $offices->ofc_acronym,
+            'nir_pos_title' => $items->tblpositions->pos_title,
+            'nir_emp_id' => $items->employee->emp_id,
+            'nir_ofc_id' => $offices->ofc_id,
+            'nir_agn_id' => (int)$agency,
+            'nir_itm_id' => 1
+            ]);
+          }
+        }
+      }
+    }
+
+    return $arrHolder;
+
+  }
+
+  public function addToNextInRank($request){
+
+    $listHolder = $request->emp_list;
+    // return $listHolder;
+    foreach ($listHolder as $value) {
+      $addQry = new TblnextInRank();
+      $addQry->nir_name = $value['nir_name'];
+      $addQry->nir_email =  $value['nir_email'];
+      $addQry->nir_office = $value['nir_office'];
+      $addQry->nir_pos_title = $value['nir_pos_title'];
+      $addQry->nir_emp_id = $value['nir_emp_id'];
+      $addQry->nir_ofc_id = $value['nir_ofc_id'];
+      $addQry->nir_agn_id = $value['nir_agn_id'];
+      $addQry->nir_itm_id = $value['nir_itm_id'];
+      $addQry->save();
+    }
+
+    return response()->json([
+      "message" => "Successfully Added",
+    ], 200);
+  }
+
 
 }

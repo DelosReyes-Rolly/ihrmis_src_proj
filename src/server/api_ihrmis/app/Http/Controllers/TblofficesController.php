@@ -59,7 +59,7 @@ class TblofficesController extends Controller
 
     public function getAllOffices()
     {
-        $item_qry = DB::select('SELECT a.,office.parent,heads.,oics.* FROM tbloffices as a 
+        $item_qry = DB::select('SELECT a.*,office.parent,heads.*,oics.* FROM tbloffices as a 
         LEFT JOIN (SELECT offices.ofc_name as parent,offices.ofc_id  from tbloffices as offices) as office on a.ofc_ofc_id = office.ofc_id
         LEFT JOIN (SELECT pos.pos_title as head,pli.itm_id as plantilla, pli.itm_ofc_id as head_ofc from tblplantilla_items as pli
                   LEFT JOIN tblpositions as pos on pli.itm_pos_id = pos.pos_id) as heads

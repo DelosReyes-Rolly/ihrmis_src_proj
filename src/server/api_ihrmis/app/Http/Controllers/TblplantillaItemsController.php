@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
-use App\Http\Resources\Plantilla\GetOfficesPositionResource;
 use App\Http\Resources\Plantilla\TblplantillaItemsResource;
-use App\Models\Applicants\Tblapplicants;
-use App\Models\Tblnotification;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaDutiesRspnsblts;
 use App\Models\TblplantillaItems;
