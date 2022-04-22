@@ -4,3 +4,5 @@ import axios from "axios";
 //   "Bearer" + localStorage.getItem("XSRF-TOKEN");
 // axios.defaults.withCredentials = true;
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+axios.defaults.headers.common["xsrfCookieName"] = "XSRF-TOKEN";
+axios.defaults.headers.common["xsrfHeaderName"] = "X-XSRF-TOKEN";

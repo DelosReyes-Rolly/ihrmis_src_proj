@@ -31,33 +31,33 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantilla, type }) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
   const [selectedMsg, setSelectedMsg] = useState(null);
 
-  const selectedType = (value) => {
-    mType?.forEach((element) => {
-      if (value === element.title) {
-        setSelectedMsg(element.message);
-      }
-    });
-  };
+	const selectedType = (value) => {
+		mType?.forEach((element) => {
+			if (value === element.title) {
+				setSelectedMsg(element.message);
+			}
+		});
+	};
 
-  const getMessageType = async () => {
-    await axios
-      .get(API_HOST + "mail-template")
-      .then((res) => {
-        let arrHolder = [];
-        const dataMType = res?.data?.data;
-        dataMType.forEach((element) => {
-          console.log(element);
-          arrHolder.push({
-            id: element.eml_name,
-            title: element.eml_name,
-            message: element.eml_message,
-            data_id: element.eml_id,
-          });
-        });
-        setmType(arrHolder);
-      })
-      .catch((err) => {});
-  };
+	const getMessageType = async () => {
+		await axios
+			.get(API_HOST + "mail-template")
+			.then((res) => {
+				let arrHolder = [];
+				const dataMType = res?.data?.data;
+				dataMType.forEach((element) => {
+					console.log(element);
+					arrHolder.push({
+						id: element.eml_name,
+						title: element.eml_name,
+						message: element.eml_message,
+						data_id: element.eml_id,
+					});
+				});
+				setmType(arrHolder);
+			})
+			.catch((err) => {});
+	};
 
   const dispatch = useDispatch();
 
@@ -112,9 +112,9 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantilla, type }) => {
     },
   });
 
-  useEffect(() => {
-    getMessageType();
-  }, []);
+	useEffect(() => {
+		getMessageType();
+	}, []);
 
   useEffect(() => {
     emailFormik.setFieldValue("recepient", email_recepients);
@@ -141,46 +141,46 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantilla, type }) => {
             onChange={emailFormik.handleChange}
           />
 
-          {emailFormik.touched.recepient && emailFormik.errors.recepient ? (
-            <p className="error-validation-styles">
-              {emailFormik.errors.recepient}
-            </p>
-          ) : null}
-        </div>
-        <br />
-        <div>
-          <label>Message:</label>
-          <SelectComponent
-            name="message_type"
-            itemList={mType}
-            value={emailFormik.values.message_type}
-            onChange={(e) => {
-              emailFormik.handleChange(e);
-              selectedType(e.target.value);
-            }}
-            defaultTitle="Subject"
-          />
-          {emailFormik.touched.message_type &&
-          emailFormik.errors.message_type ? (
-            <p className="error-validation-styles">
-              {emailFormik.errors.message_type}
-            </p>
-          ) : null}
-        </div>
-        <br />
-        <div>
-          <div className="email-modal-plantilla">
-            <RichTextEditorComponent
-              setFieldValue={(val) => emailFormik.setFieldValue("message", val)}
-              value={selectedMsg}
-            />
-          </div>
-          {emailFormik.touched.message && emailFormik.errors.message ? (
-            <p className="error-validation-styles">
-              {emailFormik.errors.message}
-            </p>
-          ) : null}
-        </div>
+					{emailFormik.touched.recepient && emailFormik.errors.recepient ? (
+						<p className="error-validation-styles">
+							{emailFormik.errors.recepient}
+						</p>
+					) : null}
+				</div>
+				<br />
+				<div>
+					<label>Message:</label>
+					<SelectComponent
+						name="message_type"
+						itemList={mType}
+						value={emailFormik.values.message_type}
+						onChange={(e) => {
+							emailFormik.handleChange(e);
+							selectedType(e.target.value);
+						}}
+						defaultTitle="Subject"
+					/>
+					{emailFormik.touched.message_type &&
+					emailFormik.errors.message_type ? (
+						<p className="error-validation-styles">
+							{emailFormik.errors.message_type}
+						</p>
+					) : null}
+				</div>
+				<br />
+				<div>
+					<div className="email-modal-plantilla">
+						<RichTextEditorComponent
+							setFieldValue={(val) => emailFormik.setFieldValue("message", val)}
+							value={selectedMsg}
+						/>
+					</div>
+					{emailFormik.touched.message && emailFormik.errors.message ? (
+						<p className="error-validation-styles">
+							{emailFormik.errors.message}
+						</p>
+					) : null}
+				</div>
 
         <br />
         <div>

@@ -11,7 +11,6 @@ const popupResponseSlice = createSlice({
       title: "",
       content: "",
     },
-    isRefresh: false,
   },
   reducers: {
     setRefresh: (state) => {

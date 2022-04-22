@@ -166,7 +166,6 @@ const DashboardView = ({}) => {
   };
 
   // const { globalFilter } = state;
-
   return (
     <div>
       <BreadcrumbConfig array={getSecondLevel(1)} />
@@ -182,7 +181,6 @@ const DashboardView = ({}) => {
           buttonName="Office"
         />
       </div>
-
       <AddOfficeModal
         isDisplay={toggleOfficeModal}
         onClose={() => {
@@ -261,4 +259,5 @@ const DashboardView = ({}) => {
     </div>
   );
 };
+
 export default DashboardView;
