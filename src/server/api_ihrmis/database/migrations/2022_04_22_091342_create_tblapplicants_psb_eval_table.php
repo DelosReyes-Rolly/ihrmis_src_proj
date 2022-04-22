@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTblapplicantsPsbEvaluationsTable extends Migration
+class CreateTblapplicantsPsbEvalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTblapplicantsPsbEvaluationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tblapplicants_psb_evaluations', function (Blueprint $table) {
+        Schema::create('tblapplicants_psb_eval', function (Blueprint $table) {
             $table->unsignedInteger('psb_app_id')->comment('Applicant ID. Identifies the related applicant.');
             $table->unsignedInteger('psb_usr_id')->comment('User ID. Identifies the HRMPSB member/evaluator who did the evaluation.');
             $table->unsignedInteger('psb_bat_id')->comment('Battery ID. Identifies the specific battery (Attribute, Accomplishment, or Performance) being referred to.');
@@ -30,6 +30,6 @@ class CreateTblapplicantsPsbEvaluationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tblapplicants_psb_evaluations');
+        Schema::dropIfExists('tblapplicants_psb_eval');
     }
 }
