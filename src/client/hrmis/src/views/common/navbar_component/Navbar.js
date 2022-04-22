@@ -12,6 +12,7 @@ import { openSideBar } from "../../../features/reducers/mobile_view_slice";
 import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper";
 import BadgeComponents from "../badge_component/Badge";
 import NotificationComponent from "../notification/notification_component";
+import navbarLogo from "../../../assets/images/ilogo.png";
 
 const NavbarComponent = ({}) => {
   let [dropState, updateDropState] = useToggleHelper(false);
@@ -45,7 +46,9 @@ const NavbarComponent = ({}) => {
     <div className="navbar-div">
       <nav>
         <h1>
-          <span className="navbar-span-1 margin-right-1">iHRMiS</span>
+          <span className="navbar-span-1 margin-right-1">
+            <img src={navbarLogo} width="100" alt="ihrmis_logo" />
+          </span>
           <span className="navbar-span-2">
             <p>&copy; 2021 DOST</p>
           </span>
