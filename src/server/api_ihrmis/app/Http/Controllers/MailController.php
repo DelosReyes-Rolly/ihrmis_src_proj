@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Email\GetEmailTypeResource;
+use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\TblemailTemplate;
 use App\Models\TblemailType;
@@ -51,18 +52,52 @@ class MailController extends Controller
 
         $arrHolder = [];
         foreach ($rawRecepient as $value) {
-            array_push($arrHolder, trim($value, " "));
+            $tempEmail = trim($value, " ");
+            array_push($arrHolder, $tempEmail);
             $data = [
                 "from" => env("MAIL_FROM_RECUITER"),
                 "email_from" => env("MAIL_FROM_ADDRESS"),
-                "email_to" => trim($value, " "),
+                "email_to" => $tempEmail,
                 "date" => Carbon::now(),
                 "message_type" => $request->message_type,
                 "message" => $request->message,
                 "sender" => nl2br($request->sender),
                 "file" => $arrFiles
             ];
-            Mail::to(trim($value," "))->send(new NotifyVacantPlantillaEmail($data));
+            Mail::to($tempEmail)->send(new NotifyVacantPlantillaEmail($data));
+        }
+       
+        return response()->json(["message" => "Mail Sent to" . implode(", ",$arrHolder)]);
+    }
+
+    public function notifyNextRank(Request $request) {
+        $arrFiles=[];
+
+        if(!empty($request->file(['image_upload']))){
+            foreach ($request->file(['image_upload']) as $value) {
+                array_push($arrFiles, $value);
+            }    
+        }
+
+        // Getting all the email where to send to
+        $rawRecepient = explode(",", $request->recepient);
+
+        $arrHolder = [];
+        foreach ($rawRecepient as $value) {
+            $tempEmail = trim($value, " ");
+            array_push($arrHolder, $tempEmail);
+            $data = [
+                "from" => env("MAIL_FROM_RECUITER"),
+                "email_from" => env("MAIL_FROM_ADDRESS"),
+                "email_to" => $tempEmail,
+                "date" => Carbon::now(),
+                "message_type" => $request->message_type,
+                "message" => $request->message,
+                "deadline" => $request->deadline,
+                "sender" => nl2br($request->sender),
+                "file" => $arrFiles
+            ];
+            Mail::to($tempEmail)->send(new NotifyNextInRankMail($data));
         }
        
         return response()->json(["message" => "Mail Sent to" . implode(", ",$arrHolder)]);

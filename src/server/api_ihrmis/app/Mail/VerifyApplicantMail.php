@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use Barryvdh\DomPDF\Facade as PDF;
+use Mpdf\Mpdf as PDF;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

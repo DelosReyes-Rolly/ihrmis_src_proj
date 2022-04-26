@@ -162,6 +162,7 @@ Route::post('register', [AuthenticationController::class, "registerUser"]);
 Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
 Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
+Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
