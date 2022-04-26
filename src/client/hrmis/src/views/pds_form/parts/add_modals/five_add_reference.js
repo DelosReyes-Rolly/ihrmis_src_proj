@@ -12,7 +12,7 @@ import ValidationComponent from "../../../common/response_component/validation_c
 const FourAddReferenceModal = (props) => {
   const [dataState, singleInput, multiInput, setter] = useFormHelper();
 
-  const { renderFailed, renderSuccess } = usePopUpHelper();
+  const { renderFail, renderSuccess } = usePopUpHelper();
   // ===================================
   // ERROR HANDLING STATE
   // ===================================
@@ -49,7 +49,7 @@ const FourAddReferenceModal = (props) => {
         if (typeof error === "object" && error !== null)
           setServerErrorResponse([error.message]);
         else setServerErrorResponse([error.message]);
-        renderFailed();
+        renderFail();
       });
     dispatch(setBusy(false));
   };

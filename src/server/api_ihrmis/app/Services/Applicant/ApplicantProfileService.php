@@ -4,6 +4,7 @@ namespace App\Services\Applicant;
 
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
+use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -313,7 +314,131 @@ class ApplicantProfileService
      * @param [int] $plantilla_id
      * @return QualifiedApplicants[]
      */
-    public function getQualifiedApplicants($plantilla_id)
+    public function getQualifiedApplicants($type)
+    {
+        $plantilla_query = TblplantillaItems::with('tblpositions')->get();
+        $qualified_applicants = [];
+        $unqualified_applicants = [];
+        $applicant_querys = [];
+        foreach ($plantilla_query as $plantilla) {
+            $applicant_query = Tblapplicants::with(
+                'tblapplicantEligibility',
+                'tblapplicantEducation',
+                'tblapplicantExperience',
+                'tblapplicantTrainings',
+                'TblapplicantsProfile',
+                'TblplantillaItems',
+                'TblPositions',
+                'TblOffices'
+            )->where('app_itm_id', $plantilla->itm_id)->get();
+            //Get Position Requirements
+            array_push($applicant_querys,$applicant_query);
+            $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla->tblpositions->pos_id)->get();
+
+            $civil_service_type = [];
+            $education = [];
+
+            /**
+             * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.
+             */
+            foreach ($position_query as $position_requirement) {
+                if ($position_requirement->std_type == "CS") {
+                    $civil_service_type = explode('|', $position_requirement->std_keyword);
+                }
+                if ($position_requirement->std_type == "ED") {
+                    $education = explode('|', $position_requirement->std_keyword);
+                }
+                if ($position_requirement->std_type == "EX") {
+                    $experience = explode(', ', $position_requirement->std_keyword);
+                    $experienceYears = $position_requirement->std_quantity;
+                }
+                if ($position_requirement->std_type == "TR") {
+                    $training = explode(', ', $position_requirement->std_keyword);
+                    $trainingHours = $position_requirement->std_quantity;
+                }
+            }
+            foreach ($applicant_query as $applicant) {
+                $related_fields = [];
+                $competencies = [];
+                $requirements = 0;
+                $qualified = false;
+                foreach ($applicant->tblapplicantEligibility as $appEligibility) {
+                    $applicantEligibility[] = $appEligibility->cse_app_title;
+                }
+                foreach ($applicant->tblapplicantEducation as $appEducation) {
+                    $applicantEducLevel[] = $appEducation->edu_app_level;
+                    $applicantEducSpecify[] = $appEducation->edu_app_degree;
+                }
+                foreach ($applicant->tblapplicantExperience as $appExperience) {
+                    $start = new Carbon($appExperience->exp_app_from, 'Asia/Manila');
+                    $end = new Carbon($appExperience->exp_app_to, 'Asia/Manila');
+                    $related_fields = explode(',', $appExperience->exp_app_rel_fields);
+                    foreach ($related_fields as $field) {
+                        $applicantExpField[$field]['field'] = $field;
+                        if (empty($applicantExpField[$field]['years'])) {
+                            $applicantExpField[$field]['years'] = $start->diffInYears($end, true);
+                        } else {
+                            $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
+                        }
+                    }
+                }
+                foreach ($applicant->tblapplicantTrainings as $appTrainings) {
+                    $competencies = explode(',', $appTrainings->trn_app_cmptncy);
+                    foreach ($competencies as $competency) {
+                        $applicantTrnCmptncy[$competency]['competency'] = $competency;
+                        if (empty($applicantTrnCmptncy[$competency]['hours'])) {
+                            $applicantTrnCmptncy[$competency]['hours'] = $appTrainings->trn_app_hours;
+                        } else {
+                            $applicantTrnCmptncy[$competency]['hours'] += $appTrainings->trn_app_hours;
+                        }
+                    }
+                }
+                foreach ($civil_service_type as $CS) {
+                    if (in_array($CS, $applicantEligibility)) {
+                        $requirements++;
+                    }
+                }
+                foreach ($education as $ED) {
+                    $exploded_requirement = explode(':', $ED);
+                    if (in_array($exploded_requirement[0], $applicantEducLevel) && in_array($exploded_requirement[1], $applicantEducSpecify)) {
+                        $requirements++;
+                    }
+                }
+                foreach ($experience as $EXP) {
+                    foreach ($applicantExpField as $applicant_exp) {
+                        if ($EXP == $applicant_exp['field'] && $experienceYears <= $applicant_exp['years']) {
+                            $requirements++;
+                        }
+                    }
+                }
+                foreach ($training as $TRN) {
+                    foreach ($applicantTrnCmptncy as $applicant_trn) {
+                        if ($TRN == $applicant_trn['competency'] && $trainingHours <= $applicant_trn['hours']) {
+                            $requirements++;
+                        }
+                    }
+                }
+                if ($requirements >= 4) {
+                    array_push($qualified_applicants, $applicant);
+                } else {
+                    array_push($unqualified_applicants, $applicant);
+                }
+            }
+        }
+
+        if ($type == 1) {
+            return $qualified_applicants;
+        }
+        return $unqualified_applicants;
+    }
+
+    /**
+     * Sorts Applicants based on the Positions Requirements
+     *
+     * @param [int] $plantilla_id
+     * @return QualifiedApplicants[]
+     */
+    public function getQualifiedApplicants_report($plantilla_id)
     {
         $applicant_query = Tblapplicants::with(
             'tblapplicantEligibility',

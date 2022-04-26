@@ -153,15 +153,12 @@ const TableOne = () => {
               // ===========================================
           */}
           <thead>
-            <tr
-              className="fixed-label-table main-headers"
-              onClick={() => setShowData()}
-            >
+            <tr className="fixed-label-table main-headers">
               <th colSpan="12">
                 <span style={{ float: "left" }}>
                   III. EDUCATIONAL BACKGROUND
                 </span>
-                <span style={{ float: "right" }}>
+                <span style={{ float: "right" }} onClick={() => setShowData()}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -368,15 +365,12 @@ const TableTwo = () => {
                 // =========================================== 
             */}
           <thead>
-            <tr
-              className="fixed-label-table main-headers"
-              onClick={() => setShowData()}
-            >
+            <tr className="fixed-label-table main-headers">
               <th colSpan="12">
                 <span style={{ float: "left" }}>
                   IV. CIVIL SERVICE ELIGIBILITY
                 </span>
-                <span style={{ float: "right" }}>
+                <span style={{ float: "right" }} onClick={() => setShowData()}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -605,13 +599,10 @@ const TableThree = () => {
                 // =========================================== 
             */}
           <thead>
-            <tr
-              className="fixed-label-table main-headers"
-              onClick={() => setShowData()}
-            >
+            <tr className="fixed-label-table main-headers">
               <th colSpan="12">
                 <span style={{ float: "left" }}>III. WORK EXPERIENCE</span>
-                <span style={{ float: "right" }}>
+                <span style={{ float: "right" }} onClick={() => setShowData()}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -824,11 +815,11 @@ const TableFour = () => {
           <thead>
             <tr className="fixed-label-table main-headers">
               <th colSpan="12">
-                <span style={{ float: "left" }} onClick={() => setShowData()}>
+                <span style={{ float: "left" }}>
                   III. VOLUNTARY WORK OR INVOLVEMENT IN
                   CIVIC/NON-GOVERNMENT/PEOPLE/VOLUNTARY ORGANIZATION
                 </span>
-                <span style={{ float: "right" }}>
+                <span style={{ float: "right" }} onClick={() => setShowData()}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />
@@ -1038,11 +1029,11 @@ const TableFive = () => {
           <thead>
             <tr className="fixed-label-table main-headers">
               <th colSpan="12">
-                <span style={{ float: "left" }} onClick={() => setShowData()}>
+                <span style={{ float: "left" }}>
                   VII. LEARNING AND DEVELOPMENT INTERVENTIONS/TRAINING PROGRAMS
                   ATTENDED
                 </span>
-                <span style={{ float: "right" }}>
+                <span style={{ float: "right" }} onClick={() => setShowData()}>
                   {" "}
                   {showData ? (
                     <AiOutlineArrowUp size="18px" />

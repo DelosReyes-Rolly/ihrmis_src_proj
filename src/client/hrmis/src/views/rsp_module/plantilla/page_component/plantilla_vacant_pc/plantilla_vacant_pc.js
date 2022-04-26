@@ -1,245 +1,115 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import IconComponent from "../../../../common/icon_component/icon";
-import { API_HOST } from "../../../../../helpers/global/global_config";
-import { statusDisplay } from "../../static/display_option";
-import {
-  BsArrowDown,
-  BsArrowUp,
-  BsFillCheckCircleFill,
-  BsGlobe,
-} from "react-icons/bs";
-import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
-import axios from "axios";
+import { BsFillCheckCircleFill, BsGlobe } from "react-icons/bs";
 import { AiFillPrinter } from "react-icons/ai";
 import { plantillaVacantBreadCramp } from "../../static/breadcramp_data";
-import { useDispatch, useSelector } from "react-redux";
-import { useToggleService } from "../../../../../services/toggle_service";
-import { plantillaItemSelectFilter } from "../../static/filter_items";
+import { PlantillaDataTableDisplay } from "./plantilla_data_table_display";
+import { API_HOST } from "../../../../../helpers/global/global_config";
+import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
+import { plantillaItemsReportsMenuItems } from "../../static/plantilla_vacant_positions_data";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
+import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
+import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
 // eslint-disable-next-line
 // import { BreadCrumbsData } from "../../static/breadcramp_data";
 
 // let bc = BreadCrumbsData();
 
 const PlantillaItemsVacantPositionComponentView = () => {
-  return (
-    <React.Fragment>
-      <div className="plantilla-view">
-        <div className="container-plantilla">
-          {/* <BreadcrumbComponent list={bc.getBreadcrumbData('vacant')} className="" /> */}
-          <BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
-        </div>
-        <div className="three-idiot">
-          <IconComponent
-            id="print_vacantposition"
-            icon={<AiFillPrinter />}
-            toolTipId="pl-vp-printer"
-            textHelper="Print"
-            onClick={handleClick}
-          />
-          <IconComponent
-            id="print_vacantposition"
-            className="padding-left-1"
-            icon={<BsGlobe />}
-            toolTipId="pl-vp-view"
-            textHelper="View/Edit Selected Vacant Position"
-            onClick={handleClick}
-          />
-          <IconComponent
-            id="print_vacantposition"
-            className="padding-left-1"
-            icon={<BsFillCheckCircleFill />}
-            toolTipId="pl-vp-check"
-            textHelper="Close Vacant Position"
-            onClick={handleClick}
-          />
-        </div>
-        <div>
-          <PlantillaDataTableDisplay type={1} />
-        </div>
-      </div>
-    </React.Fragment>
-  );
+	const dispatch = useDispatch();
+
+	const [selectedrowData, setSelectedRowData] = useState([]);
+	const [axiosCall] = useAxiosCallHelper();
+	const { sweetAlertConfirm, toastSuccessFailMessage } = useSweetAlertHelper();
+
+	const closeSelectedVacantPostions = async () => {
+		// console.log(selectedrowData);
+		if (preConfirm()) {
+			sweetAlertConfirm(
+				"Confirmation Dialog",
+				"Click OK to confirm to close selected vacant position/s",
+				"question",
+				true,
+				preConfirm,
+				confirmedAction
+			);
+		}
+	};
+
+	const preConfirm = () => {
+		if (selectedrowData.positions.length === 0) {
+			let response = {
+				data: {
+					code: 500,
+					message: "No selected position/s!",
+				},
+			};
+			toastSuccessFailMessage(response.data);
+			return false;
+		}
+		return true;
+	};
+
+	const confirmedAction = () => {
+		axiosCall("post", API_HOST + "closeVacantPositions", selectedrowData).then(
+			(response) => {
+				//console.log(response.data);
+				toastSuccessFailMessage(response.data);
+				let data = response.data;
+				if (data.code === 200) {
+					dispatch(setRefresh());
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+
+	return (
+		<React.Fragment>
+			<div className="plantilla-view">
+				<div className="container-plantilla">
+					{/* <BreadcrumbComponent list={bc.getBreadcrumbData('vacant')} className="" /> */}
+					<BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
+				</div>
+				<div className="three-idiot">
+					<DropdownViewComponent
+						itemList={plantillaItemsReportsMenuItems}
+						title={<AiFillPrinter size="22" />}
+						alignItems="end"
+						className="button-icon unstyled-button"
+						toolTipId="pl-vp-printer"
+						textHelper="Print"
+					/>
+					<IconComponent
+						id="view_edit_vacantposition"
+						className="padding-left-1"
+						icon={<BsGlobe />}
+						toolTipId="pl-vp-view"
+						textHelper="View/Edit Selected 	 Position"
+						onClick={() => {}}
+					/>
+					<IconComponent
+						id="close_vacant_position"
+						className="padding-left-1"
+						icon={<BsFillCheckCircleFill />}
+						toolTipId="pl-vp-check"
+						textHelper="Close Vacant Position"
+						onClick={() => closeSelectedVacantPostions()}
+					/>
+				</div>
+				<div>
+					<PlantillaDataTableDisplay
+						type={1}
+						selectedPlantillaItems={setSelectedRowData}
+					/>
+				</div>
+			</div>
+		</React.Fragment>
+	);
 };
 
 export default PlantillaItemsVacantPositionComponentView;
-
-export const PlantillaDataTableDisplay = ({ type }) => {
-  const refresh = useSelector((state) => state.popupResponse.refresh);
-  const [plotData, setPlotData] = useState([]);
-  const plantillaItemApi = async () => {
-    await axios
-      .get(API_HOST + "vacantpositions/" + type)
-      .then((response) => {
-        //console.log(response.data);
-        let data = response.data.data ?? [];
-
-        if (data.length > 0) {
-          let dataPlot = [];
-          data?.forEach((element) => {
-            dataPlot.push({
-              itm_no: element.itm_no,
-              pos_short_name: element.position.pos_short_name,
-              ofc_acronym: element.office.ofc_acronym,
-              itm_status: statusDisplay[element.itm_status],
-              pos_category: element.position.pos_category,
-            });
-          });
-
-          setPlotData(dataPlot);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useLayoutEffect(() => {
-    plantillaItemApi();
-  }, [refresh]);
-
-  let data = useMemo(() => plotData, [plotData]);
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Item No.",
-        accessor: "itm_no", // accessor is the "key" in the data
-      },
-      {
-        Header: "Position",
-        accessor: "pos_short_name",
-      },
-      {
-        Header: "Office",
-        accessor: "ofc_acronym",
-      },
-      {
-        Header: "Status",
-        accessor: "itm_status",
-      },
-      {
-        Header: "Category",
-        accessor: "pos_category",
-      },
-    ],
-    []
-  );
-
-  const initialState = { hiddenColumns: "pos_category" };
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    setGlobalFilter,
-    setFilter,
-  } = useTable(
-    {
-      initialState,
-      columns,
-      data,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy
-  );
-
-  const { globalFilter } = state;
-
-  return (
-    <React.Fragment>
-      <FilterPlantillaItems
-        type={type}
-        search={globalFilter}
-        setSearch={setGlobalFilter}
-        statusFilter={setFilter}
-      />
-      <div className="default-table">
-        <table className="table-design" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr
-                className="main-header"
-                {...headerGroup.getHeaderGroupProps()}
-              >
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <BsArrowDown />
-                        ) : (
-                          <BsArrowUp />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <tr className="trHoverBody" {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <p
-          style={{
-            fontSize: "small",
-            color: "rgba(70, 70, 70, 0.6)",
-            marginTop: "10px",
-          }}
-        >
-          Total of {rows.length} entries
-        </p>
-      </div>
-    </React.Fragment>
-  );
-};
-
-const FilterPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
-  return (
-    <React.Fragment>
-      <div className="selector-container">
-        <span className="vacant-position-filter selector-span-1">
-          <select
-            onChange={(e) => statusFilter("pos_category", e.target.value)}
-          >
-            <option className="options" key="0" value="0">
-              Filter By
-            </option>
-            {plantillaItemSelectFilter.map((item) => {
-              return (
-                <option className="options" key={item.value} value={item.value}>
-                  {item.title}
-                </option>
-              );
-            })}
-          </select>
-        </span>
-      </div>
-    </React.Fragment>
-  );
-};
-
-const handleClick = () => {
-  window.open("http://127.0.0.1:8000/api/generate-pdf", "_tab");
-};

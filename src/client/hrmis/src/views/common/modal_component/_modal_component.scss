@@ -48,7 +48,7 @@ $colorTheme: (
       justify-content: flex-end;
       align-items: center;
       padding: 15px 20px 5px 20px;
-
+      gap: 10px;
       .ft-button {
         color: map-get($colorTheme, fonts);
       }

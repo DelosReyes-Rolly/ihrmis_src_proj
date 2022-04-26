@@ -5,6 +5,7 @@ namespace App\Models\Applicants;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
+use App\Models\Employee\Tblemployees;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,7 @@ class Tblapplicants extends Model
     protected $table = 'tblapplicants';
     protected $primaryKey = 'app_id';
     protected $fillable = [
+        'app_id',
         'app_itm_id',
         'app_emp_id',
         'app_sts_time',
@@ -64,11 +66,21 @@ class Tblapplicants extends Model
 
     public function TblPositions()
     {
-        return $this->hasOneThrough(Tblpositions::class, TblplantillaItems::class, 'itm_id', 'pos_id', 'app_itm_id');
+        return $this->hasOneThrough(Tblpositions::class, TblplantillaItems::class, 'itm_id', 'pos_id', 'app_itm_id','itm_pos_id');
     }
 
     public function TblOffices()
     {
-        return $this->hasOneThrough(Tbloffices::class, TblplantillaItems::class, 'itm_id', 'ofc_id', 'app_itm_id');
+        return $this->hasOneThrough(Tbloffices::class, TblplantillaItems::class, 'itm_id', 'ofc_id', 'app_itm_id','itm_ofc_id');
+    }
+
+    public function plantillaItems()
+    {
+        return $this->hasOne(TblplantillaItems::class, 'itm_id', 'app_itm_id');
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }
 }

@@ -30,6 +30,7 @@ const LoginView = () => {
     }),
     onSubmit: async (values) => {
       renderBusy(true);
+      console.log(values);
       await axios
         .get(SANCTUM + "sanctum/csrf-cookie")
         .then((response) => {

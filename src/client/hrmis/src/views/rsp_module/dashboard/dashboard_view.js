@@ -1,6 +1,5 @@
-import React, { useMemo, useEffect, useLayoutEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import ButtonComponent from "../../common/button_component/button_component.js.js";
-import { useToggleService } from "../../../services/toggle_service.js";
 import AddOfficeModal from "./AddOfficeModal.js";
 import axios from "axios";
 import { API_HOST } from "../../../helpers/global/global_config.js";
@@ -17,13 +16,14 @@ import {
   apiModelOfficeType,
   apiModelOfficeAreaType,
 } from "./static/input_items.js";
+import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper.js";
 
-const DashboardView = (props) => {
-  let [toggleOfficeModal, setToggleOfficeModal] = useToggleService(false);
-  const {getSecondLevel } = crumbSecondLevel();
+const DashboardView = ({}) => {
+  let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
+  const { getSecondLevel } = crumbSecondLevel();
   const [plotOfficeData, setOfficeData] = useState([]);
   const { isRefresh } = useSelector((state) => state.popupResponse);
-  const { trueValue, displayData } = useSelectValueCon();
+  const { trueValue } = useSelectValueCon();
   const offceDataApi = async () => {
     await axios
       .get(API_HOST + "getOffices")
@@ -59,6 +59,7 @@ const DashboardView = (props) => {
       })
       .catch((error) => {});
   };
+
   useEffect(() => {
     offceDataApi();
   }, [isRefresh]);
@@ -126,6 +127,7 @@ const DashboardView = (props) => {
     ],
     []
   );
+
   const initialState = {
     hiddenColumns: [
       "ofc_type",
@@ -136,6 +138,7 @@ const DashboardView = (props) => {
       "ofc_area_type",
     ],
   };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -155,104 +158,102 @@ const DashboardView = (props) => {
     useGlobalFilter,
     useSortBy
   );
+
   const [dataState, setDataState] = useState();
   const passModalData = (param) => {
     setDataState(param);
     setToggleOfficeModal();
   };
 
-  const { globalFilter } = state;
-
-  return (
-    <div style={{ margin: "20px" }}>
-      <BreadcrumbConfig array={getSecondLevel(1)} />
-      <div className="dashborad-view">
-        <div className="header-account-name">
-          Welcome <strong>Jessica Moral!</strong>
-        </div>
-        <br />
+  // const { globalFilter } = state;
+  return(
+  <div>
+    <BreadcrumbConfig array={getSecondLevel(1)} />
+    <div style={{ margin: 20 }}>
+      <div className="">
+        Welcome <strong>Jessica Moral!</strong>
       </div>
+      <br />
       <h1>JC</h1>
       <br />
       <ButtonComponent
         onClick={() => setToggleOfficeModal()}
         buttonName="Office"
       />
-      <AddOfficeModal
-        isDisplay={toggleOfficeModal}
-        onClose={() => {
-          setToggleOfficeModal();
-          setDataState(null);
-        }}
-        officeData={dataState}
-      />
-      <div className="default-table">
-        <table className="table-design" {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr
-                className="main-header"
-                {...headerGroup.getHeaderGroupProps()}
-              >
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <span>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <BsArrowDown />
-                        ) : (
-                          <BsArrowUp />
-                        )
-                      ) : (
-                        ""
-                      )}
-                    </span>
-                    {column.render("Header")}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              let officeData = {};
-              row.allCells.map((cell) => {
-                let test = { [cell.column.id]: cell.value };
-                officeData = { ...officeData, ...test };
-              });
-
-              return (
-                <tr
-                  className="trHoverBody"
-                  {...row.getRowProps()}
-                  onClick={() => {
-                    passModalData(officeData);
-                    // console.log(officeData);
-                  }}
-                >
-                  {row.cells.map((cell) => {
-                    return (
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <p
-          style={{
-            fontSize: "small",
-            color: "rgba(70, 70, 70, 0.6)",
-            marginTop: "10px",
-          }}
-        >
-          Total of {rows.length} entries
-        </p>
-      </div>
     </div>
-  );
+    <AddOfficeModal
+      isDisplay={toggleOfficeModal}
+      onClose={() => {
+        setToggleOfficeModal();
+        setDataState(null);
+      }}
+      officeData={dataState}
+    />
+
+    <div className="default-table">
+      <table className="table-design" {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr className="main-header" {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <span>
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <BsArrowDown />
+                      ) : (
+                        <BsArrowUp />
+                      )
+                    ) : (
+                      ""
+                    )}
+                  </span>
+                  {column.render("Header")}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            let officeData = {};
+            row.allCells.map((cell) => {
+              let test = { [cell.column.id]: cell.value };
+              officeData = { ...officeData, ...test };
+            });
+
+            return (
+              <tr
+                className="trHoverBody"
+                {...row.getRowProps()}
+                onClick={() => {
+                  passModalData(officeData);
+                  // console.log(officeData);
+                }}
+              >
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <p
+        style={{
+          fontSize: "small",
+          color: "rgba(70, 70, 70, 0.6)",
+          marginTop: "10px",
+        }}
+      >
+        Total of {rows.length} entries
+      </p>
+    </div>
+  </div>);
 };
+
 export default DashboardView;

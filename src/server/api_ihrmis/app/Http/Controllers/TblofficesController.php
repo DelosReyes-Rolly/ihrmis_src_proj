@@ -7,14 +7,12 @@ use App\Http\Resources\Plantilla\GetPlantillaPositionResource;
 use App\Http\Resources\TblofficesResource;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
-use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TblofficesController extends Controller
 {
-    public function index()
-    {
+    public function index(){
     }
 
     public function store(Request $request)
@@ -35,13 +33,12 @@ class TblofficesController extends Controller
             ]
         );
     }
-
-    public function show($id)
-    {
+    
+    public function show($id){
         return Tbloffices::findOrFail($id);
     }
 
-    public function office()
+     public function office()
     {
         return CommonResource::collection(
             Tbloffices::get(),
@@ -60,10 +57,9 @@ class TblofficesController extends Controller
         return GetPlantillaPositionResource::collection($item_qry);
     }
 
-
     public function getAllOffices()
     {
-        $item_qry = DB::select('SELECT a.*,office.parent,heads.*,oics.* FROM `tbloffices` as a 
+        $item_qry = DB::select('SELECT a.*,office.parent,heads.*,oics.* FROM tbloffices as a 
         LEFT JOIN (SELECT offices.ofc_name as parent,offices.ofc_id  from tbloffices as offices) as office on a.ofc_ofc_id = office.ofc_id
         LEFT JOIN (SELECT pos.pos_title as head,pli.itm_id as plantilla, pli.itm_ofc_id as head_ofc from tblplantilla_items as pli
                   LEFT JOIN tblpositions as pos on pli.itm_pos_id = pos.pos_id) as heads

@@ -1,92 +1,139 @@
-import React, { useState } from 'react';
-import { SidebarOption } from './sidebar_data';
-import {Link} from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { SidebarOption } from "./sidebar_data";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import useSessionStorage from "../../../helpers/use_hooks/session_storage";
+import { CSSTransition } from "react-transition-group";
+import { openSideBar } from "../../../features/reducers/mobile_view_slice";
+import { useDetectScreenHelper } from "../../../helpers/use_hooks/detect_screen_helper";
 
-function SidebarComponent() {
+const SidebarComponent = ({ itemsList = SidebarOption }) => {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useSessionStorage("selected-sidebar-item", 0);
+  const [_, setSubSelected] = useSessionStorage("selected-sidebar-subitem", 0);
+  const isNavbarEnable = useSelector((state) => state.mobileView.sidebar);
+  const dispatch = useDispatch();
+  const { isMobile } = useDetectScreenHelper();
 
-    //For
-    const [subdDropdownState, updateSubDropdownState] = useState({open: false, index: 0});
-    const onClickSubDropdown = (number)=> {
-        if(subdDropdownState.open === false){
-            updateSubDropdownState({open: true, index: number});
-        } else{
-            updateSubDropdownState({open: false, index: number});
-        }
-    }
-
-    const [toggleState, setToggleState] = useState(1);
-    const toggleTab = (index) => {
-        setToggleState(index);
-    }
-    
-
-    const isNavbarEnable  = useSelector((state) => state.mobileView.sidebar);
-    const classValue = isNavbarEnable ? "display-mobile-menu" : '';
-
-    return ( 
-        <React.Fragment>    
-            <div className={`sidebar-menu ${classValue}`}>
-                <ul>
-                    <li className="margin-bottom-2 parag-link"><p>Human Resource Management<br />Information System</p></li>
-                    
-                    {SidebarOption.map((option, key)=> {
-                        if(option.more !== null){
-                            return <React.Fragment key={key}>
-                                <li onClick={() => toggleTab(option.id) } > 
-                                    <Link 
-                                        onClick={() => {
-                                            onClickSubDropdown(option.id)
-                                        }} 
-                                    
-                                        to={option.link}
-                                        className={toggleState === option.id 
-                                            ? "router-link-1 padding-1 item-list item-list-activate" 
-                                            : "router-link padding-1 item-list"} key={option.id}>       
-
-                                        <span className="margin-left-1 margin-right-1">
-                                            {option.icon}
-                                        </span>
-                                        
-                                        <span>
-                                            {option.title}
-                                        </span>
-                                    </Link>
-                                    <div className={ subdDropdownState.open 
-                                        ? subdDropdownState.index === option.id 
-                                        ?  "sub-menu-list"
-                                        : "sub-menu-list-close" 
-                                        : "sub-menu-list-close"}>
-
-                                    <ul>
-                                        {option.more.map((list, key) => {
-                                            return <Link className="router-link" to={list.link} key={key}><li className="padding-1">{list.title}</li></Link>;})
-                                        }                                      
-                                    </ul>
-                                    </div>
-
-                                </li>
-                            </React.Fragment>
-                         
-
-                        } else{
-                            return <Link className="router-link" to={option.link} key={key}>
-                            <li onClick={() => toggleTab(option.id)} 
-                                className={toggleState === option.id ? "padding-1 item-list item-list-activate" : "padding-1 item-list"}
-                                > 
-                                <span className="margin-left-1 margin-right-1">
-                                    {option.icon}
-                                </span>
-                                <span>
-                                    {option.title}
-                                </span>
-                            </li></Link>
+  return (
+    <React.Fragment>
+      <div className={`sidebar-component-style-second`}></div>
+      <CSSTransition
+        classNames="slideRight"
+        in={isMobile === true ? isNavbarEnable : true}
+        timeout={300}
+        unmountOnExit
+      >
+        <div className={`sidebar-component-style `}>
+          <p style={{ padding: "10px" }}>
+            Human Resource Management
+            <br />
+            Information System
+          </p>
+          <div className="sidebar-menu-items">
+            <ul className="list-of-items">
+              {itemsList.map((item) => {
+                return (
+                  <React.Fragment key={item.id}>
+                    <li
+                      onClick={() => {
+                        if (selected === item.id) {
+                          navigate(item.link);
+                          setSelected(0);
+                          setSubSelected(0);
+                        } else {
+                          navigate(item.link);
+                          setSelected(item.id);
+                          setSubSelected(0);
                         }
-                    })}
-                </ul>
-            </div>
-        </React.Fragment>
-    );
-}
- 
+                        if (item.more === null && isMobile) {
+                          dispatch(openSideBar());
+                        }
+                      }}
+                      className="items"
+                      style={
+                        selected === item.id
+                          ? { backgroundColor: "#408fd6", color: "white" }
+                          : null
+                      }
+                    >
+                      <div>
+                        {item.icon}
+                        {item.title}
+                      </div>
+                      {item.more && (
+                        <span>
+                          <CSSTransition
+                            in={selected === item.id}
+                            timeout={300}
+                            classNames="rotateArrow"
+                          >
+                            {selected === item.id ? (
+                              <MdKeyboardArrowUp />
+                            ) : (
+                              <MdKeyboardArrowDown />
+                            )}
+                            {/* <MdKeyboardArrowUp /> */}
+                          </CSSTransition>
+                        </span>
+                      )}
+                    </li>
+                    <CSSTransition
+                      in={selected === item.id}
+                      timeout={200}
+                      unmountOnExit
+                      classNames="slideDown"
+                    >
+                      <SubItemComponent itemList={item.more} />
+                    </CSSTransition>
+                  </React.Fragment>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      </CSSTransition>
+    </React.Fragment>
+  );
+};
+
 export default SidebarComponent;
+
+const SubItemComponent = ({ itemList = [] }) => {
+  const navigate = useNavigate();
+  const [selected, setSelected] = useSessionStorage(
+    "selected-sidebar-subitem",
+    0
+  );
+  const dispatch = useDispatch();
+  const { isMobile } = useDetectScreenHelper();
+  return (
+    <React.Fragment>
+      <ul>
+        {itemList?.map((item) => {
+          return (
+            <li
+              className="sub-item"
+              key={item.id}
+              onClick={() => {
+                navigate(item.link);
+                setSelected(item.id);
+                if (isMobile) {
+                  dispatch(openSideBar());
+                }
+              }}
+              style={
+                selected === item.id
+                  ? { backgroundColor: "rgba(70, 70, 70, 0.6)", color: "white" }
+                  : null
+              }
+            >
+              <span style={{ padding: "0px 0px 0px 35px" }}>{item.title}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </React.Fragment>
+  );
+};

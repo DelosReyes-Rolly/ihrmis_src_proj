@@ -111,6 +111,9 @@ class QualifiedApplicantsResource extends JsonResource
                 }
             }
         }
+        $name = $this->TblapplicantsProfile->app_nm_last. ", ". $this->TblapplicantsProfile->app_nm_first;
+        $email = $this->TblapplicantsProfile->app_email_addr;
+        $position_message = $this->TblPositions->pos_title. ";\n". $this->TblOffices->ofc_acronym;
 
         $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
             $highest['experience_years'] . " years experience in " . $highest['experience'] . ";\n". $highest['training_hours'] . " hours training in " .
@@ -118,16 +121,11 @@ class QualifiedApplicantsResource extends JsonResource
 
         return [
             'app_id' => $this->app_id,
-            'tblapplicant_eligibility' => $this->tblapplicantEligibility,
-            'tblapplicant_education' => $this->tblapplicantEducation,
-            'tblapplicant_experience' => $this->tblapplicantExperience,
-            'tblapplicant_trainings' => $this->tblapplicantTrainings,
-            'tblapplicants_profile' => $this->TblapplicantsProfile,
-            'tblplantilla_items' => $this->TblplantillaItems,
-            'tblpositions' => $this->TblPositions,
-            'tbloffices' => $this->Tbloffices,
+            'app_name' => $name,
+            'app_email' => $email,
             'profile_message' => $profile_message,
-            'qualification_message' => $qualification_message
+            'qualification_message' => $qualification_message,
+            'position_message' => $position_message,
         ];
     }
 }
