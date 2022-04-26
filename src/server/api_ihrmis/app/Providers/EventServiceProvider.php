@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Applicants\TblapplicantsProfile;
-use App\Models\Employees\TblEmployees;
-use App\Models\Second\SecApplicantProfile;
-
+use App\Models\Employees\Tblemployees;
 use App\Models\TbljvsCompetencies;
 use App\Models\TblplantillaItems;
 use App\Observers\ApplicantObservers\ApplicantProfileObserver;
@@ -37,9 +35,9 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Tblemployees::observe(EmployeeObserver::class);
         TbljvsCompetencies::observe(JvsCompetenciesObserver::class);
-        TblapplicantsProfile::observe(ApplicantProfileObserver::class);
-        TblEmployees::observe(EmployeeObserver::class);
+        TblapplicantsProfile::observe(ApplicantProfileObserver::class);   
         TblplantillaItems::observe(PlantillaObserver::class);
     }
 }

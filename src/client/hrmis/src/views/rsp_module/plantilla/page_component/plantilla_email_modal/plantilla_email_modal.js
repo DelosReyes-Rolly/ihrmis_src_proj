@@ -6,19 +6,30 @@ import SelectComponent from "../../../../common/input_component/select_component
 import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
-import { API_HOST } from "../../../../../helpers/global/global_config";
+import {
+  API_HOST,
+  validationRequired,
+} from "../../../../../helpers/global/global_config";
 import * as Yup from "yup";
 import axios from "axios";
 import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { EditorState, ContentState } from "draft-js";
 import { convertFromHTML } from "draft-convert";
+import { useDispatch, useSelector } from "react-redux";
+import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
 
-const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
-	//TYPE LOGIC
-	const [mType, setmType] = useState([]);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-	const [selectedMsg, setSelectedMsg] = useState(null);
+export const EMAIL_ENUM = {
+  regular: "regular",
+  next_rank: "NextRank",
+};
+
+const PlantillaEmailModal = ({ isDisplay, onClose, plantilla, type }) => {
+  const { email_recepients } = useSelector((state) => state.plantillaItem);
+  //TYPE LOGIC
+  const [mType, setmType] = useState([]);
+  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  const [selectedMsg, setSelectedMsg] = useState(null);
 
 	const selectedType = (value) => {
 		mType?.forEach((element) => {
@@ -48,73 +59,87 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
 			.catch((err) => {});
 	};
 
-	const [imageValue, setImageValue] = useState();
+  const dispatch = useDispatch();
 
-	const emailFormik = useFormik({
-		enableReinitialize: true,
-		initialValues: {
-			recepient: "",
-			message_type: "",
-			message: "",
-			sender: "",
-			image_upload: "",
-		},
-		validationSchema: Yup.object({
-			recepient: Yup.string().required("This field is required"),
-			message_type: Yup.string().required("This field is required"),
-			message: Yup.string().required("This field is required"),
-			sender: Yup.string().required("This field is required"),
-			image_upload: Yup.string().required("This field is required"),
-		}),
-		onSubmit: async (value, { resetForm }) => {
-			renderBusy(true);
-			const formData = new FormData();
-			formData.append("recepient", value.recepient);
-			formData.append("message_type", value.message_type);
-			formData.append("message", value.message);
-			formData.append("sender", value.sender);
+  const [imageValue, setImageValue] = useState();
+  // const required = Yup.string().required("This field is required");
+  const emailFormik = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      recepient: "",
+      message_type: "",
+      message: "",
+      sender: "",
+      image_upload: "",
+      deadline: "",
+    },
+    validationSchema: Yup.object({
+      recepient: validationRequired,
+      message_type: validationRequired,
+      message: validationRequired,
+      sender: validationRequired,
+      image_upload: validationRequired,
+      deadline:
+        type === EMAIL_ENUM.next_rank
+          ? Yup.date().required("This field is required")
+          : null,
+    }),
+    onSubmit: async (value, { resetForm }) => {
+      renderBusy(true);
+      const formData = new FormData();
+      formData.append("recepient", value.recepient);
+      formData.append("message_type", value.message_type);
+      formData.append("message", value.message);
+      formData.append("sender", value.sender);
+      if (imageValue != null) {
+        for (let index = 0; index < imageValue.length; index++) {
+          formData.append("image_upload[]", imageValue[index]);
+        }
+      }
 
-			if (imageValue != null) {
-				for (let index = 0; index < imageValue.length; index++) {
-					formData.append("image_upload[]", imageValue[index]);
-				}
-			}
-
-			await axios
-				.post(API_HOST + "notify-vacant-office", formData, {
-					headers: { "Content-Type": "multipart/form-data" },
-				})
-				.then((res) => {
-					renderSucceed({ content: "Email Sent" });
-				})
-				.catch((err) => {
-					renderFailed({ content: "Failed" });
-				});
-			renderBusy(false);
-		},
-	});
+      await axios
+        .post(API_HOST + "notify-vacant-office", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((res) => {
+          dispatch(setEmailRecepients([]));
+          renderSucceed({ content: "Email Sent" });
+        })
+        .catch((err) => {
+          renderFailed({ content: "Failed" });
+        });
+      renderBusy(false);
+    },
+  });
 
 	useEffect(() => {
 		getMessageType();
 	}, []);
 
-	return (
-		<React.Fragment>
-			<ModalComponent
-				title="Email Notification"
-				isDisplay={isDisplay}
-				onSubmit={emailFormik.handleSubmit}
-				onSubmitType="submit"
-				onClose={onClose}
-				onSubmitName="Send"
-			>
-				<div>
-					<label>Recepient:</label>
-					<InputComponent
-						name="recepient"
-						value={emailFormik.values.recepient}
-						onChange={emailFormik.handleChange}
-					/>
+  useEffect(() => {
+    emailFormik.setFieldValue("recepient", email_recepients);
+  }, [email_recepients]);
+
+  return (
+    <React.Fragment>
+      <ModalComponent
+        title="Email Notification"
+        isDisplay={isDisplay}
+        onSubmit={emailFormik.handleSubmit}
+        onSubmitType="submit"
+        onClose={() => {
+          dispatch(setEmailRecepients([]));
+          onClose();
+        }}
+        onSubmitName="Send"
+      >
+        <div>
+          <label>Recepient:</label>
+          <InputComponent
+            name="recepient"
+            value={emailFormik.values.recepient}
+            onChange={emailFormik.handleChange}
+          />
 
 					{emailFormik.touched.recepient && emailFormik.errors.recepient ? (
 						<p className="error-validation-styles">
@@ -157,48 +182,65 @@ const PlantillaEmailModal = ({ isDisplay, onClose, plantillaId }) => {
 					) : null}
 				</div>
 
-				<br />
-				<div>
-					<label>Sender:</label>
-					<TextAreaComponent
-						style={{ whiteSpace: "pre-line" }}
-						name="sender"
-						value={
-							emailFormik.values.sender == ""
-								? "Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City"
-								: emailFormik.values.sender
-						}
-						onChange={emailFormik.handleChange}
-					/>
-					{emailFormik.touched.sender && emailFormik.errors.sender ? (
-						<p className="error-validation-styles">
-							{emailFormik.errors.sender}
-						</p>
-					) : null}
-				</div>
-				<br />
-				<div>
-					<label>Attachment:</label>
-					<UploadAttachmentComponent
-						name="image_upload"
-						formik={emailFormik}
-						accept="image/png, image/jpeg"
-						isMulti={true}
-						onChange={(e) => {
-							const files = Array.prototype.slice.call(e.target.files);
-							setImageValue(e.target.files);
-						}}
-					/>
-					{emailFormik.touched.image_upload &&
-					emailFormik.errors.image_upload ? (
-						<p className="error-validation-styles">
-							{emailFormik.errors.image_upload}
-						</p>
-					) : null}
-				</div>
-			</ModalComponent>
-		</React.Fragment>
-	);
+        <br />
+        <div>
+          <label>Sender:</label>
+          <TextAreaComponent
+            style={{ whiteSpace: "pre-line" }}
+            name="sender"
+            value={
+              emailFormik.values.sender == ""
+                ? "Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City"
+                : emailFormik.values.sender
+            }
+            onChange={emailFormik.handleChange}
+          />
+          {emailFormik.touched.sender && emailFormik.errors.sender ? (
+            <p className="error-validation-styles">
+              {emailFormik.errors.sender}
+            </p>
+          ) : null}
+        </div>
+        <br />
+        {type === EMAIL_ENUM.next_rank ? (
+          <div>
+            <label>Deadline:</label>
+            <InputComponent
+              type="date"
+              name="deadline"
+              onChange={emailFormik.handleChange}
+            />
+            {emailFormik.touched.deadline && emailFormik.errors.deadline ? (
+              <p className="error-validation-styles">
+                {emailFormik.errors.deadline}
+              </p>
+            ) : null}
+            <br />
+          </div>
+        ) : null}
+
+        <div>
+          <label>Attachment:</label>
+          <UploadAttachmentComponent
+            name="image_upload"
+            formik={emailFormik}
+            accept="image/png, image/jpeg"
+            isMulti={true}
+            onChange={(e) => {
+              const files = Array.prototype.slice.call(e.target.files);
+              setImageValue(e.target.files);
+            }}
+          />
+          {emailFormik.touched.image_upload &&
+          emailFormik.errors.image_upload ? (
+            <p className="error-validation-styles">
+              {emailFormik.errors.image_upload}
+            </p>
+          ) : null}
+        </div>
+      </ModalComponent>
+    </React.Fragment>
+  );
 };
 
 export default PlantillaEmailModal;

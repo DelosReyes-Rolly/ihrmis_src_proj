@@ -32,7 +32,9 @@ const ModalComponent = (props) => {
             ) : (
               <div>
                 <ButtonComponent
-                  className="ft-button"
+                  className={
+                    props.onPressStyle ? props.onPressStyle : "ft-button "
+                  }
                   type="button"
                   bgColor="rgb(230, 230, 230)"
                   border="1px solid rgba(70, 70, 70, 0.8)"
@@ -46,6 +48,7 @@ const ModalComponent = (props) => {
             {props.addExtraButton}
             <div className="">
               <ButtonComponent
+                className={props.onSubStyle}
                 type={props.onSubmitType}
                 buttonName={props.onSubmitName}
                 onClick={props.onClickSubmit ?? null}

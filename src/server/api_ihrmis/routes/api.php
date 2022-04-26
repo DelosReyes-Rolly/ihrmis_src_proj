@@ -133,7 +133,7 @@ Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController:
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
 
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
-Route::get('get-next-rank/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
+Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
 
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
 
@@ -169,6 +169,10 @@ Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantil
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
+Route::get('get-agency-employee/{agency}/{plantilla}', [TblplantillaItemsVacantPositionController::class, 'getAgencyEmployees']);
+Route::get('get-next-rank-employees/{item}', [TblplantillaItemsVacantPositionController::class, 'getNextInRankEmployees']);
+Route::post('add-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'addToNextInRank']);
+Route::post('remove-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'deleteNextInRank']);
 
 Route::get('getAllPositions',[TblplantillaItemsVacantPositionController::class,"getAllPositions"]);
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
