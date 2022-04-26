@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf as MPDF;
 // use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
-class PlantillaItemsService {
+class PlantillaItemsService
+{
 
 	public function getPositionWithCsc( $id)
 	{

@@ -15,3 +15,7 @@ export const printVacantPositions = () => {
 export const printNoticeOFVacany = () => {
 	window.open(API_HOST + "generate-NoticeVpReport", "_tab");
 };
+
+export const testOutsideLink = () => {
+	window.open("https://www.youtube.com/watch?v=UVv8EBr5lE0", "_tab");
+};

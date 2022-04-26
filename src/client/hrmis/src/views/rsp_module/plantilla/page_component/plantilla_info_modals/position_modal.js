@@ -16,6 +16,7 @@ import Creatable from "react-select/creatable";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
+import { eligibilityInputItems } from "../../static/input_items";
 
 const customStyles = {
 	option: (provided, state) => ({
@@ -252,28 +253,28 @@ const EligibilityInput = ({ formik }) => {
 		{ value: "Board Exam Passer", label: "Board Exam Passer" },
 	];
 
-	return (
-		<React.Fragment>
-			<h4>ELIGIBILITY</h4>
-			<br />
-			<div className="">
-				<Creatable
-					isClearable
-					value={formik?.values?.eligibility}
-					error={formik?.errors?.eligibility}
-					name="eligibility"
-					simpleValue
-					options={options}
-					styles={style}
-					isMulti
-					onChange={(value) => {
-						formik.setFieldValue("eligibility", value);
-					}}
-				/>
-				{formik.touched.eligibility && formik.errors.eligibility ? (
-					<p className="error-validation-styles">{formik.errors.eligibility}</p>
-				) : null}
-			</div>
+  return (
+    <React.Fragment>
+      <h4>ELIGIBILITY</h4>
+      <br />
+      <div className="">
+        <Creatable
+          isClearable
+          value={formik?.values?.eligibility}
+          error={formik?.errors?.eligibility}
+          name="eligibility"
+          simpleValue
+          options={eligibilityInputItems}
+          styles={style}
+          isMulti
+          onChange={(value) => {
+            formik.setFieldValue("eligibility", value);
+          }}
+        />
+        {formik.touched.eligibility && formik.errors.eligibility ? (
+          <p className="error-validation-styles">{formik.errors.eligibility}</p>
+        ) : null}
+      </div>
 
 			<div className="">
 				<TextAreaComponent

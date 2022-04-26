@@ -42,6 +42,8 @@
         "../../views/pds_form/parts/add_modals/_modal_add.scss",
         "../../views/rsp_module/plantilla/page_component/jvs_crw_pc/_jvs_crw.scss",
         "../../views/rsp_module/plantilla/_plantilla_view.scss",
+        "../../views/rsp_module/dashboard/_dashboard_view.scss",
+        "../../views/rsp_module/recruitment/_recruitment_view.scss",
         "../../views/rsp_module/library/_library.scss",
         "../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/_plantilla_vacant_pc.scss",
         "../../views/authentication/_login_view.scss"

@@ -31,22 +31,20 @@ class TblapplicantCseligibilitiesController extends Controller
         ]);
 
         if(isset($request->item)){
-
             TblapplicantCseligibilities::where('cse_app_time',$request->item)->update([
                 'cse_app_id' => $id,
                 'cse_app_time' => $request->item,
-                'cse_app_title' => $request->cse_app_title,
+                'cse_app_title' => $request->cse_app_title[0]['value'],
                 'cse_app_date' => $request->cse_app_date,
                 'cse_app_place' => $request->cse_app_place,
                 'cse_app_rating' => $request->cse_app_rating,
                 'cse_app_license' => $request->cse_app_license,
                 'cse_app_validity' => $request->cse_app_validity,
             ]);
-
         } else {
             $cseLigibility = new TblapplicantCseligibilities();
             $cseLigibility->cse_app_id = $id;
-            $cseLigibility->cse_app_title = $request->cse_app_title;
+            $cseLigibility->cse_app_title = $request->cse_app_title[0]['value'];
             $cseLigibility->cse_app_date = $request->cse_app_date;
             $cseLigibility->cse_app_place = $request->cse_app_place;
             $cseLigibility->cse_app_rating = $request->cse_app_rating;

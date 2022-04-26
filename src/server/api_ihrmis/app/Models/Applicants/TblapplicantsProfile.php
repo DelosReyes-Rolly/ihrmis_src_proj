@@ -51,4 +51,9 @@ class TblapplicantsProfile extends Model
     public function tblapplicantChildren(){
         return $this->hasMany(TblapplicantChildren::class, 'chi_app_id' ,'app_id');
     }
+
+    public function tblapplicants()
+    {
+        return $this->hasOne(Tblapplicants::class, 'app_id', 'app_id');
+    }
 }

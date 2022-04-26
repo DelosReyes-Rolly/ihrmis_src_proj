@@ -1,4 +1,26 @@
+export const eligibilityInputItems = [
+  {value: 0,label: "No Eligibility"},
+  {value: 1,label: "Professional"},
+  {value: 2,label: "Sub-professional"},
+  {value: 3,label: "Board / Bar"},
+  {value: 4,label: "Barangay Health Worker"},
+  {value: 5,label: "Barangay Official"},
+  {value: 6,label: "Barangay Nutrition Scholar"},
+  {value: 7,label: "Electronic Data Processing Specialist (EDPS)"},
+  {value: 8,label: "Honor Graduate"},
+  {value: 9,label: "Foreign School Honor Graduate"},
+  {value: 10,label: "Scientific and Technological Specialist"},
+  {value: 11,label: "Veteran Preference Rating"},
+  {value: 12,label: "Sanggunian Member"},
+  {value: 13,label: "Skill Eligibility"}
+];
+
+
 export const educationInputItem = [
+  {
+    id: "0",
+    title: "N/A",
+  },
   {
     id: "1",
     title: "Bachelor's",
@@ -121,6 +143,24 @@ export const formThreeInput = {
       id: "4",
       title: "Graduate Studies",
     },
+  ],
+  educationInputItem: [
+    {
+      id: "0",
+      title: "N/A",
+    },
+    {
+      id: "1",
+      title: "Bachelor's",
+    },
+    {
+      id: "2",
+      title: "Master's",
+    },
+    {
+      id: "3",
+      title: "PhD",
+    }
   ],
   add_work_grade: [
     { id: "1", title: "1" },

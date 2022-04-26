@@ -104,7 +104,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 				onClose={onClose}
 			>
 				<div className="add-office-modal">
-					<div className="left-input item-modal-6">
+					<div className="left-input item-modal-5">
 						<label>Office Type</label>
 						<SelectComponent
 							name="ofc_type"
@@ -113,7 +113,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 							itemList={apiModelOfficeType}
 						/>
 					</div>
-					<div className="right-input item-modal-6">
+					<div className="right-input item-modal-5">
 						<label>Parent Office</label>
 						<SelectComponent
 							name="ofc_ofc_id"

@@ -1,18 +1,18 @@
-import React from "react";
-import ReactTooltip from "react-tooltip";
-import { plantillaItemsReportsMenuItems } from "../../rsp_module/plantilla/static/plantilla_vacant_positions_data";
+import React from 'react';
+import ReactTooltip from 'react-tooltip';
+import { plantillaItemsReportsMenuItems } from '../../rsp_module/plantilla/static/plantilla_vacant_positions_data';
 
 const IconComponent = ({
 	id,
 	icon,
 	className,
 	toolTipId,
-	textHelper = "",
-	position = "top",
-	effect = "solid",
+	textHelper = '',
+	position = 'top',
+	effect = 'solid',
 	onClick = () => {},
 }) => {
-	let addClassName = "plantilla-icon " + className;
+	let addClassName = 'plantilla-icon ' + className;
 
 	return (
 		<React.Fragment>

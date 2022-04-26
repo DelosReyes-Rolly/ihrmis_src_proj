@@ -19,6 +19,7 @@ import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import PlantillaView from "../views/rsp_module/plantilla/plantilla_view";
 import LibraryView from "../views/rsp_module/library/library_view";
 import RecruitmentView from "../views/rsp_module/recruitment/recruitment_view";
+import RecruitmentBaseComponent from "../views/rsp_module/recruitment/page_components/recruitment_base_component";
 import EmployeePageComponentView from "../views/rsp_module/plantilla/page_component/employee_pc/employee_pc_view";
 import PlantillaItemPageComponentView from "../views/rsp_module/plantilla/page_component/plantilla_items_pc/plantilla_items";
 import JvsCrwPageComponentView from "../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
@@ -84,7 +85,9 @@ const MainRouter = () => {
 
               <Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
 
-              <Route path="/rsp/recruitment" element={<RecruitmentView />} />
+							<Route path="/rsp/recruitment" element={<RecruitmentView />}>
+								<Route path="/rsp/recruitment/" element={<RecruitmentBaseComponent />}/>
+							</Route>
 
               <Route path="/rsp/request" element={<RequestView />} />
 
