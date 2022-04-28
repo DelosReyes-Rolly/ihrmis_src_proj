@@ -79,10 +79,12 @@ class MailController extends Controller
             }    
         }
 
-        // Getting all the email where to send to
         $rawRecepient = explode(",", $request->recepient);
-
+        $startDate = Carbon::now()->timezone('Asia/Manila');
+        $endDate = Carbon::parse($request->deadline)->timezone('Asia/Manila');
+        $deadline =  $startDate->diffInDays($endDate);
         $arrHolder = [];
+
         foreach ($rawRecepient as $value) {
             $tempEmail = trim($value, " ");
             array_push($arrHolder, $tempEmail);
@@ -93,13 +95,13 @@ class MailController extends Controller
                 "date" => Carbon::now(),
                 "message_type" => $request->message_type,
                 "message" => $request->message,
-                "deadline" => $request->deadline,
+                "deadline" => $deadline,
                 "sender" => nl2br($request->sender),
                 "file" => $arrFiles
             ];
             Mail::to($tempEmail)->send(new NotifyNextInRankMail($data));
         }
-       
+        
         return response()->json(["message" => "Mail Sent to" . implode(", ",$arrHolder)]);
     }
 }

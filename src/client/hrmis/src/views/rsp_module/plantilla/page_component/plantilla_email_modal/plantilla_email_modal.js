@@ -16,6 +16,7 @@ import RichTextEditorComponent from "../../../../common/rich_text_editor_compone
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
+import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 
 export const EMAIL_ENUM = {
   regular: "regular",
@@ -51,7 +52,6 @@ const PlantillaEmailModal = ({
         let arrHolder = [];
         const dataMType = res?.data?.data;
         dataMType.forEach((element) => {
-          console.log(element);
           arrHolder.push({
             id: element.eml_name,
             title: element.eml_name,
@@ -109,15 +109,20 @@ const PlantillaEmailModal = ({
         .post(endpoint ?? API_HOST + "notify-vacant-office", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then((res) => {
+        .then(() => {
           dispatch(setEmailRecepients([]));
           setSelectedMsg("");
           resetForm();
-          renderSucceed({ content: "Email Sent" });
+          popupAlert({
+            message: "Email was sent successfully",
+          });
           onClose();
         })
         .catch((err) => {
-          renderFailed({ content: "Failed" });
+          popupAlert({
+            message: err.response.date.message,
+            type: ALER_ENUM.fail,
+          });
         });
       renderBusy(false);
     },

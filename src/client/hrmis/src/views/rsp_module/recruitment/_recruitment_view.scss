@@ -1,0 +1,70 @@
+.dashborad-view {
+    display: flex;
+    flex-direction: column;
+}
+.upload-input-design{
+    cursor: pointer;
+}
+.upload-input-design label{
+    cursor: pointer;
+}
+.add-documents-modal {
+    display: flex;
+    margin-bottom: 10px;
+    .left-input {
+        margin-right: 5px;
+    }
+    .middle-input {
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+    .right-input {
+        margin-left: 5px;
+    }
+
+    .item-modal-1 {
+        width: 100%;
+    }
+    .item-modal-2 {
+        width: 90%;
+    }
+    .item-modal-3 {
+        width: 10%;
+    }
+}
+
+.documents_table{
+    width: 100%;
+    border: solid 1px;
+    border-radius: 5px 5px 5px 5px;
+    tr:hover{
+        background-color: rgba(0, 110, 255, 0.1);
+    }
+    tr{
+        display: flex;
+        justify-content: center;
+    }
+    td{
+        padding: 0.5rem;
+        color:#505050
+    }
+    .unfilled{
+        color: #b0b0b0;
+    }
+    .unfilled:hover{
+        color: #505050;
+    }
+    .col-1{
+        cursor: pointer;
+        width: 90%;
+    }
+    .col-2{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10%;
+    }
+    .col-2 .plantilla-icon{
+        cursor: pointer;
+    }
+}

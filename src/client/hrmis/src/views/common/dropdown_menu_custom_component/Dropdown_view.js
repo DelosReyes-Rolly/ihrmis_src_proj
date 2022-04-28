@@ -12,6 +12,7 @@ const DropdownViewComponent = ({
   textHelper,
   position = "top",
   effect = "solid",
+  setValue,
 }) => {
   const [dropable, setDropable] = useState(false);
   const timerRef = useRef();
@@ -62,6 +63,7 @@ const DropdownViewComponent = ({
           itemList={itemList}
           display={dropable ? "block" : "none"}
           onClick={selectedProperty}
+          setValue={setValue}
         />
       )}
     </div>
@@ -70,13 +72,12 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = "none" }) => {
+const DropList = ({ itemList = [], display = "none", setValue }) => {
   const navigate = useNavigate();
 
   const linkDetector = (item) => {
     if (typeof item === "string" || item instanceof String)
-      return navigate(item);
-    item();
+      return navigate(item.link);
   };
 
   return (
@@ -91,7 +92,8 @@ const DropList = ({ itemList = [], display = "none" }) => {
               style={{ listStyle: "none" }}
               className="ul-menu-item"
               onClick={() => {
-                linkDetector(element.link);
+                setValue(element.id);
+                linkDetector(element);
               }}
               key={key}
             >

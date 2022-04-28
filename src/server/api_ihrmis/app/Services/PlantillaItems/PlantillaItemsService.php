@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf as MPDF;
 // use Meneses\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
-class PlantillaItemsService {
+class PlantillaItemsService
+{
 
 	public function getPositionWithCsc( $id)
 	{
@@ -283,9 +284,20 @@ class PlantillaItemsService {
 
 
   public function generateVacantMemoPdf($type){
-    return Tbloffices::with(["plantillaItems" => function ($query) {
-      $query->where('itm_regular', 1);
-    }])->find(1);
+
+		$query = TblnextInRank::where("nir_itm_id", $type)->get();
+		$arrHolder = [];
+		foreach ($query as $value) {
+			array_push($arrHolder, "<strong>".$value["nir_name"]."</strong>".", ".$value["nir_pos_title"].", ".$value["nir_office"]);
+		}
+
+		// return implode("<br>" ,$arrHolder);
+		$data = [
+			"employee" => implode("<br>" ,$arrHolder)
+		];
+		$report = new MPDF();
+		$report->writeHTML(view('reports/vacantMemoReportPdf', $data ));
+    return $report->output();
   }
 
   public function getAgencyEmployees($agency, $plantilla){

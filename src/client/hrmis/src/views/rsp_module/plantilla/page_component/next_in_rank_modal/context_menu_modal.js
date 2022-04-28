@@ -2,11 +2,9 @@ import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRowSelect, useTable } from "react-table";
-import {
-  setNextRank,
-  setNextRankList,
-} from "../../../../../features/reducers/plantilla_item_slice";
+import { setNextRank } from "../../../../../features/reducers/plantilla_item_slice";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
+import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 
@@ -89,13 +87,22 @@ const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
     if (selectedItems.length !== 0) {
       await axios
         .post(API_HOST + "add-to-next-rank", { emp_list: selectedItems })
+        .then(() => {
+          popupAlert({ message: "Successfully added to Next-in-Rank List" });
+
+          dispath(setRefresh());
+          onClose();
+          dispath(setNextRank());
+        })
         .catch((err) => {
-          console.log(err);
+          popupAlert({ message: err.message, type: ALER_ENUM.fail });
         });
-      dispath(setRefresh());
-      onClose();
-      dispath(setNextRank());
+      return;
     }
+    popupAlert({
+      message: "Please Select Next-in-Rank Employee",
+      type: ALER_ENUM.fail,
+    });
   };
 
   return (

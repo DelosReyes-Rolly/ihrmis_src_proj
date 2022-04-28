@@ -8,7 +8,7 @@ import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper";
 import ButtonComponent from "../../../common/button_component/button_component.js";
 import { MdAdd } from "react-icons/md";
 import ThreeAddEducationModal from "../add_modals/three_add_educ";
-import { formThreeInput } from "../../static/input_items";
+import { educationInputItem, eligibilityInputItems, formThreeInput } from "../../static/input_items";
 import ThreeAddVoluntrayWorkModal from "../add_modals/three_add_voluntary";
 import ThreeAddCivilServiceModal from "../add_modals/three_add_csc";
 import ThreeAddWorkExperienceModal from "../add_modals/three_add_workexp";
@@ -75,6 +75,10 @@ const TableOne = () => {
       .get(API_HOST + `new-education/${item}`)
       .then((response) => {
         setEducationRecord(response.data.data);
+        console.log(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {});
   };
@@ -234,7 +238,7 @@ const TableOne = () => {
                           {item.school}
                         </td>
                         <td colSpan="4" style={{ textAlign: "center" }}>
-                          {formThreeInput.add_educ_level[item.level].title}
+                          {educationInputItem[item.level].title}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
                           {item.from}
@@ -285,6 +289,9 @@ const TableTwo = () => {
       .get(API_HOST + `new-csc-eleigibility/${item}`)
       .then((response) => {
         setCselibilityRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -447,7 +454,7 @@ const TableTwo = () => {
                         key={key}
                       >
                         <td colSpan="4" style={{ textAlign: "center" }}>
-                          {item.cse_app_title}
+                          { eligibilityInputItems[item.cse_app_title].label }
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
                           {item.cse_app_rating}
@@ -506,6 +513,9 @@ const TableThree = () => {
       .get(API_HOST + `new-work-experience/${item}`)
       .then((response) => {
         setWorkExperienceRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -725,6 +735,9 @@ const TableFour = () => {
       .get(API_HOST + `new-voluntary-work/${item}`)
       .then((response) => {
         setVoluntaryRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -936,6 +949,9 @@ const TableFive = () => {
       .get(API_HOST + `new-training/${item}`)
       .then((response) => {
         setTrainingRecord(response.data.data);
+        if (response.data.data.length > 0) {
+          setShowData(true);
+        }
       })
       .catch((error) => {
         console.log(error);

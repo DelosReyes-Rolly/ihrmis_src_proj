@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\ApplicantProfileResource;
+use App\Http\Resources\Applicant\ApplicantRCData;
+use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantChildren;
 use App\Models\Applicants\TblapplicantsFamily;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Applicants\TblapplicantVerification;
+use App\Models\TblpositionCscStandards;
 use App\Services\Applicant\ApplicantProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -209,8 +212,15 @@ class TblapplicantProfileController extends Controller
         $applicantDataQry = TblapplicantsProfile::find($id);
         return new ApplicantProfileResource($applicantDataQry);
     }
-    public function getFamilyChildren($id){
-        $getFamQry = TblapplicantsFamily::where("app_id",$id)->first();
+
+    public function getCompleteApplicantsProfile($type)
+    {
+        $qualified_applicants = $this->appProfileService->getQualifiedApplicants($type);
+        return QualifiedApplicantsResource::collection($qualified_applicants);
+    }
+    public function getFamilyChildren($id)
+    {
+        $getFamQry = TblapplicantsFamily::where("app_id", $id)->first();
         return new CommonResource($getFamQry);
     }
 

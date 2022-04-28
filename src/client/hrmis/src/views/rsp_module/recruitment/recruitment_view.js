@@ -1,9 +1,10 @@
 import React from "react";
+import { Outlet } from "react-router";
 
 const RecruitmentView = () => {
   return (
     <React.Fragment>
-      <h1>RECRUITMENT</h1>
+      <Outlet />
     </React.Fragment>
   );
 };

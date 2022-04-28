@@ -82,10 +82,10 @@ class TblplantillaItemsVacantPositionController extends Controller {
     }
 
     /**
-     * generate vacant memo report ODF FILE
+     * generate vacant memo report PDF FILE
      */
-    public function generateVacantMemoPdf(){
-        return $this->tblPantillaVacantPos->generateVacantMemoPdf(1);
+    public function generateVacantMemoPdf($id){
+        return $this->tblPantillaVacantPos->generateVacantMemoPdf($id);
     }
 
     /**
@@ -112,7 +112,6 @@ class TblplantillaItemsVacantPositionController extends Controller {
         foreach ($request->item_list as $value) {
           TblnextInRank::where('nir_id', $value['nir_id'])->delete();
         }
-    
         return response()->json(['message' => 'Successfully deleted'], 200);
     }
 

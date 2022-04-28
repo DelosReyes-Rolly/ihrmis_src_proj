@@ -3,6 +3,7 @@
 use App\Http\Controllers\Applicant\TblapplicantChildrenController;
 use App\Http\Controllers\Applicant\TblapplicantCseligibilitiesController;
 use App\Http\Controllers\Applicant\TblapplicantDeclarationController;
+use App\Http\Controllers\Applicant\TblapplicantDocumentRequirements;
 use App\Http\Controllers\Applicant\TblapplicantEducationsController;
 use App\Http\Controllers\Applicant\TblapplicantExperiencesController;
 use App\Http\Controllers\Applicant\TblapplicantOtherInfoController;
@@ -20,7 +21,6 @@ use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
-use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +46,7 @@ Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "creat
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
+Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
 Route::get('new-children/{id}',[TblapplicantChildrenController::class, "getChildrenRecord"]);
@@ -167,7 +168,7 @@ Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
+Route::get('generate-vacant-memo-pdf/{id}', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
 Route::get('get-agency-employee/{agency}/{plantilla}', [TblplantillaItemsVacantPositionController::class, 'getAgencyEmployees']);
 Route::get('get-next-rank-employees/{item}', [TblplantillaItemsVacantPositionController::class, 'getNextInRankEmployees']);
 Route::post('add-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'addToNextInRank']);
@@ -182,17 +183,22 @@ Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionCo
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// OFFICEC POSITION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);
 
-
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// NOTIFICATION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-notification', [NotificationController::class, "getNotification"]);
 Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotification"]);
 
+/**
+ * Documentary Requirement Endpoints
+ */
+Route::get('get-documentary-requirements/{grp_id}',[TblapplicantDocumentRequirements::class,"getRequirentsByGroup"]);
+Route::get('get-uploaded-documents/{grp_id}/{app_id}',[TblapplicantDocumentRequirements::class,"getUploadedRequirementsbyApplicant"]);
+Route::post('add-applicant-document',[TblapplicantDocumentRequirements::class,"saveApplicantDocument"]);
