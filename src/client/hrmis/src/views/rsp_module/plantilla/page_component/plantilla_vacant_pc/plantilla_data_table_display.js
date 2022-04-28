@@ -44,7 +44,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 							itm_id: element.itm_id,
 							itm_no: element.itm_no,
 							pos_title: element.position.pos_title,
-							ofc_acronym: element.office.ofc_acronym,
+							ofc_acronym: element?.office?.ofc_acronym,
 							itm_status: statusDisplay[element.itm_status],
 							pos_category: element.position.pos_category,
 							itm_state: element.itm_state,

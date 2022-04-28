@@ -220,4 +220,23 @@
 	}
 }
 
+.notify-button-color {
+	background-color: green;
+	border: 1px solid green;
+}
+
+.notify-button-color:hover {
+	background-color: rgb(3, 97, 3);
+}
+
+.delete-button-color {
+	color: white !important;
+	background-color: $errorColor !important;
+	border: 1px solid $errorColor !important;
+}
+
+.delete-button-color:hover {
+	background-color: rgb(185, 22, 22) !important;
+}
+
 @import "../plantilla/page_component/posting_job_vacancy_modal/_posting_job_vacancy_modal";

@@ -18,7 +18,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addCount } from "../../../features/reducers/vacant_slice.js";
 import NotificationComponent from "../../common/notification/notification_component.js";
-import NextInRankAgency from "../plantilla/page_component/next_in_rank_modal/sample.js";
+import NextInRankMain from "../plantilla/page_component/next_in_rank_modal/next_in_rank_main";
 //Main Component
 
 const data = [
@@ -47,7 +47,7 @@ const LibraryView = ({}) => {
         <ButtonComponent onClick={() => setShowPosModal()} buttonName="Position" />
         <ButtonComponent onClick={() => setShowTempModal()} buttonName="Template" /> */}
         {/* <ButtonComponent onClick={() => setShowNIPModal()} buttonName="Next-In-Rank" /> */}
-        <NextInRankAgency />
+        <NextInRankMain />
       </div>
       {/* <NextInRankModal onClose={() => setShowNIPModal()} isDisplay={showNIPModal} /> */}
       {/* <PositionModal onClose={() => setShowPosModal()} isDisplay={showPosModal} /> */}
@@ -57,6 +57,7 @@ const LibraryView = ({}) => {
       <div style={{ float: "right" }}>
         <DropdownViewComponent className="sadfasdf" itemList={data} alignItems="end" title={<MdMoreHoriz />} />
       </div> */}
+      {/* adsfasdf */}
     </div>
   );
 };

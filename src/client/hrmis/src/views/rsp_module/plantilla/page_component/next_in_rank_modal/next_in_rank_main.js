@@ -1,18 +1,22 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	setContextMenu,
 	setNextRank,
 	setRankEmail,
-	setSelectAgency,
 } from "../../../../../features/reducers/plantilla_item_slice.js";
+import { API_HOST } from "../../../../../helpers/global/global_config.js";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper.js";
 import ButtonComponent from "../../../../common/button_component/button_component.js.js";
-import PlantillaEmailModal from "../plantilla_email_modal/plantilla_email_modal.js";
+import PlantillaEmailModal, {
+	EMAIL_ENUM,
+} from "../plantilla_email_modal/plantilla_email_modal.js";
+import ContextMenuModal from "./context_menu_modal.js";
 import NextInRankModal from "./next_in_rank_modal.js";
-import SelectAgencyModal from "./select_agency_modal.js";
 
-const NextInRankAgency = () => {
+const NextInRankMain = () => {
 	const dispatch = useDispatch();
-	const { next_rank, select_agency, rank_email } = useSelector(
+	const { next_rank, context_menu, rank_email } = useSelector(
 		(state) => state.plantillaItem
 	);
 	return (
@@ -21,13 +25,15 @@ const NextInRankAgency = () => {
 				isDisplay={next_rank}
 				onClose={() => dispatch(setNextRank())}
 			/>
-			<SelectAgencyModal
-				isDisplay={select_agency}
-				onClose={() => dispatch(setSelectAgency())}
+			<ContextMenuModal
+				isDisplay={context_menu}
+				onClose={() => dispatch(setContextMenu())}
 			/>
 			<PlantillaEmailModal
 				isDisplay={rank_email}
 				onClose={() => dispatch(setRankEmail())}
+				type={EMAIL_ENUM.next_rank}
+				endpoint={API_HOST + "notify-next-rank"}
 			/>
 
 			<ButtonComponent
@@ -38,4 +44,4 @@ const NextInRankAgency = () => {
 	);
 };
 
-export default NextInRankAgency;
+export default NextInRankMain;

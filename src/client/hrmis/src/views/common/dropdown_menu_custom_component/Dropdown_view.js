@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 
 const DropdownViewComponent = ({
-	title,
+	title = {},
 	className,
 	itemList,
 	alignItems = "start",
@@ -12,6 +12,7 @@ const DropdownViewComponent = ({
 	textHelper,
 	position = "top",
 	effect = "solid",
+	setValue,
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const timerRef = useRef();
@@ -62,6 +63,7 @@ const DropdownViewComponent = ({
 					itemList={itemList}
 					display={dropable ? "block" : "none"}
 					onClick={selectedProperty}
+					setValue={setValue}
 				/>
 			)}
 		</div>
@@ -70,7 +72,7 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = "none" }) => {
+const DropList = ({ itemList = [], display = "none", setValue }) => {
 	const navigate = useNavigate();
 
 	const linkDetector = (item) => {
@@ -79,7 +81,6 @@ const DropList = ({ itemList = [], display = "none" }) => {
 		else if (typeof item === "function") {
 			item();
 		}
-		console.log(item);
 	};
 
 	return (
@@ -93,7 +94,10 @@ const DropList = ({ itemList = [], display = "none" }) => {
 						<li
 							style={{ listStyle: "none" }}
 							className="ul-menu-item"
-							onClick={() => linkDetector(element.link)}
+							onClick={() => {
+								setValue(element.id);
+								linkDetector(element);
+							}}
 							key={key}
 						>
 							{element.label}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Applicant\TblapplicantChildrenController;
 use App\Http\Controllers\Applicant\TblapplicantCseligibilitiesController;
 use App\Http\Controllers\Applicant\TblapplicantDeclarationController;
+use App\Http\Controllers\Applicant\TblapplicantDocumentRequirements;
 use App\Http\Controllers\Applicant\TblapplicantEducationsController;
 use App\Http\Controllers\Applicant\TblapplicantExperiencesController;
 use App\Http\Controllers\Applicant\TblapplicantOtherInfoController;
@@ -20,7 +21,6 @@ use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
-use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +46,7 @@ Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "creat
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
+Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
 Route::get('new-children/{id}',[TblapplicantChildrenController::class, "getChildrenRecord"]);
@@ -131,7 +132,7 @@ Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController:
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
 
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
-Route::get('get-next-rank/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
+Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
 
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
 
@@ -162,11 +163,16 @@ Route::post('register', [AuthenticationController::class, "registerUser"]);
 Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
 Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
+Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
+Route::get('generate-vacant-memo-pdf/{id}', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
+Route::get('get-agency-employee/{agency}/{plantilla}', [TblplantillaItemsVacantPositionController::class, 'getAgencyEmployees']);
+Route::get('get-next-rank-employees/{item}', [TblplantillaItemsVacantPositionController::class, 'getNextInRankEmployees']);
+Route::post('add-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'addToNextInRank']);
+Route::post('remove-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'deleteNextInRank']);
 
 Route::get('getAllPositions',[TblplantillaItemsVacantPositionController::class,"getAllPositions"]);
 Route::get('vacantpositions/{type}',[TblplantillaItemsVacantPositionController::class,"getVacantPositions"]);
@@ -179,17 +185,22 @@ Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::cla
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// OFFICEC POSITION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);
 
-
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// NOTIFICATION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-notification', [NotificationController::class, "getNotification"]);
 Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotification"]);
 
+/**
+ * Documentary Requirement Endpoints
+ */
+Route::get('get-documentary-requirements/{grp_id}',[TblapplicantDocumentRequirements::class,"getRequirentsByGroup"]);
+Route::get('get-uploaded-documents/{grp_id}/{app_id}',[TblapplicantDocumentRequirements::class,"getUploadedRequirementsbyApplicant"]);
+Route::post('add-applicant-document',[TblapplicantDocumentRequirements::class,"saveApplicantDocument"]);

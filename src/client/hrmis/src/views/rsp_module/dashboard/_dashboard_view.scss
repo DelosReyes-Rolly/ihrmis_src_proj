@@ -2,3 +2,33 @@
   display: flex;
   flex-direction: column;
 }
+.add-office-modal {
+	display: flex;
+	margin-bottom: 10px;
+	.left-input {
+		margin-right: 5px;
+	}
+	.middle-input {
+		margin-right: 5px;
+		margin-left: 5px;
+	}
+	.right-input {
+		margin-left: 5px;
+	}
+
+	.item-modal-1 {
+		width: 65%;
+	}
+	.item-modal-2 {
+		width: 35%;
+	}
+	.item-modal-3 {
+		width: 30%;
+	}
+	.item-modal-4 {
+		width: 40%;
+	}
+	.item-modal-5 {
+		width: 100%;
+	}
+}

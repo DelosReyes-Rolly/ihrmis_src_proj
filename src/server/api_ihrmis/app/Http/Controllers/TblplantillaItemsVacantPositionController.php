@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetVacantPositionsResource;
-use App\Models\TblplantillaItems;
+use App\Models\Employees\TblnextInRank;
 use App\Services\PlantillaItems\PlantillaItemsService;
 use Illuminate\Http\Request;
 
@@ -80,11 +81,15 @@ class TblplantillaItemsVacantPositionController extends Controller {
         return $this->tblPantillaVacantPos->closeVacantPositions($request); 
     }
 
-    public function generateVacantMemoPdf(){
-        return $this->tblPantillaVacantPos->generateVacantMemoPdf(["hello" => "world"]);
+    /**
+     * generate vacant memo report PDF FILE
+     */
+    public function generateVacantMemoPdf($id){
+        return $this->tblPantillaVacantPos->generateVacantMemoPdf($id);
     }
 
     /**
+<<<<<<< HEAD
 	 * getAllDostAgencies
 	 * Todo get all DOST Agencies
 	 * @return array 
@@ -104,4 +109,32 @@ class TblplantillaItemsVacantPositionController extends Controller {
     {
         return $this->tblPantillaVacantPos->getAllAgencies();
     }
+=======
+     * get all agency employees
+     */
+    public function getAgencyEmployees($agency, $plantilla){
+        return CommonResource::collection($this->tblPantillaVacantPos->getAgencyEmployees($agency, $plantilla));
+    }
+
+    /**
+     * get all saved next in rank employees
+     */
+    public function getNextInRankEmployees($item){
+        $empQry = TblnextInRank::where('nir_itm_id', $item)->get();
+        return CommonResource::collection($empQry);
+    }
+
+    public function addToNextInRank(Request $request){
+        return $this->tblPantillaVacantPos->addToNextInRank($request); 
+    }
+
+    public function deleteNextInRank(Request $request){
+
+        foreach ($request->item_list as $value) {
+          TblnextInRank::where('nir_id', $value['nir_id'])->delete();
+        }
+        return response()->json(['message' => 'Successfully deleted'], 200);
+    }
+
+>>>>>>> 38edc13305e6d2f8e085b95bb5bfb0ffee2df841
 }

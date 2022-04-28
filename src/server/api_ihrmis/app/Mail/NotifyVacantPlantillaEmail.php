@@ -41,3 +41,4 @@ class NotifyVacantPlantillaEmail extends Mailable
         return $email;
     }
 }
+

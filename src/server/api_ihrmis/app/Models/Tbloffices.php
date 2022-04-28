@@ -15,6 +15,7 @@ class Tbloffices extends Model
         'ofc_type',
         'ofc_name',
         'ofc_acronym',
+        'ofc_agn_id',
         'ofc_area_code',
         'ofc_area_type',
         'ofc_head_itm_id',
@@ -25,7 +26,11 @@ class Tbloffices extends Model
 
     public $timestamps = false;
 
-    public function tblplantillaItems(){
-        return $this->belongsTo(TblplantillaItems::class);
+    public function plantillaItems(){
+        return $this->hasMany(TblplantillaItems::class, 'itm_ofc_id', 'ofc_id');
     }
+
+    // public function plantillaItems(){
+    //     return $this->hasMany(TblplantillaItems::class, 'itm_ofc_id', 'ofc_id');
+    // }
 }
