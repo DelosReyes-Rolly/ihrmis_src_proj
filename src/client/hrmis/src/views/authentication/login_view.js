@@ -8,9 +8,10 @@ import axios from "axios";
 import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
 import { usePopUpHelper } from "../../helpers/use_hooks/popup_helper";
 import { useNavigate } from "react-router-dom";
+import { ALER_ENUM, popupAlert } from "../../helpers/alert_response";
 
 const LoginView = () => {
-  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+  const { renderBusy } = usePopUpHelper();
 
   const navigate = useNavigate();
 
@@ -30,30 +31,26 @@ const LoginView = () => {
     }),
     onSubmit: async (values) => {
       renderBusy(true);
-      console.log(values);
       await axios
         .get(SANCTUM + "sanctum/csrf-cookie")
-        .then((response) => {
+        .then(() => {
           axios
             .post(API_HOST + "login", values)
-            .then((res) => {
-              renderSucceed({
-                content: res.data.message,
-              });
+            .then(() => {
+              popupAlert({ message: "Login Successfully" });
               navigate("/rsp/dashboard");
             })
             .catch((err) => {
-              renderFailed({
-                content: err.message,
+              console.log(err.response.data.message);
+              popupAlert({
+                message: err.response.data.message,
+                type: ALER_ENUM.fail,
               });
             });
         })
         .catch((err) => {
-          renderFailed({
-            content: err.message,
-          });
+          popupAlert({ message: err.message, type: ALER_ENUM.fail });
         });
-
       renderBusy(false);
     },
   });

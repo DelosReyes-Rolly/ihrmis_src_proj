@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import htmlToDraft from "html-to-draftjs";
 import draftToHtml from "draftjs-to-html";
+import { convertFromHTML } from "draft-convert";
+import ButtonComponent from "../button_component/button_component.js";
 
 const RichTextEditorComponent = ({ value = "", setFieldValue }) => {
-  const prepareDraft = (value) => {
-    const draft = htmlToDraft(value);
+  const prepareDraft = (content) => {
+    const draft = htmlToDraft(content);
     const contentstate = ContentState.createFromBlockArray(draft.contentBlocks);
     const editorstate = EditorState.createWithContent(contentstate);
     return editorstate;
@@ -29,7 +31,7 @@ const RichTextEditorComponent = ({ value = "", setFieldValue }) => {
 
   useEffect(() => {
     if (value) {
-      prepareDraft(value);
+      setEditorState(prepareDraft(value));
     }
   }, [value]);
 

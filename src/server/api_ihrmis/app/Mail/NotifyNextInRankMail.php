@@ -7,11 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NotifyVacantPlantillaEmail extends Mailable
+class NotifyNextInRankMail extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $details;
 
     /**
      * Create a new message instance.
@@ -20,7 +18,9 @@ class NotifyVacantPlantillaEmail extends Mailable
      */
     public function __construct($details)
     {
+
         $this->details = $details;
+        //
     }
 
     /**
@@ -31,7 +31,7 @@ class NotifyVacantPlantillaEmail extends Mailable
     public function build()
     {
         $mail = $this->details;
-        $email = $this->from(env("MAIL_FROM_ADDRESS"))->subject($mail['message_type'])->view('mail.notifyVacantPlantillaEmail');
+        $email = $this->from(env("MAIL_FROM_ADDRESS"))->subject($mail['message_type'])->view('mail.notifyNextRankEmail', ['details' => $mail]);
         foreach ($mail['file'] as $value) { 
             $email->attach($value->getRealPath(), [
                 'as' => $value->getClientOriginalName(), 
@@ -41,4 +41,3 @@ class NotifyVacantPlantillaEmail extends Mailable
         return $email;
     }
 }
-

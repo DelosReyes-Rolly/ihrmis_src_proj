@@ -13,6 +13,9 @@ import {
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
+import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { printNextRankMemoReport } from "../../../../../router/outside_routes";
+
 /**
  * NOTES:
  * This table modal style is in _plantilla_view.scss
@@ -22,6 +25,7 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [dataFetched, setDataFetched] = useState([]);
   const fetch_id = plantilla ? plantilla?.itm_id : 1;
+
   const getNextInRankVacant = async () => {
     await axios
       .get(API_HOST + "get-next-rank-employees/" + fetch_id)
@@ -30,20 +34,27 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
       });
   };
 
+  const generateMemo = async () => {
+    printNextRankMemoReport(fetch_id);
+  };
+
   const onRemoveEmp = async () => {
     if (selectedItems.length !== 0) {
       await axios
         .post(API_HOST + "remove-to-next-rank", { item_list: selectedItems })
-        .then((res) => {
+        .then(() => {
           dispatch(setRefresh());
+          popupAlert({ message: "Removed Successfully" });
         })
         .catch((err) => {
-          console.log(err);
+          popupAlert({ message: err.message, type: ALER_ENUM.fail });
         });
-
       return null;
     }
-    console.log("not deleted");
+    popupAlert({
+      message: "Please Select Next-in-Rank Employee to delete",
+      type: ALER_ENUM.fail,
+    });
   };
 
   const columns = useMemo(
@@ -100,10 +111,16 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
       dispatch(setRefresh());
       dispatch(setNextRank());
       dispatch(setRankEmail());
+      return null;
     }
+    popupAlert({
+      message: "Please Select Next-in-Rank Employee Recepient",
+      type: ALER_ENUM.fail,
+    });
   };
 
   const dispatch = useDispatch();
+
   return (
     <React.Fragment>
       <ModalComponent
@@ -118,7 +135,11 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
         onPressStyle="delete-button-color"
         onClickSubmit={() => onPressedNotify()}
         addExtraButton={
-          <ButtonComponent type="button" buttonName="Memo" onClick={() => {}} />
+          <ButtonComponent
+            type="button"
+            buttonName="Memo"
+            onClick={() => generateMemo()}
+          />
         }
       >
         <div className="next-rank-modal-container">

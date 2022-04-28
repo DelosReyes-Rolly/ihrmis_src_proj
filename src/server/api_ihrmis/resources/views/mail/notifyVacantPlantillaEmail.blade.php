@@ -12,7 +12,6 @@
         Date: {{ $details['date'] }} <br/>
         Subject: Notice To Fill A Job Vacancy<br/>
         To: {{ $details['email_to'] }}
-
     </p><br/>
     
     {!! $details['message'] !!}<br/>
