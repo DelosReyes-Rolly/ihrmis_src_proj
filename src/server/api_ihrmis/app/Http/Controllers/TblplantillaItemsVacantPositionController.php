@@ -83,4 +83,25 @@ class TblplantillaItemsVacantPositionController extends Controller {
     public function generateVacantMemoPdf(){
         return $this->tblPantillaVacantPos->generateVacantMemoPdf(["hello" => "world"]);
     }
+
+    /**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllDostAgencies() {
+
+        return $this->tblPantillaVacantPos->getAllDostAgencies();
+
+	}
+
+	/**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllAgencies()
+    {
+        return $this->tblPantillaVacantPos->getAllAgencies();
+    }
 }

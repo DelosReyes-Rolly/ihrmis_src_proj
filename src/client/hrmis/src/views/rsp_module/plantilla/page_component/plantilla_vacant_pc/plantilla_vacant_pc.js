@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
 import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
 import SelectAgencyModal from "../next_in_rank_modal/select_agency_modal";
-import PostingOnJobVacancyModal from "../../posting_job_vacancy/posting_job_vacancy";
+import PostingOnJobVacancyModal from "../posting_job_vacancy_modal/posting_job_vacancy_modal";
 import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
 
 const PlantillaItemsVacantPositionComponentView = () => {

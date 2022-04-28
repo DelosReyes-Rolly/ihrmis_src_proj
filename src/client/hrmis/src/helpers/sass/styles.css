@@ -7772,6 +7772,93 @@ input:checked + .slider:before {
   }
 }
 
+.flex-selectagency-display {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  padding: 10px;
+}
+
+.flex-selectagency-display .div-labal {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+  width: 50%;
+}
+
+.flex-selectagency-display .div-labal p {
+  margin-top: -2px;
+  margin-left: 3px;
+}
+
+.flex-selectagency-display .div-labal input[type="text"] {
+  margin-top: -2px;
+  margin-left: 3px;
+}
+
+.posting-job-vacancy-main .posting-job-vacancy {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  font-weight: bold;
+  color: #4276a4;
+  font-size: 1.2em;
+  padding-top: 10px;
+}
+
+.posting-job-vacancy-main .posting-job-vacancy-anchor {
+  text-decoration: none;
+  color: #74caf3;
+}
+
+.posting-job-vacancy-main .posting-job-vacancy-anchor:hover {
+  text-decoration: underline;
+  color: #74caf3;
+  cursor: default;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  transition: transform 0.2s, -webkit-transform 0.2s;
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.posting-job-vacancy-main .posting-job-vacancy-deadline {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 30%;
+}
+
+.posting-job-vacancy-main .margin-left {
+  margin-left: 10px;
+}
+
 .position-modal-container-1 {
   margin: 10px 0px 0px 0px;
 }

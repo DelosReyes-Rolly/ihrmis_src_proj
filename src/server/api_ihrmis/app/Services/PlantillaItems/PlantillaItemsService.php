@@ -2,10 +2,12 @@
 
 namespace App\Services\PlantillaItems;
 
+use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Employees\TblEmployees;
+use App\Models\Tblagencies;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
@@ -16,8 +18,8 @@ use Mpdf\Mpdf as MPDF;
 class PlantillaItemsService {
 
 	/**
-	 * getVacantPositions
-	 * Todo get vacant positions by
+	 * getAllPlantillaItems
+	 * Todo get all plantilla positions
 	 * return array 
 	 */
 	public function getAllPlantillaItems() {
@@ -27,11 +29,10 @@ class PlantillaItemsService {
 
 	}
 
-	
 	/**
 	 * generateVacantPositionsReport
 	 * Todo this function will generate DOST Vacant Position report in PDF form
-	 * return void
+	 * @return void
 	 */
 	public function generateVacantPositionsReport()
 	{
@@ -53,7 +54,7 @@ class PlantillaItemsService {
 	    // return $new_data['vacantpositions'];
 
 		$pdf = new MPDF();
-		$date = date('m/d/Y');
+		$date = date('m/d/Y');	
 		$pdf->AddPage('L');
 		$pdf->writeHTML(view('vacantPositionsPdf',$new_data,[], [
 		'title'				=> 'Vacant Positions',
@@ -71,7 +72,7 @@ class PlantillaItemsService {
 	/**
 	 * generateNoticeofVacancyReports
 	 * Todo this function will generate Notice of Vacancy report in PDF form
-	 * return void
+	 * @return void
 	 */
 	public function generateNoticeofVacancyReports()
 	{
@@ -108,7 +109,7 @@ class PlantillaItemsService {
 	/**
 	 * generateMemoOnPostingVpReport
 	 * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
-	 * return void
+	 * @return void
 	 */
 	public function generateMemoOnPostingVpReport()
 	{
@@ -129,7 +130,7 @@ class PlantillaItemsService {
 
 		$pdf = new MPDF();
 		
-		$pdf = $pdf->loadView('memoOnPostingVPForCsc',$new_data,[], [
+		$pdf->writeHTML(view('memoOnPostingVPForCsc',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
 		'margin_right'      => 10,
@@ -137,15 +138,15 @@ class PlantillaItemsService {
 		'margin_bottom'     => 10,
 		'orientation'       => 'P',
 		'format' => 'A4'
-		]);
+		]));
 
-		return $pdf->stream('Memo On Posting Vacant Position For CSC_'.$date.'.pdf');
+		return $pdf->output('Memo On Posting Vacant Position For CSC_'.$date.'.pdf',"I");
   	}
 	  
 	/**
 	 * generateMemoOnPostingVpForDostReport
 	 * Todo this function will generate Memo On Posting Vacant Position For DOST Agencies report in PDF form
-	 * return void
+	 * @return void
 	 */
 	public function generateMemoOnPostingVpForDostReport()
 	{
@@ -166,7 +167,7 @@ class PlantillaItemsService {
 		$date = date('m/d/Y');
 
 		$pdf = new MPDF();
-		$pdf = $pdf->loadView('memoOnPostingVpForDostAgencies',$new_data,[], [
+		$pdf->writeHTML(view('memoOnPostingVpForDostAgencies',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
 		'margin_right'      => 10,
@@ -174,9 +175,9 @@ class PlantillaItemsService {
 		'margin_bottom'     => 10,
 		'orientation'       => 'P',
 		'format' => 'A4'
-		]);
-
-		return $pdf->stream('Memo On Posting Vacant Position For DOST Agencies_'.$date.'.pdf');
+		]));
+		
+		return $pdf->output('Memo On Posting Vacant Position For DOST Agencies_'.$date.'.pdf',"I");
   	} 
 
 	/**
@@ -276,7 +277,7 @@ class PlantillaItemsService {
 	/**
 	 * getVacantPositions
 	 * Todo get vacant positions by
-	 * return array 
+	 * @return array 
 	 */
 	public function getVacantPositions($type) {
 
@@ -291,9 +292,39 @@ class PlantillaItemsService {
 		return $report->output();
 	}
 
+	/**
+	 * getPositionWithCsc
+	 * Todo get position with CSC Standards
+	 * @return
+	 */
 	public function getPositionWithCsc( $id)
 	{
 		$getQry = Tblpositions::where("pos_id", $id)->with("tblpositionCscStandards")->first();
 		return new GetPositionWithCscResource($getQry);
 	}
+
+	/**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllDostAgencies() {
+
+		$item_query = Tblagencies::where('agn_sector', 'DCO')->orWhere('agn_sector', 'DRO')
+		->orWhere('agn_sector', 'DAA')->get();
+		return json_decode($item_query);
+		
+	}
+
+	/**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllAgencies()
+    {
+        return CommonResource::collection(
+            Tblagencies::get(),
+        );
+    }
 }

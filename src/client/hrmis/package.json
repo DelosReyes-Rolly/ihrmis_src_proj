@@ -4,6 +4,11 @@
 	"private": true,
 	"homepage": "http://localhost/ihrmis",
 	"dependencies": {
+		"@emotion/react": "^11.9.0",
+		"@emotion/styled": "^11.8.1",
+		"@fortawesome/react-fontawesome": "^0.1.18",
+		"@mui/icons-material": "^5.6.2",
+		"@mui/material": "^5.6.3",
 		"@reduxjs/toolkit": "^1.6.1",
 		"@sweetalert2/themes": "^5.0.10",
 		"@testing-library/jest-dom": "^5.14.1",
