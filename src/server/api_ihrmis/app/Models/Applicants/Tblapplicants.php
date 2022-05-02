@@ -83,19 +83,10 @@ class Tblapplicants extends Model
     {
         return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }
-<<<<<<< HEAD
 
     public function applicant(){
         return $this->hasOne(TblapplicantsProfile::class, 'app_id' ,'app_id');
     }
-
-    // public function plantilla(){
-    //     return $this->hasOne(TblplantillaItems::class, 'itm_id' ,'app_itm_id');
-    // }
-
     
 
 }
-=======
-}
->>>>>>> 38edc13305e6d2f8e085b95bb5bfb0ffee2df841

@@ -89,7 +89,6 @@ class TblplantillaItemsVacantPositionController extends Controller {
     }
 
     /**
-<<<<<<< HEAD
 	 * getAllDostAgencies
 	 * Todo get all DOST Agencies
 	 * @return array 
@@ -109,8 +108,8 @@ class TblplantillaItemsVacantPositionController extends Controller {
     {
         return $this->tblPantillaVacantPos->getAllAgencies();
     }
-=======
-     * get all agency employees
+
+     /** get all agency employees
      */
     public function getAgencyEmployees($agency, $plantilla){
         return CommonResource::collection($this->tblPantillaVacantPos->getAgencyEmployees($agency, $plantilla));
@@ -136,5 +135,4 @@ class TblplantillaItemsVacantPositionController extends Controller {
         return response()->json(['message' => 'Successfully deleted'], 200);
     }
 
->>>>>>> 38edc13305e6d2f8e085b95bb5bfb0ffee2df841
 }
