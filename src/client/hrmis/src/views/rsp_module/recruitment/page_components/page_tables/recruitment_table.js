@@ -16,13 +16,16 @@ import DropdownViewComponent from '../../../../common/dropdown_menu_custom_compo
 import { recrutmentTableHeaders } from '../../static/table_items.js';
 import { useNavigate } from 'react-router-dom';
 import RecruitmentDocumentModal from '../page_modals/recruitment_document_modal/recruitment_document_modal.js';
+import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper.js';
 const RecruitmentTable = ({ type, setSelectedApplicants }) => {
+	const { renderBusy } = usePopUpHelper();
 	const [plotApplicantData, setApplicantData] = useState([]);
 	const { trueValue, displayData } = useSelectValueCon();
 	const [value, setValue] = useState(0);
 	const [modalData, setModalData] = useState([]);
 	const navigate = useNavigate();
 	const applicantDataApi = async () => {
+		renderBusy(true);
 		await axios
 			.get(API_HOST + 'get-complete-applicant/' + type)
 			.then((response) => {
@@ -61,10 +64,11 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
+		renderBusy(false);
 	};
 	useEffect(() => {
 		applicantDataApi();
-	}, []);
+	}, [type]);
 	const columns = useMemo(
 		() => [
 			{

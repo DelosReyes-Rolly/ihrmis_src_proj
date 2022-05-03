@@ -1,6 +1,11 @@
-.dashborad-view {
+.documents-view {
     display: flex;
     flex-direction: column;
+    .three-idiot {
+        display: flex;
+        justify-content: end;
+        padding: 0px 20px;
+    }
 }
 .upload-input-design{
     cursor: pointer;
@@ -31,12 +36,25 @@
     .item-modal-3 {
         width: 10%;
     }
+    .item-modal-4 {
+        width: 30%;
+        .input-component{
+            margin: 5px 0px;
+        }
+    }
+    .item-modal-5 {
+        width: 70%;
+    }
 }
+
+
 
 .documents_table{
     width: 100%;
     border: solid 1px;
     border-radius: 5px 5px 5px 5px;
+    max-height: 50px;
+    overflow-y: auto;
     tr:hover{
         background-color: rgba(0, 110, 255, 0.1);
     }
@@ -66,5 +84,8 @@
     }
     .col-2 .plantilla-icon{
         cursor: pointer;
+    }
+    .gone{
+        display: none;
     }
 }

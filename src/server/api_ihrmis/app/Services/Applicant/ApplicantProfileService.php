@@ -450,6 +450,7 @@ class ApplicantProfileService
             'TblPositions',
             'TblOffices'
         )->where('app_itm_id', $plantilla_id)->get();
+        
 
         //Get Position Requirements
         $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla_id)->get();

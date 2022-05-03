@@ -10,26 +10,52 @@ import SelectComponent from '../../../../../common/input_component/select_compon
 import UploadAttachmentComponent from '../../../../../common/input_component/upload_attachment_component/upload_attachment_component';
 import ModalComponent from '../../../../../common/modal_component/modal_component';
 import DocumentListComponent from './document_list_component';
+import { setRefresh } from '../../../../../../features/reducers/popup_response';
+import { useDispatch, useSelector } from 'react-redux';
 const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
+	const dispatch = useDispatch();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const [documentRequirements, setDocumentRequirements] = useState([]);
-	const [uploadedRequirements, setUploadedRequirements] = useState([]);
+	const { refresh } = useSelector((state) => state.popupResponse);
+	const getDocumentRequirements = async () => {
+		await axios
+			.get(API_HOST + 'get-documentary-requirements/2')
+			.then((response) => {
+				let options = [];
+				let data = response.data.data;
+				data.forEach((element) => {
+					let temp = {
+						id: element.doc_id,
+						title: element.doc_name,
+						filled: false,
+						att_id: element.doc_id,
+					};
+					options.push(temp);
+				});
+				setDocumentRequirements(options);
+			})
+			.catch((error) => {});
+	};
+
 	const documentForm = useFormik({
 		enableReinitialize: true,
 		initialValues: {
 			doc_type: '1',
+			doc_name: '',
 			documents: '',
 		},
 		validationSchema: Yup.object({
 			doc_type: Yup.number()
 				.typeError('Must be a number')
 				.required('This field is required'),
+			doc_name: Yup.string().typeError('Must be Text'),
 			documents: Yup.string().required('This field is required'),
 		}),
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
 			const formData = new FormData();
-			formData.append('recepient', value.recepient);
+			formData.append('doc_type', value.doc_type);
+			formData.append('doc_name', value.doc_name);
 			formData.append('applicant_id', rowData.app_id);
 			if (documentValue != null) {
 				for (let index = 0; index < documentValue.length; index++) {
@@ -42,69 +68,16 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 				})
 				.then((res) => {
 					renderSucceed({ content: 'Document saved successfully' });
+					dispatch(setRefresh());
 				})
 				.catch((err) => {
 					renderFailed({ content: 'Document failed to save' });
 				});
 			renderBusy(false);
+			setDocumentValue([]);
 		},
 	});
 	const [documentValue, setDocumentValue] = useState();
-
-	const getDocumentRequirements = async () => {
-		await axios
-			.get(API_HOST + 'get-documentary-requirements/2')
-			.then((response) => {
-				let options = [];
-				let data = response.data.data;
-				data.forEach((element) => {
-					let temp = {
-						id: element.doc_id,
-						title: element.doc_name,
-						filled: false,
-					};
-					options.push(temp);
-				});
-				setDocumentRequirements(options);
-			})
-			.catch((error) => {});
-	};
-
-	const getUploadedDocuments = async (applicant_id) => {
-		await axios
-			.get(API_HOST + 'get-uploaded-documents/2/' + applicant_id)
-			.then((response) => {
-				let options = [];
-				let data = response.data.data;
-				data.forEach((element) => {
-					if (element.tbldocumentary_attachments[0] != null) {
-						element.tbldocumentary_attachments.forEach((value) => {
-							let temp = {
-								id: element.doc_id,
-								title:
-									element.doc_name === 'Other Documents'
-										? value.att_app_name
-										: element.doc_name,
-							};
-							options.push(temp);
-						});
-					}
-				});
-				if (options.length > 0) {
-					setUploadedRequirements(options);
-				} else {
-					setUploadedRequirements([
-						{
-							none: 'none',
-						},
-					]);
-				}
-			})
-			.catch((error) => {});
-	};
-	useEffect(() => {
-		getUploadedDocuments(rowData.app_id);
-	}, [rowData]);
 	useEffect(() => {
 		getDocumentRequirements();
 	}, []);
@@ -122,17 +95,30 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 				<div className='add-documents-modal'>
 					<div className='left-input item-modal-1'>
 						<label>Document Type</label>
-						<SelectComponent name='doc_type' itemList={documentRequirements} />
+						<SelectComponent
+							name='doc_type'
+							onChange={documentForm.handleChange}
+							itemList={documentRequirements}
+						/>
 					</div>
 				</div>
 				<div className='add-documents-modal'>
-					<div className='left-input item-modal-1'>
+					<div className='left-input item-modal-4'>
+						<label>Document Name</label>
+						<InputComponent
+							name='doc_name'
+							style={{ margin: '5px 0px' }}
+							onChange={documentForm.handleChange}
+							value={documentForm.values.doc_name}
+						/>
+					</div>
+					<div className='right-input item-modal-5'>
 						<label>Document</label>
 						<UploadAttachmentComponent
 							name='documents'
 							formik={documentForm}
 							accept='image/png, image/jpeg'
-							isMulti={true}
+							isMulti={false}
 							onChange={(e) => {
 								const files = Array.prototype.slice.call(e.target.files);
 								setDocumentValue(e.target.files);
@@ -146,10 +132,7 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 						) : null}
 					</div>
 				</div>
-				<DocumentListComponent
-					documentRequirements={{ documentRequirements }}
-					uploadedRequirements={{ uploadedRequirements }}
-				/>
+				<DocumentListComponent applicantId={rowData.app_id} />
 			</ModalComponent>
 		</React.Fragment>
 	);

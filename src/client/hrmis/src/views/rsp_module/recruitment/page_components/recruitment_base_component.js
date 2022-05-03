@@ -25,37 +25,26 @@ import { AiFillMinusCircle } from 'react-icons/ai';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
-	const [emailModalToggleState, setEmailModalToggle] = useToggleHelper(true);
-	const modalToggle = () => {
-		setEmailModalToggle(!emailModalToggleState);
-	};
+	const [emailModalToggleState, setEmailModalToggle] = useState(0);
 	const [modalStates, setModalStates] = useState({
 		documentModalState: false,
 	});
-
 	const updateModalStates = (key, value) => {
 		setModalStates({
 			...modalStates,
 			[key]: value,
 		});
 	};
-
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
-
 	const navigate = useNavigate();
-
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
-	const [selectedEmailTemplate, setEmailTemplate] = useState([]);
-
-	useEffect(() => {
-		modalToggle();
-	}, [selectedEmailTemplate]);
+	const [selectedEmailTemplate, setEmailTemplate] = useState(0);
 
 	return (
 		<React.Fragment>
-			<div className='plantilla-view'>
+			<div className='documents-view'>
 				<div className='container-plantilla'>
 					<BreadcrumbComponent list={recruitmentBreadCramp} className='' />
 				</div>
@@ -78,7 +67,7 @@ const RecruitmentBaseComponent = () => {
 							toolTipId='other-actions'
 							position='top'
 							textHelper='Click to view email templates'
-							clickFunction={setEmailTemplate}
+							setValue={setEmailModalToggle}
 						/>
 						<IconComponent
 							id='recruitment_all_docs'
@@ -189,24 +178,26 @@ const RecruitmentBaseComponent = () => {
 							</span>
 						</div>
 					</div>
-					<div className={toggleState === 1 ? 'current-tab' : 'show-none'}>
+					<div>
 						<RecruitmentTable
-							type={1}
+							type={toggleState}
 							setSelectedApplicants={setSelectedApplicants}
 							updateModalStates={setModalStates}
 						/>
 					</div>
-					<div className={toggleState === 2 ? 'current-tab' : 'show-none'}>
+					{/* <div className={toggleState === 2 ? 'current-tab' : 'show-none'}>
 						<RecruitmentTable
 							type={2}
 							setSelectedApplicants={setSelectedApplicants}
 							updateModalStates={setModalStates}
 						/>
-					</div>
+					</div> */}
 					<div>
 						<RecruitmentEmail
-							onClose={setEmailModalToggle}
-							isDisplay={emailModalToggleState}
+							isDisplay={emailModalToggleState !== 0 ? true : false}
+							onClose={() => {
+								setEmailModalToggle(0);
+							}}
 							applicantData={selectedApplicants}
 							type={selectedEmailTemplate}
 						/>

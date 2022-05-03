@@ -202,4 +202,6 @@ Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotific
  */
 Route::get('get-documentary-requirements/{grp_id}',[TblapplicantDocumentRequirements::class,"getRequirentsByGroup"]);
 Route::get('get-uploaded-documents/{grp_id}/{app_id}',[TblapplicantDocumentRequirements::class,"getUploadedRequirementsbyApplicant"]);
+Route::get('delete-uploaded-documents/{att_id}',[TblapplicantDocumentRequirements::class,"deleteApplicantDocument"]);
 Route::post('add-applicant-document',[TblapplicantDocumentRequirements::class,"saveApplicantDocument"]);
+
