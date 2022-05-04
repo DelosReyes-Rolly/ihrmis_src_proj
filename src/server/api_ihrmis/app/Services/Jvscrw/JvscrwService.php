@@ -8,11 +8,8 @@ use App\Models\TbljvsDutiesRspnsblts;
 use App\Models\TblplantillaItems;
 use Carbon\Carbon;
 use DateTime;
-use Error;
 use Exception;
-use Illuminate\Support\Facades\Storage;
 use Mpdf\Mpdf as MPDF;
-use PhpParser\Node\Stmt\TryCatch;
 use stdClass;
 
 class JvscrwService {

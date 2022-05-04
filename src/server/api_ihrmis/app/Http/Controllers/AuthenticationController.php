@@ -37,25 +37,22 @@ class AuthenticationController extends Controller
         ]);
     }
 
-    public function loginUser(Request $request)
-    {
-        return response()->json([
-            "request" => $request
-        ]);
-        
+    public function loginUser(Request $request){
+        // return response()->json([
+        //     "request" => $request
+        // ]);
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-            'message' => 'Invalid login details'
+            'message' => 'Invalid Login Credentials'
             ], 401);
         }
-    
-            $user = User::where('email', $request->email)->firstOrFail();
-    
-            $token = $user->createToken('auth_token')->plainTextToken;
-    
-            return response()->json([
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-            ]);
-        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+        ]);
+    }
 }

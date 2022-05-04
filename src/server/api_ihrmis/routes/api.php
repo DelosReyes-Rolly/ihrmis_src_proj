@@ -21,7 +21,6 @@ use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
-use App\Models\Tblpositions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -164,11 +163,12 @@ Route::post('register', [AuthenticationController::class, "registerUser"]);
 Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
 Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
+Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('get-vacant-memo-pdf', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
+Route::get('generate-vacant-memo-pdf/{id}', [TblplantillaItemsVacantPositionController::class, 'generateVacantMemoPdf']);
 Route::get('get-agency-employee/{agency}/{plantilla}', [TblplantillaItemsVacantPositionController::class, 'getAgencyEmployees']);
 Route::get('get-next-rank-employees/{item}', [TblplantillaItemsVacantPositionController::class, 'getNextInRankEmployees']);
 Route::post('add-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'addToNextInRank']);
@@ -183,16 +183,15 @@ Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionCo
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// OFFICEC POSITION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices',[TblofficesController::class, "getAllOffices"]);
 
-
 //=======================================================================================
-// MAIL CONTROLLER ENDPOINTS
+// NOTIFICATION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-notification', [NotificationController::class, "getNotification"]);
 Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotification"]);
