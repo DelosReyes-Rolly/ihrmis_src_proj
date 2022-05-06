@@ -8,7 +8,7 @@ import axios from "axios";
 import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
 import { usePopUpHelper } from "../../helpers/use_hooks/popup_helper";
 import { useNavigate } from "react-router-dom";
-import { ALER_ENUM, popupAlert } from "../../helpers/alert_response";
+import { ALERT_ENUM, popupAlert } from "../../helpers/alert_response";
 
 const LoginView = () => {
   const { renderBusy } = usePopUpHelper();
@@ -44,12 +44,12 @@ const LoginView = () => {
               console.log(err.response.data.message);
               popupAlert({
                 message: err.response.data.message,
-                type: ALER_ENUM.fail,
+                type: ALERT_ENUM.fail,
               });
             });
         })
         .catch((err) => {
-          popupAlert({ message: err.message, type: ALER_ENUM.fail });
+          popupAlert({ message: err.message, type: ALERT_ENUM.fail });
         });
       renderBusy(false);
     },

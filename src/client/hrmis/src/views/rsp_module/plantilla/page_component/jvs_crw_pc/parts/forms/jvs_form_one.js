@@ -1,6 +1,5 @@
 import TextAreaComponent from "../../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import dostLogo from "../../../../../../../assets/images/logo.png";
-import { jvsCrwTableData } from "../../../../fake_data/table_data";
 import WeightingTable from "../weight_table";
 import React, { useEffect, useState } from "react";
 import CheckJobCompetency from "../check_job_competency";
@@ -13,6 +12,7 @@ import {
   setDutyResponsibility,
   setEducation,
   setEligibility,
+  setEmployeeOptions,
   setIsEmptyCompetency,
   setMinimumRequirement,
   setOffice,
@@ -30,9 +30,7 @@ import ButtonComponent from "../../../../../../common/button_component/button_co
 
 // TODO: change jvsId to actual value
 
-const JvsFormOne = ({ itemId }) => {
-  const [dataState, _] = useState(jvsCrwTableData);
-
+const JvsFormOne = () => {
   // REDUX FUNCTIONALITIES
   const {
     plantilla_item,
@@ -44,6 +42,7 @@ const JvsFormOne = ({ itemId }) => {
     experience,
     competencies,
     minimum_req,
+    employeeOption,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
   const { item } = useParams();
@@ -58,26 +57,32 @@ const JvsFormOne = ({ itemId }) => {
     fetchJvsDutiesResponsibityOnLoad(jvs_id);
     fetchCompetenciesOnLoad(jvs_id);
   };
+
   // FETCH COMPETENCY TYPES
   const fetchCscQualificationOnLoad = async () => {
     dispatch(setBusy(true));
-    await axios.get(API_HOST + "jvscrw/" + item).then((res) => {
-      dispatch(setPlantilla(res.data.data.itm_no));
-      dispatch(setPosition(res.data.data.position));
-      dispatch(setOffice(res.data.data.office));
-      const cscQualification = res.data.data.position.csc_standards;
-      cscQualification.forEach((element) => {
-        if (element.std_type === "CS") {
-          dispatch(setEligibility(element));
-        } else if (element.std_type === "ED") {
-          dispatch(setEducation(element));
-        } else if (element.std_type === "EX") {
-          dispatch(setWorkExp(element));
-        } else if (element.std_type === "TR") {
-          dispatch(setTraining(element));
-        }
+    await axios
+      .get(API_HOST + "jvscrw/" + item)
+      .then((res) => {
+        dispatch(setPlantilla(res.data.data?.itm_no));
+        dispatch(setPosition(res.data.data?.position));
+        dispatch(setOffice(res.data.data?.office));
+        const cscQualification = res.data?.data.position.csc_standards;
+        cscQualification.forEach((element) => {
+          if (element.std_type === "CS") {
+            dispatch(setEligibility(element));
+          } else if (element.std_type === "ED") {
+            dispatch(setEducation(element));
+          } else if (element.std_type === "EX") {
+            dispatch(setWorkExp(element));
+          } else if (element.std_type === "TR") {
+            dispatch(setTraining(element));
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
       });
-    });
     dispatch(setBusy(false));
   };
 
@@ -192,9 +197,19 @@ const JvsFormOne = ({ itemId }) => {
     });
   };
 
+  const fetchEmployeeOption = async () => {
+    await axios
+      .get(API_HOST + "get-option-employee/" + item)
+      .then((res) => {
+        dispatch(setEmployeeOptions(res.data.data));
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   useEffect(() => {
     fetchJvsAllVersion();
     fetchCscQualificationOnLoad();
+    fetchEmployeeOption();
   }, []);
 
   useEffect(() => {
@@ -205,7 +220,6 @@ const JvsFormOne = ({ itemId }) => {
 
   useEffect(() => {
     if (version) {
-      console.log(version);
       dispatch(setVersionSelected(version[0]?.value));
     }
   }, [version]);
@@ -299,9 +313,7 @@ const JvsFormOne = ({ itemId }) => {
               <td className="row-percent-50" colSpan="2">
                 {office?.ofc_name}
               </td>
-              <td className="row-percent-50" colSpan="2">
-                {dataState.jobDescription.placeOfAssignment}
-              </td>
+              <td className="row-percent-50" colSpan="2"></td>
             </tr>
             {/* THIRD HEADER  */}
             <tr className="secondary-headers">
@@ -313,9 +325,7 @@ const JvsFormOne = ({ itemId }) => {
               </th>
             </tr>
             <tr>
-              <td className="row-percent-50" colSpan="2">
-                {dataState.jobDescription.reportsTo}
-              </td>
+              <td className="row-percent-50" colSpan="2"></td>
               <td className="row-percent-50" colSpan="2">
                 {position?.salary_grade}
               </td>

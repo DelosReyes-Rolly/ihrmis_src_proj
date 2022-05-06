@@ -16,6 +16,7 @@ const MainPageLayout = () => {
     <React.Fragment>
       <div className="App">
         <NavbarComponent />
+
         <div className="container">
           <div>
             <SidebarComponent />
