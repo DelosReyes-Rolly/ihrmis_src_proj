@@ -16,6 +16,7 @@ class ApplicantDocumentRequirements
         $filenameStr = '';
         $applicantId = $request->applicant_id;
         $docType = $request->doc_type;
+        $docName = '';
         $requiredDoc = TblapplicantDocumentRequirementsModel::where('doc_id', $docType)->first();
         if ($requiredDoc !== null) {
             $docName = $requiredDoc->doc_name;

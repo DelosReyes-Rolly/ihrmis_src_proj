@@ -11,14 +11,19 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import RichTextEditorComponent from '../../../../common/rich_text_editor_component/rich_text_editor_component';
 import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper';
+import Creatable from 'react-select/creatable';
 import { EditorState, ContentState } from 'draft-js';
 import { convertFromHTML } from 'draft-convert';
+import { ALER_ENUM, popupAlert } from '../../../../../helpers/alert_response';
+import { setMessage } from '../../../../../features/reducers/popup_response';
 
-const RecruitmentEmail = ({ isDisplay, onClose, applicantData, type }) => {
+const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const [mType, setmType] = useState([]);
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const [imageValue, setImageValue] = useState();
 	const [emailData, setEmailData] = useState();
+	const [emailName, setEmailName] = useState('');
+	const [options, setOptions] = useState([]);
 	const [selectedMsg, setSelectedMsg] = useState(null);
 	const selectedType = (value) => {
 		mType?.forEach((element) => {
@@ -30,42 +35,47 @@ const RecruitmentEmail = ({ isDisplay, onClose, applicantData, type }) => {
 
 	useEffect(() => {
 		let recepients = '';
-		applicantData?.forEach((data) => {
+
+		data?.forEach((data) => {
 			recepients += data.app_email + ',';
 		});
 		setEmailData(recepients);
-	}, [applicantData, type]);
-
-	
+	}, [data, type]);
 
 	const getMessageType = async () => {
 		await axios
-			.get(API_HOST + 'mail-template')
+			.get(API_HOST + 'mail-template/' + type)
 			.then((res) => {
 				let arrHolder = [];
+				let arrHolder2 = [];
 				const dataMType = res?.data?.data;
 				dataMType.forEach((element) => {
 					arrHolder.push({
-						id: element.eml_name,
+						id: element.eml_id,
 						title: element.eml_name,
 						message: element.eml_message,
 						data_id: element.eml_id,
 					});
+					arrHolder2.push({
+						value: element.eml_id,
+						label: element.eml_name,
+					});
 				});
+				setOptions(arrHolder2);
 				setmType(arrHolder);
 			})
 			.catch((err) => {});
 	};
 
-    useEffect(() => {
-        getMessageType();
-    }, [type]);
+	useEffect(() => {
+		getMessageType();
+	}, [type]);
 
 	const emailFormik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
 			recepient: emailData ?? '',
-			message_type: '',
+			message_type: emailName.value ?? '',
 			message: '',
 			sender: '',
 			image_upload: '',
@@ -75,35 +85,81 @@ const RecruitmentEmail = ({ isDisplay, onClose, applicantData, type }) => {
 			message_type: Yup.string().required('This field is required'),
 			message: Yup.string().required('This field is required'),
 			sender: Yup.string().required('This field is required'),
-			image_upload: Yup.string().required('This field is required'),
 		}),
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
 			const formData = new FormData();
 			formData.append('recepient', value.recepient);
-			formData.append('message_type', value.message_type);
-			formData.append('message', value.message);
+			formData.append('eml_type', type);
+			formData.append('eml_name', emailName.label);
+			formData.append('eml_id', emailName.value);
+			formData.append('eml_message', value.message);
 			formData.append('sender', value.sender);
-
 			if (imageValue != null) {
 				for (let index = 0; index < imageValue.length; index++) {
 					formData.append('image_upload[]', imageValue[index]);
 				}
 			}
-
 			await axios
-				.post(API_HOST + 'notify-vacant-office', formData, {
+				.post(endpoint ?? API_HOST + 'notify-vacant-office', formData, {
 					headers: { 'Content-Type': 'multipart/form-data' },
 				})
-				.then((res) => {
-					renderSucceed({ content: 'Email Sent' });
+				.then(() => {
+					setSelectedMsg('');
+					resetForm();
+					popupAlert({
+						message: 'Email was sent successfully',
+					});
+					onClose();
 				})
 				.catch((err) => {
-					renderFailed({ content: 'Failed' });
+					popupAlert({
+						message: err.response.date.message,
+						type: ALER_ENUM.fail,
+					});
 				});
 			renderBusy(false);
 		},
 	});
+
+	const customStyles = {
+		option: (provided) => ({
+			...provided,
+			padding: 3,
+			paddingLeft: 5,
+			paddingRight: 5,
+			margin: 3,
+			marginLeft: 5,
+			borderRadius: 5,
+			width: '100%',
+		}),
+
+		control: (provided, state) => ({
+			...provided,
+			width: '100%',
+			backgroundColor: 'white',
+			padding: 0,
+			borderRadius: '5px 0px 0px 5px',
+			fontSize: 'small',
+			backgroundColor: 'white',
+			border: state.isFocused
+				? '1px solid 	#A9A9A9 !important'
+				: '1px solid #DCDCDC !important',
+
+			fontSize: 'small',
+			boxShadow: 'none',
+		}),
+
+		singleValue: (provided, state) => {
+			const opacity = state.isDisabled ? 0.5 : 1;
+			const transition = 'opacity 300ms';
+			return {
+				...provided,
+				opacity,
+				transition,
+			};
+		},
+	};
 
 	return (
 		<React.Fragment>
@@ -132,7 +188,27 @@ const RecruitmentEmail = ({ isDisplay, onClose, applicantData, type }) => {
 				<br />
 				<div>
 					<label>Message:</label>
-					<SelectComponent
+					<Creatable
+						name='message_type'
+						options={options}
+						styles={customStyles}
+						value={{
+							label: options.label ?? emailName.label ?? 'Select Template',
+							value: options.value ?? emailName.value ?? '0',
+						}}
+						className='creatable-design'
+						isClearable={true}
+						onChange={(e) => {
+							setEmailName({ label: e?.label, value: e?.value });
+							for (let index = 0; index < mType.length; index++) {
+								if(mType[index].id === e.value){
+									setSelectedMsg(mType[index].message);
+								}
+							}
+							console.log(mType);
+						}}
+					/>
+					{/* <SelectComponent
 						name='message_type'
 						itemList={mType}
 						value={emailFormik.values.message_type}
@@ -141,7 +217,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, applicantData, type }) => {
 							selectedType(e.target.value);
 						}}
 						defaultTitle='Subject'
-					/>
+					/> */}
 					{emailFormik.touched.message_type &&
 					emailFormik.errors.message_type ? (
 						<p className='error-validation-styles'>

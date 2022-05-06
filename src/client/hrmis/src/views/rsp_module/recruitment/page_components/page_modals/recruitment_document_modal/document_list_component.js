@@ -4,7 +4,10 @@ import { BsTrashFill } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { setRefresh } from '../../../../../../features/reducers/popup_response';
-import { API_HOST } from '../../../../../../helpers/global/global_config';
+import {
+	API_HOST,
+	SANCTUM,
+} from '../../../../../../helpers/global/global_config';
 import IconComponent from '../../../../../common/icon_component/icon';
 
 const DocumentListComponent = ({ applicantId }) => {
@@ -24,6 +27,7 @@ const DocumentListComponent = ({ applicantId }) => {
 						title: element.doc_name,
 						filled: false,
 						att_id: '',
+						file: '',
 					};
 					options.push(temp);
 				});
@@ -38,6 +42,7 @@ const DocumentListComponent = ({ applicantId }) => {
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
+				console.log(data);
 				data.forEach((element) => {
 					if (element.tbldocumentary_attachments[0] != null) {
 						element.tbldocumentary_attachments.forEach((value) => {
@@ -47,12 +52,14 @@ const DocumentListComponent = ({ applicantId }) => {
 							if (index !== -1) {
 								requirements[index].att_id = value.att_id;
 								setDocumentRequirements(requirements);
+								console.log(requirements);
 							}
 							let temp = {
 								id: element.doc_id,
 								title:
 									element.doc_id === 7 ? value.att_app_name : element.doc_name,
 								att_id: value.att_id,
+								file: value.att_app_file,
 							};
 							options.push(temp);
 						});
@@ -83,6 +90,7 @@ const DocumentListComponent = ({ applicantId }) => {
 					title: element.title,
 					att_id: element.att_id,
 					filled: true,
+					file: element.file,
 				});
 				setOtherDocs(tempDocs);
 			} else {
@@ -93,6 +101,7 @@ const DocumentListComponent = ({ applicantId }) => {
 			});
 			if (index !== -1) {
 				requirements[index].filled = true;
+				requirements[index].file = element.file;
 			} else {
 				requirements.forEach((value) => {
 					value.filled = false;
@@ -149,7 +158,12 @@ const TableList = ({ data, counter }) => {
 							data-tip
 							data-for={'rc-dc-txt' + counter}
 							onClick={() => {
-								window.open(API_HOST, '_blank');
+								window.open(
+									SANCTUM +
+										'storage/applicant/applicant-requirements/' +
+										element.file,
+									'_blank'
+								);
 							}}
 							className={element.filled === false ? 'col-1 unfilled' : 'col-1'}
 						>

@@ -208,7 +208,7 @@ class TblapplicantProfileController extends Controller
         
     }
 
-    public function getApplicant($id){
+    public function getApplicant($id = null){
         $applicantDataQry = TblapplicantsProfile::find($id);
         return new ApplicantProfileResource($applicantDataQry);
     }

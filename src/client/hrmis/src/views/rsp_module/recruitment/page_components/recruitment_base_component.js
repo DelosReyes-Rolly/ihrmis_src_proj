@@ -22,13 +22,17 @@ import RecruitmentEmail from './page_modals/recruitment_email';
 import DropdownViewComponent from '../../../common/dropdown_menu_custom_component/Dropdown_view';
 import { useNavigate } from 'react-router-dom';
 import { AiFillMinusCircle } from 'react-icons/ai';
+import RecruitmentStatusModal from './page_modals/recruitment_status_modal';
+import { API_HOST } from '../../../../helpers/global/global_config';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
-	const [emailModalToggleState, setEmailModalToggle] = useState(0);
+	const [emailModalToggleState, setEmailModalToggle] = useState('0');
 	const [modalStates, setModalStates] = useState({
 		documentModalState: false,
 	});
+	const [value, setValue] = useState(0);
+
 	const updateModalStates = (key, value) => {
 		setModalStates({
 			...modalStates,
@@ -41,6 +45,7 @@ const RecruitmentBaseComponent = () => {
 	const navigate = useNavigate();
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
 	const [selectedEmailTemplate, setEmailTemplate] = useState(0);
+
 
 	return (
 		<React.Fragment>
@@ -118,7 +123,7 @@ const RecruitmentBaseComponent = () => {
 							{/* <span className='selector-span-1'> */}
 							{/* <ButtonComponent/> */}
 							<button
-								className='button-components'
+								className='filter_buttons button-components'
 								onClick={() => navigate('/pds-applicant')}
 								style={{
 									cursor: 'pointer',
@@ -131,7 +136,7 @@ const RecruitmentBaseComponent = () => {
 								<p>Applicant</p>
 							</button>
 							{/* </span> */}
-							<span className='margin-left-1 selector-span-1'>
+							<span className='filter_buttons margin-left-1 selector-span-1'>
 								<select defaultValue={'DEFAULT'}>
 									<option value='DEFAULT' disabled>
 										Vacant Position
@@ -150,7 +155,7 @@ const RecruitmentBaseComponent = () => {
 								</select>
 							</span>
 							<span className='margin-left-1 selector-span-1'>
-								<select defaultValue={'DEFAULT'}>
+								<select className='filter_buttons' defaultValue={'DEFAULT'}>
 									<option value='DEFAULT' disabled>
 										Filter By
 									</option>
@@ -194,12 +199,20 @@ const RecruitmentBaseComponent = () => {
 					</div> */}
 					<div>
 						<RecruitmentEmail
-							isDisplay={emailModalToggleState !== 0 ? true : false}
+							isDisplay={emailModalToggleState !== '0' ? true : false}
 							onClose={() => {
-								setEmailModalToggle(0);
+								setEmailModalToggle('0');
 							}}
-							applicantData={selectedApplicants}
-							type={selectedEmailTemplate}
+							data={selectedApplicants}
+							type={emailModalToggleState}
+							endpoint={API_HOST + 'recruitment-common-email'}
+						/>
+						<RecruitmentStatusModal
+							isDisplay={value === 3 ? true : false}
+							onClose={() => {
+								setValue(0);
+							}}
+							rowData={selectedApplicants}
 						/>
 					</div>
 				</div>

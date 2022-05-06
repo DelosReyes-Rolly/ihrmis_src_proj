@@ -57,7 +57,8 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 			formData.append('doc_type', value.doc_type);
 			formData.append('doc_name', value.doc_name);
 			formData.append('applicant_id', rowData.app_id);
-			if (documentValue != null) {
+			
+			if (documentValue.length > 0) {
 				for (let index = 0; index < documentValue.length; index++) {
 					formData.append('documents[]', documentValue[index]);
 				}
@@ -74,7 +75,6 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 					renderFailed({ content: 'Document failed to save' });
 				});
 			renderBusy(false);
-			setDocumentValue([]);
 		},
 	});
 	const [documentValue, setDocumentValue] = useState();
@@ -117,10 +117,9 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 						<UploadAttachmentComponent
 							name='documents'
 							formik={documentForm}
-							accept='image/png, image/jpeg'
+							accept='*'
 							isMulti={false}
 							onChange={(e) => {
-								const files = Array.prototype.slice.call(e.target.files);
 								setDocumentValue(e.target.files);
 							}}
 						/>
