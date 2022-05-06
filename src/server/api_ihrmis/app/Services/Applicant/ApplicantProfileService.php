@@ -14,61 +14,6 @@ class ApplicantProfileService
 
     public function createApplicant($request)
     {
-        // $request->validate([
-        //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\- ]+$/u',
-        //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_extn' => 'max:10',
-        //   'app_nm_mid' => 'required|alpha|max:50',
-        //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-        //   'app_birth_place' => 'required',
-        //   // 'app_sex' => 'required',
-        //   // 'app_blood_type' => 'required',
-        //   // 'app_civil_status' => 'required',
-
-        //   'app_civil_others' => 'required_if:app_civil_status,OT',
-
-        //   'app_height' => 'required|numeric',
-        //   'app_weight' => 'required|numeric',
-
-        //   'app_emp_no' => 'required|alpha_num',
-        //   'app_gsis' => 'required|alpha_num',
-        //   'app_pagibig' => 'required|alpha_num',
-        //   'app_philhealth' => 'required|alpha_num',
-        //   'app_sss' => 'required|alpha_num',
-        //   'app_tin' => 'required|alpha_num',
-
-        //   'app_filipino' => 'required',
-        //   'app_dual_cny_id' => 'required_if:app_filipino,0',
-        //   'app_dual_type' => 'required_if:is_dual_citizen,1',
-
-        //   'res_block_lot' => 'required',
-        //   'res_street' => 'required',
-        //   'res_sub_village' => 'required',
-        //   'res_zip_code' => 'required',
-        //   'res_barangay' => 'required',
-        //   'res_municipality' => 'required',
-        //   'res_province' => 'required',
-
-        //   'per_block_lot' => 'required_if:copied_addr,false',
-        //   'per_street' => 'required_if:copied_addr,false',
-        //   'per_sub_village' => 'required_if:copied_addr,false',
-        //   'per_zip_code' => 'required_if:copied_addr,false',
-        //   'per_barangay' => 'required_if:copied_addr,false',
-        //   'per_municipality' => 'required_if:copied_addr,false',
-        //   'per_province' => 'required_if:copied_addr,false',
-
-        //   'app_tel_no' => 'required|numeric',
-        //   'app_mobile_no' => 'required|numeric',
-        //   'app_email_addr' => 'required|email:rfc',
-        // ], [
-        //     'required' => 'This field is required.',
-        //     'required_if' => 'This field is required.',
-        //     'numeric' => 'Invalid input.',
-        //     'alpha_num' => 'Invalid input.',
-        //     'max' =>  'Invalid input',
-        //     'regex' => 'Invalid input',
-        //     'email' => 'Invalid email'
-        // ]);
 
         //IMPLODING ADDRESSES
         $fullAddress = [];
@@ -165,61 +110,6 @@ class ApplicantProfileService
 
     public function modifyApplicant($id, $request)
     {
-        // $request->validate( [
-        //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_mid' => 'required|alpha|max:50',
-
-        //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-        //   'app_birth_place' => 'required',
-        //   // 'app_sex' => 'required',
-        //   // 'app_blood_type' => 'required',
-        //   // 'app_civil_status' => 'required',
-
-        //   'app_civil_others' => 'required_if:app_civil_status,OT',
-
-        //   'app_height' => 'required|numeric',
-        //   'app_weight' => 'required|numeric',
-
-        //   'app_emp_no' => 'required|alpha_num',
-        //   'app_gsis' => 'required|alpha_num',
-        //   'app_pagibig' => 'required|alpha_num',
-        //   'app_philhealth' => 'required|alpha_num',
-        //   'app_sss' => 'required|alpha_num',
-        //   'app_tin' => 'required|alpha_num',
-
-        //   'app_filipino' => 'required',
-        //   'app_dual_cny_id' => 'required_if:app_filipino,0',
-        //   'app_dual_type' => 'required_if:is_dual_citizen,1',
-
-        //   'res_block_lot' => 'required',
-        //   'res_street' => 'required',
-        //   'res_sub_village' => 'required',
-        //   'res_zip_code' => 'required',
-        //   'res_barangay' => 'required',
-        //   'res_municipality' => 'required',
-        //   'res_province' => 'required',
-
-        //   'per_block_lot' => 'required_if:copied_addr,false',
-        //   'per_street' => 'required_if:copied_addr,false',
-        //   'per_sub_village' => 'required_if:copied_addr,false',
-        //   'per_zip_code' => 'required_if:copied_addr,false',
-        //   'per_barangay' => 'required_if:copied_addr,false',
-        //   'per_municipality' => 'required_if:copied_addr,false',
-        //   'per_province' => 'required_if:copied_addr,false',
-
-        //   'app_tel_no' => 'required|numeric',
-        //   'app_mobile_no' => 'required|numeric',
-        //   'app_email_addr' => 'required|email:rfc',
-        // ], [
-        //     'required' => 'This field is required.',
-        //     'required_if' => 'This field is required.',
-        //     'numeric' => 'Invalid input.',
-        //     'alpha_num' => 'Invalid input.',
-        //     'max' =>  'Invalid input',
-        //     'regex' => 'Invalid input',
-        //     'email' => 'Invalid email'
-        // ]);
 
         //IMPLODING ADDRESSES
         $fullAddress = [];
@@ -329,10 +219,13 @@ class ApplicantProfileService
                 'TblapplicantsProfile',
                 'TblplantillaItems',
                 'TblPositions',
+                'tblapplicantsStatus',
+                'tbltransactionStages',
                 'TblOffices'
             )->where('app_itm_id', $plantilla->itm_id)->get();
+            // return $applicant_query;
             //Get Position Requirements
-            array_push($applicant_querys,$applicant_query);
+            array_push($applicant_querys, $applicant_query);
             $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla->tblpositions->pos_id)->get();
 
             $civil_service_type = [];
@@ -357,11 +250,20 @@ class ApplicantProfileService
                     $trainingHours = $position_requirement->std_quantity;
                 }
             }
+
             foreach ($applicant_query as $applicant) {
                 $related_fields = [];
                 $competencies = [];
                 $requirements = 0;
                 $qualified = false;
+                if (count($applicant->tblapplicantsStatus) != 0) {
+                    $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
+                    if ($status->sts_app_stg_id == 2) {
+                        $requirements = $requirements + 4;
+                    } else if ($status->sts_app_stg_id == 3) {
+                        $requirements = $requirements - 4;
+                    }
+                }
                 foreach ($applicant->tblapplicantEligibility as $appEligibility) {
                     $applicantEligibility[] = $appEligibility->cse_app_title;
                 }
@@ -450,6 +352,7 @@ class ApplicantProfileService
             'TblPositions',
             'TblOffices'
         )->where('app_itm_id', $plantilla_id)->get();
+
 
         //Get Position Requirements
         $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla_id)->get();

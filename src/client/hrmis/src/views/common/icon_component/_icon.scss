@@ -1,10 +1,9 @@
-.plantilla-icon{
-   
+.plantilla-icon {
   color: #4276a4;
   font-size: 1.2em;
+  z-index: $sidebarIndex;
 }
 
-.plantilla-icon:hover{
-  
+.plantilla-icon:hover {
   @include zoomInEffect();
-} 
+}

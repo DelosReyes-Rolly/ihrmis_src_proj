@@ -235,10 +235,11 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
                             <div>{cell.render("Cell")}</div>
                             <DropdownViewComponent
                               itemList={plantillaItemsVacantPosMenuItems}
-                              title={<MdMoreHoriz size="15" />}
+                              title={<MdMoreHoriz size="20" />}
                               alignItems="end"
                               toolTipId="other-actions"
                               textHelper="Click to view other actions"
+                              className="dropdown-three-dots"
                             />
                           </div>
                         </td>

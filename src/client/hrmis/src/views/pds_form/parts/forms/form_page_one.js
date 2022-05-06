@@ -60,9 +60,9 @@ const FormPageOne = () => {
   const [perCity, perBrgy, getPerCity, getPerBrgy] = useLocationHelper();
 
   const [verifyCapcha, setVerifyCaptcha] = useState(false); // Use for determining if user successfully finish the captcha
-
+  const parameter = item?'/'+item:'';
   const getApplicantRecord = async () => {
-    await axios.get(API_HOST + `get-new-applicant/${item}`).then((res) => {
+    await axios.get(API_HOST + `get-new-applicant${parameter}`).then((res) => {
       const data = res ? res.data.data : null;
       console.log(data);
       getResCity(data ? data.res_province : "");
@@ -70,6 +70,8 @@ const FormPageOne = () => {
       getPerCity(data.per_province ?? "");
       getPerBrgy(data.per_municipality ?? "");
       setgetApplicantData({ ...data });
+    }).catch((err) => {
+      console.log(err);
     });
   };
 

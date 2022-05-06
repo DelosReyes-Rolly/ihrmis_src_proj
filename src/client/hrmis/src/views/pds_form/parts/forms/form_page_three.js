@@ -1049,7 +1049,7 @@ const TableFive = () => {
                 rowSpan="2"
                 style={{ textAlign: "center", width: "30%" }}
               >
-                Tittle
+                Title
               </th>
               <th
                 colSpan="2"

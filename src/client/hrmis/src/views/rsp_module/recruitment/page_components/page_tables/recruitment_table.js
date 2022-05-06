@@ -9,20 +9,25 @@ import {
 	useRowSelect,
 } from 'react-table';
 import { useSelectValueCon } from '../../../../../helpers/use_hooks/select_value_cons.js';
-import { recruitmentMenuItem } from '../../static/menu_items';
+import { recruitmentDisqualifiedMenuItem, recruitmentMenuItem } from '../../static/menu_items';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import DropdownViewComponent from '../../../../common/dropdown_menu_custom_component/Dropdown_view.js';
 import { recrutmentTableHeaders } from '../../static/table_items.js';
 import { useNavigate } from 'react-router-dom';
 import RecruitmentDocumentModal from '../page_modals/recruitment_document_modal/recruitment_document_modal.js';
+import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper.js';
+import RecruitmentStatusModal from '../page_modals/recruitment_status_modal.js';
+import { useSelector } from 'react-redux';
 const RecruitmentTable = ({ type, setSelectedApplicants }) => {
+	const { renderBusy } = usePopUpHelper();
+	const { refresh } = useSelector((state) => state.popupResponse);
 	const [plotApplicantData, setApplicantData] = useState([]);
-	const { trueValue, displayData } = useSelectValueCon();
 	const [value, setValue] = useState(0);
 	const [modalData, setModalData] = useState([]);
 	const navigate = useNavigate();
 	const applicantDataApi = async () => {
+		renderBusy(true);
 		await axios
 			.get(API_HOST + 'get-complete-applicant/' + type)
 			.then((response) => {
@@ -57,14 +62,14 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 						dataPlot.push(values);
 					}
 				}
-
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
+		renderBusy(false);
 	};
 	useEffect(() => {
 		applicantDataApi();
-	}, []);
+	}, [type,refresh]);
 	const columns = useMemo(
 		() => [
 			{
@@ -182,7 +187,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
           setSearch={setGlobalFilter}
           statusFilter={setFilter}
         /> */}
-			<div className='default-table'>
+			<div className='default-table document-table'>
 				<table className='table-design' {...getTableProps()}>
 					<thead>
 						{headerGroups.map((headerGroup) => (
@@ -242,7 +247,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 														<div>{cell.render('Cell')}</div>
 														<div>
 															<DropdownViewComponent
-																itemList={recruitmentMenuItem}
+																itemList={(type === 1)? recruitmentMenuItem : recruitmentDisqualifiedMenuItem}
 																title={<MdMoreHoriz size='15' />}
 																alignItems='end'
 																toolTipId='other-actions'
@@ -283,6 +288,13 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 			</div>
 			<RecruitmentDocumentModal
 				isDisplay={value === 2 ? true : false}
+				onClose={() => {
+					setValue(0);
+				}}
+				rowData={modalData}
+			/>
+			<RecruitmentStatusModal
+				isDisplay={value === 3 ? true : false}
 				onClose={() => {
 					setValue(0);
 				}}
