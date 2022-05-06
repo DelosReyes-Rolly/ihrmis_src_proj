@@ -101,10 +101,16 @@ Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRat
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 Route::get('get-signature-image/{id}', [TbljvsController::class, "getSignatureDisplay"]);
+Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
+Route::get('get-option-employee/{plantillaId}',[TbljvsController::class, "getEmployeeAsOption"]);
 
 Route::post('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
-Route::post('jvscrw-competency-rating/{type}', [TbljvsController::class, "addCompetencyAndRating"]);
+Route::post('jvscrw-competency-rating', [TbljvsController::class, "addCompetencyAndRating"]);
 Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class, "saveSignature"]);
+Route::post('save-generate-jvscrw',[TbljvsController::class, "saveSignaturesAndName"]);
+
+Route::delete('remove-signed-image/{id}/{type}',[TbljvsController::class, "removeImage"]);
+
 
 
 // Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
@@ -138,7 +144,7 @@ Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextI
 
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
 
-Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
+
 
 //=======================================================================================
 // PLANTILLA DTY RESPONSIBILITY

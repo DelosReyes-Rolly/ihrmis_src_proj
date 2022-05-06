@@ -1,11 +1,11 @@
 import { ALERT } from "./global/global_config";
 
-export const ALER_ENUM = { fail: "error", success: "success" };
+export const ALERT_ENUM = { fail: "error", success: "success" };
 
 const TYPE_PARAM = {
   title: "",
   message: "",
-  type: ALER_ENUM.success,
+  type: ALERT_ENUM.success,
 };
 
 /**
@@ -23,14 +23,14 @@ export const popupAlert = (param) => {
   });
 };
 
-const messageType = (type = ALER_ENUM.success) => {
+const messageType = (type = ALERT_ENUM.success) => {
   let objectHolder = {
     icon: "",
     buttonColor: "",
     title: "",
   };
 
-  if (type === ALER_ENUM.success) {
+  if (type === ALERT_ENUM.success) {
     objectHolder = {
       icon: "success",
       buttonColor: "#5cb85c",
@@ -38,7 +38,7 @@ const messageType = (type = ALER_ENUM.success) => {
     };
   }
 
-  if (type === ALER_ENUM.fail) {
+  if (type === ALERT_ENUM.fail) {
     objectHolder = {
       icon: "error",
       buttonColor: "#d9534f",

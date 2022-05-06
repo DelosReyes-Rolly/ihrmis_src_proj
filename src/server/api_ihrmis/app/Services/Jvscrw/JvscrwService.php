@@ -9,28 +9,98 @@ use App\Models\TblplantillaItems;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Js;
 use Mpdf\Mpdf as MPDF;
+use Mpdf\Output\Destination;
 use stdClass;
 
-class JvscrwService {
   /// CALLED IN THE JVS CONTROLLER
-  public function updateOrCreateCmpntncyRtng($request, $type){
+class JvscrwService {
+  // This function is called when user wants to save all the data of jvscrw form, excluding the signatures
+  public function updateOrCreateCmpntncyRtng($request){
     if(!empty($request->min_com_desc)){
       $jvsQry = Tbljvs::where('jvs_id', $request->jvs_id)->first();
       $jvsQry->jvs_min_com_desc = $request->min_com_desc;
       $jvsQry->save();  
     }
 
-    if($type == "save"){
-      foreach ($request->competencies as $value) {
-        if(!empty($value)){
-          $this->addCompetencies($value, $request->jvs_id);
-        }
+    foreach ($request->competencies as $value) {
+      if(!empty($value)){
+        $this->addCompetencies($value, $request->jvs_id);
       }
-      $this->dutiesResponsibilities($request, $request->jvs_id);
-      $this->onSubmitSign($request, $request->jvs_id);
-      return "Successfully updated";
     }
+
+    $this->dutiesResponsibilities($request, $request->jvs_id);
+
+    return response()->json([
+      "message" => "Successfully updated"
+    ], 200) ;
+  }
+
+  public function saveSignaturesAndName($request){
+    date_default_timezone_set('Asia/Manila'); //define local time
+    $applicantQry = Tbljvs::find($request->jvs_id);
+    $imageLocPre = "";
+    $imageLocApp = "";
+    $preparedArr = [];
+    $aprrovedArr  = [];
+
+    if(!isset($request->pre_name)){
+      return response()->json([
+        "message" => "Prepared Name is required"
+      ], 422);
+    }
+
+    // if jvs_prepared has value
+    if(!empty($applicantQry->jvs_prepared)){
+      $preparedArr = empty($applicantQry->jvs_prepared) ? null : explode("|", $applicantQry->jvs_prepared);
+      $imageLocPre = $preparedArr[2] ?? "";
+    }
+
+    if(empty($preparedArr[0])){
+      $pre_data = $request->pre_name . "|" . Carbon::now() . "|" . $imageLocPre;
+      $applicantQry->jvs_prepared = $pre_data;
+    }
+
+    if($preparedArr[0] != $request->pre_name){
+      $pre_data = $request->pre_name . "|" . $preparedArr[1] . "|" . $imageLocPre;
+      $applicantQry->jvs_prepared = $pre_data;
+    }
+    
+    
+    if($request->submit_type === "generate"){
+      if(!isset($request->app_name)){ // Check if the $app_name has value
+        return response()->json([
+          "message" => "Approved Name is required"
+        ], 422);
+      }
+
+      if(!empty($applicantQry->jvs_approved)){
+        $aprrovedArr = empty($applicantQry->jvs_approved) ? null : explode("|", $applicantQry->jvs_approved);
+        $imageLocApp = $aprrovedArr[2] ?? "";
+      }
+
+      if(empty($aprrovedArr[0])){
+        $app_data = $request->app_name . "|" . Carbon::now() . "|" . $imageLocApp;
+        $applicantQry->jvs_approved = $app_data;
+      }
+      
+      if($aprrovedArr[0] != $request->app_name){
+        $app_data = $request->app_name . "|" . $aprrovedArr[1] . "|" . $imageLocApp;
+        $applicantQry->jvs_approved = $app_data;
+      }
+
+      $applicantQry->save();
+
+      return $this->submitCreatePdf($request, $request->jvs_id);
+    }
+
+    $applicantQry->save();
+    return response()->json([
+      "message" => "Successfully updated"
+    ], 200);
+    
   }
 
   public function createNewJvsVersion ($item) {
@@ -47,9 +117,12 @@ class JvscrwService {
   }
 
   public function uploadImage($request, $id, $signType){
-    $request->validate([
-      'signature' => "required"
-    ]);
+    
+    if(!isset($request->signature)){
+      return response()->json([
+        "message" => "Unable to save the signature"
+      ], 422);
+    }
 
     date_default_timezone_set('Asia/Manila'); //define local time
     
@@ -69,15 +142,16 @@ class JvscrwService {
       $imageObj = $request->file('signature'); // Get image from request
       $extentionStr = $imageObj->getClientOriginalExtension(); // Get image name amd extension 
       $filenameStr = 'prepared-img-' . $uploadedDate . "." . $extentionStr; // Assign database name
-      $imageObj->storeAs('public/jvscrw/prepared', $filenameStr); // Store image to storage folder
+      $imageObj->storeAs('public/jvscrw/prepared/', $filenameStr); // Store image to storage folder
 
       $preparedName = $arrCurrentData[0] ?? "";
-
-      $data =  $preparedName . "|" . $uploadedDate . "|" . $filenameStr;
-      $jvsQry->jvs_prepared = $data;
+      $date = $arrCurrentData[1] ?? $uploadedDate;
+      $jvsQry->jvs_prepared = $preparedName . "|" . $date . "|" . $filenameStr;
       $jvsQry->save(); 
 
-      return "Image Prepared saved";
+      return response()->json([
+        "message" => "Signature Prepared saved"
+      ], 200);
     }
 
     if($signType == "approved"){
@@ -96,12 +170,13 @@ class JvscrwService {
       $imageObj->storeAs('public/jvscrw/approved', $filenameStr); // Store image to storage folder
 
       $approvedName = $arrCurrentData[0] ?? "";
-
-      $data = $approvedName . "|" . $uploadedDate . "|" . $filenameStr;
-      $jvsQry->jvs_approved = $data;
+      $date = $arrCurrentData[1] ?? $uploadedDate;
+      $jvsQry->jvs_approved = $approvedName . "|" . $date . "|" . $filenameStr;
       $jvsQry->save();
 
-      return "Image Approved saved";
+      return response()->json([
+        "message" => "Signature Approved saved"
+      ], 200);
     }   
   }
 
@@ -125,43 +200,38 @@ class JvscrwService {
     ], 200);
   }
 
-  public function submitGenerate($request, $id){
+  private function submitCreatePdf($request, $id){
     $dataJvs = Tbljvs::find($id);
     $prepared = explode("|", $dataJvs->jvs_prepared);
     $approved = explode("|", $dataJvs->jvs_approved);
 
-    $objectSign = new stdClass();
-    $objectSign->app_name = $request->app_name ?? null;
-    $objectSign->app_sign = $request->file('app_sign') ?? null;
-    $objectSign->pre_name = $request->pre_name ?? null;
-    $objectSign->pre_sign = $request->file('pre_sign') ?? null;
-
-    try {
-      // Case 1
-      if(!empty($prepared[0]) && !empty($prepared[1]) && !empty($prepared[2]) && !empty($approved[0]) && !empty($approved[1]) && !empty($approved[2])){
-        $this->generateFile($id);
-        return $this->generateFile($id);
-      }
-
-      // Case 2
-      if(!empty($prepared[0]) && !empty($prepared[1]) && !empty($prepared[2]) && !isset($request->app_name) && !isset($request->app_sign)){
-        return $this->generateFile($id);
-      }
-
-      // case 3
-      if(!isset($request->pre_name) && !isset($request->pre_sign) && !isset($request->app_name) && !isset($request->app_sign)){
-        return $this->generateFile($id);
-      }
-
-
-      throw new Exception("Please Sign the approved");
-
-    } catch (\Throwable $th) {
-      throw $th;
+    if(empty($prepared[2]) && !isset($request->pre_sign)){
+      return response()->json([
+        "message" => "Preparer sign is required"
+      ], 422);
     }
 
-    
-    
+    if(empty($approved[2]) && !isset($request->app_sign)){
+      return response()->json([
+        "message" => "Approver sign is required"
+      ], 422);
+    }
+
+    $objectSign = new stdClass();
+
+    if(!empty($prepared[2])){
+      $objectSign->pre_sign = storage_path('app/public/jvscrw/prepared/'. $prepared[2]);
+    } else {
+      $objectSign->pre_sign = $request->pre_sign;
+    }
+
+    if(!empty($approved[2])){
+      $objectSign->app_sign = storage_path('app/public/jvscrw/approved/'. $approved[2]);
+    } else {
+      $objectSign->app_sign = $request->app_sign;
+    }
+
+    return $this->generateFile($request->jvs_id, $objectSign);
   }
 
   public function generateFile($id, $objectSign = null){
@@ -169,7 +239,6 @@ class JvscrwService {
     date_default_timezone_set('Asia/Manila'); //define local time
     
     $jvsQry = Tbljvs::with('tbljvsDutiesRspnsblts')->find($id);
-    
     $comp = TbljvsCompetencies::where('com_jvs_id', $id)->with(['tblComType' => function ($query) use ($id){
       $query->where('rtg_id', $id);
     }])->get(); 
@@ -179,12 +248,18 @@ class JvscrwService {
     
     $plantilla = TblplantillaItems::with('tbloffices', 'tblpositions.tblpositionCscStandards', 'tbldtyresponsibility')->find($jvsQry->jvs_itm_id);
     
-    $approvedDate = DateTime::createFromFormat('Y-m-d H:i:s', $aprrovedArr[1] ?? Carbon::now())->format('m/d/Y');
-    $preparedDate = DateTime::createFromFormat('Y-m-d H:i:s', $preparedArr[1] ?? Carbon::now())->format('m/d/Y');
+    if(!empty($preparedArr[2])){
+      $preparedDate = DateTime::createFromFormat('Y-m-d H:i:s', Carbon::now())->format('m/d/Y');
+    } else {
+      $preparedDate = DateTime::createFromFormat('Y-m-d H:i:s', $preparedArr[1])->format('m/d/Y');
+    }
+
+    if(!empty($aprrovedArr[2])){
+      $approvedDate = DateTime::createFromFormat('Y-m-d H:i:s', Carbon::now())->format('m/d/Y');
+    } else {
+      $approvedDate = DateTime::createFromFormat('Y-m-d H:i:s', $aprrovedArr[1])->format('m/d/Y');
+    }
     
-    $preSign =  file_get_contents(asset('storage/jvscrw/prepared/'. $preparedArr[2]));
-    
-    // return $this->reqCompetency($comp);
     $jvs = [
       'jvs' => $jvsQry,
       'plantilla' => $plantilla,
@@ -194,10 +269,9 @@ class JvscrwService {
       'approved' => [ 
         'date' => $approvedDate ?? "",
         'name' => $aprrovedArr[0] ?? "",
-        'sign' => $aprrovedArr[2] ?? ""
+        'sign' => $objectSign->app_sign ?? ""
       ]
     ];
-    
     $crw = [
       'jvs' => $jvsQry,
       'plantilla' => $plantilla,
@@ -206,24 +280,70 @@ class JvscrwService {
       'approved' => [ 
         'date' => $approvedDate,
         'name' => $aprrovedArr[0] ?? "",
-        'sign' => $aprrovedArr[2] ?? ""
+        'sign' => $objectSign->app_sign ?? ""
       ],
       'prepared' => [ 
         'date' => $preparedDate,
         'name' => $preparedArr[0] ?? "",
-        'sign' => 'data:image/' . 'png' . ';base64,' . base64_encode($preSign)
+        'sign' => $objectSign->pre_sign  ?? "" //$preSign
       ],
     ];
 
     $report = new MPDF();
     $report->writeHTML(view('reports/jvsReportPdf', $jvs));
     $report->AddPage('L');
-   
     $report->writeHTML(view('reports/crwReportPdf', $crw));
-    // $report->Image($preSign , 0, 0, 210, 297, 'png', '', true, false);
 
-    return $report->output();
+    $createFileName = "generate-jvscrw-" . Carbon::now() . "-" . $id . ".pdf";
+
+    if(!empty($jvsQry->jvs_signed_file)){
+      $public = public_path('storage/jvscrw/generate_pdf/'. $jvsQry->jvs_signed_file);
+      unlink($public);
+      if(is_file($public)){
+        return response()->json([
+          "message" => "Can't unlink path"
+        ], 500);
+      }
+    }
+    
+    $report->Output(storage_path('app/public/jvscrw/generate_pdf/'.$createFileName) , 'F');
+    $jvsQry->jvs_signed_file = $createFileName;
+    $jvsQry->save();
+    
+    return response()->json([
+      "message" => "Generate JVSCRW file"
+    ], 200);
    
+  }
+
+  public function removeImage($id, $type){
+    $jvsQry = Tbljvs::find($id);
+
+    if($type == "prepared"){
+      $arrCurrentData = explode("|", $jvsQry->jvs_prepared); 
+      if(empty($jvsQry->jvs_prepared)){  // Delete Current image 
+        $img = $arrCurrentData[2];
+        if($img != ""){
+          $public = public_path('storage/jvscrw/prepared/'.$img);
+          unlink($public);
+        }
+      }
+      $arr = [$arrCurrentData[0], $arrCurrentData[1], ""]; 
+      $jvsQry->jvs_prepared = implode("|", $arr);
+    } 
+    
+    if ($type == "approved"){
+      $arrCurrentData = explode("|", $jvsQry->jvs_approved); 
+      if(empty($jvsQry->jvs_approved)){  // Delete Current image 
+        $img = $arrCurrentData[2];
+        if($img != ""){
+          $public = public_path('storage/jvscrw/prepared/'.$img);
+          unlink($public);
+        }
+      }
+      $arr = [$arrCurrentData[0], $arrCurrentData[1], ""]; 
+      $jvsQry->jvs_approved = implode("|", $arr);
+    }
   }
 
   /// CALLED IN updateOrCreateCmpntncyRtng FUCNTION
@@ -290,43 +410,6 @@ class JvscrwService {
       $add->dty_jvs_desc = $value['description'];
       $add->save();
     }
-  }
-  /// CALLED IN updateOrCreateCmpntncyRtng FUCNTION
-  private function onSubmitSign($request, $id){
-    date_default_timezone_set('Asia/Manila'); //define local time
-    $applicantQry = Tbljvs::find($id);
-    $imageLocPre = "";
-    $imageLocApp = "";
-    $preparedArr = [];
-    $aprrovedArr  = [];
-
-    if(!empty($applicantQry->jvs_prepared)){
-      $preparedArr = empty($applicantQry->jvs_prepared) ? null : explode("|", $applicantQry->jvs_prepared);
-      $imageLocPre = $preparedArr[2] ?? "";
-    }
-
-    if(!empty($applicantQry->jvs_approved)){
-      $aprrovedArr = empty($applicantQry->jvs_prepared) ? null : explode("|", $applicantQry->jvs_approved);
-      $imageLocApp = $aprrovedArr[2] ?? "";
-    }
-
-    if(isset($request->pre_name) && empty($preparedArr[0])){
-      $pre_data = $request->pre_name . "|" . Carbon::now() . "|" . $imageLocPre;
-      $applicantQry->jvs_prepared = $pre_data;
-    }
-
-    if(isset($request->app_name) && empty($aprrovedArr[0])){
-      $app_data = $request->app_name . "|" . Carbon::now() . "|" . $imageLocApp;
-      $applicantQry->jvs_approved = $app_data;
-    }
-
-    // if(isset($request->pre_name) &&  isset($request->pre_sign) && isset($request->app_name) &&  isset($request->app_sign)){
-    //   $this->generateFile($request->jvs_id); 
-    // }
-
-    $applicantQry->save();
-    return "Save worksheet";
-    
   }
 
   // For getting RATING CALLED IN generateFile
@@ -459,60 +542,7 @@ class JvscrwService {
 
     return [$max, $min];
   }
-
-  public function removeImage($id, $type){
-    $jvsQry = Tbljvs::find($id);
-
-    if($type == "prepared"){
-      $arrCurrentData = explode("|", $jvsQry->jvs_prepared); 
-      if(empty($jvsQry->jvs_prepared)){  // Delete Current image 
-        $img = $arrCurrentData[2];
-        if($img != ""){
-          $public = public_path('storage/jvscrw/prepared/'.$img);
-          unlink($public);
-        }
-      }
-      $arr = [$arrCurrentData[0], $arrCurrentData[1], ""]; 
-      $jvsQry->jvs_prepared = implode("|", $arr);
-    } 
-    
-    if ($type == "approved"){
-      $arrCurrentData = explode("|", $jvsQry->jvs_approved); 
-      if(empty($jvsQry->jvs_approved)){  // Delete Current image 
-        $img = $arrCurrentData[2];
-        if($img != ""){
-          $public = public_path('storage/jvscrw/prepared/'.$img);
-          unlink($public);
-        }
-      }
-      $arr = [$arrCurrentData[0], $arrCurrentData[1], ""]; 
-      $jvsQry->jvs_approved = implode("|", $arr);
-    }
-  }
+  
 }
 
 
-
-//
-// else {
-//   $latestVersion = Tbljvs::where('jvs_id', $request->jvs_id)->orderBy('jvs_version', 'DESC')->first();
-//   $newJvs = new Tbljvs();
-//   $newJvs->jvs_version = $latestVersion->jvs_version + 1;
-//   $newJvs->jvs_itm_id = $latestVersion->jvs_itm_id;
-//   $newJvs->jvs_min_com_desc = $request->min_com_desc;
-//   $newJvs->jvs_prepared = "";
-//   $newJvs->jvs_approved = "";
-//   $newJvs->jvs_signed_file = "";
-//   $newJvs->save();
-
-//   return $newJvs->jvs_id;
-
-//   foreach ($request->competencies as $value) {
-//     if(!empty($value)){
-//       $this->addCompetencies($value, $newJvs->jvs_id);
-//     }
-//   }
-
-//   $this->dutiesResponsibilities($request, $newJvs->jvs_id);
-//   $this->onSubmitSign($request, $newJvs->jvs_id);
-// }

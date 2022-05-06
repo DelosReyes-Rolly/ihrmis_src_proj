@@ -111,7 +111,7 @@
     color: $fontSecondaryColor;
   }
 
-  div {
+  .container-for-creatable-sign {
     @include containerFlexRow(true);
     button {
       padding: 0px 20px;

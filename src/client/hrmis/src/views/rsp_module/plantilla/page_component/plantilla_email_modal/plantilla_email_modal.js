@@ -16,7 +16,11 @@ import RichTextEditorComponent from "../../../../common/rich_text_editor_compone
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
-import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import {
+  ALERT_ENUM,
+  ALER_ENUM,
+  popupAlert,
+} from "../../../../../helpers/alert_response";
 
 export const EMAIL_ENUM = {
   regular: "regular",
@@ -121,7 +125,7 @@ const PlantillaEmailModal = ({
         .catch((err) => {
           popupAlert({
             message: err.response.date.message,
-            type: ALER_ENUM.fail,
+            type: ALERT_ENUM.fail,
           });
         });
       renderBusy(false);

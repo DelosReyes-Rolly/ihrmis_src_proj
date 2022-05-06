@@ -1,3 +1,4 @@
+import axios from "axios";
 import { API_HOST } from "../helpers/global/global_config";
 
 export const printMemoOnPostingOfVpForDost = () => {
@@ -22,4 +23,13 @@ export const testOutsideLink = () => {
 
 export const printNextRankMemoReport = (plantilla) => {
   window.open(API_HOST + "generate-vacant-memo-pdf/" + plantilla, "_tab");
+};
+
+export const printJvsCrwReport = async (jvs) => {
+  try {
+    await axios.get(API_HOST + "get-generated-pdf/" + jvs);
+    window.open(API_HOST + "get-generated-pdf/" + jvs, "_tab");
+  } catch (error) {
+    throw error;
+  }
 };
