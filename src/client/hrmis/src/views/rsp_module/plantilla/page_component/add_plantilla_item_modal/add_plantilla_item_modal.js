@@ -11,7 +11,6 @@ import {
   apiLevelPositionModalInputItem,
   apiModeCreationModalInputItem,
 } from "../../static/input_items";
-import { useFormHelper } from "../../../../../helpers/use_hooks/form_helper";
 import axios from "axios";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { useFormik } from "formik";

@@ -4494,10 +4494,6 @@ body {
           align-items: start;
 }
 
-.swal2-container {
-  z-index: 10000000;
-}
-
 @media only screen and (max-width: 800px) {
   .positioning {
     padding-left: 0;
@@ -7262,7 +7258,7 @@ input:checked + .slider:before {
   color: rgba(70, 70, 70, 0.8);
 }
 
-.remarks-div-1 div {
+.remarks-div-1 .container-for-creatable-sign {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -7272,39 +7268,39 @@ input:checked + .slider:before {
           flex-direction: row;
 }
 
-.remarks-div-1 div button {
+.remarks-div-1 .container-for-creatable-sign button {
   padding: 0px 20px;
   border: 1px solid #4276a4;
   font-weight: 600;
 }
 
-.remarks-div-1 div .button-1 {
+.remarks-div-1 .container-for-creatable-sign .button-1 {
   color: #4276a4;
   border: 1px solid #4276a4;
 }
 
-.remarks-div-1 div .button-2 {
+.remarks-div-1 .container-for-creatable-sign .button-2 {
   color: white;
   background-color: #4276a4;
   border-radius: 0px 3px 3px 0px;
 }
 
-.remarks-div-1 div .button-1:hover {
+.remarks-div-1 .container-for-creatable-sign .button-1:hover {
   -webkit-transition: 0.2s;
   transition: 0.2s;
   background-color: #11111120;
   border: 1px solid #4276a480;
 }
 
-.remarks-div-1 div .button-2:hover {
+.remarks-div-1 .container-for-creatable-sign .button-2:hover {
   -webkit-transition: 0.2s;
   transition: 0.2s;
   background-color: #4276a480;
   border: 1px solid #4276a480;
 }
 
-.remarks-div-1 div .button-2:active,
-.remarks-div-1 div .button-1:active {
+.remarks-div-1 .container-for-creatable-sign .button-2:active,
+.remarks-div-1 .container-for-creatable-sign .button-1:active {
   -webkit-transform: translateY(2px);
           transform: translateY(2px);
 }

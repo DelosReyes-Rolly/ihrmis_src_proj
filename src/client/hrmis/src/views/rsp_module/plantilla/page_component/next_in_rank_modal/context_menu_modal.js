@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRowSelect, useTable } from "react-table";
 import { setNextRank } from "../../../../../features/reducers/plantilla_item_slice";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
-import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 
@@ -95,13 +95,13 @@ const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
           dispath(setNextRank());
         })
         .catch((err) => {
-          popupAlert({ message: err.message, type: ALER_ENUM.fail });
+          popupAlert({ message: err.message, type: ALERT_ENUM.fail });
         });
       return;
     }
     popupAlert({
       message: "Please Select Next-in-Rank Employee",
-      type: ALER_ENUM.fail,
+      type: ALERT_ENUM.fail,
     });
   };
 

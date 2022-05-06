@@ -151,25 +151,22 @@
           <tr>
             <td class="no-border"><br/><br/>
               <img style="width: 200px" src="{{ $prepared['sign'] }}"  alt="pre_sign">
-              {{ $prepared['sign'] }}
+              <br/>
               {{ $prepared['name'] ?? "" }}
               <hr style="width: 50%; text-align: left"/>
-             <br/>(Position/Designation)
+             <br/><p style="font-size: 10px">(Position/Designation)</p>
             </td>
             <td class="no-border"><br/><br/>
+              <img style="width: 200px" src="{{ $approved['sign'] }}"  alt="app_sign">
+              <br/>
               {{ $approved['name']  ?? "" }}
               <hr style="width: 50%; text-align: left" />
-              <br/>(Position/Designation)
+              <br/> <p style="font-size: 10px">(Position/Designation)</p>
             </td>
           </tr>
-        </tbody>
-      </table>
-      <br/>
-      <table>
-        <tbody>
           <tr>
-            <td class="no-border">Date:</td>
-            <td class="no-border">Date:</td>
+            <td class="no-border"><br/>Date:</td>
+            <td class="no-border"><br/>Date:</td>
           </tr>
           <tr>
             <td class="no-border" style="width: 50%;"><br/>

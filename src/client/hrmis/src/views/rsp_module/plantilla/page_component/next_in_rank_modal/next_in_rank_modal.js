@@ -13,13 +13,14 @@ import {
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
-import { ALER_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { printNextRankMemoReport } from "../../../../../router/outside_routes";
 
 /**
  * NOTES:
  * This table modal style is in _plantilla_view.scss
  */
+
 const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   const { refresh } = useSelector((state) => state.popupResponse);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -47,13 +48,13 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
           popupAlert({ message: "Removed Successfully" });
         })
         .catch((err) => {
-          popupAlert({ message: err.message, type: ALER_ENUM.fail });
+          popupAlert({ message: err.message, type: ALERT_ENUM.fail });
         });
       return null;
     }
     popupAlert({
       message: "Please Select Next-in-Rank Employee to delete",
-      type: ALER_ENUM.fail,
+      type: ALERT_ENUM.fail,
     });
   };
 
@@ -115,7 +116,7 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
     }
     popupAlert({
       message: "Please Select Next-in-Rank Employee Recepient",
-      type: ALER_ENUM.fail,
+      type: ALERT_ENUM.fail,
     });
   };
 
