@@ -6,6 +6,7 @@ use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use App\Models\Employee\Tblemployees;
+use App\Models\TblTransactionStages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -54,6 +55,11 @@ class Tblapplicants extends Model
         return $this->hasMany(TblapplicantsStatus::class, 'sts_app_id', 'app_id');
     }
 
+    public function tbltransactionStages()
+    {
+        return $this->hasManyThrough(TblTransactionStages::class, tblapplicantsStatus::class,'sts_app_id','stg_id','app_id','sts_app_stg_id');
+    }
+
     public function TblapplicantsProfile()
     {
         return $this->hasOne(TblapplicantsProfile::class, 'app_id', 'app_id');
@@ -66,12 +72,12 @@ class Tblapplicants extends Model
 
     public function TblPositions()
     {
-        return $this->hasOneThrough(Tblpositions::class, TblplantillaItems::class, 'itm_id', 'pos_id', 'app_itm_id','itm_pos_id');
+        return $this->hasOneThrough(Tblpositions::class, TblplantillaItems::class, 'itm_id', 'pos_id', 'app_itm_id', 'itm_pos_id');
     }
 
     public function TblOffices()
     {
-        return $this->hasOneThrough(Tbloffices::class, TblplantillaItems::class, 'itm_id', 'ofc_id', 'app_itm_id','itm_ofc_id');
+        return $this->hasOneThrough(Tbloffices::class, TblplantillaItems::class, 'itm_id', 'ofc_id', 'app_itm_id', 'itm_ofc_id');
     }
 
     public function plantillaItems()

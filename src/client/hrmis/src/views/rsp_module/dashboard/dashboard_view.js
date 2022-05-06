@@ -22,7 +22,7 @@ const DashboardView = ({}) => {
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
 	const { getSecondLevel } = crumbSecondLevel();
 	const [plotOfficeData, setOfficeData] = useState([]);
-	const { isRefresh } = useSelector((state) => state.popupResponse);
+	const { refresh } = useSelector((state) => state.popupResponse);
 	const { trueValue } = useSelectValueCon();
 	const offceDataApi = async () => {
 		await axios
@@ -62,7 +62,7 @@ const DashboardView = ({}) => {
 
 	useEffect(() => {
 		offceDataApi();
-	}, [isRefresh]);
+	}, [refresh]);
 
 	let data = useMemo(() => plotOfficeData, [plotOfficeData]);
 

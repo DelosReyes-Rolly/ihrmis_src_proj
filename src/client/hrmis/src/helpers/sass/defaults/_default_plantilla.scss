@@ -59,7 +59,8 @@ hr.solid {
 }
  
 .selector-container{
-    display: flex;
+    display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 

@@ -329,10 +329,13 @@ class ApplicantProfileService
                 'TblapplicantsProfile',
                 'TblplantillaItems',
                 'TblPositions',
+                'tblapplicantsStatus',
+                'tbltransactionStages',
                 'TblOffices'
             )->where('app_itm_id', $plantilla->itm_id)->get();
+            // return $applicant_query;
             //Get Position Requirements
-            array_push($applicant_querys,$applicant_query);
+            array_push($applicant_querys, $applicant_query);
             $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla->tblpositions->pos_id)->get();
 
             $civil_service_type = [];
@@ -357,11 +360,20 @@ class ApplicantProfileService
                     $trainingHours = $position_requirement->std_quantity;
                 }
             }
+
             foreach ($applicant_query as $applicant) {
                 $related_fields = [];
                 $competencies = [];
                 $requirements = 0;
                 $qualified = false;
+                if (count($applicant->tblapplicantsStatus) != 0) {
+                    $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
+                    if ($status->sts_app_stg_id == 2) {
+                        $requirements = $requirements + 4;
+                    } else if ($status->sts_app_stg_id == 3) {
+                        $requirements = $requirements - 4;
+                    }
+                }
                 foreach ($applicant->tblapplicantEligibility as $appEligibility) {
                     $applicantEligibility[] = $appEligibility->cse_app_title;
                 }
@@ -450,6 +462,7 @@ class ApplicantProfileService
             'TblPositions',
             'TblOffices'
         )->where('app_itm_id', $plantilla_id)->get();
+
 
         //Get Position Requirements
         $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla_id)->get();

@@ -1,4 +1,4 @@
-import { testOutsideLink } from "../../../../router/outside_routes";
+import { testOutsideLink } from '../../../../router/outside_routes';
 
 export const recruitmentSelectItem = [
 	{
@@ -36,7 +36,7 @@ export const recruitmentMenuItem = [
 	},
 	{
 		id: 3,
-		label: 'Failed',
+		label: 'Disqualify',
 		link: '#',
 	},
 	{
@@ -45,55 +45,74 @@ export const recruitmentMenuItem = [
 		link: '#',
 	},
 ];
-export const recruitmentEmailTemplateList = [
+
+export const recruitmentDisqualifiedMenuItem = [
 	{
 		id: 1,
-		label: 'Schedule of Pre-employment Examination',
-		link: testOutsideLink,
+		label: 'Ratings',
+		link: '#',
 	},
 	{
 		id: 2,
+		label: 'Documents',
+		link: '#',
+	},
+	{
+		id: 3,
+		label: 'Qualify',
+		link: '#',
+	},
+	{
+		id: 4,
+		label: 'Delete',
+		link: '#',
+	},
+];
+
+export const recruitmentEmailTemplateList = [
+	{
+		id: 'PEE',
+		label: 'Schedule of Pre-employment Examination',
+		link: null,
+	},
+	{
+		id: 'INT',
 		label: 'Schedule of PSB Interview',
 		link: null,
 	},
 	{
-		id: 3,
+		id: 'PSY',
 		label: 'Schedule of Psychometric Examination',
 		link: null,
 	},
 	{
-		id: 4,
+		id: 'PER',
 		label: 'Pre-employment Examination Results',
 		link: null,
 	},
 	{
-		id: 5,
+		id: 'DOC',
 		label: 'Completion of Documentary Requirements',
 		link: null,
 	},
 	{
-		id: 6,
+		id: 'ASS',
 		label: 'Notification for End-User Assessment',
 		link: null,
 	},
 	{
-		id: 7,
+		id: 'BCK',
 		label: 'Background Check',
 		link: null,
 	},
 	{
-		id: 8,
+		id: 'DSQ',
 		label: 'Notification of Disqualification',
 		link: null,
 	},
 	{
-		id: 9,
+		id: 'PSB',
 		label: 'Notification to HRMPSB',
-		link: null,
-	},
-	{
-		id: 10,
-		label: 'Created Templates',
 		link: null,
 	},
 ];

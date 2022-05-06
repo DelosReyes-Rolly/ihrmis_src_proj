@@ -1,6 +1,12 @@
-.dashborad-view {
+.documents-view {
     display: flex;
     flex-direction: column;
+    .three-idiot {
+        display: flex;
+        justify-content: end;
+        padding: 0px 20px;
+    }
+    min-height: 95vh;
 }
 .upload-input-design{
     cursor: pointer;
@@ -31,12 +37,28 @@
     .item-modal-3 {
         width: 10%;
     }
+    .item-modal-4 {
+        width: 30%;
+        .input-component{
+            margin: 5px 0px;
+        }
+    }
+    .item-modal-5 {
+        width: 70%;
+    }
+}
+
+.document-table{
+    overflow-x: auto;
+    scrollbar-width: thin;
 }
 
 .documents_table{
     width: 100%;
     border: solid 1px;
     border-radius: 5px 5px 5px 5px;
+    max-height: 50px;
+    overflow-y: auto;
     tr:hover{
         background-color: rgba(0, 110, 255, 0.1);
     }
@@ -67,4 +89,27 @@
     .col-2 .plantilla-icon{
         cursor: pointer;
     }
+    .gone{
+        display: none;
+    }
 }
+
+
+
+@media only screen and (max-width: 800px){
+
+    .filter_buttons{
+        min-width: 125px;
+        width: 30%;
+    }
+    .selector-search-label{
+        display: none;
+
+    }
+
+    .search-container{
+        display: block;
+        margin-top: 20px;
+        width: 100% !important;
+    }
+  }

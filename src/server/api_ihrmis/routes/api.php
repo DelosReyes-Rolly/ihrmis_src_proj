@@ -10,6 +10,7 @@ use App\Http\Controllers\Applicant\TblapplicantOtherInfoController;
 use App\Http\Controllers\Applicant\TblapplicantProfileController;
 use App\Http\Controllers\Applicant\TblapplicantReferencesController;
 use App\Http\Controllers\Applicant\TblapplicantRequirementsController;
+use App\Http\Controllers\Applicant\TblapplicantStatusController;
 use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
+use App\Http\Controllers\TblTransactionStagesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +47,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "createApplicant"]);
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
-Route::get('get-new-applicant/{id}',[TblapplicantProfileController::class, "getApplicant"]);
+Route::get('get-new-applicant/{id?}',[TblapplicantProfileController::class, "getApplicant"]);
 Route::get('get-complete-applicant/{id}',[TblapplicantProfileController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-new-family/{id}',[TblapplicantProfileController::class, "getFamilyChildren"]);
 //crud-child
@@ -160,11 +162,11 @@ Route::post('register', [AuthenticationController::class, "registerUser"]);
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('mail-template', [MailController::class, "getEmailTemplate"]);
+Route::get('mail-template/{type?}', [MailController::class, "getEmailTemplate"]);
 Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
-
+Route::post('recruitment-common-email',[MailController::class,'recruitmentEmail']);
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -201,4 +203,14 @@ Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotific
  */
 Route::get('get-documentary-requirements/{grp_id}',[TblapplicantDocumentRequirements::class,"getRequirentsByGroup"]);
 Route::get('get-uploaded-documents/{grp_id}/{app_id}',[TblapplicantDocumentRequirements::class,"getUploadedRequirementsbyApplicant"]);
+Route::get('delete-uploaded-documents/{att_id}',[TblapplicantDocumentRequirements::class,"deleteApplicantDocument"]);
 Route::post('add-applicant-document',[TblapplicantDocumentRequirements::class,"saveApplicantDocument"]);
+/**
+ * Transaction Stages Endpoints
+ */
+Route::get('get-transaction-stage-select/{cluster}',[TblTransactionStagesController::class,"getTransactionStage"]);
+
+/**
+ * Applicant Status Endpoints
+ */
+ Route::post('add-applicant-status',[TblapplicantStatusController::class,'saveStatus']);
