@@ -3,7 +3,6 @@ import {
   AiFillCaretDown,
   AiFillCaretUp,
   AiOutlineQuestionCircle,
-  AiOutlineBell,
   AiOutlineMenu,
 } from "react-icons/ai";
 import { useDispatch } from "react-redux";
@@ -13,11 +12,13 @@ import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper";
 import BadgeComponents from "../badge_component/Badge";
 import NotificationComponent from "../notification/notification_component";
 import navbarLogo from "../../../assets/images/ilogo.png";
+import { useNavigate } from "react-router-dom";
 
 const NavbarComponent = ({}) => {
   let [dropState, updateDropState] = useToggleHelper(false);
   let dispatch = useDispatch();
   const [timeDataState, setTimeDataState] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -106,14 +107,14 @@ const NavbarComponent = ({}) => {
                 <span className="user-arrow-up">
                   <AiFillCaretUp size="15px" />
                 </span>
-                <li className="margin-top-1">
-                  <a href="/ihrmis/#">HR Module</a>
+                <li className="margin-top-1" onClick={() => navigate("")}>
+                  <span>HR Module</span>
                 </li>
                 <li className="margin-bottom-1">
-                  <a href="/ihrmis/#">Change Password</a>
+                  <span>Change Password</span>
                 </li>
-                <li className="margin-bottom-1">
-                  <a href="/ihrmis/#">LOGOUT</a>
+                <li className="margin-bottom-1" onClick={() => navigate("/")}>
+                  <span>LOGOUT</span>
                 </li>
               </ul>
             </li>
@@ -126,30 +127,3 @@ const NavbarComponent = ({}) => {
 };
 
 export default NavbarComponent;
-
-{
-  /* <li className="margin-right-1 notification">
-            <BadgeComponents className="add-style-badge" value={1} />
-            <span>
-              <AiOutlineQuestionCircle size="20px" />
-            </span>
-          </li> */
-}
-{
-  /* <li
-            className="notification menu-on-mobile"
-            onClick={() => {
-              dispatch(openSideBar());
-            }}
-          >
-            <span>
-              <AiOutlineMenu size="20px" />
-            </span>
-          </li> */
-}
-{
-  /* <BadgeComponents className="add-style-badge" value={1} />
-            <span>
-              <AiOutlineBell size="20px" />
-            </span> */
-}

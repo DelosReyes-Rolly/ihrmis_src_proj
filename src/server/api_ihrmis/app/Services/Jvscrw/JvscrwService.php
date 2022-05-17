@@ -46,6 +46,8 @@ class JvscrwService {
     $preparedArr = [];
     $aprrovedArr  = [];
 
+    $preparedZero = $preparedArr[0] ?? "";
+
     if(!isset($request->pre_name)){
       return response()->json([
         "message" => "Prepared Name is required"
@@ -58,12 +60,12 @@ class JvscrwService {
       $imageLocPre = $preparedArr[2] ?? "";
     }
 
-    if(empty($preparedArr[0])){
+    if(empty($preparedZero)){
       $pre_data = $request->pre_name . "|" . Carbon::now() . "|" . $imageLocPre;
       $applicantQry->jvs_prepared = $pre_data;
     }
 
-    if($preparedArr[0] != $request->pre_name){
+    if($preparedZero != $request->pre_name){
       $pre_data = $request->pre_name . "|" . $preparedArr[1] . "|" . $imageLocPre;
       $applicantQry->jvs_prepared = $pre_data;
     }

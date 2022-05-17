@@ -7,7 +7,7 @@
   background-color: whitesmoke;
   .code-design {
     font-size: 150px;
-    color: $login-color;
+    color: map-get($primaryColor, regular);
   }
 
   .descript-design {
