@@ -14,6 +14,7 @@ use App\Http\Controllers\Applicant\TblapplicantStatusController;
 use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Jvs\TbljvsController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
@@ -135,6 +136,7 @@ Route::get('get-info-position/{id}',[TblpositionsController::class, "getPosition
 //=======================================================================================
 Route::get('office-position', [TblplantillaItemsController::class, "officePosition"]);
 Route::get('plantilla-items/{type}', [TblplantillaItemsController::class, "getPlantillaItem"]);
+Route::get('get-plantilla-id/{id}', [TblplantillaItemsController::class, "getPlantillaItemById"]);
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
@@ -220,3 +222,10 @@ Route::get('get-transaction-stage-select/{cluster}',[TblTransactionStagesControl
  * Applicant Status Endpoints
  */
  Route::post('add-applicant-status',[TblapplicantStatusController::class,'saveStatus']);
+
+
+//=======================================================================================
+// EMPLOYEE CONTROLLER ENDPOINTS
+//=======================================================================================
+
+Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);

@@ -39,5 +39,7 @@ class Tblemployees extends Model
         return $this->hasOne(TblplantillaItems::class, 'itm_id' ,'emp_itm_id');
     }
 
-    
+    public function serviceHistory(){
+        return $this->hasOne(TblemployeeServiceHistory::class, 'svc_emp_id' ,'emp_id');
+    }
 }

@@ -1,5 +1,5 @@
 //DEFAULTS
-@import "./defaults/default_colors";
+@use "./defaults/default_colors" as *;
 @import "./defaults/default_mixins";
 @import "./defaults/default_themes";
 @import "./defaults/default_plantilla";
@@ -134,3 +134,42 @@ body {
 @import "./../../views/rsp_module/library/library";
 @import "./../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
 @import "./../../views/authentication/login_view";
+
+.btn-primary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: map-get($primaryColor, regular);
+  font-size: 14px;
+  font-weight: bold;
+  padding: 4px 10px;
+  color: white;
+  gap: 3;
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  transition: 0.3s;
+  background-color: #033e72;
+}
+
+.btn-primary:active {
+  transform: translateY(2px);
+}
+
+// .selector-span-1 button{
+//     display: inline-flex;
+//     align-items: center;
+//     font-weight: 600;
+//     font-size: 14px;
+//     color: white;
+//     background: #4276A4;
+//     border: none;
+//     border-radius: 5px;
+//     padding: 6px 18px 6px 10px;
+// }
+
+// .selector-span-1 button:hover{
+//     transition: .3s;
+//     background: #4276A4BB;
+// }

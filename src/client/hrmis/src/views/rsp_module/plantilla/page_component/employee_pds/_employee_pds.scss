@@ -1,0 +1,11 @@
+.list-tab-style {
+  font-weight: bold;
+  cursor: pointer;
+  background-color: map-get($blackColor, 100);
+  transition: 300ms;
+}
+
+.list-tab-style:hover {
+  color: white;
+  background-color: map-get($primaryColor, regular);
+}

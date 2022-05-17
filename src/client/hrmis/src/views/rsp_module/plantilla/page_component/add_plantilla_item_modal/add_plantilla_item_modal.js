@@ -107,7 +107,7 @@ const AddPlantillaItemModal = ({
       onClose();
     },
   });
-  
+
   const [officePositionState, setOfficePositionState] = useState();
 
   const getPositionAndOffice = () => {
@@ -135,7 +135,6 @@ const AddPlantillaItemModal = ({
           arrHolder.push({ id: element.itm_id, title: element.itm_no });
         });
         setPlantillaByOfc(arrHolder);
-        console.log(arrHolder);
       })
       .catch((error) => {});
   };
@@ -149,6 +148,7 @@ const AddPlantillaItemModal = ({
       getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
     }
   }, [plantillaForm.values.itm_ofc_id]);
+
   return (
     <React.Fragment>
       <ModalComponent

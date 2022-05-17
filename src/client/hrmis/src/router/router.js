@@ -30,6 +30,7 @@ import LoginView from "../views/authentication/login_view";
 import PlantillaItemInformation from "../views/rsp_module/plantilla/page_component/plantilla_item_info_pc/plantilla_item_info";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
 import JvscrsForm from "../views/jvs_form/jvscrw_form";
+import EmployeePds from "../views/rsp_module/plantilla/page_component/employee_pds/emplpyee_pds";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -59,6 +60,12 @@ const MainRouter = () => {
                   path="/rsp/plantilla/employee"
                   element={<EmployeePageComponentView />}
                 />
+
+                <Route
+                  path="/rsp/plantilla/employee/:item"
+                  element={<EmployeePds />}
+                />
+
                 <Route
                   exact
                   path="/rsp/plantilla/plantilla-items"
@@ -85,9 +92,12 @@ const MainRouter = () => {
 
               <Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
 
-							<Route path="/rsp/recruitment" element={<RecruitmentView />}>
-								<Route path="/rsp/recruitment/" element={<RecruitmentBaseComponent />}/>
-							</Route>
+              <Route path="/rsp/recruitment" element={<RecruitmentView />}>
+                <Route
+                  path="/rsp/recruitment/"
+                  element={<RecruitmentBaseComponent />}
+                />
+              </Route>
 
               <Route path="/rsp/request" element={<RequestView />} />
 

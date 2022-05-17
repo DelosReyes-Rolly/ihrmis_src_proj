@@ -1,85 +1,45 @@
-// .ul-dropdown-container {
-// 	position: absolute;
-// 	width: max-content;
-// 	background-color: white;
-// 	padding: 4px 0px;
-// 	top: 26px;
-// 	right: -3px;
-// 	box-shadow: 0 0px 20px #00000011;
-// 	text-decoration: none;
-// 	z-index: 1;
-// }
-
-// .ul-menu-item {
-// 	padding: 7px 20px;
-// }
-// .ul-menu-item:hover {
-// 	background-color: rgba(0, 110, 255, 0.1);
-// }
-
-// .ul-menu-item-arrow {
-// 	margin: 0;
-// 	position: absolute;
-// 	top: -9px;
-// 	right: 4px;
-// 	color: white;
-// }
-// .link-class {
-// 	color: black;
-// 	text-decoration: none;
-// }
-
 .ul-dropdown-container {
-	// position: absolute;
-	// width: max-content;
-	// background-color: white;
-	// padding: 4px 0px;
-	// top: 17px;
-	// box-shadow: 0 0px 20px #00000011;
-	// text-decoration: none;
-	// z-index: 1;
-	// border-radius: 2px;
-	position: absolute;
-	width: max-content;
-	background-color: white;
-	padding: 4px 0px;
-	top: 30px;
-	box-shadow: 0 0px 20px #00000011;
-	text-decoration: none;
-	z-index: 1;
+  position: absolute;
+  width: max-content;
+  background-color: white;
+  padding: 4px 0px;
+  top: 30px;
+  box-shadow: 0 0px 20px #00000011;
+  text-decoration: none;
+  z-index: 1;
 }
 
 .ul-menu-item {
-	padding: 7px 20px;
-	cursor: pointer;
+  padding: 7px 20px;
+  cursor: pointer;
 }
 .ul-menu-item:hover {
-	background-color: rgba(0, 110, 255, 0.1);
+  background-color: rgba(0, 110, 255, 0.1);
 }
 
 .ul-menu-item-arrow {
-	margin: 0;
-	position: absolute;
-	top: -11px;
-	right: 4px;
-	color: white;
+  margin: 0;
+  position: absolute;
+  top: -11px;
+  right: 4px;
+  color: white;
 }
 
 .link-class {
-	color: black;
-	text-decoration: none;
+  color: black;
+  text-decoration: none;
 }
 
 .unstyled-button {
-	border: none;
-	padding: 0;
-	background: none;
+  border: none;
+  padding: 0;
+  background: none;
 }
 
 .button-icon {
-	color: #4276a4;
+  color: #4276a4;
 }
 
 .button-icon:hover {
-	@include zoomInEffect();
+  @include zoomInEffect();
 }
