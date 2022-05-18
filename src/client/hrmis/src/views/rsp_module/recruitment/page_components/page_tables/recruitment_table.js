@@ -9,7 +9,10 @@ import {
 	useRowSelect,
 } from 'react-table';
 import { useSelectValueCon } from '../../../../../helpers/use_hooks/select_value_cons.js';
-import { recruitmentDisqualifiedMenuItem, recruitmentMenuItem } from '../../static/menu_items';
+import {
+	recruitmentDisqualifiedMenuItem,
+	recruitmentMenuItem,
+} from '../../static/menu_items';
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import DropdownViewComponent from '../../../../common/dropdown_menu_custom_component/Dropdown_view.js';
@@ -19,12 +22,15 @@ import RecruitmentDocumentModal from '../page_modals/recruitment_document_modal/
 import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper.js';
 import RecruitmentStatusModal from '../page_modals/recruitment_status_modal.js';
 import { useSelector } from 'react-redux';
-const RecruitmentTable = ({ type, setSelectedApplicants }) => {
+import SearchComponent from '../../../../common/input_component/search_input/search_input.js';
+const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 	const { renderBusy } = usePopUpHelper();
 	const { refresh } = useSelector((state) => state.popupResponse);
+	const [positionsFilter, setPositionsFilter] = useState([]);
 	const [plotApplicantData, setApplicantData] = useState([]);
 	const [value, setValue] = useState(0);
 	const [modalData, setModalData] = useState([]);
+	const [filterInput, setFilterInput] = useState('');
 	const navigate = useNavigate();
 	const applicantDataApi = async () => {
 		renderBusy(true);
@@ -33,12 +39,14 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 			.then((response) => {
 				const data = response.data.data;
 				let dataPlot = [];
+				let positions = [];
 				if (data.length === 0) {
 					let values = {
 						app_name: 'No data available',
 					};
 					dataPlot.push(values);
 				} else {
+					let positionChecker = [];
 					for (let i = 0; i < data.length; i++) {
 						let profile_message = data[i].profile_message
 							.split('\n')
@@ -55,13 +63,21 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 							app_name: data[i].app_name,
 							app_profile: profile_message ?? 'N/A',
 							pos_applied: position_message ?? 'N/A',
+							position: data[i].plantilla ?? 'N/A',
 							app_qualifications: qualification_message ?? 'N/A',
 							sts_App_remarks: 'To be done',
 						};
-
+						let values2 = [];
+						let fail = false;
+						values2 = {
+							pos_id: data[i].plantilla,
+							pos_title: data[i].position,
+						};
+						positions.push(values2);
 						dataPlot.push(values);
 					}
 				}
+				setPositionsFilter(positions);
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
@@ -69,7 +85,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 	};
 	useEffect(() => {
 		applicantDataApi();
-	}, [type,refresh]);
+	}, [type, refresh]);
 	const columns = useMemo(
 		() => [
 			{
@@ -97,6 +113,10 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 				accessor: 'pos_applied',
 			},
 			{
+				Header: 'Pos',
+				accessor: 'position',
+			},
+			{
 				Header: 'Status',
 				accessor: 'sts_App_remarks',
 			},
@@ -119,7 +139,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 		}
 	);
 	const initialState = {
-		hiddenColumns: ['app_id', 'app_email'],
+		hiddenColumns: ['app_id', 'app_email', 'position'],
 	};
 	const {
 		getTableProps,
@@ -129,6 +149,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 		prepareRow,
 		selectedFlatRows,
 		state,
+		setFilter,
+		setGlobalFilter,
 	} = useTable(
 		{
 			initialState,
@@ -180,6 +202,65 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 	}, [selectedFlatRows]);
 	return (
 		<React.Fragment>
+			<div>
+				<div className='selector-buttons'>
+					<div className='selector-container'>
+						{/* <span className='selector-span-1'> */}
+						{/* <ButtonComponent/> */}
+						<button
+							className='filter_buttons button-components'
+							onClick={() => navigate('/pds-applicant')}
+							style={{
+								cursor: 'pointer',
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+								textAlign: 'center',
+							}}
+						>
+							<p>Applicant</p>
+						</button>
+						{/* </span> */}
+						<span className='filter_buttons margin-left-1 selector-span-1'>
+							<select
+								defaultValue={'DEFAULT'}
+								onChange={(e) => {
+									setFilter('position', e.target.value);
+									setPosition(e.target.value);
+								}}
+							>
+								<option value=''>Vacant Position</option>
+								{positionsFilter.map((item) => {
+									return (
+										<option
+											className='options'
+											key={item.pos_id}
+											defaultValue={item.pos_id}
+											value={item.pos_id}
+										>
+											{item.pos_title}
+										</option>
+									);
+								})}
+							</select>
+						</span>
+					</div>
+
+					<div className='search-container'>
+						<span className='margin-right-1 selector-search-label'>
+							<label>Search</label>
+						</span>
+						<span>
+							<SearchComponent
+								placeholder='Search'
+								onChange={(e) => {
+									setGlobalFilter(e.target.value ?? '');
+								}}
+							/>
+						</span>
+					</div>
+				</div>
+			</div>
 			<br />
 			{/* <AddPlantillaItems
           type={type}
@@ -247,7 +328,12 @@ const RecruitmentTable = ({ type, setSelectedApplicants }) => {
 														<div>{cell.render('Cell')}</div>
 														<div>
 															<DropdownViewComponent
-																itemList={(type === 1)? recruitmentMenuItem : recruitmentDisqualifiedMenuItem}
+																className={'recruitmentTableDrop'}
+																itemList={
+																	type === 1
+																		? recruitmentMenuItem
+																		: recruitmentDisqualifiedMenuItem
+																}
 																title={<MdMoreHoriz size='15' />}
 																alignItems='end'
 																toolTipId='other-actions'

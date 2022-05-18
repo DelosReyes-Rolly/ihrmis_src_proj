@@ -11,6 +11,7 @@ use App\Models\TblemailType;
 use Carbon\Carbon;
 use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
@@ -35,6 +36,15 @@ class MailController extends Controller
             $mailQry->eml_link = $request->eml_link;
         }
         $mailQry->save();
+    }
+
+    public function deleteEmailTemplate($id)
+    {
+        TblemailTemplate::where('eml_id', $id)->delete();
+        return response()->json([
+            "status" => "200",
+            "message" => "Successfully deleted an Email Template"
+        ]);
     }
 
     public function removeMailType()
