@@ -14,6 +14,23 @@ class GetPositionWithCscResource extends JsonResource
      */
     public function toArray($request)
     {
+        $IligibilityHolder = [
+            "No Eligibility", 
+            "Professional", 
+            "Sub-professional", 
+            "Board / Bar",
+            "Barangay Health Worker",
+            "Barangay Official",
+            "Barangay Nutrition Scholar",
+            "Electronic Data Processing Specialist (EDPS)",
+            "Honor Graduate",
+            "Foreign School Honor Graduate",
+            "Scientific and Technological Specialist",
+            "Veteran Preference Rating",
+            "Sanggunian Member",
+            "Skill Eligibility",
+        ];
+
         $arrContainer = [];
         $EducType = ['Bachelor\'s', 'Master\'s', 'PhD'];
         foreach ($this->tblpositionCscStandards as $value) {
@@ -35,12 +52,15 @@ class GetPositionWithCscResource extends JsonResource
                 $arrContainer["tr"] = $value["std_quantity"] . " hours of " . $value["std_keyword"];
             } else if ($value["std_type"] == "CS") {
                 $reArange = explode("|", $value["std_keyword"]);
-                $arrContainer["cs"] = implode(" / ", $reArange);
+                $eligibililityValue = [];
+                foreach ($reArange as $value) {
+                    array_push($eligibililityValue, $IligibilityHolder[$value]);
+                }
+                $arrContainer["cs"] = implode(" / ", $eligibililityValue);
             }
         }
 
         return [
-            
             "pos_title" => $this->pos_title,
             "pos_short_name" => $this->pos_short_name,
             "pos_salary_grade" => $this->pos_salary_grade,
