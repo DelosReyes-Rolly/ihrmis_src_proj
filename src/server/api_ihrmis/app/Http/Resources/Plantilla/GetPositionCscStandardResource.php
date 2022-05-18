@@ -21,15 +21,32 @@ class GetPositionCscStandardResource extends JsonResource
         $training = [];
         $experience = [];
 
+        $IligibilityHolder = [
+            "No Eligibility", 
+            "Professional", 
+            "Sub-professional", 
+            "Board / Bar",
+            "Barangay Health Worker",
+            "Barangay Official",
+            "Barangay Nutrition Scholar",
+            "Electronic Data Processing Specialist (EDPS)",
+            "Honor Graduate",
+            "Foreign School Honor Graduate",
+            "Scientific and Technological Specialist",
+            "Veteran Preference Rating",
+            "Sanggunian Member",
+            "Skill Eligibility",
+        ];
+
         foreach ($arrData as $value) {
             if ($value['std_type'] == "CS"){
                 $cscArr = [];
-                if($value->std_keyword ){
+                if($value->std_keyword){
 
                 }
                 $varExp = explode("|", $value->std_keyword);
                 foreach ($varExp as $cscData) {
-                    array_push($cscArr, ["value" => $cscData, "label" => $cscData]);
+                    array_push($cscArr, ["value" => $cscData, "label" => $IligibilityHolder[$cscData]]);
                 }
                 $csc = [
                     "std_quantity" => $value->std_quantity,

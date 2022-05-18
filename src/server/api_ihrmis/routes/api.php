@@ -140,13 +140,12 @@ Route::get('get-plantilla-id/{id}', [TblplantillaItemsController::class, "getPla
 Route::get('plantilla-itm-detail/{id}', [TblplantillaItemsController::class, "showItemDetail"]);
 Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController::class, "getDutiesAndResponsibility"]);
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
-
-Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
-
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
 
+Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
+Route::delete("remove-plantilla/{id}", [TblplantillaItemsController::class, "removePlantilla"]);
 
 //=======================================================================================
 // PLANTILLA DTY RESPONSIBILITY

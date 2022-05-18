@@ -66,7 +66,7 @@ export const EMPLOYEE_DROPDOWN = [
   {
     id: 1,
     label: "PDS",
-    link: "#",
+    link: "/rsp/plantilla/employee/:item",
   },
   {
     id: 2,

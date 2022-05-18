@@ -14,9 +14,9 @@ import { API_HOST } from "../../../../../helpers/global/global_config";
 import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
 import { EMPLOYEE_DROPDOWN } from "../../static/plantilla_vacant_positions_data";
 import { EMPLOYEE_STATUS } from "../../static/filter_items";
+import DropDownComponent from "../../../../common/dropdown_menu_custom_component/dropdown_component";
 
 const EmployeePageComponentView = () => {
-  const navigate = useNavigate();
   return (
     <React.Fragment>
       <div className="plantilla-view">
@@ -40,7 +40,8 @@ const EmployeePageComponentView = () => {
 
 export default EmployeePageComponentView;
 
-export const EmployeeDataTableDisplay = () => {
+const EmployeeDataTableDisplay = () => {
+  const navigate = useNavigate();
   const { refresh } = useSelector((state) => state.popupResponse);
   const [plotData, setPlotData] = useState([]);
   const employeesList = async () => {
@@ -48,6 +49,7 @@ export const EmployeeDataTableDisplay = () => {
       .get(API_HOST + "get-all-employee")
       .then((response) => {
         const data = response.data.data ?? [];
+        console.log(data);
         const arrHolder = [];
         data.forEach((element) => {
           const pos_ofc = element?.emp_ofc_pos
@@ -57,6 +59,7 @@ export const EmployeeDataTableDisplay = () => {
             .split("\n")
             .map((str, key) => <p key={key}>{str}</p>);
           arrHolder.push({
+            emp_id: element?.emp_id,
             emp_name: element?.emp_name,
             emp_no: element?.emp_no,
             emp_itm_no: element?.emp_itm_no,
@@ -79,10 +82,24 @@ export const EmployeeDataTableDisplay = () => {
     employeesList();
   }, [refresh]);
 
+  /// DROP LIST VALUE
+  const [value, setValue] = useState(null);
+  const [employeeID, setEmployeeID] = useState(null);
+  useEffect(() => {
+    if (value !== null && employeeID !== null) {
+      navigate(dropdownLogic(value, employeeID));
+      setEmployeeID(null);
+    }
+  }, [value]);
+
   const data = useMemo(() => plotData, [plotData]);
 
   const columns = useMemo(
     () => [
+      {
+        Header: "Name",
+        accessor: "emp_id", // accessor is the "key" in the data
+      },
       {
         Header: "Name",
         accessor: "emp_name", // accessor is the "key" in the data
@@ -102,8 +119,8 @@ export const EmployeeDataTableDisplay = () => {
       {
         Header: "Status",
         accessor: "emp_status",
-        Cell: ({ cell }) => (
-          <React.Fragment>
+        Cell: ({ cell }) => {
+          return (
             <div
               style={{
                 display: "flex",
@@ -113,19 +130,19 @@ export const EmployeeDataTableDisplay = () => {
               }}
             >
               <div>{cell.row.values.emp_status}</div>
-              <div>
-                <DropdownViewComponent
-                  itemList={EMPLOYEE_DROPDOWN}
+              <div onClick={setEmployeeID(cell.row.values.emp_id)}>
+                <DropDownComponent
                   title={<MdMoreHoriz size="20" />}
-                  alignItems="end"
-                  toolTipId="other-actions"
-                  textHelper="Click to view other actions"
+                  itemList={EMPLOYEE_DROPDOWN}
                   className="dropdown-three-dots"
+                  textHelper="Click to view other actions"
+                  toolTipId="other-actions"
+                  setValue={setValue}
                 />
               </div>
             </div>
-          </React.Fragment>
-        ),
+          );
+        },
       },
       {
         Header: "Service Status",
@@ -161,7 +178,6 @@ export const EmployeeDataTableDisplay = () => {
 
   return (
     <React.Fragment>
-      <br />
       <AddEmployee
         search={globalFilter}
         setSearch={setGlobalFilter}
@@ -275,4 +291,18 @@ const AddEmployee = ({ search, setSearch, statusFilter }) => {
       </div>
     </React.Fragment>
   );
+};
+
+const dropdownLogic = (item, id) => {
+  if (item === 1) {
+    return "/rsp/plantilla/employee/" + id;
+  }
+
+  if (item === 2) {
+    return "adsg";
+  }
+
+  if (item === 3) {
+    return "adsf";
+  }
 };

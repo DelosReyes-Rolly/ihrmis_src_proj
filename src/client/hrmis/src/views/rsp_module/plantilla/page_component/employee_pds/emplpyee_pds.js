@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import { employeeItemsBreadCramp } from "../../static/breadcramp_data";
+import PersonalTab from "./personal_tab";
 
 const EmployeePds = () => {
   return (
@@ -67,7 +68,6 @@ const EmployeePds = () => {
         <div style={{ margin: "20px 0px" }}>
           <TablistDisplay />
         </div>
-        <div>Component</div>
       </div>
     </React.Fragment>
   );
@@ -76,40 +76,60 @@ const EmployeePds = () => {
 export default EmployeePds;
 
 const TablistDisplay = () => {
-  return (
-    <ul
-      style={{
-        cursor: "pointer",
-        listStyle: "none",
-        display: "flex",
-        flexDirection: "row",
-        gap: 5,
-      }}
-    >
-      {TAB_LIST.map((element, key) => {
-        if (key === 0) {
-          return (
-            <li
-              className="list-tab-style"
-              style={{
-                borderRadius: "10px 0px 0px 10px",
-                padding: "13px 0px",
-                flexGrow: 1,
-                textAlign: "center",
-              }}
-              key={element.value}
-            >
-              {element.label}
-            </li>
-          );
-        }
+  const [tabState, setStabState] = useState(1);
 
-        if (key === TAB_LIST.length - 1) {
+  return (
+    <React.Fragment>
+      <ul
+        style={{
+          cursor: "pointer",
+          listStyle: "none",
+          display: "flex",
+          flexDirection: "row",
+          gap: 5,
+        }}
+      >
+        {TAB_LIST.map((element, key) => {
+          if (key === 0) {
+            return (
+              <li
+                className="list-tab-style"
+                style={{
+                  borderRadius: "10px 0px 0px 10px",
+                  padding: "13px 0px",
+                  flexGrow: 1,
+                  textAlign: "center",
+                }}
+                key={element.value}
+                onClick={() => {
+                  setStabState(key + 1);
+                }}
+              >
+                {element.label}
+              </li>
+            );
+          }
+
+          if (key === TAB_LIST.length - 1) {
+            return (
+              <li
+                className="list-tab-style"
+                style={{
+                  borderRadius: "0px 10px 10px 0px",
+                  padding: "13px 0px",
+                  flexGrow: 1,
+                  textAlign: "center",
+                }}
+                key={element.value}
+              >
+                {element.label}
+              </li>
+            );
+          }
           return (
             <li
               className="list-tab-style"
               style={{
-                borderRadius: "0px 10px 10px 0px",
                 padding: "13px 0px",
                 flexGrow: 1,
                 textAlign: "center",
@@ -119,22 +139,10 @@ const TablistDisplay = () => {
               {element.label}
             </li>
           );
-        }
-        return (
-          <li
-            className="list-tab-style"
-            style={{
-              padding: "13px 0px",
-              flexGrow: 1,
-              textAlign: "center",
-            }}
-            key={element.value}
-          >
-            {element.label}
-          </li>
-        );
-      })}
-    </ul>
+        })}
+      </ul>
+      {tabState === 1 && <PersonalTab />}
+    </React.Fragment>
   );
 };
 
