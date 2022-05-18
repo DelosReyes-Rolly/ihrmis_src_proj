@@ -95,4 +95,19 @@ class TblplantillaItemsController extends Controller
         ]);
     }
 
+
+    public function removePlantilla($id){
+        try {
+            $itemQry = TblplantillaItems::where("itm_id", $id)->delete();
+            return response()->json([
+                "message" => "Successfully deleted Plantilla"
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Unable To Delete Plantilla"
+            ], 422);
+        }    
+    }
+
 }

@@ -42,7 +42,6 @@ const JvsFormOne = () => {
     experience,
     competencies,
     minimum_req,
-    employeeOption,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
   const { item } = useParams();
@@ -64,10 +63,12 @@ const JvsFormOne = () => {
     await axios
       .get(API_HOST + "jvscrw/" + item)
       .then((res) => {
-        dispatch(setPlantilla(res.data.data?.itm_no));
+        dispatch(setPlantilla(res.data.data));
         dispatch(setPosition(res.data.data?.position));
         dispatch(setOffice(res.data.data?.office));
+
         const cscQualification = res.data?.data.position.csc_standards;
+
         cscQualification.forEach((element) => {
           if (element.std_type === "CS") {
             dispatch(setEligibility(element));
@@ -185,7 +186,7 @@ const JvsFormOne = () => {
         setJvscrwID(dataVersion[0].jvs_id);
         setVersions(verJvs);
       })
-      .catch((err) => {});
+      .catch((err) => console.log(err));
   };
 
   const jvsVersionOnChange = (e) => {
@@ -297,7 +298,7 @@ const JvsFormOne = () => {
                 {position?.title}
               </td>
               <td className="row-percent-50" colSpan="2">
-                {plantilla_item}
+                {plantilla_item?.itm_no}
               </td>
             </tr>
             {/* SECOND HEADER  */}
@@ -313,7 +314,9 @@ const JvsFormOne = () => {
               <td className="row-percent-50" colSpan="2">
                 {office?.ofc_name}
               </td>
-              <td className="row-percent-50" colSpan="2"></td>
+              <td className="row-percent-50" colSpan="2">
+                {plantilla_item?.agency}
+              </td>
             </tr>
             {/* THIRD HEADER  */}
             <tr className="secondary-headers">
@@ -325,7 +328,9 @@ const JvsFormOne = () => {
               </th>
             </tr>
             <tr>
-              <td className="row-percent-50" colSpan="2"></td>
+              <td className="row-percent-50" colSpan="2">
+                {plantilla_item?.report_to}
+              </td>
               <td className="row-percent-50" colSpan="2">
                 {position?.salary_grade}
               </td>

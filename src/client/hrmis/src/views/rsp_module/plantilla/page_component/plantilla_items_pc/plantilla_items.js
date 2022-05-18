@@ -92,6 +92,9 @@ export default PlantillaItemPageComponentView;
 export const PlantillaDataTableDisplay = ({ type }) => {
   const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
+
+  const navigate = useNavigate();
+
   const plantillaItemApi = async () => {
     await axios
       .get(API_HOST + "plantilla-items/" + type)
@@ -191,15 +194,6 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         statusFilter={setFilter}
       />
 
-      <AddPlantillaItemModal
-        isDisplay={toogle}
-        onClose={() => {
-          setToogle(false);
-          setPlantillaData(null);
-        }}
-        plantillaData={plantillaData}
-      />
-
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
           <thead>
@@ -234,9 +228,11 @@ export const PlantillaDataTableDisplay = ({ type }) => {
               return (
                 <tr
                   onClick={() => {
-                    console.log(row.values.itm_plantilla);
-                    setToogle(true);
-                    setPlantillaData(row.values.itm_plantilla);
+                    console.log(row.values.itm_plantilla.itm_id);
+                    navigate(
+                      "/rsp/plantilla/plantilla-items/info/" +
+                        row.values.itm_plantilla.itm_id
+                    );
                   }}
                   className="trHoverBody"
                   {...row.getRowProps()}

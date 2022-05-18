@@ -21,11 +21,12 @@ class GetEmployeeResource extends JsonResource
         $service = ", " . $svcStatusHolder[$this->serviceHistory->svc_status] . "\n" . $this->serviceHistory->svc_remarks;
 
         return [
+            "emp_id" => $this->emp_id,
             "emp_name" => $this->emp_nm_last . ", " . $this->emp_nm_first . " " . $this->emp_nm_mid ?? "" . " " . $this->emp_nm_extn?? "",
-            "emp_no" => $this->emp_no,
-            "emp_itm_no" => $this->plantilla->itm_no,
-            "emp_ofc_pos" => $this->plantilla->tbloffices->ofc_acronym . "\n" . $this->emp_title,
-            "emp_status" => $statusHolder[$this->plantilla->itm_status]. $service,
+            "emp_no" => $this->emp_no ?? null,
+            "emp_itm_no" => $this->plantilla->itm_no ?? null,
+            "emp_ofc_pos" => $this->plantilla->tbloffices->ofc_acronym  ?? null . "\n" . $this->emp_title,
+            "emp_status" => $statusHolder[$this->plantilla->itm_status ?? 0]. $service,
             "svc_status" => $this->serviceHistory->svc_status
         ];
     }

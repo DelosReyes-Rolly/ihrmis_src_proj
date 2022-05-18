@@ -17,6 +17,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
+import { Navigate, useNavigate } from "react-router-dom";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 
 const AddPlantillaItemModal = ({
   type,
@@ -25,9 +27,10 @@ const AddPlantillaItemModal = ({
   plantillaData,
   plantillaID = null,
 }) => {
-  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-  let token = document.head.querySelector('meta[name="csrf-token"]');
-  let dispatch = useDispatch();
+  const { renderBusy } = usePopUpHelper();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const closeName = plantillaID === null ? "Close" : "Delete";
   const endpointId = plantillaID === null ? "/0" : "/" + plantillaID;
   // ==========================================
   // FORMIK FORM
@@ -96,11 +99,17 @@ const AddPlantillaItemModal = ({
       await axios
         .post(API_HOST + "plantilla-items" + endpointId, value)
         .then(() => {
-          renderSucceed({});
+          popupAlert({
+            message: "Saved Plantilla Successfully",
+            type: ALERT_ENUM.success,
+          });
           resetForm();
         })
         .catch((err) => {
-          renderFailed({});
+          popupAlert({
+            message: err.response.message ?? "Plantilla Creation/Update Failed",
+            type: ALERT_ENUM.fail,
+          });
         });
       renderBusy(false);
       dispatch(setRefresh());
@@ -109,22 +118,18 @@ const AddPlantillaItemModal = ({
   });
 
   const [officePositionState, setOfficePositionState] = useState();
-
   const getPositionAndOffice = () => {
     axios
       .get(API_HOST + "office-position")
       .then((response) => {
         setOfficePositionState(response.data.data);
       })
-      .catch((error) => {});
-
-    // if (plantillaForm.values.itm_ofc_id !== "") {
-    //   getPlantillasByOffice(plantillaForm.values.itm_ofc_id);
-    // }
+      .catch((error) => {
+        console.log(error);
+      });
   };
-  //
-  const [plantillaByOfc, setPlantillaByOfc] = useState([]);
 
+  const [plantillaByOfc, setPlantillaByOfc] = useState([]);
   const getPlantillasByOffice = async (officeId) => {
     await axios
       .get(API_HOST + "get-plantilla-by-office/" + officeId ?? 0)
@@ -137,6 +142,29 @@ const AddPlantillaItemModal = ({
         setPlantillaByOfc(arrHolder);
       })
       .catch((error) => {});
+  };
+
+  const onRemovePressed = async () => {
+    if (plantillaID === null) return onClose();
+    renderBusy(true);
+    await axios
+      .delete(API_HOST + "remove-plantilla/" + plantillaID)
+      .then(() => {
+        renderBusy(false);
+        popupAlert({
+          message: "Deleted Plantilla Successfully",
+          type: ALERT_ENUM.success,
+        });
+        navigate("/rsp/plantilla/plantilla-items");
+      })
+      .catch((err) => {
+        renderBusy(false);
+        popupAlert({
+          message: err.response.message ?? "Failed to Delete Plantilla",
+          type: ALERT_ENUM.fail,
+        });
+      });
+    onClose();
   };
 
   useEffect(() => {
@@ -154,11 +182,12 @@ const AddPlantillaItemModal = ({
       <ModalComponent
         title="Plantilla Items"
         onSubmitName="Save"
-        onCloseName="Delete"
+        onCloseName={closeName}
         isDisplay={isDisplay}
         onSubmit={plantillaForm.handleSubmit}
         onSubmitType="submit"
         onClose={onClose}
+        onPressed={() => onRemovePressed()}
       >
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-1">
