@@ -42,11 +42,12 @@ class QualifiedApplicantsResource extends JsonResource
 
         $education = [
             0 => "N/A",
-            1 => "Bachelor's",
-            2 => "Master's",
-            3 => "PhD",
+            1 => "Elementary",
+            2 => "Secondary",
+            3 => "Vocational/Trade",
+            4 => "Bachelor's",
+            5 => "Doctorate",
         ];
-
 
         $age = Carbon::parse($this->TblapplicantsProfile->app_birth_date)->age;
         $civil_status = $civil_statuses[$this->TblapplicantsProfile->app_civil_status];
@@ -114,7 +115,6 @@ class QualifiedApplicantsResource extends JsonResource
         $name = $this->TblapplicantsProfile->app_nm_last. ", ". $this->TblapplicantsProfile->app_nm_first;
         $email = $this->TblapplicantsProfile->app_email_addr;
         $position_message = $this->TblPositions->pos_title. ";\n". $this->TblOffices->ofc_acronym;
-
         $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
             $highest['experience_years'] . " years experience in " . $highest['experience'] . ";\n". $highest['training_hours'] . " hours training in " .
             $highest['training'] . "; " . $highest['eligibility'] . "";
@@ -126,6 +126,8 @@ class QualifiedApplicantsResource extends JsonResource
             'profile_message' => $profile_message,
             'qualification_message' => $qualification_message,
             'position_message' => $position_message,
+            'position' => $this->TblPositions->pos_title,
+            'plantilla' => $this->TblplantillaItems->itm_id,
         ];
     }
 }

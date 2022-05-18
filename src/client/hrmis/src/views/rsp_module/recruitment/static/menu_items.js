@@ -23,6 +23,58 @@ export const recruitmentSelectItem = [
 	},
 ];
 
+export const monthSelectItem = [
+	{
+		id: '1',
+		title: 'January',
+	},
+	{
+		id: '2',
+		title: 'February',
+	},
+	{
+		id: '3',
+		title: 'March',
+	},
+	{
+		id: '4',
+		title: 'April',
+	},
+	{
+		id: '5',
+		title: 'May',
+	},
+	{
+		id: '6',
+		title: 'June',
+	},
+	{
+		id: '7',
+		title: 'July',
+	},
+	{
+		id: '8',
+		title: 'August',
+	},
+	{
+		id: '9',
+		title: 'September',
+	},
+	{
+		id: '10',
+		title: 'October',
+	},
+	{
+		id: '11',
+		title: 'November',
+	},
+	{
+		id: '12',
+		title: 'December',
+	},
+	
+];
+
 export const recruitmentMenuItem = [
 	{
 		id: 1,
@@ -66,6 +118,39 @@ export const recruitmentDisqualifiedMenuItem = [
 		id: 4,
 		label: 'Delete',
 		link: '#',
+	},
+];
+
+export const recruitmentReportList = [
+	{
+		id: 'POA',
+		label:'Profile of Applicants',
+		link: '#'
+	},
+	{
+		id: 'CM',
+		label:'Comparative Matrix',
+		link: '#'
+	},
+	{
+		id: 'RAI',
+		label:'Reports on Appointments Issued',
+		link: '#'
+	},
+	{
+		id: 'CAD',
+		label:'Certification of Assumption to Duty',
+		link: '#'
+	},
+	{
+		id: 'OOO',
+		label:'Oath of Office',
+		link: '#'
+	},
+	{
+		id: 'AFA',
+		label:'Appointment Form - Accredited',
+		link: '#'
 	},
 ];
 
