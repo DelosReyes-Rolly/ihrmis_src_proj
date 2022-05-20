@@ -26,7 +26,7 @@ import {
 } from "../../../../../../../features/reducers/jvscrw_slice";
 import { setBusy } from "../../../../../../../features/reducers/popup_response";
 import DutiesResponsibilityTable from "../duties_responsibility_table";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ButtonComponent from "../../../../../../common/button_component/button_component.js";
 import {
   ALERT_ENUM,
@@ -248,18 +248,19 @@ const JvsFormOne = () => {
     fetchJvsAllVersion();
     fetchCscQualificationOnLoad();
     fetchEmployeeOption();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   useEffect(() => {
-    console.log("Hello");
-
     versionSelectedFetch(jvscrwID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jvscrwID]);
 
   useEffect(() => {
     if (version) {
       dispatch(setVersionSelected(version[0]?.value));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
 
   return (

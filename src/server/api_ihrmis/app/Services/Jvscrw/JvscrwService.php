@@ -77,14 +77,9 @@ class JvscrwService {
         $aprrovedArr = empty($applicantQry->jvs_approved) ? null : explode("|", $applicantQry->jvs_approved);
         $imageLocApp = $aprrovedArr[2] ?? "";
       }
-
-      if(empty($aprrovedArr[0])){
-        $app_data = $request->app_name . "|" . Carbon::now() . "|" . $imageLocApp;
-        $applicantQry->jvs_approved = $app_data;
-      }
       
       if($aprrovedArr[0] != $request->app_name){
-        $app_data = $request->app_name . "|" . $aprrovedArr[1] . "|" . $imageLocApp;
+        $app_data = $request->app_name . "|" . Carbon::now() . "|" . $imageLocApp;
         $applicantQry->jvs_approved = $app_data;
       }
 
