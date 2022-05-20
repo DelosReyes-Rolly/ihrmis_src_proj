@@ -60,13 +60,8 @@ class JvscrwService {
       $imageLocPre = $preparedArr[2] ?? "";
     }
 
-    if(empty($preparedZero)){
-      $pre_data = $request->pre_name . "|" . Carbon::now() . "|" . $imageLocPre;
-      $applicantQry->jvs_prepared = $pre_data;
-    }
-
     if($preparedZero != $request->pre_name){
-      $pre_data = $request->pre_name . "|" . $preparedArr[1] . "|" . $imageLocPre;
+      $pre_data = $request->pre_name . "|" . Carbon::now() ?? "". "|" . $imageLocPre;
       $applicantQry->jvs_prepared = $pre_data;
     }
     
@@ -106,16 +101,30 @@ class JvscrwService {
   }
 
   public function createNewJvsVersion ($item) {
-    $latestVersion = Tbljvs::where('jvs_itm_id', $item)->orderBy('jvs_version', 'DESC')->get();
-    $newVersionQry = new Tbljvs();
-    $newVersionQry->jvs_itm_id = $item;
-    $newVersionQry->jvs_version = $latestVersion[0]->jvs_version + 1;
-    $newVersionQry->jvs_min_com_desc = "";
-    $newVersionQry->jvs_prepared = "";
-    $newVersionQry->jvs_approved = "";
-    $newVersionQry->jvs_signed_file = "";
-    $newVersionQry->save(); 
-    return 'Created new version';
+    try {
+      $latestVersion = Tbljvs::where('jvs_itm_id', $item)->orderBy('jvs_version', 'DESC')->get();
+      $newVersionQry = new Tbljvs();
+      $newVersionQry->jvs_itm_id = $item;
+      if(count($latestVersion) == 0){
+        $newVersionQry->jvs_version = 1;
+      }
+
+      if(count($latestVersion) > 0){
+        $newVersionQry->jvs_version = $latestVersion[0]->jvs_version + 1;
+      }
+
+      $newVersionQry->jvs_min_com_desc = "";
+      $newVersionQry->jvs_prepared = "";
+      $newVersionQry->jvs_approved = "";
+      $newVersionQry->jvs_signed_file = "";
+      $newVersionQry->save(); 
+  
+      return response()->json(["message" => "Created new version.", "jvs_version" => $newVersionQry->jvs_version], 200);
+    } catch (\Throwable $th) {
+      return response()->json(["message" => "Failed! Try Again Later."], 400);
+    }
+
+    
   }
 
   public function uploadImage($request, $id, $signType){
