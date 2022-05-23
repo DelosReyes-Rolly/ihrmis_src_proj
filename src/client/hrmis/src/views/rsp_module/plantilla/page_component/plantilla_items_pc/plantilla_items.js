@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import ButtonComponent from "../../../../common/button_component/button_component.js";
 import { useNavigate } from "react-router-dom";
 import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
+import PositionModal from "../plantilla_info_modals/position_modal";
 
 const PlantillaItemPageComponentView = () => {
   const [toggleState, setToggleState] = useState(1);
@@ -91,6 +92,9 @@ export default PlantillaItemPageComponentView;
 export const PlantillaDataTableDisplay = ({ type }) => {
   const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
+
+  const navigate = useNavigate();
+
   const plantillaItemApi = async () => {
     await axios
       .get(API_HOST + "plantilla-items/" + type)
@@ -106,6 +110,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
             ofc_acronym: element?.office?.ofc_acronym,
             itm_status: statusDisplay[element.itm_status],
             pos_category: element.position.pos_category,
+            itm_plantilla: element,
           });
         });
 
@@ -144,11 +149,15 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         Header: "Category",
         accessor: "pos_category",
       },
+      {
+        Header: "Plantilla",
+        accessor: "itm_plantilla",
+      },
     ],
     []
   );
 
-  const initialState = { hiddenColumns: "pos_category" };
+  const initialState = { hiddenColumns: ["pos_category", "itm_plantilla"] };
 
   const {
     getTableProps,
@@ -171,6 +180,9 @@ export const PlantillaDataTableDisplay = ({ type }) => {
   );
 
   const { globalFilter } = state;
+
+  const [plantillaData, setPlantillaData] = useState();
+  const [toogle, setToogle] = useState(false);
 
   return (
     <React.Fragment>
@@ -214,7 +226,17 @@ export const PlantillaDataTableDisplay = ({ type }) => {
             {rows.map((row) => {
               prepareRow(row);
               return (
-                <tr className="trHoverBody" {...row.getRowProps()}>
+                <tr
+                  onClick={() => {
+                    console.log(row.values.itm_plantilla.itm_id);
+                    navigate(
+                      "/rsp/plantilla/plantilla-items/info/" +
+                        row.values.itm_plantilla.itm_id
+                    );
+                  }}
+                  className="trHoverBody"
+                  {...row.getRowProps()}
+                >
                   {row.cells.map((cell) => {
                     return (
                       <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
@@ -241,21 +263,47 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 
 const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
   let [toggleAddPlantillaItem, setTogglePlantillaItem] = useToggleHelper(false);
+
+  const [plantillaHolder, SetPlantillaHolder] = useState({
+    id: null,
+    data: null,
+  });
+
+  const [showPosModal, setShowPosModal] = useState(false);
+
   return (
     <React.Fragment>
+      <AddPlantillaItemModal
+        isDisplay={toggleAddPlantillaItem}
+        onClose={() => setTogglePlantillaItem()}
+        type={type}
+      />
+      <PositionModal
+        onClose={() => setShowPosModal(false)}
+        isDisplay={showPosModal}
+      />
+
       <div className="selector-buttons">
         <div className="selector-container">
           <span className="selector-span-1">
-            <button onClick={() => setTogglePlantillaItem()}>
-              <MdAdd size="14" />
+            <button
+              className="btn-primary"
+              onClick={() => setTogglePlantillaItem()}
+            >
+              <MdAdd style={{ padding: 0, margin: 0 }} size="14" />
               <span>Plantilla Item</span>
             </button>
           </span>
-          <AddPlantillaItemModal
-            isDisplay={toggleAddPlantillaItem}
-            onClose={() => setTogglePlantillaItem()}
-            type={type}
-          />
+
+          <span className="margin-left-1 selector-span-1">
+            <button
+              className="btn-primary"
+              onClick={() => setShowPosModal(true)}
+            >
+              <MdAdd style={{ padding: 0, margin: 0 }} size="14" />
+              <span>Position</span>
+            </button>
+          </span>
 
           <span className="margin-left-1 selector-span-1">
             <select

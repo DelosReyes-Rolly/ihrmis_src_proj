@@ -1,11 +1,18 @@
 /* START NAVBAR STYLE */
 .navbar-div {
   position: -webkit-sticky; /* Safari */
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: $sidebarIndex;
+  z-index: $navbarIndex;
   background-color: $navbar-color;
   padding: 0px 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navabar-borderline {
+  position: sticky;
+  height: 42px;
 }
 //#4880B3
 .navbar-div nav {
@@ -79,14 +86,6 @@
 }
 
 .add-style-badge {
-  /* display: inline-block;
-  justify-content: center;
-  align-items: center; */
-  /* font-size: 10px;
-  font-weight: 900;
-  padding: 2px 6px;
-  border-radius: 30%;
-  background-color: crimson; */
   position: absolute;
   top: -2px;
   left: -5px;
@@ -139,7 +138,7 @@
   position: absolute !important;
 }
 
-.user-drop-option li a {
+.user-drop-option li span {
   /* margin: 10px 15px; */
   color: rgba(0, 0, 0, 0.7) !important;
   width: 100%;
@@ -149,7 +148,7 @@
   text-decoration: none;
 }
 
-.user-drop-option li a:hover {
+.user-drop-option li span:hover {
   transition-duration: 0.3s;
   background-color: rgba(0, 110, 255, 0.1);
 }

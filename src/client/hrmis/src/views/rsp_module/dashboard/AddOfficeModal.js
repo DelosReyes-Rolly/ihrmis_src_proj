@@ -76,9 +76,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
 			await axios
-				.post(API_HOST + "offices", value, {
-					// headers: { "X-CSRF-TOKEN": token.content },
-				})
+				.post(API_HOST + "offices", value)
 				.then(() => {
 					renderSucceed({});
 					dispatch(setRefresh());

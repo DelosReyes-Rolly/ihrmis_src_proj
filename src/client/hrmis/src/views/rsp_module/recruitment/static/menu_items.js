@@ -1,4 +1,4 @@
-import { testOutsideLink } from "../../../../router/outside_routes";
+import { testOutsideLink } from '../../../../router/outside_routes';
 
 export const recruitmentSelectItem = [
 	{
@@ -23,6 +23,58 @@ export const recruitmentSelectItem = [
 	},
 ];
 
+export const monthSelectItem = [
+	{
+		id: '1',
+		title: 'January',
+	},
+	{
+		id: '2',
+		title: 'February',
+	},
+	{
+		id: '3',
+		title: 'March',
+	},
+	{
+		id: '4',
+		title: 'April',
+	},
+	{
+		id: '5',
+		title: 'May',
+	},
+	{
+		id: '6',
+		title: 'June',
+	},
+	{
+		id: '7',
+		title: 'July',
+	},
+	{
+		id: '8',
+		title: 'August',
+	},
+	{
+		id: '9',
+		title: 'September',
+	},
+	{
+		id: '10',
+		title: 'October',
+	},
+	{
+		id: '11',
+		title: 'November',
+	},
+	{
+		id: '12',
+		title: 'December',
+	},
+	
+];
+
 export const recruitmentMenuItem = [
 	{
 		id: 1,
@@ -36,7 +88,7 @@ export const recruitmentMenuItem = [
 	},
 	{
 		id: 3,
-		label: 'Failed',
+		label: 'Disqualify',
 		link: '#',
 	},
 	{
@@ -45,55 +97,107 @@ export const recruitmentMenuItem = [
 		link: '#',
 	},
 ];
-export const recruitmentEmailTemplateList = [
+
+export const recruitmentDisqualifiedMenuItem = [
 	{
 		id: 1,
-		label: 'Schedule of Pre-employment Examination',
-		link: testOutsideLink,
+		label: 'Ratings',
+		link: '#',
 	},
 	{
 		id: 2,
+		label: 'Documents',
+		link: '#',
+	},
+	{
+		id: 3,
+		label: 'Qualify',
+		link: '#',
+	},
+	{
+		id: 4,
+		label: 'Delete',
+		link: '#',
+	},
+];
+
+export const recruitmentReportList = [
+	{
+		id: 'POA',
+		label:'Profile of Applicants',
+		link: '#'
+	},
+	{
+		id: 'CM',
+		label:'Comparative Matrix',
+		link: '#'
+	},
+	{
+		id: 'RAI',
+		label:'Reports on Appointments Issued',
+		link: '#'
+	},
+	{
+		id: 'CAD',
+		label:'Certification of Assumption to Duty',
+		link: '#'
+	},
+	{
+		id: 'OOO',
+		label:'Oath of Office',
+		link: '#'
+	},
+	{
+		id: 'AFA',
+		label:'Appointment Form - Accredited',
+		link: '#'
+	},
+];
+
+export const recruitmentEmailTemplateList = [
+	{
+		id: 'PEE',
+		label: 'Schedule of Pre-employment Examination',
+		link: null,
+	},
+	{
+		id: 'INT',
 		label: 'Schedule of PSB Interview',
 		link: null,
 	},
 	{
-		id: 3,
+		id: 'PSY',
 		label: 'Schedule of Psychometric Examination',
 		link: null,
 	},
 	{
-		id: 4,
+		id: 'PER',
 		label: 'Pre-employment Examination Results',
 		link: null,
 	},
 	{
-		id: 5,
+		id: 'DOC',
 		label: 'Completion of Documentary Requirements',
 		link: null,
 	},
 	{
-		id: 6,
+		id: 'ASS',
 		label: 'Notification for End-User Assessment',
 		link: null,
 	},
 	{
-		id: 7,
+		id: 'BCK',
 		label: 'Background Check',
 		link: null,
 	},
 	{
-		id: 8,
+		id: 'DSQ',
 		label: 'Notification of Disqualification',
 		link: null,
 	},
 	{
-		id: 9,
+		id: 'PSB',
 		label: 'Notification to HRMPSB',
-		link: null,
-	},
-	{
-		id: 10,
-		label: 'Created Templates',
 		link: null,
 	},
 ];

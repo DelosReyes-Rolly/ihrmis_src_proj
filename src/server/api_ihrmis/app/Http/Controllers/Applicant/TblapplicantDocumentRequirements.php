@@ -7,10 +7,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantAttachmentsModel;
 use App\Models\Applicants\TblapplicantDocumentRequirementsModel;
+use App\Services\Applicant\ApplicantDocumentRequirements;
 use Illuminate\Http\Request;
 
 class TblapplicantDocumentRequirements extends Controller
 {
+    protected $appDocumentService;
+
+    public function __construct(ApplicantDocumentRequirements $appService)
+    {
+        $this->appDocumentService = $appService;
+    }
+
     public function getRequirentsByGroup($grp_id)
     {
         $requirements = TblapplicantDocumentRequirementsModel::where('doc_group', $grp_id)->get();
@@ -27,13 +35,24 @@ class TblapplicantDocumentRequirements extends Controller
 
     public function saveApplicantDocument(Request $request)
     {
-        $arrFiles=[];
-        if (!empty($request->file(['documents']))) {
-            foreach ($request->file(['documents']) as $value) {
-                array_push($arrFiles, $value);
-            }
-        }
-        var_dump($arrFiles);
+        $message = $this->appDocumentService->saveDocuments($request);
+        return $message;
         // $fileNameWithExt = $request->file('documents')->getClientOriginalName();
+    }
+
+    public function deleteApplicantDocument($att_id)
+    {
+        $query = TblapplicantAttachmentsModel::where('att_id', $att_id)->first();
+        if ($query !== null) {
+            $stringName = $query->att_app_file;
+            $storedFile = explode(",", $stringName);
+            foreach ($storedFile as $file) {
+                if (is_file(public_path("storage/applicant/applicant-requirements/" . $file))) {
+                    unlink(public_path("storage/applicant/applicant-requirements/" . $file));
+                }
+            }
+            TblapplicantAttachmentsModel::where('att_id', $att_id)->delete();
+        }
+        return ($query->att_app_file);
     }
 }

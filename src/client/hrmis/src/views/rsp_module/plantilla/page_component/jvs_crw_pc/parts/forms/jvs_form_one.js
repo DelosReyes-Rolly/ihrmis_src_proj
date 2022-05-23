@@ -1,6 +1,5 @@
 import TextAreaComponent from "../../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import dostLogo from "../../../../../../../assets/images/logo.png";
-import { jvsCrwTableData } from "../../../../fake_data/table_data";
 import WeightingTable from "../weight_table";
 import React, { useEffect, useState } from "react";
 import CheckJobCompetency from "../check_job_competency";
@@ -13,11 +12,13 @@ import {
   setDutyResponsibility,
   setEducation,
   setEligibility,
+  setEmployeeOptions,
   setIsEmptyCompetency,
   setMinimumRequirement,
   setOffice,
   setPlantilla,
   setPosition,
+  setRefreh,
   setTotalWeight,
   setTraining,
   setVersionSelected,
@@ -27,12 +28,16 @@ import { setBusy } from "../../../../../../../features/reducers/popup_response";
 import DutiesResponsibilityTable from "../duties_responsibility_table";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "../../../../../../common/button_component/button_component.js";
+import {
+  ALERT_ENUM,
+  popupAlert,
+} from "../../../../../../../helpers/alert_response";
+import { usePopUpHelper } from "../../../../../../../helpers/use_hooks/popup_helper";
+import Swal from "sweetalert2";
 
 // TODO: change jvsId to actual value
 
-const JvsFormOne = ({ itemId }) => {
-  const [dataState, _] = useState(jvsCrwTableData);
-
+const JvsFormOne = () => {
   // REDUX FUNCTIONALITIES
   const {
     plantilla_item,
@@ -44,6 +49,7 @@ const JvsFormOne = ({ itemId }) => {
     experience,
     competencies,
     minimum_req,
+    refresh,
   } = useSelector((state) => state.jvsform);
   const dispatch = useDispatch();
   const { item } = useParams();
@@ -58,26 +64,34 @@ const JvsFormOne = ({ itemId }) => {
     fetchJvsDutiesResponsibityOnLoad(jvs_id);
     fetchCompetenciesOnLoad(jvs_id);
   };
+
   // FETCH COMPETENCY TYPES
   const fetchCscQualificationOnLoad = async () => {
     dispatch(setBusy(true));
-    await axios.get(API_HOST + "jvscrw/" + item).then((res) => {
-      dispatch(setPlantilla(res.data.data.itm_no));
-      dispatch(setPosition(res.data.data.position));
-      dispatch(setOffice(res.data.data.office));
-      const cscQualification = res.data.data.position.csc_standards;
-      cscQualification.forEach((element) => {
-        if (element.std_type === "CS") {
-          dispatch(setEligibility(element));
-        } else if (element.std_type === "ED") {
-          dispatch(setEducation(element));
-        } else if (element.std_type === "EX") {
-          dispatch(setWorkExp(element));
-        } else if (element.std_type === "TR") {
-          dispatch(setTraining(element));
-        }
+    await axios
+      .get(API_HOST + "jvscrw/" + item)
+      .then((res) => {
+        dispatch(setPlantilla(res.data.data));
+        dispatch(setPosition(res.data.data?.position));
+        dispatch(setOffice(res.data.data?.office));
+
+        const cscQualification = res.data?.data.position.csc_standards;
+
+        cscQualification.forEach((element) => {
+          if (element.std_type === "CS") {
+            dispatch(setEligibility(element));
+          } else if (element.std_type === "ED") {
+            dispatch(setEducation(element));
+          } else if (element.std_type === "EX") {
+            dispatch(setWorkExp(element));
+          } else if (element.std_type === "TR") {
+            dispatch(setTraining(element));
+          }
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
       });
-    });
     dispatch(setBusy(false));
   };
 
@@ -180,34 +194,73 @@ const JvsFormOne = ({ itemId }) => {
         setJvscrwID(dataVersion[0].jvs_id);
         setVersions(verJvs);
       })
-      .catch((err) => {});
+      .catch((err) => console.log(err));
   };
 
-  const jvsVersionOnChange = (e) => {
+  const jvsVersionOnChange = (value) => {
     itemJvsVersions?.forEach((element) => {
-      if (e.target.value == element.jvs_version) {
+      if (value == element.jvs_version) {
         setJvscrwID(element.jvs_id);
         dispatch(setVersionSelected(element.jvs_version));
       }
     });
   };
 
+  const fetchEmployeeOption = async () => {
+    await axios
+      .get(API_HOST + "get-option-employee/" + item)
+      .then((res) => {
+        dispatch(setEmployeeOptions(res.data.data));
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const { renderBusy } = usePopUpHelper();
+
+  const createNewVersion = async () => {
+    renderBusy(true);
+    await axios
+      .get(API_HOST + "new-jvs-version/" + item)
+      .then((res) => {
+        renderBusy(false);
+        Swal.fire({
+          title: "Succeeded!",
+          text: "New JVS was Created!",
+          icon: "success",
+          confirmButtonColor: "#5cb85c",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            jvsVersionOnChange(res.data.jvs_version);
+            dispatch(setRefreh());
+          }
+        });
+      })
+      .catch((err) => {
+        renderBusy(false);
+        popupAlert({
+          message: err.response.message ?? err.message,
+          type: ALERT_ENUM.fail,
+        });
+      });
+  };
+
   useEffect(() => {
     fetchJvsAllVersion();
     fetchCscQualificationOnLoad();
-  }, []);
+    fetchEmployeeOption();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh]);
 
   useEffect(() => {
-    if (jvscrwID) {
-      versionSelectedFetch(jvscrwID);
-    }
+    versionSelectedFetch(jvscrwID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jvscrwID]);
 
   useEffect(() => {
     if (version) {
-      console.log(version);
       dispatch(setVersionSelected(version[0]?.value));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
 
   return (
@@ -238,7 +291,7 @@ const JvsFormOne = ({ itemId }) => {
           <select
             // value={version_selected}
             className="select-version"
-            onChange={(e) => jvsVersionOnChange(e)}
+            onChange={(e) => jvsVersionOnChange(e.target.value)}
           >
             <option value="DEFAULT" disabled>
               Select version
@@ -253,7 +306,10 @@ const JvsFormOne = ({ itemId }) => {
           </select>
         </span>
         <span className="margin-left-1">
-          <ButtonComponent buttonName="New" />
+          <ButtonComponent
+            buttonName="New"
+            onClick={() => createNewVersion()}
+          />
         </span>
       </div>
       <br />
@@ -283,7 +339,7 @@ const JvsFormOne = ({ itemId }) => {
                 {position?.title}
               </td>
               <td className="row-percent-50" colSpan="2">
-                {plantilla_item}
+                {plantilla_item?.itm_no}
               </td>
             </tr>
             {/* SECOND HEADER  */}
@@ -300,7 +356,7 @@ const JvsFormOne = ({ itemId }) => {
                 {office?.ofc_name}
               </td>
               <td className="row-percent-50" colSpan="2">
-                {dataState.jobDescription.placeOfAssignment}
+                {plantilla_item?.agency}
               </td>
             </tr>
             {/* THIRD HEADER  */}
@@ -314,7 +370,7 @@ const JvsFormOne = ({ itemId }) => {
             </tr>
             <tr>
               <td className="row-percent-50" colSpan="2">
-                {dataState.jobDescription.reportsTo}
+                {plantilla_item?.report_to}
               </td>
               <td className="row-percent-50" colSpan="2">
                 {position?.salary_grade}

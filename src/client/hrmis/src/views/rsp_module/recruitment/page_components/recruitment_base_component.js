@@ -1,74 +1,74 @@
 import BreadcrumbComponent from '../../../common/breadcrumb_component/Breadcrumb';
-import SearchComponent from '../../../common/input_component/search_input/search_input';
 import { recruitmentBreadCramp } from '../static/breadcramp_item';
 import React, { useEffect, useState } from 'react';
 import {
 	recruitmentEmailTemplateList,
-	recruitmentSelectItem,
+	recruitmentReportList,
 } from '../static/menu_items';
-import { recruitmentSelectFilter } from '../static/filter_items';
 
 import RecruitmentTable from './page_tables/recruitment_table';
 import IconComponent from '../../../common/icon_component/icon';
 import {
 	BsFillEnvelopeFill,
 	BsFillStarFill,
-	BsGlobe,
 	BsPrinterFill,
 } from 'react-icons/bs';
 import { IoDocuments } from 'react-icons/io5';
-import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper';
 import RecruitmentEmail from './page_modals/recruitment_email';
 import DropdownViewComponent from '../../../common/dropdown_menu_custom_component/Dropdown_view';
-import { useNavigate } from 'react-router-dom';
-import { AiFillMinusCircle } from 'react-icons/ai';
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
+import RecruitmentStatusModal from './page_modals/recruitment_status_modal';
+import { API_HOST } from '../../../../helpers/global/global_config';
+import axios from 'axios';
+import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
+import RecruitmentDateSelector from './page_modals/recruitment_date_selector';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
-	const [emailModalToggleState, setEmailModalToggle] = useToggleHelper(true);
-	const modalToggle = () => {
-		setEmailModalToggle(!emailModalToggleState);
-	};
-	const [modalStates, setModalStates] = useState({
-		documentModalState: false,
-	});
-
-	const updateModalStates = (key, value) => {
-		setModalStates({
-			...modalStates,
-			[key]: value,
-		});
-	};
-
+	const [emailModalToggleState, setEmailModalToggle] = useState('0');
+	const [value, setValue] = useState('');
+	const [position, setPosition] = useState(0);
+	const [reportValue, setReportValue] = useState(null);
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
-
-	const navigate = useNavigate();
-
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
-	const [selectedEmailTemplate, setEmailTemplate] = useState([]);
-
 	useEffect(() => {
-		modalToggle();
-	}, [selectedEmailTemplate]);
+		if (reportValue === 'POA') {
+			if (position !== 0) {
+				window.open(
+					API_HOST + 'generate-' + reportValue + '/' + position,
+					'_self'
+				);
+			} else {
+				popupAlert({
+					message: 'Please Select a Vacant Position',
+					type: ALERT_ENUM.fail,
+				});
+			}
+		}
 
+		// setReportValue(null);
+	}, [reportValue]);
 	return (
 		<React.Fragment>
-			<div className='plantilla-view'>
+			<div className='documents-view'>
 				<div className='container-plantilla'>
 					<BreadcrumbComponent list={recruitmentBreadCramp} className='' />
 				</div>
 
 				<div className='container-vacant-position'>
 					<div className='three-idiot'>
-						<IconComponent
+						<DropdownViewComponent
+							itemList={recruitmentReportList}
 							id='applicant_print_reports'
-							className='padding-left-1'
-							icon={<BsPrinterFill />}
-							toolTipId='rc-ap-print'
-							textHelper='View/Edit Selected 	 Position'
-							onClick={() => {}}
+							title={<BsPrinterFill size='22' />}
+							className='plantilla-icon margin-left-1 unstyled-button'
+							toolTipId='applicant_print_reports-tooltip'
+							position='top'
+							alignItems='end'
+							textHelper='Click to view printable reports'
+							setValue={setReportValue}
 						/>
 						<DropdownViewComponent
 							itemList={recruitmentEmailTemplateList}
@@ -78,7 +78,7 @@ const RecruitmentBaseComponent = () => {
 							toolTipId='other-actions'
 							position='top'
 							textHelper='Click to view email templates'
-							clickFunction={setEmailTemplate}
+							setValue={setEmailModalToggle}
 						/>
 						<IconComponent
 							id='recruitment_all_docs'
@@ -97,9 +97,15 @@ const RecruitmentBaseComponent = () => {
 						<IconComponent
 							id='recruitment_all_disqualify'
 							className='margin-left-1'
-							icon={<AiFillMinusCircle />}
+							icon={
+								toggleState === 1 ? <AiFillMinusCircle /> : <AiFillPlusCircle />
+							}
 							toolTipId='rc-ap-disq'
-							textHelper='Disqualify selected Applicants'
+							textHelper={
+								toggleState === 1
+									? 'Disqualify selected Applicants'
+									: 'Qualify selected Applicants'
+							}
 						/>
 					</div>
 					<div className='regular-tab-component'>
@@ -124,91 +130,36 @@ const RecruitmentBaseComponent = () => {
 				</div>
 				{/* TAB MENU STARTS HERE  */}
 				<div>
-					<div className='selector-buttons'>
-						<div className='selector-container'>
-							{/* <span className='selector-span-1'> */}
-							{/* <ButtonComponent/> */}
-							<button
-								className='button-components'
-								onClick={() => navigate('/pds-applicant')}
-								style={{
-									cursor: 'pointer',
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-									textAlign: 'center',
-								}}
-							>
-								<p>Applicant</p>
-							</button>
-							{/* </span> */}
-							<span className='margin-left-1 selector-span-1'>
-								<select defaultValue={'DEFAULT'}>
-									<option value='DEFAULT' disabled>
-										Vacant Position
-									</option>
-									{recruitmentSelectFilter.map((item) => {
-										return (
-											<option
-												className='options'
-												key={item.value}
-												defaultValue={item.value}
-											>
-												{item.title}
-											</option>
-										);
-									})}
-								</select>
-							</span>
-							<span className='margin-left-1 selector-span-1'>
-								<select defaultValue={'DEFAULT'}>
-									<option value='DEFAULT' disabled>
-										Filter By
-									</option>
-									{recruitmentSelectItem.map((item) => {
-										return (
-											<option
-												className='options'
-												key={item.value}
-												defaultValue={item.value}
-											>
-												{item.title}
-											</option>
-										);
-									})}
-								</select>
-							</span>
-						</div>
-
-						<div className='search-container'>
-							<span className='margin-right-1 selector-search-label'>
-								<label>Search</label>
-							</span>
-							<span>
-								<SearchComponent placeholder='Search' />
-							</span>
-						</div>
-					</div>
-					<div className={toggleState === 1 ? 'current-tab' : 'show-none'}>
+					<div>
 						<RecruitmentTable
-							type={1}
+							type={toggleState}
 							setSelectedApplicants={setSelectedApplicants}
-							updateModalStates={setModalStates}
-						/>
-					</div>
-					<div className={toggleState === 2 ? 'current-tab' : 'show-none'}>
-						<RecruitmentTable
-							type={2}
-							setSelectedApplicants={setSelectedApplicants}
-							updateModalStates={setModalStates}
+							setPosition={setPosition}
 						/>
 					</div>
 					<div>
 						<RecruitmentEmail
-							onClose={setEmailModalToggle}
-							isDisplay={emailModalToggleState}
-							applicantData={selectedApplicants}
-							type={selectedEmailTemplate}
+							isDisplay={emailModalToggleState !== '0' ? true : false}
+							onClose={() => {
+								setEmailModalToggle('0');
+							}}
+							data={selectedApplicants}
+							type={emailModalToggleState}
+							endpoint={API_HOST + 'recruitment-common-email'}
+						/>
+						<RecruitmentStatusModal
+							isDisplay={value === 3 ? true : false}
+							onClose={() => {
+								setValue(0);
+							}}
+							rowData={selectedApplicants}
+						/>
+						<RecruitmentDateSelector
+							isDisplay={reportValue === 'RAI' ? true : false}
+							title={reportValue === 'RAI' ? "Select month and year of the Report" : 'Date Selector'}
+							onClose={() => {
+								setReportValue('');
+							}}
 						/>
 					</div>
 				</div>

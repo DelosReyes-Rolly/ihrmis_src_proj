@@ -3,8 +3,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 // RestAPI link
-export const API_HOST = "http://127.0.0.1:8000/api/";
+export const API_HOST = "http://localhost:8000/api/";
+// export const API_HOST = "http://127.0.0.1:8000/api/";
 export const SANCTUM = "http://localhost:8000/";
+// export const SANCTUM = "http://localhost:8000/";
 
 //Validation Constant
 export const validationRequired = Yup.string()

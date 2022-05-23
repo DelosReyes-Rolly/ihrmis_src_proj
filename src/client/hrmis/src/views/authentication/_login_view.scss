@@ -1,5 +1,5 @@
 .blue-div {
-  background-color: $login-color;
+  background-color: map-get($primaryColor, regular);
   width: 100vw;
   height: 50vh;
   display: flex;
@@ -43,7 +43,7 @@
   .login-button {
     width: 100%;
     height: 35px;
-    background-color: $login-color;
+    background-color: map-get($primaryColor, regular);
     align-items: center;
     justify-content: center;
   }

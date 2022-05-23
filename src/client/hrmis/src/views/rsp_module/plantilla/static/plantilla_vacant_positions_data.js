@@ -81,4 +81,42 @@ export const plantillaItemsReportsMenuItems = [
 		label: "Notice of Vacancy",
 		link: printNoticeOFVacany,
 	},
+	{
+		id: 1,
+		label: "Notify Office",
+		link: "#",
+	},
+	{
+		id: 2,
+		label: "Next-in-rank",
+		link: "#",
+	},
+	{
+		id: 3,
+		label: "JVS &CRW",
+		link: "#",
+	},
+	{
+		id: 4,
+		label: "History",
+		link: "#",
+	},
+];
+
+export const EMPLOYEE_DROPDOWN = [
+	{
+		id: 1,
+		label: "PDS",
+		link: "/rsp/plantilla/employee/:item",
+	},
+	{
+		id: 2,
+		label: "DTR",
+		link: "#",
+	},
+	{
+		id: 3,
+		label: "Remarks",
+		link: "#",
+	},
 ];

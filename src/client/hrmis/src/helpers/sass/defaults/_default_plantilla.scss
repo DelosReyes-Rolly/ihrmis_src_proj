@@ -1,154 +1,134 @@
-
-.plantilla-view{
-    padding: 0px 0px 30px 0px;
+.plantilla-view {
+  padding: 0px 0px 30px 0px;
 }
 .tab-button {
-    padding: 20px 20px;
+  padding: 20px 20px;
 }
 /* TABS STARTS HERE  */
-.tab-tap{
-    background-color: whitesmoke;
-    color: rgba(70, 70, 70, 0.6);
-    border: none;
-    padding-bottom: 8px;
-    font-size: 15px;
-    font-weight: 600;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 3px solid transparent;
+.tab-tap {
+  background-color: whitesmoke;
+  color: rgba(70, 70, 70, 0.6);
+  border: none;
+  padding-bottom: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid transparent;
 }
 
-.tab-tap:hover{
-    float: inline-end;
-    transition: .3s;
-    color: #1DA1F2;
-    border-bottom: 3px solid #1DA1F2; 
-    z-index: 1;
+.tab-tap:hover {
+  float: inline-end;
+  transition: 0.3s;
+  color: #1da1f2;
+  border-bottom: 3px solid #1da1f2;
+  z-index: 1;
 }
 
-.tab-tap-activate{
-    float: inline-end;
-    transition: .3s;
-    color: #1DA1F2;
-    border-bottom: 3px solid #1DA1F2; 
-    z-index: 1;
+.tab-tap-activate {
+  float: inline-end;
+  transition: 0.3s;
+  color: #1da1f2;
+  border-bottom: 3px solid #1da1f2;
+  z-index: 1;
 }
 
 hr.solid {
-    top: -2px;
-    position: relative;
-    border-top: 1px solid #bbbbbb77;
-    z-index: 0;
+  top: -2px;
+  position: relative;
+  border-top: 1px solid #bbbbbb77;
+  z-index: 0;
 }
 
-.tab-badge-add-style{
-    position: relative;
-    top: -6px;
-    left: 3px;
+.tab-badge-add-style {
+  position: relative;
+  top: -6px;
+  left: 3px;
 }
-
 
 /* SELECTOR STARTS HERE  */
 
- .selector-buttons{
-    padding: 5px 30px;
-    display: flex;
-    justify-content: space-between !important;
-    align-items: center;
-   
-}
- 
-.selector-container{
-    display: flex;
-    align-items: center;
+.selector-buttons {
+  padding: 5px 30px;
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
 }
 
-.selector-span-1 button{
-    display: inline-flex;
-    align-items: center;
-    font-weight: 600;
-    font-size: 14px;
-    color: white;
-    background: #4276A4;
-    border: none;
-    border-radius: 5px;
-    padding: 6px 18px 6px 10px;
+.selector-container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.selector-span-1 button:hover{
-    transition: .3s;
-    background: #4276A4BB;
+.selector-span-1 button span {
+  margin-left: 5px;
 }
 
-.selector-span-1 button span{
-    margin-left: 5px;
-} 
-
-.selector-span-1 select{
-    -webkit-user-select: none; 
-    -ms-user-select: none; 
-    user-select: none;  
-    font-weight: 600;
-    font-size: 13px;
-    color: #4276A4;
-    background-color: whitesmoke;
-    border: 2px solid #4276A4;
-    border-radius: 5px;
-    padding: 4px;
-    outline: #4276A4;    
+.selector-span-1 select {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: 600;
+  font-size: 13px;
+  color: #4276a4;
+  background-color: whitesmoke;
+  border: 2px solid #4276a4;
+  border-radius: 5px;
+  padding: 4px;
+  outline: #4276a4;
 }
 
-.selector-span-1 select:hover{
-    transition: .3s;
-    background-color: rgba(235, 235, 235, 0.582);
+.selector-span-1 select:hover {
+  transition: 0.3s;
+  background-color: rgba(235, 235, 235, 0.582);
 }
 
-.selector-span-1 select .options{
-    background-color: whitesmoke;
-    color: rgba(70, 70, 70, 0.9);  
+.selector-span-1 select .options {
+  background-color: whitesmoke;
+  color: rgba(70, 70, 70, 0.9);
 }
 
-.selector-search-label{
-    color: rgba(70, 70, 70, 0.8);
-    font-size: 14px;
+.selector-search-label {
+  color: rgba(70, 70, 70, 0.8);
+  font-size: 14px;
 }
 
-.search-container{
-    display: flex;
-    align-items: center;
+.search-container {
+  display: flex;
+  align-items: center;
 }
 
 /* SECOND TAB DISPLAY STARTS HERE  */
 
-.show-none{
-    display: none;
-    align-items: center;
+.show-none {
+  display: none;
+  align-items: center;
 }
 
-.current-tab{
-    display: block;    
+.current-tab {
+  display: block;
 }
 
-.non-regular{
-    margin: 20px;
+.non-regular {
+  margin: 20px;
 }
 
-@media only screen and (max-width: 800px){
-    .selector-buttons{
-        flex-direction: column;
-        justify-content: flex-start !important;
-        align-items: flex-start !important;
-        padding: 0px 20px;
-    }
-
-    .selector-search-label{
-        display: none;
-
-    }
-
-    .search-container{
-        display: block;
-        margin-top: 20px;
-        width: 100% !important;
-    }
+@media only screen and (max-width: 800px) {
+  .selector-buttons {
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    padding: 0px 20px;
   }
+
+  .selector-search-label {
+    display: none;
+  }
+
+  .search-container {
+    display: block;
+    margin-top: 20px;
+    width: 100% !important;
+  }
+}

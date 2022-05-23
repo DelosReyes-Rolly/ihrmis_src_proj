@@ -9,25 +9,42 @@ use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\TblemailTemplate;
 use App\Models\TblemailType;
 use Carbon\Carbon;
+use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
 {
-    public function getEmailTemplate()
+    public function getEmailTemplate($type = null)
     {
+        if ($type != null) {
+            $mailQry = TblemailTemplate::where('eml_type', $type)->get();
+            return CommonResource::collection($mailQry);
+        }
         $mailQry = TblemailTemplate::all();
         return CommonResource::collection($mailQry);
     }
 
-    public function addEmailTemplate(Request $request)
+    public function addEmailTemplate($request)
     {
         $mailQry = new TblemailTemplate();
         $mailQry->eml_type = $request->eml_type;
         $mailQry->eml_name = $request->eml_name;
         $mailQry->eml_message = $request->eml_message;
-        $mailQry->eml_link = $request->eml_link;
+        if ($request->eml_link != null) {
+            $mailQry->eml_link = $request->eml_link;
+        }
         $mailQry->save();
+    }
+
+    public function deleteEmailTemplate($id)
+    {
+        TblemailTemplate::where('eml_id', $id)->delete();
+        return response()->json([
+            "status" => "200",
+            "message" => "Successfully deleted an Email Template"
+        ]);
     }
 
     public function removeMailType()
@@ -35,16 +52,17 @@ class MailController extends Controller
         // $mailQry = TblemailType::all();
         // return CommonResource::collection($mailQry);
     }
-    
+
+
     public function notifyVacantPlantillaEmail(Request $request)
     {
-        
-        $arrFiles=[];
 
-        if(!empty($request->file(['image_upload']))){
+        $arrFiles = [];
+
+        if (!empty($request->file(['image_upload']))) {
             foreach ($request->file(['image_upload']) as $value) {
                 array_push($arrFiles, $value);
-            }    
+            }
         }
 
         // Getting all the email where to send to
@@ -66,17 +84,18 @@ class MailController extends Controller
             ];
             Mail::to($tempEmail)->send(new NotifyVacantPlantillaEmail($data));
         }
-       
-        return response()->json(["message" => "Mail Sent to" . implode(", ",$arrHolder)]);
+
+        return response()->json(["message" => "Mail Sent to" . implode(", ", $arrHolder)]);
     }
 
-    public function notifyNextRank(Request $request) {
-        $arrFiles=[];
+    public function notifyNextRank(Request $request)
+    {
+        $arrFiles = [];
 
-        if(!empty($request->file(['image_upload']))){
+        if (!empty($request->file(['image_upload']))) {
             foreach ($request->file(['image_upload']) as $value) {
                 array_push($arrFiles, $value);
-            }    
+            }
         }
 
         $rawRecepient = explode(",", $request->recepient);
@@ -101,7 +120,16 @@ class MailController extends Controller
             ];
             Mail::to($tempEmail)->send(new NotifyNextInRankMail($data));
         }
-        
-        return response()->json(["message" => "Mail Sent to" . implode(", ",$arrHolder)]);
+
+        return response()->json(["message" => "Mail Sent to" . implode(", ", $arrHolder)]);
+    }
+
+    public function recruitmentEmail(Request $request)
+    {
+        if (is_string($request->eml_id)) {
+            $this->addEmailTemplate($request);
+        } else {
+            return $request;
+        }
     }
 }

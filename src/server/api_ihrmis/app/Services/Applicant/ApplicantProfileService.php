@@ -8,67 +8,14 @@ use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
+use NumberFormatter;
 
 class ApplicantProfileService
 {
 
     public function createApplicant($request)
     {
-        // $request->validate([
-        //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\- ]+$/u',
-        //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_extn' => 'max:10',
-        //   'app_nm_mid' => 'required|alpha|max:50',
-        //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-        //   'app_birth_place' => 'required',
-        //   // 'app_sex' => 'required',
-        //   // 'app_blood_type' => 'required',
-        //   // 'app_civil_status' => 'required',
-
-        //   'app_civil_others' => 'required_if:app_civil_status,OT',
-
-        //   'app_height' => 'required|numeric',
-        //   'app_weight' => 'required|numeric',
-
-        //   'app_emp_no' => 'required|alpha_num',
-        //   'app_gsis' => 'required|alpha_num',
-        //   'app_pagibig' => 'required|alpha_num',
-        //   'app_philhealth' => 'required|alpha_num',
-        //   'app_sss' => 'required|alpha_num',
-        //   'app_tin' => 'required|alpha_num',
-
-        //   'app_filipino' => 'required',
-        //   'app_dual_cny_id' => 'required_if:app_filipino,0',
-        //   'app_dual_type' => 'required_if:is_dual_citizen,1',
-
-        //   'res_block_lot' => 'required',
-        //   'res_street' => 'required',
-        //   'res_sub_village' => 'required',
-        //   'res_zip_code' => 'required',
-        //   'res_barangay' => 'required',
-        //   'res_municipality' => 'required',
-        //   'res_province' => 'required',
-
-        //   'per_block_lot' => 'required_if:copied_addr,false',
-        //   'per_street' => 'required_if:copied_addr,false',
-        //   'per_sub_village' => 'required_if:copied_addr,false',
-        //   'per_zip_code' => 'required_if:copied_addr,false',
-        //   'per_barangay' => 'required_if:copied_addr,false',
-        //   'per_municipality' => 'required_if:copied_addr,false',
-        //   'per_province' => 'required_if:copied_addr,false',
-
-        //   'app_tel_no' => 'required|numeric',
-        //   'app_mobile_no' => 'required|numeric',
-        //   'app_email_addr' => 'required|email:rfc',
-        // ], [
-        //     'required' => 'This field is required.',
-        //     'required_if' => 'This field is required.',
-        //     'numeric' => 'Invalid input.',
-        //     'alpha_num' => 'Invalid input.',
-        //     'max' =>  'Invalid input',
-        //     'regex' => 'Invalid input',
-        //     'email' => 'Invalid email'
-        // ]);
 
         //IMPLODING ADDRESSES
         $fullAddress = [];
@@ -165,61 +112,6 @@ class ApplicantProfileService
 
     public function modifyApplicant($id, $request)
     {
-        // $request->validate( [
-        //   'app_nm_last' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_first' => 'required|max:50|regex:/^[\pL\s\-]+$/u',
-        //   'app_nm_mid' => 'required|alpha|max:50',
-
-        //   'app_birth_date' => 'required|date_format:Y-m-d|before:today',
-        //   'app_birth_place' => 'required',
-        //   // 'app_sex' => 'required',
-        //   // 'app_blood_type' => 'required',
-        //   // 'app_civil_status' => 'required',
-
-        //   'app_civil_others' => 'required_if:app_civil_status,OT',
-
-        //   'app_height' => 'required|numeric',
-        //   'app_weight' => 'required|numeric',
-
-        //   'app_emp_no' => 'required|alpha_num',
-        //   'app_gsis' => 'required|alpha_num',
-        //   'app_pagibig' => 'required|alpha_num',
-        //   'app_philhealth' => 'required|alpha_num',
-        //   'app_sss' => 'required|alpha_num',
-        //   'app_tin' => 'required|alpha_num',
-
-        //   'app_filipino' => 'required',
-        //   'app_dual_cny_id' => 'required_if:app_filipino,0',
-        //   'app_dual_type' => 'required_if:is_dual_citizen,1',
-
-        //   'res_block_lot' => 'required',
-        //   'res_street' => 'required',
-        //   'res_sub_village' => 'required',
-        //   'res_zip_code' => 'required',
-        //   'res_barangay' => 'required',
-        //   'res_municipality' => 'required',
-        //   'res_province' => 'required',
-
-        //   'per_block_lot' => 'required_if:copied_addr,false',
-        //   'per_street' => 'required_if:copied_addr,false',
-        //   'per_sub_village' => 'required_if:copied_addr,false',
-        //   'per_zip_code' => 'required_if:copied_addr,false',
-        //   'per_barangay' => 'required_if:copied_addr,false',
-        //   'per_municipality' => 'required_if:copied_addr,false',
-        //   'per_province' => 'required_if:copied_addr,false',
-
-        //   'app_tel_no' => 'required|numeric',
-        //   'app_mobile_no' => 'required|numeric',
-        //   'app_email_addr' => 'required|email:rfc',
-        // ], [
-        //     'required' => 'This field is required.',
-        //     'required_if' => 'This field is required.',
-        //     'numeric' => 'Invalid input.',
-        //     'alpha_num' => 'Invalid input.',
-        //     'max' =>  'Invalid input',
-        //     'regex' => 'Invalid input',
-        //     'email' => 'Invalid email'
-        // ]);
 
         //IMPLODING ADDRESSES
         $fullAddress = [];
@@ -319,7 +211,6 @@ class ApplicantProfileService
         $plantilla_query = TblplantillaItems::with('tblpositions')->get();
         $qualified_applicants = [];
         $unqualified_applicants = [];
-        $applicant_querys = [];
         foreach ($plantilla_query as $plantilla) {
             $applicant_query = Tblapplicants::with(
                 'tblapplicantEligibility',
@@ -329,10 +220,12 @@ class ApplicantProfileService
                 'TblapplicantsProfile',
                 'TblplantillaItems',
                 'TblPositions',
+                'tblapplicantsStatus',
+                'tbltransactionStages',
                 'TblOffices'
             )->where('app_itm_id', $plantilla->itm_id)->get();
+            // return $applicant_query;
             //Get Position Requirements
-            array_push($applicant_querys,$applicant_query);
             $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla->tblpositions->pos_id)->get();
 
             $civil_service_type = [];
@@ -357,11 +250,166 @@ class ApplicantProfileService
                     $trainingHours = $position_requirement->std_quantity;
                 }
             }
+
             foreach ($applicant_query as $applicant) {
                 $related_fields = [];
                 $competencies = [];
+                $applicantEligibility = [];
+                $applicantEducLevel = [];
+                $applicantEducSpecify = [];
+                $applicantExpField = [];
+                $applicantTrnCmptncy = [];
                 $requirements = 0;
                 $qualified = false;
+                if (count($applicant->tblapplicantsStatus) != 0) {
+                    $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
+                    if ($status->sts_app_stg_id == 2) {
+                        $requirements = $requirements + 4;
+                    } else if ($status->sts_app_stg_id == 3) {
+                        $requirements = $requirements - 4;
+                    }
+                }
+                foreach ($applicant->tblapplicantEligibility as $appEligibility) {
+                    $applicantEligibility[] = $appEligibility->cse_app_title;
+                }
+                foreach ($applicant->tblapplicantEducation as $appEducation) {
+                    $applicantEducLevel[] = $appEducation->edu_app_level;
+                    $applicantEducSpecify[] = $appEducation->edu_app_degree;
+                }
+                foreach ($applicant->tblapplicantExperience as $appExperience) {
+                    $start = new Carbon($appExperience->exp_app_from, 'Asia/Manila');
+                    $end = new Carbon($appExperience->exp_app_to, 'Asia/Manila');
+                    $related_fields = explode(',', $appExperience->exp_app_rel_fields);
+                    foreach ($related_fields as $field) {
+                        $applicantExpField[$field]['field'] = $field;
+                        if (empty($applicantExpField[$field]['years'])) {
+                            $applicantExpField[$field]['years'] = $start->diffInYears($end, true);
+                        } else {
+                            $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
+                        }
+                    }
+                }
+                foreach ($applicant->tblapplicantTrainings as $appTrainings) {
+                    $competencies = explode(',', $appTrainings->trn_app_cmptncy);
+                    foreach ($competencies as $competency) {
+                        $applicantTrnCmptncy[$competency]['competency'] = $competency;
+                        if (empty($applicantTrnCmptncy[$competency]['hours'])) {
+                            $applicantTrnCmptncy[$competency]['hours'] = $appTrainings->trn_app_hours;
+                        } else {
+                            $applicantTrnCmptncy[$competency]['hours'] += $appTrainings->trn_app_hours;
+                        }
+                    }
+                }
+                foreach ($civil_service_type as $CS) {
+                    if (in_array($CS, $applicantEligibility)) {
+                        $requirements++;
+                    }
+                }
+                foreach ($education as $ED) {
+                    $exploded_requirement = explode(':', $ED);
+                    if (in_array($exploded_requirement[0], $applicantEducLevel) && in_array($exploded_requirement[1], $applicantEducSpecify)) {
+                        $requirements++;
+                    }
+                }
+                foreach ($experience as $EXP) {
+                    foreach ($applicantExpField as $applicant_exp) {
+                        if ($EXP == $applicant_exp['field'] && $experienceYears <= $applicant_exp['years']) {
+                            $requirements++;
+                        }
+                    }
+                }
+                foreach ($training as $TRN) {
+                    foreach ($applicantTrnCmptncy as $applicant_trn) {
+                        if ($TRN == $applicant_trn['competency'] && $trainingHours <= $applicant_trn['hours']) {
+                            $requirements++;
+                        }
+                    }
+                }
+
+                if ($requirements >= 4) {
+                    array_push($qualified_applicants, $applicant);
+                } else {
+                    array_push($unqualified_applicants, $applicant);
+                }
+            }
+        }
+
+        if ($type == 1) {
+            return $qualified_applicants;
+        } else {
+            return $unqualified_applicants;
+        }
+    }
+
+    /**
+     * Sorts Applicants based on the Positions Requirements for reports
+     *
+     * @param [int] $plantilla_id
+     * @return QualifiedApplicants[]
+     */
+    public function getQualifiedApplicants_report($plantilla_id)
+    {
+        $plantilla_query = TblplantillaItems::with('tblpositions')->where('itm_id', $plantilla_id)->get();
+        $qualified_applicants = [];
+        $unqualified_applicants = [];
+        foreach ($plantilla_query as $plantilla) {
+            $applicant_query = Tblapplicants::with(
+                'tblapplicantEligibility',
+                'tblapplicantEducation',
+                'tblapplicantExperience',
+                'tblapplicantTrainings',
+                'TblapplicantsProfile',
+                'TblplantillaItems',
+                'TblPositions',
+                'tblapplicantsStatus',
+                'tbltransactionStages',
+                'TblOffices'
+            )->where('app_itm_id', $plantilla_id)->get();
+            //Get Position Requirements
+            $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla->tblpositions->pos_id)->get();
+            // return $position_query;
+
+            $civil_service_type = [];
+            $education = [];
+
+            /**
+             * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.
+             */
+            foreach ($position_query as $position_requirement) {
+                if ($position_requirement->std_type == "CS") {
+                    $civil_service_type = explode('|', $position_requirement->std_keyword);
+                }
+                if ($position_requirement->std_type == "ED") {
+                    $education = explode('|', $position_requirement->std_keyword);
+                }
+                if ($position_requirement->std_type == "EX") {
+                    $experience = explode(', ', $position_requirement->std_keyword);
+                    $experienceYears = $position_requirement->std_quantity;
+                }
+                if ($position_requirement->std_type == "TR") {
+                    $training = explode(', ', $position_requirement->std_keyword);
+                    $trainingHours = $position_requirement->std_quantity;
+                }
+            }
+
+            foreach ($applicant_query as $applicant) {
+                $related_fields = [];
+                $competencies = [];
+                $applicantEligibility = [];
+                $applicantEducLevel = [];
+                $applicantEducSpecify = [];
+                $applicantExpField = [];
+                $applicantTrnCmptncy = [];
+                $requirements = 0;
+                $qualified = false;
+                if (count($applicant->tblapplicantsStatus) != 0) {
+                    $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
+                    if ($status->sts_app_stg_id == 2) {
+                        $requirements = $requirements + 4;
+                    } else if ($status->sts_app_stg_id == 3) {
+                        $requirements = $requirements - 4;
+                    }
+                }
                 foreach ($applicant->tblapplicantEligibility as $appEligibility) {
                     $applicantEligibility[] = $appEligibility->cse_app_title;
                 }
@@ -425,123 +473,175 @@ class ApplicantProfileService
                 }
             }
         }
-
-        if ($type == 1) {
-            return $qualified_applicants;
-        }
-        return $unqualified_applicants;
+        return $qualified_applicants;
     }
 
     /**
-     * Sorts Applicants based on the Positions Requirements
+     * Gets Position Requirements, returns all in text
      *
-     * @param [int] $plantilla_id
-     * @return QualifiedApplicants[]
+     * @param [type] $pos_id
+     * @return void
      */
-    public function getQualifiedApplicants_report($plantilla_id)
+    public function getPositionRequirement($pos_id)
     {
-        $applicant_query = Tblapplicants::with(
-            'tblapplicantEligibility',
-            'tblapplicantEducation',
-            'tblapplicantExperience',
-            'tblapplicantTrainings',
-            'TblapplicantsProfile',
-            'TblplantillaItems',
-            'TblPositions',
-            'TblOffices'
-        )->where('app_itm_id', $plantilla_id)->get();
+        $position_requirement = TblpositionCscStandards::where('std_pos_id', $pos_id)->get();
+        $eligibility_array = [];
+        $eligibility_array[] = 'No Eligibility';
+        $eligibility_array[] = 'Professional';
+        $eligibility_array[] = 'Sub-professional';
+        $eligibility_array[] = 'Board / Bar';
+        $eligibility_array[] = 'Barangay Health Worker';
+        $eligibility_array[] = 'Barangay Official';
+        $eligibility_array[] = 'Barangay Nutrition Scholar';
+        $eligibility_array[] = 'Electronic Data Processing Specialist (EDPS)';
+        $eligibility_array[] = 'Honor Graduate';
+        $eligibility_array[] = 'Foreign School Honor Graduate';
+        $eligibility_array[] = 'Scientific and Technological Specialist';
+        $eligibility_array[] = 'Veteran Preference Rating';
+        $eligibility_array[] = 'Sanggunian Member';
+        $eligibility_array[] = 'Skill Eligibility';
 
-        //Get Position Requirements
-        $position_query = TblpositionCscStandards::where('std_pos_id', $plantilla_id)->get();
-
-        $qualified_applicants = [];
-        $civil_service_type = [];
-        $education = [];
-
-        /**
-         * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.
-         */
-        foreach ($position_query as $position_requirement) {
-            if ($position_requirement->std_type == "CS") {
-                $civil_service_type = explode('|', $position_requirement->std_keyword);
+        $education_level = [];
+        $education_level[] = 'N/A';
+        $education_level[] = 'Elementary';
+        $education_level[] = 'Secondary';
+        $education_level[] = 'Vocational/Trade';
+        $education_level[] = 'Bachelors Degree';
+        $education_level[] = 'Doctorate Degree';
+        $experienceYears = 0;
+        $educations = [];
+        $trainingHours = 0;
+        foreach ($position_requirement as $requirement) {
+            if ($requirement->std_type == "ED") {
+                $exploded_requirement = explode('|', $requirement->std_keyword);
             }
-            if ($position_requirement->std_type == "ED") {
-                $education = explode('|', $position_requirement->std_keyword);
+            if ($requirement->std_type == 'EX') {
+                $experienceYears = $requirement->std_quantity;
             }
-            if ($position_requirement->std_type == "EX") {
-                $experience = explode(', ', $position_requirement->std_keyword);
-                $experienceYears = $position_requirement->std_quantity;
+            if ($requirement->std_type == "TR") {
+                $trainingHours = $requirement->std_quantity;
             }
-            if ($position_requirement->std_type == "TR") {
-                $training = explode(', ', $position_requirement->std_keyword);
-                $trainingHours = $position_requirement->std_quantity;
+            if ($requirement->std_type == "CS") {
+                $civil_service_type = explode('|', $requirement->std_keyword);
             }
         }
-        foreach ($applicant_query as $applicant) {
-            $related_fields = [];
-            $competencies = [];
-            $requirements = 0;
-            $qualified = false;
-            foreach ($applicant->tblapplicantEligibility as $appEligibility) {
-                $applicantEligibility[] = $appEligibility->cse_app_title;
-            }
-            foreach ($applicant->tblapplicantEducation as $appEducation) {
-                $applicantEducLevel[] = $appEducation->edu_app_level;
-                $applicantEducSpecify[] = $appEducation->edu_app_degree;
-            }
-            foreach ($applicant->tblapplicantExperience as $appExperience) {
-                $start = new Carbon($appExperience->exp_app_from, 'Asia/Manila');
-                $end = new Carbon($appExperience->exp_app_to, 'Asia/Manila');
-                $related_fields = explode(',', $appExperience->exp_app_rel_fields);
-                foreach ($related_fields as $field) {
-                    $applicantExpField[$field]['field'] = $field;
-                    if (empty($applicantExpField[$field]['years'])) {
-                        $applicantExpField[$field]['years'] = $start->diffInYears($end, true);
-                    } else {
-                        $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
-                    }
-                }
-            }
-            foreach ($applicant->tblapplicantTrainings as $appTrainings) {
-                $competencies = explode(',', $appTrainings->trn_app_cmptncy);
-                foreach ($competencies as $competency) {
-                    $applicantTrnCmptncy[$competency]['competency'] = $competency;
-                    if (empty($applicantTrnCmptncy[$competency]['hours'])) {
-                        $applicantTrnCmptncy[$competency]['hours'] = $appTrainings->trn_app_hours;
-                    } else {
-                        $applicantTrnCmptncy[$competency]['hours'] += $appTrainings->trn_app_hours;
-                    }
-                }
-            }
-            foreach ($civil_service_type as $CS) {
-                if (in_array($CS, $applicantEligibility)) {
-                    $requirements++;
-                }
-            }
-            foreach ($education as $ED) {
-                $exploded_requirement = explode(':', $ED);
-                if (in_array($exploded_requirement[0], $applicantEducLevel) && in_array($exploded_requirement[1], $applicantEducSpecify)) {
-                    $requirements++;
-                }
-            }
-            foreach ($experience as $EXP) {
-                foreach ($applicantExpField as $applicant_exp) {
-                    if ($EXP == $applicant_exp['field'] && $experienceYears <= $applicant_exp['years']) {
-                        $requirements++;
-                    }
-                }
-            }
-            foreach ($training as $TRN) {
-                foreach ($applicantTrnCmptncy as $applicant_trn) {
-                    if ($TRN == $applicant_trn['competency'] && $trainingHours <= $applicant_trn['hours']) {
-                        $requirements++;
-                    }
-                }
-            }
-            if ($requirements >= 4) {
-                array_push($qualified_applicants, $applicant);
+        $highest = [];
+        $highest = 0;
+        $number = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+        $current = 0;
+        foreach ($exploded_requirement as $education_requirements) {
+            $educations = explode(':', $education_requirements);
+            $current = $educations[0];
+            if ($current < $highest || $highest == 0) {
+                $highest = $current;
             }
         }
-        return $qualified_applicants;
+        $civil_service_text = '';
+        for ($i = 0; $i < count($civil_service_type); $i++) {
+            if ($i == count($civil_service_type) - 1) {
+                $civil_service_text .= $eligibility_array[$civil_service_type[$i]];
+            } else {
+                $civil_service_text .= $eligibility_array[$civil_service_type[$i]] . ' / ';
+            }
+        }
+        $requirements = [
+            'exp' => ucfirst($number->format($experienceYears)) . ' (' . $experienceYears . ')' . ' years of relevant experience',
+            // 'edu' => $education_level($highest['education_level']) . ' relevant to the job'
+            'edu' => $education_level[$highest] . ' relevant to the job',
+            'trn' => ucfirst($number->format($trainingHours)) . ' (' . $trainingHours . ')' . ' hours of relevant training',
+            'eli' => $civil_service_text,
+        ];
+        return $requirements;
+    }
+    /**
+     * Will Generate Profile of Pre-Qualified Applicants based on 
+     * 
+     * @param [type] $request
+     * @return void
+     */
+    public function generatePOAReport($applicants, $positionRequirements)
+    {
+
+        $report = new Mpdf([
+            'format' => 'Legal', 'orientation' => 'L', 'setAutoTopMargin' => 'stretch',
+            'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
+        ]);
+        $data = [
+            'office' => $applicants[0]->TblOffices->ofc_name,
+            'pos_title' => $applicants[0]->TblPositions->pos_title,
+            'salary' => $applicants[0]->TblPositions->pos_salary_grade,
+            'item_no' => $applicants[0]->TblplantillaItems->itm_no,
+            'applicants' => $applicants,
+            'requirements' => $positionRequirements,
+        ];
+
+        // return $applicants[0]->TblOffices->ofc_name;
+        $report->writeHTML(view('reports/recruitment/poaReportPDF', $data));
+        $report->AddPage('L');
+        $report->page = 0;
+        $report->state = 0;
+        unset($report->pages[0]);
+        $report->PageNumSubstitutions[] = [
+            'from' => 0,
+            'reset' => 0,
+            'type' => 'num',
+            'suppress' => 'off'
+        ];
+        $report->writeHTML(view('reports/recruitment/poaReportPDF', $data));
+        $report->SetFooter('<p class="center">{PAGENO}</p>');
+        return $report->output();
+    }
+    /**
+     * Will Generate Profile of Pre-Qualified Applicants based on 
+     * 
+     * @param [type] $request
+     * @return void
+     */
+    public function generateRAIReport($month, $year)
+    {
+
+        $report = new Mpdf([
+            'format' => 'A4', 'orientation' => 'L', 'setAutoTopMargin' => 'stretch',
+            'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
+        ]);
+        // $data = [
+        //     'office' => $applicants[0]->TblOffices->ofc_name,
+        //     'pos_title' => $applicants[0]->TblPositions->pos_title,
+        //     'salary' => $applicants[0]->TblPositions->pos_salary_grade,
+        //     'item_no' => $applicants[0]->TblplantillaItems->itm_no,
+        //     'applicants' => $applicants,
+        //     'requirements' => $positionRequirements,
+        // ];
+        $monthConverter = [];
+        $monthConverter[1] = 'January';
+        $monthConverter[2] = 'February';
+        $monthConverter[3] = 'March';
+        $monthConverter[4] = 'April';
+        $monthConverter[5] = 'May';
+        $monthConverter[6] = 'June';
+        $monthConverter[7] = 'July';
+        $monthConverter[8] = 'August';
+        $monthConverter[9] = 'September';
+        $monthConverter[10] = 'October';
+        $monthConverter[11] = 'November';
+        $monthConverter[12] = 'December';
+        $data = [
+            'date' => $monthConverter[$month] . ' ' . $year,
+        ];
+
+        // return $applicants[0]->TblOffices->ofc_name;
+        $report->writeHTML(view('reports/recruitment/raiReportPDF', $data));
+        $report->AddPage('L');
+        $report->page = 0;
+        $report->state = 0;
+        unset($report->pages[0]);
+        $report->PageNumSubstitutions[] = [
+            'from' => 0,
+            'reset' => 0,
+            'type' => 'num',
+            'suppress' => 'off'
+        ];
+        $report->writeHTML(view('reports/recruitment/raiReportPDF', $data));
+        return $report->output();
     }
 }

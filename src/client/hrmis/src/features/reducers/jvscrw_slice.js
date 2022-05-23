@@ -77,6 +77,7 @@ const jvscrwSlice = createSlice({
       max: 0,
       total: 0,
     },
+    employeeOption: [],
   },
 
   reducers: {
@@ -344,7 +345,6 @@ const jvscrwSlice = createSlice({
       const { key, value } = action.payload;
       state.remarksImg = { ...state.remarksImg, [key]: value };
     },
-
     setTotalWeight: (state) => {
       const {
         com_education,
@@ -409,7 +409,6 @@ const jvscrwSlice = createSlice({
         total: parseFloat((totalValue / totalLength).toFixed(2)),
       };
     },
-
     setRatingFactor: (state, action) => {
       const { skills, com_specific, com_type, com_jvs_id } = action.payload;
       state.competencies = {
@@ -427,6 +426,22 @@ const jvscrwSlice = createSlice({
     },
     setVersionSelected: (state, action) => {
       state.version_selected = action.payload;
+    },
+    setEmployeeOptions: (state, action) => {
+      const { payload } = action;
+      const arrHolder = [];
+      payload?.forEach((element) => {
+        const name =
+          element?.emp_nm_first +
+          " " +
+          element?.emp_nm_mid +
+          " " +
+          element?.emp_nm_last +
+          " " +
+          element?.emp_nm_extn;
+        arrHolder.push({ value: name, label: name });
+      });
+      state.employeeOption = arrHolder;
     },
   },
 });
@@ -454,6 +469,7 @@ export const {
   setTotalWeight,
   setRatingFactor,
   setVersionSelected,
+  setEmployeeOptions,
 } = jvscrwSlice.actions;
 
 export default jvscrwSlice.reducer;

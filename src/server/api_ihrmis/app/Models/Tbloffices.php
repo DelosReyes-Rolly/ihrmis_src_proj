@@ -30,6 +30,10 @@ class Tbloffices extends Model
         return $this->hasMany(TblplantillaItems::class, 'itm_ofc_id', 'ofc_id');
     }
 
+    public function officeAgency() {
+        return $this->hasMany(Tblagencies::class, 'agn_id', 'ofc_agn_id');
+    }
+
     // public function plantillaItems(){
     //     return $this->hasMany(TblplantillaItems::class, 'itm_ofc_id', 'ofc_id');
     // }
