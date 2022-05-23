@@ -16,108 +16,116 @@ export const eligibilityInputItems = [
 ];
 
 export const educationInputItem = [
-  {
-    id: "0",
-    title: "N/A",
-  },
-  {
-    id: "1",
-    title: "Bachelor's",
-  },
-  {
-    id: "2",
-    title: "Master's",
-  },
-  {
-    id: "3",
-    title: "PhD",
-  },
+	{
+		id: '0',
+		title: 'N/A',
+	},
+	{
+		id: '1',
+		title: 'Elementary',
+	},
+	{
+		id: '2',
+		title: 'Secondary',
+	},
+	{
+		id: '3',
+		title: 'Vocational/Trade',
+	},
+	{
+		id: '4',
+		title: 'College',
+	},
+	{
+		id: '5',
+		title: 'Graduate Studies',
+	},
 ];
 
 export const formOneInput = {
-  blood_type: [
-    {
-      id: "AB+",
-      title: "AB+",
-    },
-    {
-      id: "AB-",
-      title: "AB-",
-    },
-    {
-      id: "A+",
-      title: "A+",
-    },
-    {
-      id: "A-",
-      title: "A-",
-    },
-    {
-      id: "B+",
-      title: "B+",
-    },
-    {
-      id: "B-",
-      title: "B-",
-    },
-    {
-      id: "O+",
-      title: "O+",
-    },
-    {
-      id: "O-",
-      title: "O-",
-    },
-  ],
+	blood_type: [
+		{
+			id: 'AB+',
+			title: 'AB+',
+		},
+		{
+			id: 'AB-',
+			title: 'AB-',
+		},
+		{
+			id: 'A+',
+			title: 'A+',
+		},
+		{
+			id: 'A-',
+			title: 'A-',
+		},
+		{
+			id: 'B+',
+			title: 'B+',
+		},
+		{
+			id: 'B-',
+			title: 'B-',
+		},
+		{
+			id: 'O+',
+			title: 'O+',
+		},
+		{
+			id: 'O-',
+			title: 'O-',
+		},
+	],
 
-  sex: [
-    {
-      id: "M",
-      title: "MALE",
-    },
-    {
-      id: "F",
-      title: "FEMALE",
-    },
-  ],
+	sex: [
+		{
+			id: 'M',
+			title: 'MALE',
+		},
+		{
+			id: 'F',
+			title: 'FEMALE',
+		},
+	],
 
-  civil_status: [
-    {
-      id: "SG",
-      title: "Single",
-    },
-    {
-      id: "MR",
-      title: "Married",
-    },
-    {
-      id: "WD",
-      title: "Widowed",
-    },
-    {
-      id: "SP",
-      title: "Separated",
-    },
-    {
-      id: "OT",
-      title: "Others",
-    },
-  ],
+	civil_status: [
+		{
+			id: 'SG',
+			title: 'Single',
+		},
+		{
+			id: 'MR',
+			title: 'Married',
+		},
+		{
+			id: 'WD',
+			title: 'Widowed',
+		},
+		{
+			id: 'SP',
+			title: 'Separated',
+		},
+		{
+			id: 'OT',
+			title: 'Others',
+		},
+	],
 
-  dual_citizen_type: [
-    {
-      id: "0",
-      title: "N/A",
-    },
-    {
-      id: "1",
-      title: "By Birth",
-    },
-    {
-      id: "2",
-      title: "By Naturalization",
-    },
-  ],
+	dual_citizen_type: [
+		{
+			id: '0',
+			title: 'N/A',
+		},
+		{
+			id: '1',
+			title: 'By Birth',
+		},
+		{
+			id: '2',
+			title: 'By Naturalization',
+		},
+	],
 };
 
 export const formThreeInput = {
@@ -211,62 +219,62 @@ export const formThreeInput = {
     { id: "67", title: "67" },
   ],
 
-  add_work_status: [
-    { id: "PE", title: "Permanent" },
-    { id: "PV", title: "Provisional" },
-    { id: "TM", title: "Temporary" },
-    { id: "SB", title: "Subtitute" },
-    { id: "CT", title: "Co-Terminous" },
-    { id: "CA", title: "Casual" },
-    { id: "CO", title: "Contractual" },
-    { id: "JO", title: "Job Order" },
-  ],
+	add_work_status: [
+		{ id: 'PE', title: 'Permanent' },
+		{ id: 'PV', title: 'Provisional' },
+		{ id: 'TM', title: 'Temporary' },
+		{ id: 'SB', title: 'Subtitute' },
+		{ id: 'CT', title: 'Co-Terminous' },
+		{ id: 'CA', title: 'Casual' },
+		{ id: 'CO', title: 'Contractual' },
+		{ id: 'JO', title: 'Job Order' },
+	],
 
-  add_work_service: [
-    { id: "0", title: "No" },
-    { id: "1", title: "Yes" },
-  ],
+	add_work_service: [
+		{ id: '0', title: 'No' },
+		{ id: '1', title: 'Yes' },
+	],
 
-  add_training_type: [
-    {
-      id: "Managerial",
-      title: "Managerial",
-    },
-    {
-      id: "Supervisory",
-      title: "Supervisory",
-    },
-    {
-      id: "Technical",
-      title: "Technical",
-    },
-    {
-      id: "Quality",
-      title: "Quality",
-    },
-    {
-      id: "Skills",
-      title: "Skills",
-    },
-    {
-      id: "Soft Skills",
-      title: "Soft Skills",
-    },
-    {
-      id: "Professional",
-      title: "Professional",
-    },
-    {
-      id: "Team",
-      title: "Team",
-    },
-    {
-      id: "Orientaion",
-      title: "Orientaion",
-    },
-    {
-      id: "Product",
-      title: "Product",
-    },
-  ],
+	add_training_type: [
+		{
+			id: 'Managerial',
+			title: 'Managerial',
+		},
+		{
+			id: 'Supervisory',
+			title: 'Supervisory',
+		},
+		{
+			id: 'Technical',
+			title: 'Technical',
+		},
+		{
+			id: 'Quality',
+			title: 'Quality',
+		},
+		{
+			id: 'Skills',
+			title: 'Skills',
+		},
+		{
+			id: 'Soft Skills',
+			title: 'Soft Skills',
+		},
+		{
+			id: 'Professional',
+			title: 'Professional',
+		},
+		{
+			id: 'Team',
+			title: 'Team',
+		},
+		{
+			id: 'Orientaion',
+			title: 'Orientaion',
+		},
+		{
+			id: 'Product',
+			title: 'Product',
+		},
+	],
 };
