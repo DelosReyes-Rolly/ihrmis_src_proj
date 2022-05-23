@@ -18,7 +18,7 @@ class GetEmployeeResource extends JsonResource
 
         $statusHolder = ['Permanent', 'Provisional', 'Temporary', 'Substitute', 'Coterminous', 'Casual', 'Contractual', 'Job Order'];
         $svcStatusHolder = ['In Service', 'Transferred', 'Retired', 'Resigned', 'Rationalized', 'End of Contract', 'Deceased', 'Drop from Rolls', 'Awol'];
-        $service = ", " . $svcStatusHolder[$this->serviceHistory->svc_status] . "\n" . $this->serviceHistory->svc_remarks;
+        $service = ", " . $svcStatusHolder[$this->serviceHistory->svc_status ?? null] ?? null . "\n" . $this->serviceHistory->svc_remarks;
 
         return [
             "emp_id" => $this->emp_id,

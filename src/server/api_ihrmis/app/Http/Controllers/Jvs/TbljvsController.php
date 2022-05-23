@@ -82,19 +82,8 @@ class TbljvsController extends Controller
         return response()->file($path);
     }
 
-    public function newVersion ($item) {
-        try {
-            $newVersion = $this->appService->createNewJvsVersion($item);
-            return response()->json([
-                "message" => $newVersion,
-            ], 200);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json([
-               "message" => "Creation Failed",
-               "error" => $th
-            ], 500);
-        }
+    public function newVersion ($item) {   
+        return $this->appService->createNewJvsVersion($item);
     }
 
     public function removeImage ($id, $type) {
