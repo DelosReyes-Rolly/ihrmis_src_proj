@@ -155,6 +155,7 @@ class PlantillaItemsService
   
 		date_default_timezone_set('Asia/Manila'); //define local time
 		
+		//1 for vacant positions
 		$data = $this->getVacantPositions(1);
 
 		$new_data = [];

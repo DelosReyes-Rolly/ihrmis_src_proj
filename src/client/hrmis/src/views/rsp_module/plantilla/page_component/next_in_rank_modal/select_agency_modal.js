@@ -1,19 +1,22 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
-const SelectAgencyModal = ({ isDisplay, onClose }) => {
+const SelectAgencyModal = ({
+	isDisplay,
+	onClose,
+	setSelectedAgency,
+	onClickSubmit,
+}) => {
 	const [axiosCall] = useAxiosCallHelper();
 	const [agencies, setAgencies] = useState([]);
 
 	const getDostAgencies = () => {
 		axiosCall("get", API_HOST + "getAllDostAgencies").then(
 			(response) => {
-				console.log(response.data);
-
 				setAgencies(response.data);
 			},
 			(error) => {
@@ -36,11 +39,16 @@ const SelectAgencyModal = ({ isDisplay, onClose }) => {
 				onClose={onClose}
 				onPressedHidden={true}
 				onSubmitName="Save"
+				onClickSubmit={onClickSubmit}
 			>
 				<AddHeaderForOfficer />
-				{agencies?.map((element, key) => {
-					return <RowDisplay countIndex={key} element={element} />;
-				})}
+				{agencies?.map((element, index) => (
+					<RowDisplay
+						key={index}
+						element={element}
+						setSelectedAgency={setSelectedAgency}
+					/>
+				))}
 			</ModalComponent>
 		</React.Fragment>
 	);
@@ -48,8 +56,14 @@ const SelectAgencyModal = ({ isDisplay, onClose }) => {
 
 export default SelectAgencyModal;
 
-const RowDisplay = ({ countIndex, element }) => {
+const RowDisplay = ({ element, setSelectedAgency }) => {
 	const [toggleState, setToggleState] = useState(false);
+	const array_selected = [];
+	const handleChange = (e) => {
+		array_selected.push(e.target.value);
+		setSelectedAgency(array_selected);
+	};
+
 	return (
 		<React.Fragment>
 			<div className="flex-selectagency-display">
@@ -58,11 +72,11 @@ const RowDisplay = ({ countIndex, element }) => {
 						type="checkbox"
 						id={"dost-agency_" + element.agn_id}
 						name="dost-agency"
-						value={element.agn_name}
+						value={element}
+						onChange={(e) => handleChange(e)}
 					/>
 					<p style={{ marginTop: "-3px" }}>{element.agn_acronym}</p>
 				</label>
-
 				<label className="div-labal" htmlFor="officer-incharge">
 					<input
 						type="checkbox"

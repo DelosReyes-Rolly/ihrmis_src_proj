@@ -22,6 +22,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	const { sweetAlertConfirm, toastSuccessFailMessage } = useSweetAlertHelper();
 	const [select_agency, setSelectAgency] = useState(false);
 	const [posting_vacancy, setPostingJobVancy] = useState(false);
+	const [selected_agency, setSelectedAgency] = useState([]);
 
 	const closeSelectedVacantPostions = async () => {
 		// console.log(selectedrowData);
@@ -75,6 +76,10 @@ const PlantillaItemsVacantPositionComponentView = () => {
 		);
 	};
 
+	const saveSelectedAgency = (action) => {
+		console.log(selected_agency);
+	};
+
 	return (
 		<React.Fragment>
 			<div className="plantilla-view">
@@ -122,6 +127,11 @@ const PlantillaItemsVacantPositionComponentView = () => {
 				selectedrowData={selectedrowData}
 				isDisplay={select_agency}
 				onClose={() => setSelectAgency()}
+				setSelectedAgency={setSelectedAgency}
+				onClickSubmit={() => {
+					saveSelectedAgency();
+					setSelectAgency();
+				}}
 			/>
 			<PostingOnJobVacancyModal
 				selectedrowData={selectedrowData}
