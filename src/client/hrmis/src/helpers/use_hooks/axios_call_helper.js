@@ -11,10 +11,10 @@ const useAxiosCallHelper = () => {
 			url: url,
 		};
 
-		console.log(options);
+		//	console.log(options);
 		try {
 			//Axios Request
-			const result = await axios(options);
+			let result = await axios(options);
 
 			//console.log(result);
 			//Return Result when success

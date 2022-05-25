@@ -89,4 +89,10 @@ class Tblapplicants extends Model
     {
         return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }
+
+    public function applicant(){
+        return $this->hasOne(TblapplicantsProfile::class, 'app_id' ,'app_id');
+    }
+    
+
 }

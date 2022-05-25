@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Microsoft Word - Notice of Vacancy.docx</title>
+		<title>Notice of Vacancy.docx</title>
 		<meta name="author" content="User" />
 		<style type="text/css">
 			.page-break {
@@ -385,10 +385,12 @@
 			</a>
 		</p>
 		<br />
+		<br />
+		<br />
 		<h1
 			style="
 				padding-top: 9pt;
-				text-align: right;
+				text-align: center;
 				padding-right: 10pt
 			"
 		>

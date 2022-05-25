@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const InputComponent = (props) => {
 	return (
 		<input
-			style={props.style ?? { marginTop: '3px' }}
+			style={props.style ?? { marginTop: "3px" }}
 			onChange={props.onChange}
 			value={props.value}
 			name={props.name}
@@ -21,11 +21,11 @@ const InputComponent = (props) => {
 };
 
 InputComponent.defaultProps = {
-	type: 'text',
+	type: "text",
 	maxLength: 255,
 	size: 999,
-	className: '',
-	placeholder: '',
+	className: "",
+	placeholder: "",
 	onchange: () => {},
 	readOnly: false,
 };

@@ -21,6 +21,7 @@ class Tbloffices extends Model
         'ofc_head_itm_id',
         'ofc_oic_itm_id',
         'ofc_ofc_id',
+        'ofc_agn_id',
     ];
 
     public $timestamps = false;

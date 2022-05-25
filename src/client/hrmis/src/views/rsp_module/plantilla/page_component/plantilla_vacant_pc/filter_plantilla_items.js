@@ -1,6 +1,7 @@
 import { plantillaItemSelectFilter } from "../../static/filter_items";
 import React, { useLayoutEffect, useState } from "react";
 import { useAsyncDebounce } from "react-table";
+import SearchComponent from "../../../../common/input_component/search_input/search_input";
 
 /**
  * FilterPlantillaItems
@@ -76,9 +77,36 @@ export const FilterPlantillaItems = ({
 						})}
 					</select>
 				</span>
+				<SearchFilter
+					type={type}
+					search={search}
+					setSearch={setSearch}
+					statusFilter={statusFilter}
+				/>
 			</div>
 		</React.Fragment>
 	);
 };
 
 export default FilterPlantillaItems;
+
+const SearchFilter = ({ type, search, setSearch, statusFilter }) => {
+	return (
+		<React.Fragment>
+			<div className="selector-buttons">
+				<div className="search-container">
+					<span className="margin-right-1 selector-search-label">
+						<label>Search</label>
+					</span>
+					<span>
+						<SearchComponent
+							placeholder="Search"
+							value={search || ""}
+							onChange={(e) => setSearch(e.target.value)}
+						/>
+					</span>
+				</div>
+			</div>
+		</React.Fragment>
+	);
+};
