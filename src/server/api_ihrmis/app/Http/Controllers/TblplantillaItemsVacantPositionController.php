@@ -26,7 +26,7 @@ class TblplantillaItemsVacantPositionController extends Controller {
      */
     public function getVacantPositions( $type) {
         
-        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos::getVacantPositions($type)) ;
+        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos->getVacantPositions($type)) ;
 
     }
 
@@ -36,7 +36,7 @@ class TblplantillaItemsVacantPositionController extends Controller {
      */
     public function getAllPositions() {
         
-        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos::getAllPlantillaItems()) ;
+        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos->getAllPlantillaItems()) ;
 
     }
 
