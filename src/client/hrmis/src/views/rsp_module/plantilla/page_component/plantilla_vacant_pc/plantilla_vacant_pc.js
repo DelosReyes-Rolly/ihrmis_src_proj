@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadcrumbComponent from "../../../../common/breadcrumb_component/Breadcrumb";
 import IconComponent from "../../../../common/icon_component/icon";
 import { BsFillCheckCircleFill, BsGlobe } from "react-icons/bs";
@@ -76,9 +76,13 @@ const PlantillaItemsVacantPositionComponentView = () => {
 		);
 	};
 
-	const saveSelectedAgency = (action) => {
+	const saveSelectedAgency = () => {
 		console.log(selected_agency);
 	};
+
+	// useEffect(() => {
+	// 	saveSelectedAgency();
+	// }, []);
 
 	return (
 		<React.Fragment>
@@ -102,7 +106,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 						className="padding-left-1"
 						icon={<BsGlobe />}
 						toolTipId="pl-vp-view"
-						textHelper="View/Edit Selected 	 Position"
+						textHelper="View/Edit Selected Position"
 						onClick={() => {
 							setPostingJobVancy(true);
 						}}

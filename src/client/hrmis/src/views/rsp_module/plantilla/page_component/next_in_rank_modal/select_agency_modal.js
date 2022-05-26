@@ -2,9 +2,10 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
-import ModalComponent from "../../../../common/modal_component/modal_component";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import ModalVpComponent from "../../../../common/modal_component/modal_component_vp";
+import { VscAccount } from "react-icons/vsc";
 
+const array_selected = [];
 const SelectAgencyModal = ({
 	isDisplay,
 	onClose,
@@ -32,7 +33,7 @@ const SelectAgencyModal = ({
 
 	return (
 		<React.Fragment>
-			<ModalComponent
+			<ModalVpComponent
 				style={{ zIndex: "101" }}
 				title="Select Agency"
 				isDisplay={isDisplay}
@@ -49,7 +50,7 @@ const SelectAgencyModal = ({
 						setSelectedAgency={setSelectedAgency}
 					/>
 				))}
-			</ModalComponent>
+			</ModalVpComponent>
 		</React.Fragment>
 	);
 };
@@ -58,10 +59,16 @@ export default SelectAgencyModal;
 
 const RowDisplay = ({ element, setSelectedAgency }) => {
 	const [toggleState, setToggleState] = useState(false);
-	const array_selected = [];
+	const [fontweight, setFontweight] = useState("Normal");
+
 	const handleChange = (e) => {
 		array_selected.push(e.target.value);
 		setSelectedAgency(array_selected);
+		if (e.target.checked) {
+			setFontweight("Bold");
+		} else {
+			setFontweight("Normal");
+		}
 	};
 
 	return (
@@ -72,10 +79,12 @@ const RowDisplay = ({ element, setSelectedAgency }) => {
 						type="checkbox"
 						id={"dost-agency_" + element.agn_id}
 						name="dost-agency"
-						value={element}
+						value={element.agn_id}
 						onChange={(e) => handleChange(e)}
 					/>
-					<p style={{ marginTop: "-3px" }}>{element.agn_acronym}</p>
+					<p style={{ marginTop: "-3px", fontWeight: fontweight }}>
+						{element.agn_acronym}
+					</p>
 				</label>
 				<label className="div-labal" htmlFor="officer-incharge">
 					<input
@@ -84,7 +93,7 @@ const RowDisplay = ({ element, setSelectedAgency }) => {
 						name="officer-incharge"
 						value={toggleState}
 						onChange={(event) => {
-							// sconsole.log(event.target.value);
+							// console.log(event.target.value);
 							setToggleState(!toggleState);
 						}}
 					/>
@@ -102,7 +111,7 @@ const DisplayTextbox = ({ element }) => {
 				<InputComponent
 					value={element.agn_head_name}
 					readOnly={true}
-					icon={<AccountCircleOutlinedIcon />}
+					icon={<VscAccount />}
 				/>
 				<InputComponent value={element.agn_head_email} readOnly={true} />
 			</div>

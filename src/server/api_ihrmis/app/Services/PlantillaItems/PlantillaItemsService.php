@@ -332,8 +332,7 @@ class PlantillaItemsService
 		foreach ($query as $value) {
 			array_push($arrHolder, "<strong>".$value["nir_name"]."</strong>".", ".$value["nir_pos_title"].", ".$value["nir_office"]);
 		}
-
-		// return implode("<br>" ,$arrHolder);
+		
 		$data = [
 			"employee" => implode("<br>" ,$arrHolder)
 		];

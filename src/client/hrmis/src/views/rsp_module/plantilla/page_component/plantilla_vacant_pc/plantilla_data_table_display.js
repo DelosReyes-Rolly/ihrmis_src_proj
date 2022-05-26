@@ -168,6 +168,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		selectedItems["positions"] = temp_selected;
 		selectedPlantillaItems(selectedItems);
 	};
+
 	const displayOtherAction = (data, item) => {
 		if (typeof item.link === "boolean" && item.link) {
 			if (item.label.includes("Notify")) {
