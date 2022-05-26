@@ -1,9 +1,9 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
+import { MdOutlineAccountCircle } from "react-icons/md";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
-import ModalVpComponent from "../../../../common/modal_component/modal_component_vp";
-import { VscAccount } from "react-icons/vsc";
+import ModalComponent from "../../../../common/modal_component/modal_component";
 
 const array_selected = [];
 const SelectAgencyModal = ({
@@ -33,7 +33,7 @@ const SelectAgencyModal = ({
 
 	return (
 		<React.Fragment>
-			<ModalVpComponent
+			<ModalComponent
 				style={{ zIndex: "101" }}
 				title="Select Agency"
 				isDisplay={isDisplay}
@@ -50,7 +50,7 @@ const SelectAgencyModal = ({
 						setSelectedAgency={setSelectedAgency}
 					/>
 				))}
-			</ModalVpComponent>
+			</ModalComponent>
 		</React.Fragment>
 	);
 };
@@ -79,7 +79,7 @@ const RowDisplay = ({ element, setSelectedAgency }) => {
 						type="checkbox"
 						id={"dost-agency_" + element.agn_id}
 						name="dost-agency"
-						value={element.agn_id}
+						value={element}
 						onChange={(e) => handleChange(e)}
 					/>
 					<p style={{ marginTop: "-3px", fontWeight: fontweight }}>
@@ -93,7 +93,7 @@ const RowDisplay = ({ element, setSelectedAgency }) => {
 						name="officer-incharge"
 						value={toggleState}
 						onChange={(event) => {
-							// console.log(event.target.value);
+							// sconsole.log(event.target.value);
 							setToggleState(!toggleState);
 						}}
 					/>
@@ -111,7 +111,7 @@ const DisplayTextbox = ({ element }) => {
 				<InputComponent
 					value={element.agn_head_name}
 					readOnly={true}
-					icon={<VscAccount />}
+					icon={<MdOutlineAccountCircle />}
 				/>
 				<InputComponent value={element.agn_head_email} readOnly={true} />
 			</div>

@@ -18,8 +18,16 @@ import {
 } from "../../static/plantilla_vacant_positions_data";
 import { MdMoreHoriz } from "react-icons/md";
 import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
-import PlantillaEmailModal from "../plantilla_email_modal/plantilla_email_modal";
+import PlantillaEmailModal, {
+	EMAIL_ENUM,
+} from "../plantilla_email_modal/plantilla_email_modal";
 import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
+import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
+import {
+	setContextMenu,
+	setNextRank,
+	setRankEmail,
+} from "../../../../../features/reducers/plantilla_item_slice";
 
 /**
  * PlantillaDataTableDisplay
@@ -59,15 +67,11 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 			});
 	};
 
+	const dispatch = useDispatch();
+
 	useLayoutEffect(() => {
 		plantillaItemApi();
 	}, [refresh]);
-
-	// useEffect(() => {
-	// 	return () => {
-	// 		plantillaItemApi();
-	// 	};
-	// });
 
 	let data = useMemo(() => plotData, [plotData]);
 	// console.log(data);
@@ -169,16 +173,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		selectedPlantillaItems(selectedItems);
 	};
 
-	const displayOtherAction = (data, item) => {
-		if (typeof item.link === "boolean" && item.link) {
-			if (item.label.includes("Notify")) {
-				data.setRankEmail(item.link);
-			} else if (item.label.includes("Next-in")) {
-				data.setNextRank(item.link);
-			}
-		}
-	};
-
 	useLayoutEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		setSelectedRowsData(selectedFlatRowsData);
@@ -262,11 +256,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 																toolTipId: "other-actions",
 																textHelper: "Click to view other actions",
 															}}
-															customData={{
-																setRankEmail: setRankEmail,
-																setNextRank: setNextRank,
-															}}
-															callback={displayOtherAction}
 														/>
 													</div>
 												</td>
@@ -295,19 +284,32 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	);
 };
 
-const SelectAction = ({
-	next_rank = false,
-	rank_email = false,
-	setNextRank,
-	setRankEmail,
-}) => {
+const SelectAction = () => {
+	const dispatch = useDispatch();
+	const { next_rank, context_menu, rank_email } = useSelector(
+		(state) => state.plantillaItem
+	);
 	return (
 		<React.Fragment>
-			<NextInRankModal isDisplay={next_rank} onClose={() => setNextRank()} />
+			<NextInRankModal
+				isDisplay={next_rank}
+				onClose={() => dispatch(setNextRank())}
+			/>
+			<ContextMenuModal
+				isDisplay={context_menu}
+				onClose={() => dispatch(setContextMenu())}
+			/>
 			<PlantillaEmailModal
 				isDisplay={rank_email}
-				onClose={() => setRankEmail()}
+				onClose={() => dispatch(setRankEmail())}
+				type={EMAIL_ENUM.next_rank}
+				endpoint={API_HOST + "notify-next-rank"}
 			/>
+
+			{/* <PlantillaEmailModal
+        isDisplay={rank_email}
+        onClose={() => dispatch(setRankEmail())}
+      /> */}
 		</React.Fragment>
 	);
 };

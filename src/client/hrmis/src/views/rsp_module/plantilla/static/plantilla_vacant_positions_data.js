@@ -2,7 +2,6 @@ import {
 	printVacantPositions,
 	printNoticeOFVacany,
 } from "../../../../router/outside_routes";
-
 /**
  *  tableHeaderColumnName
  *  @description static data
