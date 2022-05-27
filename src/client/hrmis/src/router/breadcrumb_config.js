@@ -7,6 +7,14 @@ export const crumbFirstLevel = () => {
       label: "Home",
       route: "/rsp",
     },
+    {
+      label: "Home",
+      route: "/rsp",
+    },
+    {
+      label: "Library",
+      route: "/library",
+    },
   ];
   const getFirstLevel = (number) => {
     let newArr = [];
@@ -27,12 +35,16 @@ export const crumbSecondLevel = () => {
       label: "Dashboard",
       route: "/ihrmis/Dashboard",
     },
+    {
+      label: "Office",
+      route: "/ihrmis/library",
+    }
   ];
 
   const getSecondLevel = (number) => {
     const { getFirstLevel } = crumbFirstLevel();
     let newArr = [];
-    getFirstLevel(0).forEach((element) => {
+    getFirstLevel(number).forEach((element) => {
       console.log(element?.length);
       newArr.push(element);
     });
@@ -47,6 +59,8 @@ export const crumbThirdLevel = () => {
   const plantillaLevel = [
     { label: "Employee", route: "ihrmis/employee" },
     { label: "Plantilla Items", route: "ihrmis/plantilla-items" },
+    { label: "Office", route: "ihrmis/office" },
+    
   ];
 };
 

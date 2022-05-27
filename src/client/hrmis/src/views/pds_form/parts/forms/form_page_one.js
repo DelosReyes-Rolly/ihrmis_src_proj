@@ -60,19 +60,29 @@ const FormPageOne = () => {
   const [perCity, perBrgy, getPerCity, getPerBrgy] = useLocationHelper();
 
   const [verifyCapcha, setVerifyCaptcha] = useState(false); // Use for determining if user successfully finish the captcha
+  const urlpath = window.location.pathname;
+  const route = urlpath.split('/');
   const parameter = item?'/'+item:'';
+  let position = undefined;
+
+  if(route[2] === 'applicant'){
+    console.log(route[3]);
+    position = '/'+route[3];
+  }
   const getApplicantRecord = async () => {
-    await axios.get(API_HOST + `get-new-applicant${parameter}`).then((res) => {
-      const data = res ? res.data.data : null;
-      console.log(data);
-      getResCity(data ? data.res_province : "");
-      getResBrgy(data ? data.res_municipality : "");
-      getPerCity(data.per_province ?? "");
-      getPerBrgy(data.per_municipality ?? "");
-      setgetApplicantData({ ...data });
-    }).catch((err) => {
-      console.log(err);
-    });
+    if(position === undefined){
+      await axios.get(API_HOST + `get-new-applicant${parameter}`).then((res) => {
+        const data = res ? res.data.data : null;
+        console.log(data);
+        getResCity(data ? data.res_province : "");
+        getResBrgy(data ? data.res_municipality : "");
+        getPerCity(data.per_province ?? "");
+        getPerBrgy(data.per_municipality ?? "");
+        setgetApplicantData({ ...data });
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
   };
 
   const checkItemIfNull = () => {
@@ -207,12 +217,15 @@ const FormPageOne = () => {
       if (verifyCapcha === true) {
         renderBusy(true);
         await useAxiosHelper
-          .post(values, "new-applicant", item)
+          .post(values, (position !== undefined)?"new-applicant"+position:"modify-applicant"+item)
           .then(() => {
             renderSucceed({ content: "Form submitted" });
-            navigate(
-              "/pds-applicant/email-confirmation/" + values.app_email_addr
-            );
+            if(position !== undefined){
+              navigate(
+                "/pds-applicant/email-confirmation/" + values.app_email_addr
+              );
+            }
+            
           })
           .catch((err) => renderFailed({ content: err.message }));
         renderBusy(false);

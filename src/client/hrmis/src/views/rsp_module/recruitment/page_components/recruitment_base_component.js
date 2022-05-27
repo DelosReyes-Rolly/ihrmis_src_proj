@@ -5,7 +5,6 @@ import {
 	recruitmentEmailTemplateList,
 	recruitmentReportList,
 } from '../static/menu_items';
-
 import RecruitmentTable from './page_tables/recruitment_table';
 import IconComponent from '../../../common/icon_component/icon';
 import {
@@ -33,8 +32,12 @@ const RecruitmentBaseComponent = () => {
 		setToggleState(index);
 	};
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
+
 	useEffect(() => {
-		if (reportValue === 'POA') {
+		console.log(reportValue);
+		console.log(selectedApplicants);
+
+		if (reportValue === 'POA' || reportValue === 'CM') {
 			if (position !== 0) {
 				window.open(
 					API_HOST + 'generate-' + reportValue + '/' + position,
@@ -42,13 +45,34 @@ const RecruitmentBaseComponent = () => {
 				);
 			} else {
 				popupAlert({
-					message: 'Please Select a Vacant Position',
+					message: 'Please Select a Vacant Position for this report',
 					type: ALERT_ENUM.fail,
 				});
 			}
 		}
-
-		// setReportValue(null);
+		if (
+			reportValue === 'OOO' ||
+			reportValue === 'AFA' ||
+			reportValue === 'CAD'
+		) {
+			if (selectedApplicants.length !== 0) {
+				let applicants = '';
+				selectedApplicants.forEach((element) => {
+					applicants = applicants + element.app_id + '-';
+				});
+				let finalString = applicants.slice(0, -1);
+				console.log(finalString);
+				window.open(
+					API_HOST + 'generate-' + reportValue + '/' + position,
+					'_self'
+				);
+			} else {
+				popupAlert({
+					message: 'Please Select Applicant/s for this report',
+					type: ALERT_ENUM.fail,
+				});
+			}
+		}
 	}, [reportValue]);
 	return (
 		<React.Fragment>
@@ -156,7 +180,11 @@ const RecruitmentBaseComponent = () => {
 						/>
 						<RecruitmentDateSelector
 							isDisplay={reportValue === 'RAI' ? true : false}
-							title={reportValue === 'RAI' ? "Select month and year of the Report" : 'Date Selector'}
+							title={
+								reportValue === 'RAI'
+									? 'Select month and year of the Report'
+									: 'Date Selector'
+							}
 							onClose={() => {
 								setReportValue('');
 							}}

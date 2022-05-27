@@ -11,8 +11,7 @@ const RecruitmentDateSelector = ({ isDisplay, onClose, title }) => {
 	const [selectedYear, setSelectedYear] = useState('');
 
 	let years = [];
-	let i = 2000;
-	for (i = 2000; i <= new Date().getFullYear(); i++) {
+	for (let i = new Date().getFullYear(); i >= 2000; i--) {
 		let temp = {
 			id: i,
 			title: i,

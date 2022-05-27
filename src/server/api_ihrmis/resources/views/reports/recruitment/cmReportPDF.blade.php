@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile of Pre-Qualified Applicants</title>
+    <title>ASSESSMENT OF PRE-QUALIFIED APPLICANTS</title>
     <style>
         .w100 {
             width: 100%;
@@ -133,7 +133,7 @@
     $civilStatus['SP'] = 'Separated';
     ?>
     <htmlpageheader name="header">
-        <h4 class="w100 center"><b>PROFILE OF PRE-QUALIFIED APPLICANTS</b></h4>
+        <h4 class="w100 center"><b>ASSESSMENT OF PRE-QUALIFIED APPLICANTS</b></h4>
         <div class="w100">
             <table class="w100 dfs" style="float: left;">
                 <tr>
@@ -182,31 +182,55 @@
             </table>
         </div>
     </htmlpageheader>
+    <htmlpagefooter name="footer">
+        <p class="center">{PAGENO}</p>
+    </htmlpagefooter>
     <sethtmlpageheader name="header" value="on" show-this-page="1" />
-
-    <table class="w100 table">
+    <sethtmlpagefooter name="footer" value="on" />
+    <table class="w100 table ">
         <thead>
             <tr>
-                <th class="td th" rowspan="2">NO.</th>
-                <th class="td th" rowspan="2">NAME OF CANDIDATE<br>AGE / CIVIL STATUS/</th>
-                <th class="td th" rowspan="2">SEX</th>
-                <th class="td th" rowspan="2">EDUC'L. ATTAINMENT /<br>NCL. YR. / NAME OF SCHOOL</th>
-                <th class="td th" colspan="3">WORK Experience</th>
-                <td class="td th center" rowspan="2">TRAINING/SEMINAR ATTENDED<br>(Pls. CHECK relevant to the
-                    position)</td>
-                <td class="td th center" rowspan="2">ELIGIBILITY</td>
-                <td class="td th center" rowspan="2">PERFORMANCE</td>
-                <td class="td th center" rowspan="2">RESULT OF<br>PRE-EMPLOYMENT EXAM</td>
-                <td class="td th center" rowspan="2">REMARK</td>
+                <th class="td th" rowspan="3">NO.</th>
+                <th class="td th" rowspan="3">NAME OF CANDIDATE<br>AGE / CIVIL STATUS/</th>
+                <th class="td th" rowspan="3">SEX</th>
+                <td class="td th center" rowspan="3">ELIGIBILITY</td>
+                <th class="td th center" colspan="8">END - USER</th>
+                <th class="td th" rowspan="2">SUB - TOTAL</th>
+                <th class="td th center" colspan="6">HRMPSB</th>
+                <th class="td th" rowspan="2">SUB - TOTAL</th>
+                <th class="td th" rowspan="2">TOTAL 100%</th>
             </tr>
             <tr>
-                <td class="td th center">Position Title</td>
-                <td class="td th center">Inclusive Dates</td>
-                <td class="td th center">Agency / Office</td>
+                <th class="td th center" colspan="2">EDUCATION - 10%</th>
+                <th class="td th center" colspan="2">RELEVANT EXPERIENCE - 15%</th>
+                <th class="td th center" colspan="2">RELEV. TRAINING 10%</th>
+                <th class="td th center" colspan="2">JOB COMPETENCY - 30%</th>
+                <th class="td th center" colspan="2">ATTRIBUTES - 25%</th>
+                <th class="td th center" colspan="2">COMMEND.ACCOMP. - 5%</th>
+                <th class="td th center" colspan="2">PERFORMANCE - 5%</th>
+            </tr>
+            <tr>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center">Score</th>
+                <th class="td th center"></th>
+                <th class="td th center"></th>
             </tr>
         </thead>
         <tbody>
-            {{ $counter = 1 }}
+            <?php $counter = 1; ?>
             @foreach ($applicants as $applicant)
                 {
                 <tr>
@@ -224,34 +248,32 @@
                             $civilStatus['OT'] = $applicant->TblapplicantsProfile->app_civil_others;
                         @endphp
                         {{ $civilStatus[$applicant->TblapplicantsProfile->app_civil_status] }}
-                        <br><br>
-                        {{ $applicant->TblapplicantsProfile->app_email_addr }}
-                        <br>
-                        {{ $applicant->TblapplicantsProfile->app_mobile_no }}
                     </td>
                     <td class="td">
                         {{ $applicant->TblapplicantsProfile->app_sex == 'M' ? 'Male' : 'Female' }}
                     </td>
                     <td class="td center">
+                        <?php foreach($applicant->tblapplicantEligibility as $eligibility){?>
+                        {{ $eligibility_array[$eligibility->cse_app_title] }}<br><br>
+                        <?php } ?>
+                    </td>
+                    <td class="td center">
                         <?php foreach ($applicant->tblapplicantEducation as $education) { ?>
-                        {{ $education_level[$education->edu_app_level] . ' in ' . $education->edu_app_degree }}<br>
-                        {{ $education->edu_app_school }}<br>
-                        {{ $education->edu_app_from . ' - ' . $education->edu_app_to }}
+                        {{ $education_level[$education->edu_app_level] . ' in ' . $education->edu_app_degree }}<br><br>
+                        {{ $education->edu_app_school }}<br><br>
+                        {{ $education->edu_app_from . ' - ' . $education->edu_app_to }}<br><br>
                         {{ $education->edu_app_honors == 'N/A' || $education->edu_app_honors == 'None' ? '' : $education->edu_app_honors }}<br><br>
                         <?php }?>
                     </td>
-                    <td class="td center" colspan="3">
-                        <table class="nmp table dfs">
-                            <?php foreach ($applicant->tblapplicantExperience as $experience) { ?>
-                            <tr>
-                                <td class="tdInner">{{ $experience->exp_app_position }}<br></td>
-                                <td class="tdInner">
-                                    {{ $experience->exp_app_from . ' - ' . $experience->exp_app_to }}<br></td>
-                                <td class="tdInner">{{ $experience->exp_app_agency }}<br></td>
-                            </tr>
-                            <?php }?>
-                        </table>
+                    <td class="td"></td>
+                    <td class="td center">
+                        <?php foreach ($applicant->tblapplicantExperience as $experience) { ?>
+                        {{ $experience->exp_app_position }}<br><br>
+                        {{ $experience->exp_app_from . ' - ' . $experience->exp_app_to }}<br><br>
+                        {{ $experience->exp_app_agency }}
+                        <?php }?>
                     </td>
+                    <td class="td"></td>
                     <td class="td center">
                         <?php 
                         $counter = 1;
@@ -262,21 +284,35 @@
                         {{ date('d M Y', strtotime($training->trn_app_from)) . ' - ' . date('d M Y', strtotime($training->trn_app_to)) }}<br><br>
                         <?php }?>
                     </td>
-                    <td class="td center">
-                        <?php foreach($applicant->tblapplicantEligibility as $eligibility){?>
-                        {{ $eligibility_array[$eligibility->cse_app_title] }}<br><br>
-                        <?php } ?>
-                    </td>
-                    <td class="td center">N/A</td>
+
                     <td class="td"></td>
-                    <td class="td center">
-                        {{ !empty($applicant->tblapplicantsStatus[0]->sts_app_remarks) ? $applicant->tblapplicantsStatus[0]->sts_app_remarks : 'N/A' }}
-                    </td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
+                    <td class="td"></td>
                 </tr>
                 }
             @endforeach
+            <tr>
+                <td></td>
+                <td colspan="20">
+                    <p class="dfs w100">Attributes: a) Pleasing personality; b) Sharpness of mind; c) Ability to
+                        express ideas/
+                        communication skills; d) Good quality of response; e) Self-confidence; f) Judgment and logical
+                        thinking; g)
+                        Initiative; h) Willingness and ability to learn; i) Other relevant attribute</p>
+                </td>
+            </tr>
         </tbody>
     </table>
+
 </body>
 
 </html>

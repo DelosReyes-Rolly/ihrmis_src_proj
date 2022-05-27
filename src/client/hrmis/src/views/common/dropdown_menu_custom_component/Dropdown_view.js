@@ -1,22 +1,23 @@
-import React, { useRef, useState } from "react";
-import { AiFillCaretUp } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import ReactTooltip from "react-tooltip";
+import React, { useEffect, useRef, useState } from 'react';
+import { AiFillCaretUp } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
 
 const DropdownViewComponent = ({
 	title = {},
 	className,
 	itemList,
-	alignItems = "start",
+	alignItems = 'start',
 	toolTipId,
 	textHelper,
-	position = "top",
-	effect = "solid",
+	position = 'top',
+	effect = 'solid',
 	setValue,
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const timerRef = useRef();
 	const navigate = useNavigate();
+	const location = useRef();
 
 	const selectedProperty = (link = null) => {
 		if (link !== null) {
@@ -34,11 +35,12 @@ const DropdownViewComponent = ({
 	return (
 		<div
 			style={{
-				position: "relative",
-				display: "flex",
-				flexDirection: "column",
+				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
 				alignItems: alignItems,
 			}}
+			ref={location}
 			onBlur={() => selectedProperty()}
 		>
 			{toolTipId && (
@@ -51,7 +53,7 @@ const DropdownViewComponent = ({
 				data-tip
 				data-for={toolTipId}
 				className={className}
-				style={{ width: "max-content" }}
+				style={{ width: 'max-content' }}
 				onClick={() => {
 					setDropable(!dropable);
 				}}
@@ -61,9 +63,10 @@ const DropdownViewComponent = ({
 			{itemList && (
 				<DropList
 					itemList={itemList}
-					display={dropable ? "block" : "none"}
+					display={dropable ? 'block' : 'none'}
 					onClick={selectedProperty}
 					setValue={setValue}
+					location={location}
 				/>
 			)}
 		</div>
@@ -72,9 +75,11 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = "none", setValue }) => {
+const DropList = ({ itemList = [], display = 'none', setValue, location }) => {
 	const navigate = useNavigate();
-
+	const size = useRef();
+	const [x, setx] = useState(0);
+	const [y, sety] = useState(0);
 	const linkDetector = (item) => {
 		if (typeof item === "string" || item instanceof String)
 			return navigate(item);
@@ -83,17 +88,28 @@ const DropList = ({ itemList = [], display = "none", setValue }) => {
 		}
 	};
 
+	useEffect(() => {
+		setx(
+			location.current.getBoundingClientRect().x - size.current.clientWidth + 20
+		);
+		sety(location.current.getBoundingClientRect().y + 30);
+	}, [display]);
+
 	return (
 		<React.Fragment>
-			<ul className="ul-dropdown-container" style={{ display: display }}>
-				<div className="ul-menu-item-arrow">
-					<AiFillCaretUp size="15px" />
+			<ul
+				className='ul-dropdown-container'
+				ref={size}
+				style={{ display: display, position: 'fixed', top: y, left: x }}
+			>
+				<div className='ul-menu-item-arrow'>
+					<AiFillCaretUp size='15px' />
 				</div>
 				{itemList?.map((element, key) => {
 					return (
 						<li
-							style={{ listStyle: "none" }}
-							className="ul-menu-item"
+							style={{ listStyle: 'none' }}
+							className='ul-menu-item'
 							onClick={() => {
 								setValue(element.id);
 								linkDetector(element);
