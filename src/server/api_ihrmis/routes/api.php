@@ -109,10 +109,11 @@ Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRat
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 Route::get('get-signature-image/{id}', [TbljvsController::class, "getSignatureDisplay"]);
-Route::get('get-generated-pdf/{id}', [TbljvsController::class, "generatedPdf"]);
-Route::get('get-option-employee/{plantillaId}', [TbljvsController::class, "getEmployeeAsOption"]);
 
-Route::post('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
+Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
+Route::get('get-option-employee/{plantillaId}',[TbljvsController::class, "getEmployeeAsOption"]);
+Route::get('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
+
 Route::post('jvscrw-competency-rating', [TbljvsController::class, "addCompetencyAndRating"]);
 Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class, "saveSignature"]);
 Route::post('save-generate-jvscrw', [TbljvsController::class, "saveSignaturesAndName"]);
@@ -198,6 +199,8 @@ Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController
 Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
 Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
+Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
+Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS

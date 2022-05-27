@@ -9,7 +9,7 @@ import {
   useRowSelect,
 } from "react-table";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import FilterPlantillaItems from "./filter_plantilla_items";
 import {
@@ -17,7 +17,17 @@ import {
   tableHeaderColumnName,
 } from "../../static/plantilla_vacant_positions_data";
 import { MdMoreHoriz } from "react-icons/md";
-import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
+import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
+import PlantillaEmailModal, {
+  EMAIL_ENUM,
+} from "../plantilla_email_modal/plantilla_email_modal";
+import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
+import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
+import {
+  setContextMenu,
+  setNextRank,
+  setRankEmail,
+} from "../../../../../features/reducers/plantilla_item_slice";
 
 /**
  * PlantillaDataTableDisplay
@@ -57,15 +67,11 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
       });
   };
 
+  const dispatch = useDispatch();
+
   useLayoutEffect(() => {
     plantillaItemApi();
   }, [refresh]);
-
-  // useEffect(() => {
-  // 	return () => {
-  // 		plantillaItemApi();
-  // 	};
-  // });
 
   let data = useMemo(() => plotData, [plotData]);
   // console.log(data);
@@ -174,6 +180,9 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     // console.log(setFilter);
   }, [selectedFlatRows]);
 
+  const [rank_email, setRankEmail] = useState(false);
+  const [next_rank, setNextRank] = useState(false);
+
   return (
     <React.Fragment>
       <FilterPlantillaItems
@@ -186,6 +195,12 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
         setGlobalFilter={setGlobalFilter}
         setAllFilters={setAllFilters}
         setFiltersTable={setFiltersTable}
+      />
+      <SelectAction
+        next_rank={next_rank}
+        rank_email={rank_email}
+        setNextRank={setNextRank}
+        setRankEmail={setRankEmail}
       />
       {/* <SelectTableComponent list={plotData} /> */}
       <div className="default-table">
@@ -233,13 +248,14 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
                             }}
                           >
                             <div>{cell.render("Cell")}</div>
-                            <DropdownViewComponent
+                            <DropdownMenu
                               itemList={plantillaItemsVacantPosMenuItems}
-                              title={<MdMoreHoriz size="20" />}
+                              title={<MdMoreHoriz size="15" />}
                               alignItems="end"
-                              toolTipId="other-actions"
-                              textHelper="Click to view other actions"
-                              className="dropdown-three-dots"
+                              tooltipData={{
+                                toolTipId: "other-actions",
+                                textHelper: "Click to view other actions",
+                              }}
                             />
                           </div>
                         </td>
@@ -267,3 +283,35 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     </React.Fragment>
   );
 };
+
+const SelectAction = () => {
+  const dispatch = useDispatch();
+  const { next_rank, context_menu, rank_email } = useSelector(
+    (state) => state.plantillaItem
+  );
+  return (
+    <React.Fragment>
+      <NextInRankModal
+        isDisplay={next_rank}
+        onClose={() => dispatch(setNextRank())}
+      />
+      <ContextMenuModal
+        isDisplay={context_menu}
+        onClose={() => dispatch(setContextMenu())}
+      />
+      <PlantillaEmailModal
+        isDisplay={rank_email}
+        onClose={() => dispatch(setRankEmail())}
+        type={EMAIL_ENUM.next_rank}
+        endpoint={API_HOST + "notify-next-rank"}
+      />
+
+      {/* <PlantillaEmailModal
+        isDisplay={rank_email}
+        onClose={() => dispatch(setRankEmail())}
+      /> */}
+    </React.Fragment>
+  );
+};
+
+export default SelectAction;

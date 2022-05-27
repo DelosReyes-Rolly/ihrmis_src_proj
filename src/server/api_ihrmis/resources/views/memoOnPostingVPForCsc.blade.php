@@ -50,6 +50,15 @@
 				text-decoration: none;
 				font-size: 12pt;
 			}
+			table {
+				width: 100%;
+			}
+
+			table, th, td {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+			
 			table,
 			tbody {
 				vertical-align: top;

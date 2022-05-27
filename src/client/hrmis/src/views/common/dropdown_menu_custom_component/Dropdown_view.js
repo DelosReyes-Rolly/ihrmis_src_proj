@@ -81,8 +81,11 @@ const DropList = ({ itemList = [], display = 'none', setValue, location }) => {
 	const [x, setx] = useState(0);
 	const [y, sety] = useState(0);
 	const linkDetector = (item) => {
-		if (typeof item === 'string' || item instanceof String)
-			return navigate(item.link);
+		if (typeof item === "string" || item instanceof String)
+			return navigate(item);
+		else if (typeof item === "function") {
+			item();
+		}
 	};
 
 	useEffect(() => {

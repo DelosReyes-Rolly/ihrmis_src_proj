@@ -10,6 +10,7 @@ export const plantillaItemSlice = createSlice({
     rank_email: false,
     next_rank_list: [],
     email_recepients: "",
+    notifyEmail: false,
   },
   reducers: {
     setNextRank: (state) => {
