@@ -64,3 +64,17 @@ export const plantillaItemsInfoBreadCramp = [
     link: "#",
   },
 ];
+export const libraryOfficeBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "Office",
+    link: "#",
+  },
+];

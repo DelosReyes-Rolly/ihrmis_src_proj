@@ -45,7 +45,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //=======================================================================================
 // APPLICANT ENDPOINTS
 //=======================================================================================
-Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "createApplicant"]);
+Route::post('new-applicant/{position?}', [TblapplicantProfileController::class, "createApplicant"]);
+Route::post('modify-applicant/{id?}', [TblapplicantProfileController::class, "modifyApplicant"]);
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id?}', [TblapplicantProfileController::class, "getApplicant"]);
@@ -54,6 +55,9 @@ Route::get('get-complete-applicant/{id}', [TblapplicantProfileController::class,
 //Reports
 Route::get('generate-POA/{plantillaId}', [TblapplicantProfileController::class, "generatePOAReport"]);
 Route::get('generate-RAI/{month}/{year}', [TblapplicantProfileController::class, "generateRAIReport"]);
+Route::get('generate-CM/{plantillaId}', [TblapplicantProfileController::class, "generateCMReport"]);
+Route::get('generate-OOO/{applicant}', [TblapplicantProfileController::class, "generateOOOReport"]);
+// Route::get('generate-CAD/{applicant}', [TblapplicantProfileController::class, "generateCADReport"]);
 //crud-child
 Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChildrenRecord"]);
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
