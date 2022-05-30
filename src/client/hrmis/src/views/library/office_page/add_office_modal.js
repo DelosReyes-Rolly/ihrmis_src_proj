@@ -7,6 +7,8 @@ import {
 	apiModelOfficeAreaType,
 	apiModelOffices,
 	apiModelgetPositions,
+	getAgencies,
+	apiModelAgencies,
 } from './parts/input_items';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSelectValueCon } from '../../../helpers/use_hooks/select_value_cons';
@@ -22,17 +24,63 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 	const { displayData } = useSelectValueCon();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const { isRefresh } = useSelector((state) => state.popupResponse);
-	const [state, setState] = useState({
-		positions: [],
-		offices: apiModelOffices,
-	});
+	const [positions, setPositionState] = useState([]);
+	const [office, setOfficeState] = useState([]);
+	const [agency, setAgencyState] = useState([]);
 	const getPlantillas = async (office) => {
-		setState({ ...state, positions: await apiModelgetPositions(office) });
+		setPositionState(apiModelgetPositions(office));
+	};
+
+	const getPositions = async (ofc_id) => {
+		let positions = [];
+		await axios
+			.get(API_HOST + 'plantilla-positions/' + ofc_id)
+			.then((response) => {
+				response.data.data.forEach((data) => {
+					let obj = {};
+					obj['id'] = data.itm_id;
+					obj['title'] = data.pos_title;
+					positions.push(obj);
+				});
+			})
+			.catch((error) => {});
+		setPositionState(positions);
+	};
+	const getOffice = async () => {
+		let offices = [];
+		await axios
+			.get(API_HOST + 'office')
+			.then((response) => {
+				response.data.data.map((data) => {
+					let obj = {};
+					obj['id'] = data.ofc_id;
+					obj['title'] = data.ofc_acronym;
+					offices.push(obj);
+				});
+			})
+			.catch((error) => {});
+		setOfficeState(offices);
+	};
+	const getAgency = async () => {
+		let agencies = [];
+		await axios
+			.get(API_HOST + 'agency')
+			.then((response) => {
+				response.data.data.map((data) => {
+					let obj = {};
+					obj['id'] = data.agn_id;
+					obj['title'] = data.agn_name;
+					agencies.push(obj);
+				});
+			})
+			.catch((error) => {});
+		setAgencyState(agencies);
 	};
 	useEffect(() => {
-		getPlantillas(officeData?.ofc_id ?? '');
+		getPositions(officeData?.ofc_id ?? '');
+		getOffice();
+		getAgency();
 	}, [officeData?.ofc_id]);
-	console.log(officeData);
 	const officeForm = useFormik({
 		enableReinitialize: true,
 
@@ -40,6 +88,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 			ofc_id: officeData?.ofc_id ?? '',
 			ofc_type: officeData?.ofc_type ?? '',
 			ofc_name: officeData?.ofc_name ?? '',
+			ofc_agn_id: officeData?.ofc_agn_id ?? '',
 			ofc_acronym: officeData?.ofc_acronym ?? '',
 			ofc_area_code: officeData?.ofc_area_code ?? '',
 			ofc_area_type: officeData?.ofc_area_type ?? '',
@@ -72,6 +121,9 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 			ofc_ofc_id: Yup.number()
 				.typeError('Must be a number')
 				.required('This field is required'),
+			ofc_agn_id: Yup.number()
+				.typeError('Must be a number')
+				.required('This field is required'),
 		}),
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
@@ -101,6 +153,26 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 				onSubmitType='submit'
 				onClose={onClose}
 			>
+				<div className='add-documents-modal'>
+					<div className='left-input item-modal-1'>
+						<label>Office Agency</label>
+						{/* <SelectComponent
+							name='ofc_ofc_id'
+							value={officeForm.values.ofc_ofc_id}
+							onChange={(e) => {
+								officeForm.handleChange(e);
+								// getPlantillas(e.target.value);
+							}}
+							itemList={state.office}
+						></SelectComponent> */}
+						<SelectComponent
+							name='ofc_agn_id'
+							value={officeForm.values.ofc_agn_id}
+							onChange={officeForm.handleChange}
+							itemList={agency}
+						/>
+					</div>
+				</div>
 				<div className='add-office-modal'>
 					<div className='left-input item-modal-5'>
 						<label>Office Type</label>
@@ -120,7 +192,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 								officeForm.handleChange(e);
 								// getPlantillas(e.target.value);
 							}}
-							itemList={apiModelOffices}
+							itemList={office}
 						/>
 					</div>
 				</div>
@@ -171,16 +243,16 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 							name='ofc_head_itm_id'
 							value={officeForm.values.ofc_head_itm_id}
 							onChange={officeForm.handleChange}
-							itemList={state.positions}
+							itemList={positions}
 						/>
 					</div>
 					<div className='right-input item-modal-1'>
 						<label>Office in Charge</label>
 						<SelectComponent
 							name='ofc_oic_itm_id'
-							//   value={offi}
+							value={officeForm.values.ofc_oic_itm_id}
 							onChange={officeForm.handleChange}
-							itemList={state.positions}
+							itemList={positions}
 						/>
 					</div>
 				</div>

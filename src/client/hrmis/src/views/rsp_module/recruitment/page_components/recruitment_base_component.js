@@ -41,7 +41,7 @@ const RecruitmentBaseComponent = () => {
 			if (position !== 0) {
 				window.open(
 					API_HOST + 'generate-' + reportValue + '/' + position,
-					'_self'
+					'_blank'
 				);
 			} else {
 				popupAlert({
@@ -61,10 +61,9 @@ const RecruitmentBaseComponent = () => {
 					applicants = applicants + element.app_id + '-';
 				});
 				let finalString = applicants.slice(0, -1);
-				console.log(finalString);
 				window.open(
-					API_HOST + 'generate-' + reportValue + '/' + position,
-					'_self'
+					API_HOST + 'generate-' + reportValue + '/' + finalString,
+					'_tab'
 				);
 			} else {
 				popupAlert({

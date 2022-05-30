@@ -390,9 +390,6 @@ class ApplicantProfileService
         }
     }
 
-    public function getApplicantData($applicants){
-    }
-
     /**
      * Sorts Applicants based on the Positions Requirements for reports
      *
@@ -731,14 +728,25 @@ class ApplicantProfileService
 
         return $report->output();
     }
+    public function getApplicantData($applicant_id)
+    {
+        $applicant_query = Tblapplicants::with(
+            'TblapplicantsProfile',
+            'TblplantillaItems',
+            'TblPositions',
+            'TblOffices'
+        )->where('app_id', $applicant_id)->first();
+
+        return $applicant_query;
+    }
+
     public function generateOOOReport($applicants)
     {
         $report = new Mpdf([
             'format' => [215.9, 279.4], 'orientation' => 'P', 'setAutoTopMargin' => 'stretch',
             'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
         ]);
-        $applicantsData = explode('-', $applicants);
-        return $applicantsData;
+        $applicantsId = explode('-', $applicants);
         // $data = [
         //     'office' => $applicants[0]->TblOffices->ofc_name,
         //     'pos_title' => $applicants[0]->TblPositions->pos_title,
@@ -748,8 +756,7 @@ class ApplicantProfileService
         // ];
 
         // return $applicants[0]->TblOffices->ofc_name;
-        $report->writeHTML(view('reports/recruitment/oooReportPDF'));
-        $report->AddPage();
+        $report->writeHTML('');
         $report->page = 0;
         $report->state = 0;
         unset($report->pages[0]);
@@ -759,7 +766,19 @@ class ApplicantProfileService
             'type' => 'num',
             'suppress' => 'off'
         ];
-        $report->writeHTML(view('reports/recruitment/oooReportPDF'));
+        $applicantData = [];
+        foreach ($applicantsId as $applicant) {
+        $applicantData = $this->getApplicantData($applicant);
+            $data = [
+                'applicants_profile' =>  $applicantData['TblapplicantsProfile'],
+                'applicants_position' =>  $applicantData['TblPositions'],
+            ];
+            // return $data;
+            $report->AddPage();
+            $report->writeHTML(view('reports/recruitment/oooReportPDF', $data));
+        }
+
+
 
 
         return $report->output();

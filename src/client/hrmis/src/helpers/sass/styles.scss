@@ -126,6 +126,7 @@ body {
 @import "./../../views/common/import_component_style";
 
 //PAGES
+@import "./../../views/library/office_page/officeLibrary";
 @import "./../../views/pds_form/pds_profile";
 @import "./../../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
 @import "./../../views/rsp_module/plantilla/plantilla_view";
@@ -134,7 +135,6 @@ body {
 @import "./../../views/rsp_module/library/library";
 @import "./../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
 @import "./../../views/authentication/login_view";
-@import "./../../views/library/office_page/officeLibrary";
 
 .btn-primary {
 	display: flex;

@@ -36,6 +36,27 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 	const [modalData, setModalData] = useState([]);
 	const [position, setPositions] = useState('');
 	const navigate = useNavigate();
+	const openPositionApi = async () => {
+		await axios.get(API_HOST + 'get-open-positions').then((response) => {
+			const data = response.data.data;
+			console.log(data);
+			let positions = [];
+			data.forEach((element) => {
+				let values2 = [];
+				values2 = {
+					pos_id: element.itm_id,
+					pos_title: element.tblpositions.pos_title,
+				};
+				let exists = positions.some(
+					(position) => position.pos_id === element.itm_id
+				);
+				if (!exists) {
+					positions.push(values2);
+				}
+			});
+			setPositionsFilter(positions);
+		});
+	};
 	const applicantDataApi = async () => {
 		renderBusy(true);
 		await axios
@@ -43,14 +64,12 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 			.then((response) => {
 				const data = response.data.data;
 				let dataPlot = [];
-				let positions = [];
 				if (data.length === 0) {
 					let values = {
 						app_name: 'No data available',
 					};
 					dataPlot.push(values);
 				} else {
-					let positionChecker = [];
 					for (let i = 0; i < data.length; i++) {
 						let profile_message = data[i].profile_message
 							.split('\n')
@@ -71,27 +90,17 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 							app_qualifications: qualification_message ?? 'N/A',
 							sts_App_remarks: 'To be done',
 						};
-						let values2 = [];
-						let fail = false;
-						values2 = {
-							pos_id: data[i].plantilla,
-							pos_title: data[i].position,
-						};
-						let exists = positions.some(
-							(position) => position.pos_id === data[i].plantilla
-						);
-						if (!exists) {
-							positions.push(values2);
-						}
 						dataPlot.push(values);
 					}
 				}
-				setPositionsFilter(positions);
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
 		renderBusy(false);
 	};
+	useEffect(() => {
+		openPositionApi();
+	}, [refresh]);
 	useEffect(() => {
 		applicantDataApi();
 	}, [type, refresh]);
