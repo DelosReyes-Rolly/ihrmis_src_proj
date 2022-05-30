@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState, useLayoutEffect } from 'react';
 import ButtonComponent from '../../../common/button_component/button_component.js.js';
 import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
@@ -14,6 +14,7 @@ import {
 	apiModelOffices,
 	apiModelOfficeType,
 	apiModelOfficeAreaType,
+	getAgencies,
 } from './input_items.js';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
 import AddOfficeModal from '../add_office_modal.js';
@@ -21,11 +22,11 @@ import { Outlet } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import BreadcrumbComponent from '../../../common/breadcrumb_component/Breadcrumb.js';
 import { libraryOfficeBreadCrumbs } from '../../../rsp_module/plantilla/static/breadcramp_data.js';
-import OfficeLibraryTable from './officeLibraryTable.js';
-import AgencyLibraryTable from './agencyLibraryTable.js';
+import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 
-const LibraryOfficeView = ({}) => {
+const OfficeLibraryTable = ({}) => {
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
+	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const { getSecondLevel } = crumbSecondLevel();
 	const [plotOfficeData, setOfficeData] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
@@ -34,17 +35,39 @@ const LibraryOfficeView = ({}) => {
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
-	const offceDataApi = async () => {
+
+	const getAgency = async () => {
+		renderBusy(true);
+		let agencies = [];
+		await axios
+			.get(API_HOST + 'agency')
+			.then((response) => {
+				response.data.data.map((data) => {
+					let obj = {};
+					obj['id'] = data.agn_id;
+					obj['title'] = data.agn_name;
+					agencies.push(obj);
+				});
+				offceDataApi(agencies);
+			})
+			.catch((error) => {});
+	};
+	useEffect(() => {
+		getAgency();
+	}, [refresh]);
+	const offceDataApi = async (agencies) => {
 		await axios
 			.get(API_HOST + 'getOffices')
 			.then((response) => {
 				let data = response.data ?? [];
 				let dataPlot = [];
 				data.map((data) => {
-					// console.log(apiModelOfficeType);
-
+					console.log(agencies);
 					let values = {
 						ofc_id: data.ofc_id,
+						ofc_agn_id: data.ofc_agn_id,
+						agencies,
+						ofc_agn_text: trueValue(data.ofc_agn_id, agencies),
 						ofc_type: data.ofc_type,
 						ofc_type_text: trueValue(data.ofc_type, apiModelOfficeType),
 						ofc_name: data.ofc_name,
@@ -68,11 +91,8 @@ const LibraryOfficeView = ({}) => {
 				setOfficeData(dataPlot);
 			})
 			.catch((error) => {});
+		renderBusy(false);
 	};
-
-	useEffect(() => {
-		offceDataApi();
-	}, [refresh]);
 
 	let data = useMemo(() => plotOfficeData, [plotOfficeData]);
 
@@ -81,6 +101,14 @@ const LibraryOfficeView = ({}) => {
 			{
 				Header: 'Office ID',
 				accessor: 'ofc_id',
+			},
+			{
+				Header: 'Office Agency ID',
+				accessor: 'ofc_agn_id',
+			},
+			{
+				Header: 'Office Agency',
+				accessor: 'ofc_agn_text',
 			},
 			{
 				Header: 'Office',
@@ -141,6 +169,7 @@ const LibraryOfficeView = ({}) => {
 	const initialState = {
 		hiddenColumns: [
 			'ofc_type',
+			'ofc_agn_id',
 			'ofc_oic',
 			'ofc_head',
 			'ofc_ofc_id',
@@ -178,30 +207,89 @@ const LibraryOfficeView = ({}) => {
 	// const { globalFilter } = state;
 	return (
 		<div>
-			<BreadcrumbComponent list={libraryOfficeBreadCrumbs} className='' />
-			<div className='container-vacant-position'>
-				<div className='regular-tab-component'>
-					<div className='reg-tab-container '>
-						<button
-							onClick={() => toggleTab(1)}
-							className={toggleState === 1 ? 'reg-tab-activate' : 'reg-tab'}
-						>
-							Offices
-						</button>
-						<button
-							onClick={() => toggleTab(2)}
-							className={toggleState === 2 ? 'reg-tab-activate' : 'reg-tab'}
-						>
-							Agencies
-						</button>
-					</div>
-				</div>
-				<hr className='solid' />
+			<div style={{ margin: 20 }}>
+				<button className='btn-primary' onClick={() => setToggleOfficeModal()}>
+					<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
+					<span>Office</span>
+				</button>
 			</div>
-			<div>{toggleState === 1 && <OfficeLibraryTable />}</div>
-			<div>{toggleState === 2 && <AgencyLibraryTable />}</div>
+			<AddOfficeModal
+				isDisplay={toggleOfficeModal}
+				onClose={() => {
+					setToggleOfficeModal();
+					setDataState(null);
+				}}
+				officeData={dataState}
+			/>
+
+			<div className='default-table'>
+				<table className='table-design' {...getTableProps()}>
+					<thead>
+						{headerGroups.map((headerGroup) => (
+							<tr
+								className='main-header'
+								{...headerGroup.getHeaderGroupProps()}
+							>
+								{headerGroup.headers.map((column) => (
+									<th {...column.getHeaderProps(column.getSortByToggleProps())}>
+										<span>
+											{column.isSorted ? (
+												column.isSortedDesc ? (
+													<BsArrowDown />
+												) : (
+													<BsArrowUp />
+												)
+											) : (
+												''
+											)}
+										</span>
+										{column.render('Header')}
+									</th>
+								))}
+							</tr>
+						))}
+					</thead>
+
+					<tbody {...getTableBodyProps()}>
+						{rows.map((row) => {
+							prepareRow(row);
+							let officeData = {};
+							row.allCells.map((cell) => {
+								let test = { [cell.column.id]: cell.value };
+								officeData = { ...officeData, ...test };
+							});
+
+							return (
+								<tr
+									className='trHoverBody'
+									{...row.getRowProps()}
+									onClick={() => {
+										passModalData(officeData);
+										// console.log(officeData);
+									}}
+								>
+									{row.cells.map((cell) => {
+										return (
+											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+										);
+									})}
+								</tr>
+							);
+						})}
+					</tbody>
+				</table>
+				<p
+					style={{
+						fontSize: 'small',
+						color: 'rgba(70, 70, 70, 0.6)',
+						marginTop: '10px',
+					}}
+				>
+					Total of {rows.length} entries
+				</p>
+			</div>
 		</div>
 	);
 };
 
-export default LibraryOfficeView;
+export default OfficeLibraryTable;

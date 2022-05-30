@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AiFillCaretUp } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+import usePositionSetter from '../../../helpers/use_hooks/position_setter';
 
 const DropdownViewComponent = ({
 	title = {},
@@ -15,9 +16,10 @@ const DropdownViewComponent = ({
 	setValue,
 }) => {
 	const [dropable, setDropable] = useState(false);
+	const [x, y, location, elementSize] = usePositionSetter(dropable);
 	const timerRef = useRef();
 	const navigate = useNavigate();
-	const location = useRef();
+	// const location = useRef();
 
 	const selectedProperty = (link = null) => {
 		if (link !== null) {
@@ -67,6 +69,9 @@ const DropdownViewComponent = ({
 					onClick={selectedProperty}
 					setValue={setValue}
 					location={location}
+					size={elementSize}
+					xPosition={x}
+					yPosition={y}
 				/>
 			)}
 		</div>
@@ -75,32 +80,21 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = 'none', setValue, location }) => {
+const DropList = ({ itemList = [], display = 'none', setValue, size, xPosition, yPosition }) => {
 	const navigate = useNavigate();
-	const size = useRef();
-	const [x, setx] = useState(0);
-	const [y, sety] = useState(0);
 	const linkDetector = (item) => {
-		if (typeof item === "string" || item instanceof String)
+		if (typeof item === 'string' || item instanceof String)
 			return navigate(item);
-		else if (typeof item === "function") {
+		else if (typeof item === 'function') {
 			item();
 		}
 	};
-
-	useEffect(() => {
-		setx(
-			location.current.getBoundingClientRect().x - size.current.clientWidth + 20
-		);
-		sety(location.current.getBoundingClientRect().y + 30);
-	}, [display]);
-
 	return (
 		<React.Fragment>
 			<ul
 				className='ul-dropdown-container'
 				ref={size}
-				style={{ display: display, position: 'fixed', top: y, left: x }}
+				style={{ display: display, position: 'fixed', top: yPosition, left: xPosition }}
 			>
 				<div className='ul-menu-item-arrow'>
 					<AiFillCaretUp size='15px' />

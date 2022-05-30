@@ -159,10 +159,24 @@
     <br>
     <h3 class="w90 mauto center">OATH OF OFFICE</h3>
     <br>
-    <p class="w90 mauto tj">I, <span class="underline w65">(Name of the Appointee)</span> of
-        <span class="underline">(Address of the Appointee)</span> having been
-        appointed to the position of <span class="underline">(Position Title)</span> hereby
-        solemnly swear, that I will faithfully discharge to the best of my ability, the duties of
+    <p class="w90 mauto tj">
+        I, <span
+            class="underline w65">{{ $applicants_profile['app_nm_last'] . ' ' . $applicants_profile['app_nm_first'] }}{{ $applicants_profile['app_nm_ext'] != null ? ' ' . $applicants_profile['app_nm_ext'] : '' }}{{ ', ' . strtoupper(substr($applicants_profile['app_nm_mid'], 0, 1)) . '.' }}
+        </span>
+        of
+        <?php $addressArr = explode('|', $applicants_profile['app_resident_addr']); ?>
+        <span class="underline">
+            <?php for ($i = 0; $i < count($addressArr); $i++) {
+                if ($i != count($addressArr) - 1) {
+                    echo $addressArr[$i] . ', ';
+                } else {
+                    echo $addressArr[$i];
+                }
+            } ?>
+        </span>
+        having been appointed to the position of
+        <span class="underline">{{ $applicants_position['pos_title'] }}</span>
+        hereby solemnly swear, that I will faithfully discharge to the best of my ability, the duties of
         my present position and of all others that I may hereafter hold under the Republic of
         the Philippines; that I will bear true faith and allegiance to the same; that I will obey
         the laws, legal orders, and decrees promulgated by the duly constituted authorities of

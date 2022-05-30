@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetPlantillaPositionResource;
 use App\Http\Resources\TblofficesResource;
+use App\Models\Employees\Tblagencies;
+use App\Models\Tblagencies as ModelsTblagencies;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use Illuminate\Http\Request;
@@ -12,7 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class TblofficesController extends Controller
 {
-    public function index(){
+    public function index()
+    {
     }
 
     public function store(Request $request)
@@ -34,15 +37,23 @@ class TblofficesController extends Controller
             ]
         );
     }
-    
-    public function show($id){
+
+    public function show($id)
+    {
         return Tbloffices::findOrFail($id);
     }
 
-     public function office()
+    public function office()
     {
         return CommonResource::collection(
             Tbloffices::get(),
+        );
+    }
+
+    public function agency()
+    {
+        return CommonResource::collection(
+            Tblagencies::get(),
         );
     }
 
@@ -69,5 +80,23 @@ class TblofficesController extends Controller
                   LEFT JOIN tblpositions as pos on pli.itm_pos_id = pos.pos_id) as oics
                   on a.ofc_oic_itm_id = oics.plantilla_oic;');
         return response()->json($item_qry);
+    }
+
+    public function saveAgency(Request $request)
+    {
+        return Tblagencies::updateOrCreate(
+            [
+                'agn_id' => $request->agn_id,
+            ],
+            [
+                'agn_name' => $request->agn_name,
+                'agn_acronym' => $request->agn_acronym,
+                'agn_sector' => $request->agn_sector,
+                'agn_head_name' => $request->agn_head_name,
+                'agn_head_position' => $request->agn_head_position,
+                'agn_head_email' => $request->agn_head_email,
+                'agn_address' => $request->agn_address,
+            ]
+        );
     }
 }

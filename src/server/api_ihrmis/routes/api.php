@@ -57,7 +57,7 @@ Route::get('generate-POA/{plantillaId}', [TblapplicantProfileController::class, 
 Route::get('generate-RAI/{month}/{year}', [TblapplicantProfileController::class, "generateRAIReport"]);
 Route::get('generate-CM/{plantillaId}', [TblapplicantProfileController::class, "generateCMReport"]);
 Route::get('generate-OOO/{applicant}', [TblapplicantProfileController::class, "generateOOOReport"]);
-// Route::get('generate-CAD/{applicant}', [TblapplicantProfileController::class, "generateCADReport"]);
+Route::get('generate-CAD/{applicant}', [TblapplicantProfileController::class, "generateCADReport"]);
 //crud-child
 Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChildrenRecord"]);
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
@@ -110,8 +110,8 @@ Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDut
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 Route::get('get-signature-image/{id}', [TbljvsController::class, "getSignatureDisplay"]);
 
-Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
-Route::get('get-option-employee/{plantillaId}',[TbljvsController::class, "getEmployeeAsOption"]);
+Route::get('get-generated-pdf/{id}', [TbljvsController::class, "generatedPdf"]);
+Route::get('get-option-employee/{plantillaId}', [TbljvsController::class, "getEmployeeAsOption"]);
 Route::get('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
 
 Route::post('jvscrw-competency-rating', [TbljvsController::class, "addCompetencyAndRating"]);
@@ -150,7 +150,7 @@ Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController:
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
 Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
-
+Route::get('get-open-positions', [TblplantillaItemsController::class, "getOpenPlantillaItems"]);
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
 Route::delete("remove-plantilla/{id}", [TblplantillaItemsController::class, "removePlantilla"]);
@@ -166,6 +166,7 @@ Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class,
 //=======================================================================================
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
+Route::post('save-agency', [TblofficesController::class, "saveAgency"]);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
 
@@ -206,6 +207,8 @@ Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 
 // OFFICEC POSITION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
+Route::get('agency', [TblofficesController::class, "agency"]);
+
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
@@ -231,11 +234,11 @@ Route::get('get-transaction-stage-select/{cluster}', [TblTransactionStagesContro
 /**
  * Applicant Status Endpoints
  */
- Route::post('add-applicant-status',[TblapplicantStatusController::class,'saveStatus']);
+Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveStatus']);
 
 
 //=======================================================================================
 // EMPLOYEE CONTROLLER ENDPOINTS
 //=======================================================================================
 
-Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);
+Route::get('get-all-employee', [EmployeeController::class, "getAllEmployee"]);
