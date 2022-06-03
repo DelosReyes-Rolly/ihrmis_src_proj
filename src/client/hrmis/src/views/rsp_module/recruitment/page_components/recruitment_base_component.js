@@ -21,24 +21,22 @@ import { API_HOST } from '../../../../helpers/global/global_config';
 import axios from 'axios';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
 import RecruitmentDateSelector from './page_modals/recruitment_date_selector';
+import { useNavigate } from 'react-router-dom';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
 	const [emailModalToggleState, setEmailModalToggle] = useState('0');
 	const [value, setValue] = useState('');
-	const [position, setPosition] = useState(0);
+	const [position, setPosition] = useState('');
 	const [reportValue, setReportValue] = useState(null);
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
+	const navigate = useNavigate();
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
-
 	useEffect(() => {
-		console.log(reportValue);
-		console.log(selectedApplicants);
-
 		if (reportValue === 'POA' || reportValue === 'CM') {
-			if (position !== 0) {
+			if (position.length !== 0 || position !== 0) {
 				window.open(
 					API_HOST + 'generate-' + reportValue + '/' + position,
 					'_blank'
@@ -114,6 +112,21 @@ const RecruitmentBaseComponent = () => {
 							id='recruitment_all_ratings'
 							className='margin-left-1'
 							icon={<BsFillStarFill />}
+							onClick={() => {
+								if (position !== '' && position !== 0) {
+									console.log(position);
+									// window.open(
+									// 	API_HOST + 'generate-' + reportValue + '/' + position,
+									// 	'_blank'
+									navigate('./comparative-matrix/' + position);
+									// );
+								} else {
+									popupAlert({
+										message: 'Please Select a Vacant Position',
+										type: ALERT_ENUM.fail,
+									});
+								}
+							}}
 							toolTipId='rc-ap-ratings'
 							textHelper='Show ratings of Selected Applicants'
 						/>

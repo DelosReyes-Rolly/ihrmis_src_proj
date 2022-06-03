@@ -78,3 +78,17 @@ export const libraryOfficeBreadCrumbs = [
     link: "#",
   },
 ];
+export const libraryCategoryGroupsBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "Category Groups",
+    link: "#",
+  },
+];

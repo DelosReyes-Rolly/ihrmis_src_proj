@@ -62,25 +62,30 @@ export const SidebarOption = [
 		more: [
 			{
 				id: 9,
-				title: 'Offices',
+				title: 'Office / Agency',
 				link: '/library/office',
 			},
 			{
 				id: 10,
-				title: 'Documentary Requirements',
-				link: '/rsp/plantilla/plantilla-items',
+				title: 'Category Groups',
+				link: '/library/category-groups',
 			},
-      {
+			{
 				id: 11,
+				title: 'Documentary Requirements',
+				link: '/library/documents',
+			},
+			{
+				id: 12,
 				title: 'Email Templates',
 				link: '/rsp/plantilla/plantilla-items',
 			},
-      {
-				id: 12,
+			{
+				id: 13,
 				title: 'Positions',
 				link: '/rsp/plantilla/plantilla-items',
 			},
 		],
-		link: '/rsp/library',
+		link: '#',
 	},
 ];

@@ -33,6 +33,7 @@ import JvscrsForm from '../views/jvs_form/jvscrw_form';
 import EmployeePds from '../views/rsp_module/plantilla/page_component/employee_pds/emplpyee_pds';
 import LibraryOfficeView from '../views/library/office_page/parts/office_library_view';
 import OfficeView from '../views/library/office_page/office_view';
+import CategoryGroupsBaseComponent from '../views/library/category_groups_page/parts/categoryGroupsBaseComponent';
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -94,13 +95,6 @@ const MainRouter = () => {
 
 							<Route path='/rsp/jvs' element={<JvsCrwPageComponentView />} />
 
-							<Route path='/rsp/recruitment' element={<RecruitmentView />}>
-								<Route
-									path='/rsp/recruitment/'
-									element={<RecruitmentBaseComponent />}
-								/>
-							</Route>
-
 							<Route
 								exact
 								path='/rsp/plantilla/plantilla-items/vacantpositions'
@@ -114,6 +108,10 @@ const MainRouter = () => {
 							<Route path='/rsp/recruitment' element={<RecruitmentView />}>
 								<Route
 									path='/rsp/recruitment/'
+									element={<RecruitmentBaseComponent />}
+								/>
+								<Route
+									path='/rsp/recruitment/comparative-matrix/:item'
 									element={<RecruitmentBaseComponent />}
 								/>
 							</Route>
@@ -185,12 +183,9 @@ const MainRouter = () => {
 							}
 						/>
 						<Route path='/library' element={<MainPageLayout />}>
-							<Route path='/library/office' element={<OfficeView />}>
-								<Route
-									path='/library/office/'
-									element={<LibraryOfficeView />}
-								/>
-							</Route>
+							<Route path='/library/office/' element={<LibraryOfficeView />} />
+							<Route path='/library/category-groups/' element={<CategoryGroupsBaseComponent />} />
+							<Route path='/library/documents/' element={<LibraryOfficeView />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>

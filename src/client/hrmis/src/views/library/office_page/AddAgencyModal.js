@@ -25,9 +25,6 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 	const { displayData } = useSelectValueCon();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const { isRefresh } = useSelector((state) => state.popupResponse);
-	useEffect(() => {
-		console.log(agencyData);
-	}, [agencyData]);
 	const agencyForm = useFormik({
 		enableReinitialize: true,
 

@@ -1,5 +1,5 @@
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
-import { MdMoreHoriz } from 'react-icons/md';
+import { MdAdd, MdMoreHoriz } from 'react-icons/md';
 import axios from 'axios';
 import {
 	useTable,
@@ -230,7 +230,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 							onClick={() => {
 								console.log(position);
 								if (position !== '') {
-									navigate('/pds-applicant');
+									navigate('/pds-applicant/admin/' + position);
 								} else {
 									popupAlert({
 										message: 'Please Select a Vacant Position',
@@ -246,7 +246,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 								textAlign: 'center',
 							}}
 						>
-							<p>Applicant</p>
+							<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
+							<span>Applicant</span>
 						</button>
 						{/* </span> */}
 						<span className='filter_buttons margin-left-1 selector-span-1'>

@@ -187,7 +187,6 @@ const AgencyLibraryTable = ({}) => {
 									{...row.getRowProps()}
 									onClick={() => {
 										passModalData(agencyData);
-										// console.log(officeData);
 									}}
 								>
 									{row.cells.map((cell) => {
