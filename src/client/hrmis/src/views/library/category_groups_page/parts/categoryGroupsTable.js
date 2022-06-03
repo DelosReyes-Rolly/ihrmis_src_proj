@@ -1,5 +1,4 @@
 import React, { useMemo, useEffect, useState, useLayoutEffect } from 'react';
-import ButtonComponent from '../../../common/button_component/button_component.js.js';
 import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
 import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
@@ -9,172 +8,78 @@ import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_co
 import BreadcrumbConfig, {
 	crumbSecondLevel,
 } from '../../../../router/breadcrumb_config';
-import {
-	apiGetPositions,
-	apiModelOffices,
-	apiModelOfficeType,
-	apiModelOfficeAreaType,
-	getAgencies,
-} from './input_items.js';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
-import AddOfficeModal from '../add_office_modal.js';
 import { Outlet } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
-import BreadcrumbComponent from '../../../common/breadcrumb_component/Breadcrumb.js';
-import { libraryOfficeBreadCrumbs } from '../../../rsp_module/plantilla/static/breadcramp_data.js';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
+import { GroupClusterData } from '../static/input_items.js';
 
-const OfficeLibraryTable = ({}) => {
+const CategoryGroupsTable = ({}) => {
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const { getSecondLevel } = crumbSecondLevel();
-	const [plotOfficeData, setOfficeData] = useState([]);
+	const [plotCategories, setCategories] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const { trueValue } = useSelectValueCon();
 	const [toggleState, setToggleState] = useState(1);
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
-
-	const getAgency = async () => {
-		renderBusy(true);
-		let agencies = [];
+	const categoryGroupsData = async () => {
 		await axios
-			.get(API_HOST + 'agency')
+			.get(API_HOST + 'category-groups')
 			.then((response) => {
-				response.data.data.map((data) => {
-					let obj = {};
-					obj['id'] = data.agn_id;
-					obj['title'] = data.agn_name;
-					agencies.push(obj);
-				});
-				offceDataApi(agencies);
-			})
-			.catch((error) => {});
-	};
-	useEffect(() => {
-		getAgency();
-	}, [refresh]);
-	const offceDataApi = async (agencies) => {
-		await axios
-			.get(API_HOST + 'getOffices')
-			.then((response) => {
-				let data = response.data ?? [];
+				let data = response.data.data ?? [];
 				let dataPlot = [];
 				data.map((data) => {
 					let values = {
-						ofc_id: data.ofc_id,
-						ofc_agn_id: data.ofc_agn_id,
-						agencies,
-						ofc_agn_text: trueValue(data.ofc_agn_id, agencies),
-						ofc_type: data.ofc_type,
-						ofc_type_text: trueValue(data.ofc_type, apiModelOfficeType),
-						ofc_name: data.ofc_name,
-						ofc_acronym: data.ofc_acronym,
-						ofc_area_code: data.ofc_area_code,
-						ofc_area_type: data.ofc_area_type,
-						ofc_area_type_text: trueValue(
-							data.ofc_area_type,
-							apiModelOfficeAreaType
-						),
-						plantilla: trueValue(data.plantilla, apiGetPositions),
-						ofc_head: data.plantilla,
-						plantilla_oic: trueValue(data.plantilla_oic, apiGetPositions),
-						ofc_oic: data.plantilla_oic,
-						ofc_ofc_id: data.ofc_ofc_id,
-						parent: trueValue(data.ofc_ofc_id, apiModelOffices),
+						grp_id: data.grp_id,
+						grp_name: data.grp_name,
+						grp_level: data.grp_level,
+						grp_cluster: data.grp_cluster,
+						grp_cluster_text: trueValue(data.grp_cluster, GroupClusterData),
+						// parent: trueValue(data.ofc_ofc_id, apiModelOffices),
 					};
 
 					dataPlot.push(values);
 				});
-				setOfficeData(dataPlot);
+				setCategories(dataPlot);
 			})
 			.catch((error) => {});
 		renderBusy(false);
 	};
-
-	let data = useMemo(() => plotOfficeData, [plotOfficeData]);
-
+	useEffect(() => {
+		categoryGroupsData();
+	}, [refresh]);
+	let data = useMemo(() => plotCategories, [plotCategories]);
 	const columns = useMemo(
 		() => [
 			{
-				Header: 'Office ID',
-				accessor: 'ofc_id',
+				Header: 'Group ID',
+				accessor: 'grp_id',
 			},
 			{
-				Header: 'Office Agency ID',
-				accessor: 'ofc_agn_id',
+				Header: 'Group Name',
+				accessor: 'grp_name',
 			},
 			{
-				Header: 'Office Agency',
-				accessor: 'ofc_agn_text',
+				Header: 'Group Level',
+				accessor: 'grp_level',
 			},
 			{
-				Header: 'Office',
-				accessor: 'ofc_type',
+				Header: 'Group Clister',
+				accessor: 'grp_cluster',
 			},
 			{
-				Header: 'Office Type',
-				accessor: 'ofc_type_text',
-			},
-			{
-				Header: 'Office Name',
-				accessor: 'ofc_name',
-			},
-			{
-				Header: 'Office Acronym',
-				accessor: 'ofc_acronym',
-			},
-			{
-				Header: 'Office Area Code',
-				accessor: 'ofc_area_code',
-			},
-			{
-				Header: 'Office Area',
-				accessor: 'ofc_area_type',
-			},
-			{
-				Header: 'Office Area Type',
-				accessor: 'ofc_area_type_text',
-			},
-			{
-				Header: 'Office Head',
-				accessor: 'plantilla',
-			},
-			{
-				Header: 'Head',
-				accessor: 'ofc_head',
-			},
-			{
-				Header: 'Office OIC',
-				accessor: 'plantilla_oic',
-			},
-			{
-				Header: 'OIC',
-				accessor: 'ofc_oic',
-			},
-			{
-				Header: 'Parent_ID',
-				accessor: 'ofc_ofc_id',
-			},
-			{
-				Header: 'Parent Office',
-				accessor: 'parent',
+				Header: 'Group Clister',
+				accessor: 'grp_cluster_text',
 			},
 		],
 		[]
 	);
 
 	const initialState = {
-		hiddenColumns: [
-			'ofc_type',
-			'ofc_agn_id',
-			'ofc_oic',
-			'ofc_head',
-			'ofc_ofc_id',
-			'ofc_id',
-			'ofc_area_type',
-		],
+		hiddenColumns: ['grp_id', 'grp_cluster'],
 	};
 
 	const {
@@ -196,14 +101,11 @@ const OfficeLibraryTable = ({}) => {
 		useGlobalFilter,
 		useSortBy
 	);
-
 	const [dataState, setDataState] = useState();
 	const passModalData = (param) => {
 		setDataState(param);
 		setToggleOfficeModal();
 	};
-
-	// const { globalFilter } = state;
 	return (
 		<div>
 			<div style={{ margin: 20 }}>
@@ -212,14 +114,14 @@ const OfficeLibraryTable = ({}) => {
 					<span>Office</span>
 				</button>
 			</div>
-			<AddOfficeModal
+			{/* <AddOfficeModal
 				isDisplay={toggleOfficeModal}
 				onClose={() => {
 					setToggleOfficeModal();
 					setDataState(null);
 				}}
 				officeData={dataState}
-			/>
+			/> */}
 
 			<div className='default-table'>
 				<table className='table-design' {...getTableProps()}>
@@ -290,4 +192,4 @@ const OfficeLibraryTable = ({}) => {
 	);
 };
 
-export default OfficeLibraryTable;
+export default CategoryGroupsTable;

@@ -27,10 +27,6 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 	const [positions, setPositionState] = useState([]);
 	const [office, setOfficeState] = useState([]);
 	const [agency, setAgencyState] = useState([]);
-	const getPlantillas = async (office) => {
-		setPositionState(apiModelgetPositions(office));
-	};
-
 	const getPositions = async (ofc_id) => {
 		let positions = [];
 		await axios
@@ -80,6 +76,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
 		getPositions(officeData?.ofc_id ?? '');
 		getOffice();
 		getAgency();
+		console.log(officeData?.ofc_head);
 	}, [officeData?.ofc_id]);
 	const officeForm = useFormik({
 		enableReinitialize: true,

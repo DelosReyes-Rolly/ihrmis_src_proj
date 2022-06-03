@@ -16,6 +16,7 @@ use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Jvs\TbljvsController;
+use App\Http\Controllers\Library\CategoryGroup;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TblofficesController;
@@ -169,6 +170,11 @@ Route::resource('offices', TblofficesController::class);
 Route::post('save-agency', [TblofficesController::class, "saveAgency"]);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
+
+//=======================================================================================
+//  Library Resources
+//=======================================================================================
+Route::resource('category-groups', CategoryGroup::class);
 
 //=======================================================================================
 // AUTH END POINTS
