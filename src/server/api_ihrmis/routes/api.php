@@ -112,17 +112,6 @@ Route::post('save-generate-jvscrw',[TbljvsController::class, "saveSignaturesAndN
 
 Route::delete('remove-signed-image/{id}/{type}',[TbljvsController::class, "removeImage"]);
 
-
-
-// Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
-// Route::post('jvscrw-competency-rating/{id}/sequence/{order?}', [TbljvsController::class, "addCompenencyAndRating"]);
-// Route::resource('jvscrw/{id}', JvscrwMainController::class);
-// Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
-// Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
-// Competency
-// Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
-// SIGNATURE UPLOAD
-
 //=======================================================================================
 // POSITION AND OFFICE END POINTS
 //=======================================================================================
@@ -226,5 +215,29 @@ Route::get('get-transaction-stage-select/{cluster}',[TblTransactionStagesControl
 //=======================================================================================
 // EMPLOYEE CONTROLLER ENDPOINTS
 //=======================================================================================
-
 Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);
+Route::get('get-single-employee/{id}',[EmployeeController::class, "getSingleEmployee"]);
+
+Route::post('add-update-emp_ref/{ref_id?}',[EmployeeController::class, "addUpdateReference"]);
+Route::get('get-emp_ref/{emp_id}',[EmployeeController::class, "getEmployeeReference"]);
+Route::delete('remove-emp_ref/{ref_id}',[EmployeeController::class, "removeEmployeeReference"]);
+
+Route::post('add-update-emp_trn/{trn_id?}',[EmployeeController::class, "addUpdateTraining"]);
+Route::get('get-emp_trn/{emp_id}',[EmployeeController::class, "getEmployeeTraining"]);
+Route::delete('remove-emp_trn/{trn_id}',[EmployeeController::class, "removeEmployeeTraining"]);
+
+Route::post('add-update-emp_vol/{vol_id?}',[EmployeeController::class, "addUpdateVoluntary"]);
+Route::get('get-emp_vol/{emp_id}',[EmployeeController::class, "getEmployeeVoluntary"]);
+Route::delete('remove-emp_vol/{vol_id}',[EmployeeController::class, "removeEmployeeVoluntary"]);
+
+Route::post('add-update-emp_exp/{exp_id?}',[EmployeeController::class, "addUpdateExperience"]);
+Route::get('get-emp_exp/{emp_id}',[EmployeeController::class, "getEmployeeExperience"]);
+Route::delete('remove-emp_exp/{exp_id}',[EmployeeController::class, "removeEmployeeExperience"]);
+
+Route::post('add-update-emp_cse/{cse_id?}',[EmployeeController::class, "addUpdateEligibility"]);
+Route::get('get-emp_cse/{emp_id}',[EmployeeController::class, "getEmployeeEligibility"]);
+Route::delete('remove-emp_cse/{cse_id}',[EmployeeController::class, "removeEmployeeEligibility"]);
+
+Route::post('add-update-emp_edu/{edu_id?}',[EmployeeController::class, "addUpdateEducation"]);
+Route::get('get-emp_edu/{emp_id}',[EmployeeController::class, "getEmployeeEducation"]);
+Route::delete('remove-emp_edu/{edu_id}',[EmployeeController::class, "removeEmployeeEducation"]);

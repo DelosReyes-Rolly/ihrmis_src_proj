@@ -83,9 +83,7 @@ class PlantillaItemsService
 	 * Todo this function will generate Notice of Vacancy report in PDF form
 	 * return void
 	 */
-	public function generateNoticeofVacancyReports()
-	{
-  
+	public function generateNoticeofVacancyReports(){
 		date_default_timezone_set('Asia/Manila'); //define local time
 		
 		$data = $this->getVacantPositions(1);
@@ -273,15 +271,6 @@ class PlantillaItemsService
 		
 		return $employee->save();
 	}
-
-	private function generateEmpNo($plantillaitm_data){
-		//get $item_source
-		//get $last_emp_no
-		//get $current_year
-		//assign $separator = "_";
-		//concatinate $last_emp_no + 1 . "_" . $item_source . "_" . $current_year	
-	}
-
 
   public function generateVacantMemoPdf($type){
 
