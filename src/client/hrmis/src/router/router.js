@@ -39,7 +39,7 @@ const MainRouter = () => {
   return (
     <React.Fragment>
       <div className="main-body">
-        {isBusy && <LoaderComponent />}
+        {true && <LoaderComponent />}
         {isSuccess && <SuccessResponseComponent />}
         {isFail && <FailResponseComponent />}
         <BrowserRouter basename="/ihrmis">

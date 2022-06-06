@@ -11,7 +11,6 @@ import axios from "axios";
 import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { useSelector } from "react-redux";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view";
 import { EMPLOYEE_DROPDOWN } from "../../static/plantilla_vacant_positions_data";
 import { EMPLOYEE_STATUS } from "../../static/filter_items";
 import DropDownComponent from "../../../../common/dropdown_menu_custom_component/dropdown_component";
@@ -47,9 +46,9 @@ const EmployeeDataTableDisplay = () => {
   const employeesList = async () => {
     await axios
       .get(API_HOST + "get-all-employee")
-      .then((response) => {
-        const data = response.data.data ?? [];
-        console.log(data);
+      .then((res) => {
+        const data = res.data.data ?? [];
+
         const arrHolder = [];
         data.forEach((element) => {
           const pos_ofc = element?.emp_ofc_pos
@@ -119,31 +118,30 @@ const EmployeeDataTableDisplay = () => {
       {
         Header: "Status",
         accessor: "emp_status",
-        Cell: ({ cell }) => {
-          return (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                zIndex: 0,
-              }}
-            >
-              <div>{cell.row.values.emp_status}</div>
-              <div onClick={setEmployeeID(cell.row.values.emp_id)}>
-                <DropDownComponent
-                  title={<MdMoreHoriz size="20" />}
-                  itemList={EMPLOYEE_DROPDOWN}
-                  className="dropdown-three-dots"
-                  textHelper="Click to view other actions"
-                  toolTipId="other-actions"
-                  setValue={setValue}
-                />
-              </div>
+        Cell: ({ cell }) => (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              zIndex: 0,
+            }}
+          >
+            <div>{cell.row.values.emp_status}</div>
+            <div onClick={setEmployeeID(cell.row.values.emp_id)}>
+              <DropDownComponent
+                title={<MdMoreHoriz size="20" />}
+                itemList={EMPLOYEE_DROPDOWN}
+                className="dropdown-three-dots"
+                textHelper="Click to view other actions"
+                toolTipId="other-actions"
+                setValue={setValue}
+              />
             </div>
-          );
-        },
+          </div>
+        ),
       },
+
       {
         Header: "Service Status",
         accessor: "svc_status",

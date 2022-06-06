@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SidebarOption } from "./sidebar_data";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,8 @@ import { useDetectScreenHelper } from "../../../helpers/use_hooks/detect_screen_
 
 const SidebarComponent = ({ itemsList = SidebarOption }) => {
   const navigate = useNavigate();
-  const [selected, setSelected] = useSessionStorage("selected-sidebar-item", 0);
-  const [_, setSubSelected] = useSessionStorage("selected-sidebar-subitem", 0);
+  const [selected, setSelected] = useSessionStorage("selected-sidebar-item", 1);
+  const [_, setSubSelected] = useSessionStorage("selected-sidebar-subitem", 1);
   const isNavbarEnable = useSelector((state) => state.mobileView.sidebar);
   const dispatch = useDispatch();
   const { isMobile } = useDetectScreenHelper();
@@ -104,10 +104,14 @@ const SubItemComponent = ({ itemList = [] }) => {
   const navigate = useNavigate();
   const [selected, setSelected] = useSessionStorage(
     "selected-sidebar-subitem",
-    0
+    1
   );
   const dispatch = useDispatch();
   const { isMobile } = useDetectScreenHelper();
+  useEffect(() => {
+    setSelected(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <React.Fragment>
       <ul>
