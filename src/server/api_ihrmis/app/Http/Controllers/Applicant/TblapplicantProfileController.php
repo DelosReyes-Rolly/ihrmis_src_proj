@@ -18,44 +18,43 @@ use Illuminate\Validation\Rule;
 
 class TblapplicantProfileController extends Controller
 {
-    
+
     protected $appProfileService;
 
     public function __construct(ApplicantProfileService $appService)
     {
         $this->appProfileService = $appService;
     }
-    
-    
-    public function createApplicant($id = null, Request $request)
-    {
-        
-        if ( $id == null ){
-            $item = $this->appProfileService->createApplicant($request);
 
-            return response()->json([
-                'item' => $item,
-                'status' => 200,
-                'message' => "Added Successfully",
-            ]);
-        }
-        
-        $item = $this->appProfileService->modifyApplicant($id, $request);
-        
+
+    public function createApplicant($position, Request $request)
+    {
+        $item = $this->appProfileService->createApplicant($request, $position);
         return response()->json([
             'item' => $item,
             'status' => 200,
             'message' => "Added Successfully",
         ]);
-
-        
+        return 'create';
     }
 
+    public function modifyApplicant($id, Request $request)
+    {
+        $item = $this->appProfileService->modifyApplicant($id, $request);
+
+        return response()->json([
+            'item' => $item,
+            'status' => 200,
+            'message' => "Added Successfully",
+        ]);
+        return 'edit';
+
+    }
 
     public function createFamilyChildren($id, Request $request)
-    {   
+    {
 
-      
+
         $request->validate([
             'app_sps_nm_last' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_sps_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
@@ -70,19 +69,19 @@ class TblapplicantProfileController extends Controller
             'app_fthr_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_fthr_nm_mid'  => 'required',
             'app_fthr_nm_extn' => 'required|regex:/^[\pL\s\-]+$/u',
-    
+
             'app_mthr_nm_last' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_mthr_nm_first' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_mthr_nm_mid' => 'required|regex:/^[\pL\s\-]+$/u',
             'app_mthr_nm_extn' => 'required|regex:/^[\pL\s\-]+$/u',
-        
+
         ], [
             'required' => 'This field is required.'
         ]);
 
         $familyApplicant = TblapplicantsFamily::findOrNew($id);
-        
-        $familyApplicant->app_id = $id; 
+
+        $familyApplicant->app_id = $id;
         $familyApplicant->app_sps_nm_last = $request->app_sps_nm_last;
         $familyApplicant->app_sps_nm_first = $request->app_sps_nm_first;
         $familyApplicant->app_sps_nm_mid = $request->app_sps_nm_mid;
@@ -102,7 +101,7 @@ class TblapplicantProfileController extends Controller
         $familyApplicant->app_mthr_nm_mid = $request->app_mthr_nm_mid;
         $familyApplicant->app_mthr_nm_extn = $request->app_mthr_nm_extn ?? 'NA';
 
-        if(isset($request->children)){
+        if (isset($request->children)) {
             TblapplicantChildren::destroy($id);
             foreach ($request->children as $value) {
                 $data = json_decode($value, true);
@@ -128,8 +127,8 @@ class TblapplicantProfileController extends Controller
 
         $verify = TblapplicantVerification::where('vry_app_id', $request->applicant)->first();
 
-        if($verify != null){
-            if($verify->vry_app_token == $request->token){
+        if ($verify != null) {
+            if ($verify->vry_app_token == $request->token) {
                 $setAsVerified = TblapplicantsProfile::where('app_id', $request->applicant)->update(["app_verified" => 1]);
                 // where('app_id', $request->applicant)->first(find($request->applicant)
                 $verify->where('vry_app_id', $request->applicant)->delete();
@@ -140,52 +139,53 @@ class TblapplicantProfileController extends Controller
         } else {
             abort('404');
         }
-
     }
 
     public function addGovernmentId($id, Request $request)
     {
-     
+
         $isImageBool = TblapplicantsProfile::where('app_id', $id)->first();
-        
-        
-        $request->validate([
-            "app_id_issued" => "required",
-            "app_id_no" => "required",
-            "app_id_dateplace" => "required" ,
-            "app_photo" => [Rule::when(isset($isImageBool->app_photo), [], ['required'] )],
-            "app_agree" => "required",
-        ],
-        [
-            "required" => "This field is required",
-        ]);
+
+
+        $request->validate(
+            [
+                "app_id_issued" => "required",
+                "app_id_no" => "required",
+                "app_id_dateplace" => "required",
+                "app_photo" => [Rule::when(isset($isImageBool->app_photo), [], ['required'])],
+                "app_agree" => "required",
+            ],
+            [
+                "required" => "This field is required",
+            ]
+        );
 
         $applicantQry = TblapplicantsProfile::find($id);
-  
-        if(!isset($isImageBool->app_photo)){
-            
+
+        if (!isset($isImageBool->app_photo)) {
+
             $imageObj = $request->file('app_photo');
             $extentionStr = $imageObj->getClientOriginalExtension();
             $filenameStr = 'passport-img-' . time() . '.' . $extentionStr;
             $imageObj->storeAs('public/applicant/passport-img', $filenameStr);
-            
+
             $applicantQry->app_id_issued = $request->app_id_issued;
             $applicantQry->app_id_no = $request->app_id_no;
             $applicantQry->app_id_dateplace = $request->app_id_dateplace;
             $applicantQry->app_agree = $request->app_agree;
             $applicantQry->app_photo = $filenameStr;
-          
+
             $applicantQry->save();
-            return response()->json([ "status" => "200" ]);
-        } 
-         
-        if($request->hasFile('app_photo')){
+            return response()->json(["status" => "200"]);
+        }
+
+        if ($request->hasFile('app_photo')) {
             // if(isset($isImageBool->app_photo)){
-                $imgNameStr = $applicantQry->app_photo;
-                $public = public_path('storage/applicant/passport-img/'.$imgNameStr);
-                unlink($public);
+            $imgNameStr = $applicantQry->app_photo;
+            $public = public_path('storage/applicant/passport-img/' . $imgNameStr);
+            unlink($public);
             // }
-            
+
             $imageObj = $request->file('app_photo');
             $extentionStr = $imageObj->getClientOriginalExtension();
             $filenameStr = 'passport-img-' . time() . '.' . $extentionStr;
@@ -197,7 +197,7 @@ class TblapplicantProfileController extends Controller
             $applicantQry->app_agree = $request->app_agree;
             $applicantQry->app_photo = $filenameStr;
             $applicantQry->save();
-            return response()->json([ "status" => "200" ]);
+            return response()->json(["status" => "200"]);
         }
 
         $applicantQry->app_id_issued = $request->app_id_issued;
@@ -205,10 +205,10 @@ class TblapplicantProfileController extends Controller
         $applicantQry->app_id_dateplace = $request->app_id_dateplace;
         $applicantQry->app_agree = $request->app_agree;
         $applicantQry->save();
-        
     }
 
-    public function getApplicant($id = null){
+    public function getApplicant($id = null)
+    {
         $applicantDataQry = TblapplicantsProfile::find($id);
         return new ApplicantProfileResource($applicantDataQry);
     }
@@ -218,10 +218,39 @@ class TblapplicantProfileController extends Controller
         $qualified_applicants = $this->appProfileService->getQualifiedApplicants($type);
         return QualifiedApplicantsResource::collection($qualified_applicants);
     }
+
+    public function generatePOAReport($plantillaId)
+    {
+        $qualified_applicants = $this->appProfileService->getQualifiedApplicants_report($plantillaId);
+        $requirements = $this->appProfileService->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
+        // return $qualified_applicants;
+        return $this->appProfileService->generatePOAReport($qualified_applicants, $requirements);
+    }
+
+    public function generateRAIReport($month, $year)
+    {
+        return $this->appProfileService->generateRAIReport($month, $year);
+    }
+
+    public function generateCMReport($plantillaId)
+    {
+        $qualified_applicants = $this->appProfileService->getQualifiedApplicants_report($plantillaId);
+        $requirements = $this->appProfileService->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
+        return $this->appProfileService->generateCMReport($qualified_applicants, $requirements);
+    }
+
+    public function generateOOOReport($applicants)
+    {
+        return $this->appProfileService->generateOOOReport($applicants);
+    }
+    public function generateCADReport($applicants)
+    {
+        return $this->appProfileService->generateOOOReport($applicants);
+    }
+
     public function getFamilyChildren($id)
     {
         $getFamQry = TblapplicantsFamily::where("app_id", $id)->first();
         return new CommonResource($getFamQry);
     }
-
 }

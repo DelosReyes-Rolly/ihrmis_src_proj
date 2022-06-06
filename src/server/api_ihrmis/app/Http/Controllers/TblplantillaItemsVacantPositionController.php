@@ -88,7 +88,27 @@ class TblplantillaItemsVacantPositionController extends Controller {
     }
 
     /**
-     * get all agency employees
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllDostAgencies() {
+
+        return $this->tblPantillaVacantPos->getAllDostAgencies();
+
+	}
+
+	/**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAllAgencies()
+    {
+        return $this->tblPantillaVacantPos->getAllAgencies();
+    }
+
+     /** get all agency employees
      */
     public function getAgencyEmployees($agency, $plantilla){
         return CommonResource::collection($this->tblPantillaVacantPos->getAgencyEmployees($agency, $plantilla));

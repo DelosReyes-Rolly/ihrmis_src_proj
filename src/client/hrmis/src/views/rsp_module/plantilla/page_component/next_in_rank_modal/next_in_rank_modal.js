@@ -32,7 +32,8 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
       .get(API_HOST + "get-next-rank-employees/" + fetch_id)
       .then((res) => {
         setDataFetched(res.data.data);
-      });
+      })
+      .catch((err) => console.log(err));
   };
 
   const generateMemo = async () => {

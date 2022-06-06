@@ -4656,6 +4656,151 @@ input:checked + .slider:before {
   background-color: rgba(0, 0, 0, 0.1333333333);
 }
 
+.documents-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 95vh;
+}
+.documents-view .three-idiot {
+  display: flex;
+  justify-content: end;
+  padding: 0px 20px;
+}
+
+.upload-input-design {
+  cursor: pointer;
+}
+
+.upload-input-design label {
+  cursor: pointer;
+}
+
+.rowgroup {
+  overflow-y: auto;
+}
+
+.main-header {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+}
+
+.main-header th {
+  background-color: whitesmoke;
+  border: 1px solid rgba(70, 70, 70, 0.2);
+  background-clip: padding-box;
+}
+
+.add-documents-modal {
+  display: flex;
+  margin-bottom: 10px;
+}
+.add-documents-modal .left-input {
+  margin-right: 5px;
+}
+.add-documents-modal .middle-input {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.add-documents-modal .right-input {
+  margin-left: 5px;
+}
+.add-documents-modal .item-modal-1 {
+  width: 100%;
+}
+.add-documents-modal .item-modal-2 {
+  width: 90%;
+}
+.add-documents-modal .item-modal-3 {
+  width: 10%;
+}
+.add-documents-modal .item-modal-4 {
+  width: 30%;
+}
+.add-documents-modal .item-modal-4 .input-component {
+  margin: 5px 0px;
+}
+.add-documents-modal .item-modal-5 {
+  width: 70%;
+}
+
+.document-table {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.documents_table {
+  width: 100%;
+  border: solid 1px;
+  border-radius: 5px 5px 5px 5px;
+  max-height: 50px;
+  overflow-y: auto;
+}
+.documents_table tr:hover {
+  background-color: rgba(0, 110, 255, 0.1);
+}
+.documents_table tr {
+  display: flex;
+  justify-content: center;
+}
+.documents_table td {
+  padding: 0.5rem;
+  color: #505050;
+}
+.documents_table .unfilled {
+  color: #b0b0b0;
+}
+.documents_table .unfilled:hover {
+  color: #505050;
+}
+.documents_table .col-1 {
+  cursor: pointer;
+  width: 90%;
+}
+.documents_table .col-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+}
+.documents_table .col-2 .plantilla-icon {
+  cursor: pointer;
+}
+.documents_table .gone {
+  display: none;
+}
+
+.email_icon {
+  width: 5%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.5em;
+  justify-content: center;
+}
+.email_icon .save {
+  color: #40d940;
+}
+.email_icon .delete {
+  color: #ff2b2b;
+}
+
+@media only screen and (max-width: 800px) {
+  .filter_buttons {
+    min-width: 125px;
+    width: 30%;
+  }
+
+  .selector-search-label {
+    display: none;
+  }
+
+  .search-container {
+    display: block;
+    margin-top: 20px;
+    width: 100% !important;
+  }
+}
 .pds-profile-main-view {
   padding: 50px 30px;
   max-width: 1200px;
@@ -5843,6 +5988,28 @@ input:checked + .slider:before {
     margin-bottom: 5px;
   }
 }
+.flex-selectagency-display {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px;
+}
+.flex-selectagency-display .div-labal {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+  width: 50%;
+}
+.flex-selectagency-display .div-labal p {
+  margin-top: -2px;
+  margin-left: 3px;
+}
+.flex-selectagency-display .div-labal input[type=text] {
+  margin-top: -2px;
+  margin-left: 3px;
+}
+
 .notify-button-color {
   background-color: green;
   border: 1px solid green;
@@ -5860,6 +6027,35 @@ input:checked + .slider:before {
 
 .delete-button-color:hover {
   background-color: rgb(185, 22, 22) !important;
+}
+
+.posting-job-vacancy-main .posting-job-vacancy {
+  display: flex;
+  justify-content: end;
+  font-weight: bold;
+  color: #4276a4;
+  font-size: 1.2em;
+  padding-top: 10px;
+}
+.posting-job-vacancy-main .posting-job-vacancy-anchor {
+  text-decoration: none;
+  color: #74caf3;
+}
+.posting-job-vacancy-main .posting-job-vacancy-anchor:hover {
+  text-decoration: underline;
+  color: #74caf3;
+  cursor: default;
+  transition: transform 0.2s;
+  transform: scale(1.2);
+}
+.posting-job-vacancy-main .posting-job-vacancy-deadline {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 30%;
+}
+.posting-job-vacancy-main .margin-left {
+  margin-left: 10px;
 }
 
 .btn-primary {
@@ -5933,6 +6129,9 @@ input:checked + .slider:before {
 }
 .add-office-modal .item-modal-5 {
   width: 100%;
+}
+.add-office-modal .item-modal-6 {
+  width: 50%;
 }
 
 .documents-view {
@@ -6190,5 +6389,5 @@ input:checked + .slider:before {
 }
 
 .btn-primary:active {
-  transform: translateY(2px);
+  transform: translate(2px);
 }/*# sourceMappingURL=styles.css.map */

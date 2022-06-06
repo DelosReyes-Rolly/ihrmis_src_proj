@@ -42,11 +42,12 @@ class QualifiedApplicantsResource extends JsonResource
 
         $education = [
             0 => "N/A",
-            1 => "Bachelor's",
-            2 => "Master's",
-            3 => "PhD",
+            1 => "Elementary",
+            2 => "Secondary",
+            3 => "Vocational/Trade",
+            4 => "Bachelor's",
+            5 => "Doctorate",
         ];
-
 
         $age = Carbon::parse($this->TblapplicantsProfile->app_birth_date)->age;
         $civil_status = $civil_statuses[$this->TblapplicantsProfile->app_civil_status];
@@ -97,26 +98,32 @@ class QualifiedApplicantsResource extends JsonResource
             $start = new Carbon($appExperience->exp_app_from, 'Asia/Manila');
             $end = new Carbon($appExperience->exp_app_to, 'Asia/Manila');
             $related_fields = explode(',', $appExperience->exp_app_rel_fields);
-            foreach ($related_fields as $field) {
-                $applicantExpField[$field]['field'] = $field;
-                if (empty($applicantExpField[$field]['years'])) {
-                    $applicantExpField[$field]['years'] = $start->diffInYears($end, true);
-                } else {
-                    $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
-                }
-                $current = $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
-                if ($current > $highest['experience_years']) {
-                    $highest['experience_years'] = $current;
-                    $highest['experience'] = $field;
-                }
-            }
+            // foreach ($related_fields as $field) {
+            //     $applicantExpField['field'] = $field;
+            //     if (empty($applicantExpField['years'])) {
+            //         $applicantExpField['years'] = $start->diffInYears($end, true);
+            //     } else {
+            //         $applicantExpField['years'] += $start->diffInYears($end, true);
+            //     }
+            // $current = $applicantExpField['years'] += $start->diffInYears($end, true);
+            //     if ($current > $highest['experience_years']) {
+            $highest['experience_years'] += $start->diffInYears($end, true);
+            $highest['experience'] = $appExperience->exp_app_rel_fields;
+            //     }
+            // }
         }
-        $name = $this->TblapplicantsProfile->app_nm_last. ", ". $this->TblapplicantsProfile->app_nm_first;
-        $email = $this->TblapplicantsProfile->app_email_addr;
-        $position_message = $this->TblPositions->pos_title. ";\n". $this->TblOffices->ofc_acronym;
+        $year_text = "";
+        if ($highest['experience_years'] == 1) {
+            $year_text = " year of experience";
+        } else {
+            $year_text = " years of experience";
+        }
 
+        $name = $this->TblapplicantsProfile->app_nm_last . ", " . $this->TblapplicantsProfile->app_nm_first;
+        $email = $this->TblapplicantsProfile->app_email_addr;
+        $position_message = $this->TblPositions->pos_title . ";\n" . $this->TblOffices->ofc_acronym;
         $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
-            $highest['experience_years'] . " years experience in " . $highest['experience'] . ";\n". $highest['training_hours'] . " hours training in " .
+            $highest['experience_years'] . $year_text . "\n" . $highest['training_hours'] . " hours training in " .
             $highest['training'] . "; " . $highest['eligibility'] . "";
 
         return [
@@ -126,6 +133,8 @@ class QualifiedApplicantsResource extends JsonResource
             'profile_message' => $profile_message,
             'qualification_message' => $qualification_message,
             'position_message' => $position_message,
+            'position' => $this->TblPositions->pos_title,
+            'plantilla' => $this->TblplantillaItems->itm_id,
         ];
     }
 }

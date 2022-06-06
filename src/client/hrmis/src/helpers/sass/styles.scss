@@ -1,5 +1,6 @@
 //DEFAULTS
-@use "./defaults/default_colors" as *;
+@import "./defaults/default_colors";
+// @use "../../../../../helpers/sass/defaults/_default_colors.scss" as *;
 @import "./defaults/default_mixins";
 @import "./defaults/default_themes";
 @import "./defaults/default_plantilla";
@@ -126,6 +127,7 @@ body {
 @import "./../../views/common/import_component_style";
 
 //PAGES
+@import "./../../views/library/office_page/officeLibrary";
 @import "./../../views/pds_form/pds_profile";
 @import "./../../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
 @import "./../../views/rsp_module/plantilla/plantilla_view";
@@ -154,7 +156,7 @@ body {
 }
 
 .btn-primary:active {
-  transform: translateY(2px);
+  transform: translate(2px);
 }
 
 // .selector-span-1 button{

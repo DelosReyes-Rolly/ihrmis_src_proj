@@ -33,7 +33,7 @@ const SidebarComponent = ({ itemsList = SidebarOption }) => {
           </p>
           <div className="sidebar-menu-items">
             <ul className="list-of-items">
-              {itemsList.map((item) => {
+              {itemsList.map((item, key) => {
                 return (
                   <React.Fragment key={item.id}>
                     <li
@@ -41,11 +41,11 @@ const SidebarComponent = ({ itemsList = SidebarOption }) => {
                         if (selected === item.id) {
                           navigate(item.link);
                           setSelected(0);
-                          setSubSelected(0);
+                          setSubSelected(1);
                         } else {
                           navigate(item.link);
                           setSelected(item.id);
-                          setSubSelected(0);
+                          setSubSelected(1);
                         }
                         if (item.more === null && isMobile) {
                           dispatch(openSideBar());
@@ -85,7 +85,7 @@ const SidebarComponent = ({ itemsList = SidebarOption }) => {
                       unmountOnExit
                       classNames="slideDown"
                     >
-                      <SubItemComponent itemList={item.more} />
+                      <SubItemComponent itemList={item.more} name={key} />
                     </CSSTransition>
                   </React.Fragment>
                 );
@@ -100,18 +100,15 @@ const SidebarComponent = ({ itemsList = SidebarOption }) => {
 
 export default SidebarComponent;
 
-const SubItemComponent = ({ itemList = [] }) => {
+const SubItemComponent = ({ itemList = [], name }) => {
   const navigate = useNavigate();
   const [selected, setSelected] = useSessionStorage(
-    "selected-sidebar-subitem",
+    `selected-sidebar-subitem`,
     1
   );
   const dispatch = useDispatch();
   const { isMobile } = useDetectScreenHelper();
-  useEffect(() => {
-    setSelected(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
   return (
     <React.Fragment>
       <ul>

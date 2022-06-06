@@ -1,52 +1,76 @@
 import BreadcrumbComponent from '../../../common/breadcrumb_component/Breadcrumb';
-import SearchComponent from '../../../common/input_component/search_input/search_input';
 import { recruitmentBreadCramp } from '../static/breadcramp_item';
 import React, { useEffect, useState } from 'react';
 import {
 	recruitmentEmailTemplateList,
-	recruitmentSelectItem,
+	recruitmentReportList,
 } from '../static/menu_items';
-import { recruitmentSelectFilter } from '../static/filter_items';
-
 import RecruitmentTable from './page_tables/recruitment_table';
 import IconComponent from '../../../common/icon_component/icon';
 import {
 	BsFillEnvelopeFill,
 	BsFillStarFill,
-	BsGlobe,
 	BsPrinterFill,
 } from 'react-icons/bs';
 import { IoDocuments } from 'react-icons/io5';
-import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper';
 import RecruitmentEmail from './page_modals/recruitment_email';
 import DropdownViewComponent from '../../../common/dropdown_menu_custom_component/Dropdown_view';
-import { useNavigate } from 'react-router-dom';
-import { AiFillMinusCircle } from 'react-icons/ai';
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 import RecruitmentStatusModal from './page_modals/recruitment_status_modal';
 import { API_HOST } from '../../../../helpers/global/global_config';
+import axios from 'axios';
+import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
+import RecruitmentDateSelector from './page_modals/recruitment_date_selector';
+import { useNavigate } from 'react-router-dom';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
 	const [emailModalToggleState, setEmailModalToggle] = useState('0');
-	const [modalStates, setModalStates] = useState({
-		documentModalState: false,
-	});
-	const [value, setValue] = useState(0);
-
-	const updateModalStates = (key, value) => {
-		setModalStates({
-			...modalStates,
-			[key]: value,
-		});
-	};
+	const [value, setValue] = useState('');
+	const [position, setPosition] = useState('');
+	const [reportValue, setReportValue] = useState(null);
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
 	const navigate = useNavigate();
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
-	const [selectedEmailTemplate, setEmailTemplate] = useState(0);
-
-
+	useEffect(() => {
+		if (reportValue === 'POA' || reportValue === 'CM') {
+			if (position.length !== 0 || position !== 0) {
+				window.open(
+					API_HOST + 'generate-' + reportValue + '/' + position,
+					'_blank'
+				);
+			} else {
+				popupAlert({
+					message: 'Please Select a Vacant Position for this report',
+					type: ALERT_ENUM.fail,
+				});
+			}
+		}
+		if (
+			reportValue === 'OOO' ||
+			reportValue === 'AFA' ||
+			reportValue === 'CAD'
+		) {
+			if (selectedApplicants.length !== 0) {
+				let applicants = '';
+				selectedApplicants.forEach((element) => {
+					applicants = applicants + element.app_id + '-';
+				});
+				let finalString = applicants.slice(0, -1);
+				window.open(
+					API_HOST + 'generate-' + reportValue + '/' + finalString,
+					'_tab'
+				);
+			} else {
+				popupAlert({
+					message: 'Please Select Applicant/s for this report',
+					type: ALERT_ENUM.fail,
+				});
+			}
+		}
+	}, [reportValue]);
 	return (
 		<React.Fragment>
 			<div className='documents-view'>
@@ -56,13 +80,16 @@ const RecruitmentBaseComponent = () => {
 
 				<div className='container-vacant-position'>
 					<div className='three-idiot'>
-						<IconComponent
+						<DropdownViewComponent
+							itemList={recruitmentReportList}
 							id='applicant_print_reports'
-							className='padding-left-1'
-							icon={<BsPrinterFill />}
-							toolTipId='rc-ap-print'
-							textHelper='View/Edit Selected 	 Position'
-							onClick={() => {}}
+							title={<BsPrinterFill size='22' />}
+							className='plantilla-icon margin-left-1 unstyled-button'
+							toolTipId='applicant_print_reports-tooltip'
+							position='top'
+							alignItems='end'
+							textHelper='Click to view printable reports'
+							setValue={setReportValue}
 						/>
 						<DropdownViewComponent
 							itemList={recruitmentEmailTemplateList}
@@ -85,15 +112,36 @@ const RecruitmentBaseComponent = () => {
 							id='recruitment_all_ratings'
 							className='margin-left-1'
 							icon={<BsFillStarFill />}
+							onClick={() => {
+								if (position !== '' && position !== 0) {
+									console.log(position);
+									// window.open(
+									// 	API_HOST + 'generate-' + reportValue + '/' + position,
+									// 	'_blank'
+									navigate('./comparative-matrix/' + position);
+									// );
+								} else {
+									popupAlert({
+										message: 'Please Select a Vacant Position',
+										type: ALERT_ENUM.fail,
+									});
+								}
+							}}
 							toolTipId='rc-ap-ratings'
 							textHelper='Show ratings of Selected Applicants'
 						/>
 						<IconComponent
 							id='recruitment_all_disqualify'
 							className='margin-left-1'
-							icon={<AiFillMinusCircle />}
+							icon={
+								toggleState === 1 ? <AiFillMinusCircle /> : <AiFillPlusCircle />
+							}
 							toolTipId='rc-ap-disq'
-							textHelper='Disqualify selected Applicants'
+							textHelper={
+								toggleState === 1
+									? 'Disqualify selected Applicants'
+									: 'Qualify selected Applicants'
+							}
 						/>
 					</div>
 					<div className='regular-tab-component'>
@@ -118,85 +166,13 @@ const RecruitmentBaseComponent = () => {
 				</div>
 				{/* TAB MENU STARTS HERE  */}
 				<div>
-					<div className='selector-buttons'>
-						<div className='selector-container'>
-							{/* <span className='selector-span-1'> */}
-							{/* <ButtonComponent/> */}
-							<button
-								className='filter_buttons button-components'
-								onClick={() => navigate('/pds-applicant')}
-								style={{
-									cursor: 'pointer',
-									display: 'flex',
-									justifyContent: 'center',
-									alignItems: 'center',
-									textAlign: 'center',
-								}}
-							>
-								<p>Applicant</p>
-							</button>
-							{/* </span> */}
-							<span className='filter_buttons margin-left-1 selector-span-1'>
-								<select defaultValue={'DEFAULT'}>
-									<option value='DEFAULT' disabled>
-										Vacant Position
-									</option>
-									{recruitmentSelectFilter.map((item) => {
-										return (
-											<option
-												className='options'
-												key={item.value}
-												defaultValue={item.value}
-											>
-												{item.title}
-											</option>
-										);
-									})}
-								</select>
-							</span>
-							<span className='margin-left-1 selector-span-1'>
-								<select className='filter_buttons' defaultValue={'DEFAULT'}>
-									<option value='DEFAULT' disabled>
-										Filter By
-									</option>
-									{recruitmentSelectItem.map((item) => {
-										return (
-											<option
-												className='options'
-												key={item.value}
-												defaultValue={item.value}
-											>
-												{item.title}
-											</option>
-										);
-									})}
-								</select>
-							</span>
-						</div>
-
-						<div className='search-container'>
-							<span className='margin-right-1 selector-search-label'>
-								<label>Search</label>
-							</span>
-							<span>
-								<SearchComponent placeholder='Search' />
-							</span>
-						</div>
-					</div>
 					<div>
 						<RecruitmentTable
 							type={toggleState}
 							setSelectedApplicants={setSelectedApplicants}
-							updateModalStates={setModalStates}
+							setPosition={setPosition}
 						/>
 					</div>
-					{/* <div className={toggleState === 2 ? 'current-tab' : 'show-none'}>
-						<RecruitmentTable
-							type={2}
-							setSelectedApplicants={setSelectedApplicants}
-							updateModalStates={setModalStates}
-						/>
-					</div> */}
 					<div>
 						<RecruitmentEmail
 							isDisplay={emailModalToggleState !== '0' ? true : false}
@@ -213,6 +189,17 @@ const RecruitmentBaseComponent = () => {
 								setValue(0);
 							}}
 							rowData={selectedApplicants}
+						/>
+						<RecruitmentDateSelector
+							isDisplay={reportValue === 'RAI' ? true : false}
+							title={
+								reportValue === 'RAI'
+									? 'Select month and year of the Report'
+									: 'Date Selector'
+							}
+							onClose={() => {
+								setReportValue('');
+							}}
 						/>
 					</div>
 				</div>
