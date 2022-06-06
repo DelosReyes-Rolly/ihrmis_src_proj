@@ -76,9 +76,7 @@ class PlantillaItemsService
 	 * Todo this function will generate Notice of Vacancy report in PDF form
 	 * @return void
 	 */
-	public function generateNoticeofVacancyReports()
-	{
-  
+	public function generateNoticeofVacancyReports(){
 		date_default_timezone_set('Asia/Manila'); //define local time
 		//get vacant position
 		$data = $this->getVacantPositions(0);
@@ -269,14 +267,6 @@ class PlantillaItemsService
 		return $employee->save();
 	}
 
-	private function generateEmpNo($plantillaitm_data){
-		//get $item_source
-		//get $last_emp_no
-		//get $current_year
-		//assign $separator = "_";
-		//concatinate $last_emp_no + 1 . "_" . $item_source . "_" . $current_year	
-	}
-
 	/**
 	 * getVacantPositions
 	 * Todo get vacant positions by
@@ -347,33 +337,32 @@ class PlantillaItemsService
 		$nextRankQrt = TblnextInRank::where('nir_itm_id', $plantilla)->get();
 		$arrEmpIdHolder =[];
 		foreach($nextRankQrt as $value){
-		array_push($arrEmpIdHolder, $value->nir_emp_id);
-    }
+			array_push($arrEmpIdHolder, $value->nir_emp_id);
+    	}
 
-    $arrHolder = [];
-    foreach ($itemQry as $offices) {
-      foreach($offices->plantillaItems as $items){
-        if($items->employee != null){
-          if(!in_array($items->employee->emp_id, $arrEmpIdHolder)){
-            $name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
-            array_push($arrHolder, [
-            'nir_name' => $name,
-            'nir_email' =>  $items->employee->emp_ofc_email,
-            'nir_office' => $offices->ofc_acronym,
-            'nir_pos_title' => $items->tblpositions->pos_title,
-            'nir_emp_id' => $items->employee->emp_id,
-            'nir_ofc_id' => $offices->ofc_id,
-            'nir_agn_id' => (int)$agency,
-            'nir_itm_id' => 1
-            ]);
-          }
-        }
-      }
-    }
+		$arrHolder = [];
+		foreach ($itemQry as $offices) {
+			foreach($offices->plantillaItems as $items){
+				if($items->employee != null){
+					if(!in_array($items->employee->emp_id, $arrEmpIdHolder)){
+						$name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
+						array_push($arrHolder, [
+						'nir_name' => $name,
+						'nir_email' =>  $items->employee->emp_ofc_email,
+						'nir_office' => $offices->ofc_acronym,
+						'nir_pos_title' => $items->tblpositions->pos_title,
+						'nir_emp_id' => $items->employee->emp_id,
+						'nir_ofc_id' => $offices->ofc_id,
+						'nir_agn_id' => (int)$agency,
+						'nir_itm_id' => 1
+						]);
+					}
+				}
+			}
+		}
 
-    return $arrHolder;
-
-  }
+    	return $arrHolder;
+  	}
 
 	public function addToNextInRank($request){
 

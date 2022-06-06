@@ -6,74 +6,104 @@ import InputComponent from "../../../common/input_component/input_component/inpu
 import ModalComponent from "../../../common/modal_component/modal_component";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import useAxiosHelper from "../../../../helpers/use_hooks/axios_helper";
 import {
+  API_HOST,
   validationDate,
   validationRequired,
   validationRequiredNum,
-  yesterday,
 } from "../../../../helpers/global/global_config";
+import axios from "axios";
+import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 
-const ThreeAddVoluntrayWorkModal = (props) => {
-  // ===========================================================
-  // CUSTOM HOOK SERVICE
-  // ===========================================================
-  const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+const dateValidationAfter = validationDate.min(
+  Yup.ref("vol_app_from"),
+  ({ min }) =>
+    `Date from needs to be after ${new Date(min).toLocaleDateString()}`
+);
 
-  // ===================================
-  // HANDLING ROUTES
-  // ===================================
+const ThreeAddVoluntrayWorkModal = ({
+  reference,
+  isDisplay,
+  remove,
+  onClose,
+  endpoint,
+}) => {
+  const { renderBusy } = usePopUpHelper();
+
   const { item } = useParams();
 
-  // ===========================================================
-  // SUBMIT HANDLER
-  // ===========================================================
   const voluntaryPdsForm = useFormik({
     enableReinitialize: true,
     initialValues: {
-      item: props?.data?.vol_app_time ?? "",
-      vol_app_org: props?.data?.vol_app_org ?? "",
-      vol_app_addr: props?.data?.vol_app_addr ?? "",
-      vol_app_from: props?.data?.vol_app_from ?? "",
-      vol_app_to: props?.data?.vol_app_to ?? "",
-      vol_app_hours: props?.data?.vol_app_hours ?? "",
-      vol_app_work: props?.data?.vol_app_work ?? "",
+      vol_app_id: item ?? "",
+      vol_app_org: reference?.vol_app_org ?? "",
+      vol_app_addr: reference?.vol_app_addr ?? "",
+      vol_app_from: reference?.vol_app_from ?? "",
+      vol_app_to: reference?.vol_app_to ?? "",
+      vol_app_hours: reference?.vol_app_hours ?? "",
+      vol_app_work: reference?.vol_app_work ?? "",
     },
     validationSchema: Yup.object({
       vol_app_org: validationRequired,
       vol_app_addr: validationRequired,
-      vol_app_from: validationDate.max(yesterday, "Invalid Date"),
-      vol_app_to: validationDate,
+      vol_app_from: validationDate,
+      vol_app_to: dateValidationAfter,
       vol_app_hours: validationRequiredNum,
       vol_app_work: validationRequired,
     }),
     onSubmit: async (values, { resetForm }) => {
       renderBusy(true);
-      await useAxiosHelper
-        .post(values, "new-voluntary-work", item)
+
+      const plantilla =
+        reference?.vol_id === undefined ? "" : `/${reference?.vol_id}`;
+      const link =
+        endpoint === undefined
+          ? "new-voluntary-work" + plantilla
+          : endpoint + plantilla;
+
+      await axios
+        .post(API_HOST + link, values)
         .then(() => {
           resetForm();
-          renderSucceed({ content: "Form Submitted" });
-          props.onClose();
+          let MESSAGE = "New voluntary work was added successfully";
+          if (reference !== undefined)
+            MESSAGE = "Voluntary work was edited successfully";
+          popupAlert({
+            message: MESSAGE,
+            type: ALERT_ENUM.success,
+          });
+          onClose();
         })
-        .catch((err) => renderFailed({ content: err.message }));
+        .catch((error) => {
+          resetForm();
+          popupAlert({
+            message: error?.response?.data?.message ?? error?.message,
+            type: ALERT_ENUM.fail,
+          });
+          onClose();
+        });
       renderBusy(false);
     },
   });
 
-  useEffect(() => {}, [props.isDisplay]);
+  useEffect(() => {
+    if (isDisplay === false) {
+      voluntaryPdsForm.setTouched({}, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDisplay]);
 
   return (
     <React.Fragment>
       <ModalComponent
         title="Voluntary Work"
         onSubmitName="Save"
-        onCloseName="Delete"
-        isDisplay={props.isDisplay}
-        onPressed={props.onPressed}
+        onCloseName={remove === undefined ? "Close" : "Delete"}
+        isDisplay={isDisplay}
+        onPressed={remove}
         onSubmit={voluntaryPdsForm.handleSubmit}
         onSubmitType="submit"
-        onClose={props.onClose}
+        onClose={onClose}
       >
         <div className="add-volwork-modal-container">
           <br />

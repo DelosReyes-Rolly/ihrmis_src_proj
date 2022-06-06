@@ -9,39 +9,46 @@ import TextAreaComponent from "../../../common/input_component/textarea_input_co
 import ModalComponent from "../../../common/modal_component/modal_component";
 import { formThreeInput } from "../../static/input_items";
 import {
+  API_HOST,
   validationDate,
   validationRequired,
   validationRequiredNum,
-  yesterday,
 } from "../../../../helpers/global/global_config";
-import useAxiosHelper from "../../../../helpers/use_hooks/axios_helper";
+import axios from "axios";
+import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 
-const ThreeAddInterventionModal = (props) => {
-  const { renderFailed, renderBusy, renderSucceed } = usePopUpHelper();
-  // ===================================
-  // HANDLING ROUTES
-  // ===================================
+const dateValidationAfter = validationDate.min(
+  Yup.ref("trn_app_from"),
+  ({ min }) =>
+    `Date from needs to be after ${new Date(min).toLocaleDateString()}`
+);
+
+const ThreeAddInterventionModal = ({
+  reference,
+  isDisplay,
+  onClose,
+  endpoint,
+  remove,
+}) => {
+  const { renderBusy } = usePopUpHelper();
   const { item } = useParams();
 
-  // ===========================================================
-  // SUBMIT HANDLER
-  // ===========================================================
   const trainingPdsForm = useFormik({
     enableReinitialize: true,
     initialValues: {
-      item: props?.data?.trn_app_time ?? "",
-      trn_app_title: props?.data?.trn_app_title ?? "",
-      trn_app_from: props?.data?.trn_app_from ?? "",
-      trn_app_to: props?.data?.trn_app_to ?? "",
-      trn_app_hours: props?.data?.trn_app_hours ?? "",
-      trn_app_type: props?.data?.trn_app_type ?? "",
-      trn_app_sponsor: props?.data?.trn_app_sponsor ?? "",
-      trn_app_cmptncy: props?.data?.trn_app_cmptncy ?? "",
+      trn_app_id: item ?? "",
+      trn_app_title: reference?.trn_app_title ?? "",
+      trn_app_from: reference?.trn_app_from ?? "",
+      trn_app_to: reference?.trn_app_to ?? "",
+      trn_app_hours: reference?.trn_app_hours ?? "",
+      trn_app_type: reference?.trn_app_type ?? "",
+      trn_app_sponsor: reference?.trn_app_sponsor ?? "",
+      trn_app_cmptncy: reference?.trn_app_cmptncy ?? "",
     },
     validationSchema: Yup.object({
       trn_app_title: validationRequired,
-      trn_app_from: validationDate.max(yesterday, "Invalid Date"),
-      trn_app_to: validationDate.max(yesterday, "Invalid Date"),
+      trn_app_from: validationDate,
+      trn_app_to: dateValidationAfter,
       trn_app_hours: validationRequiredNum,
       trn_app_type: validationRequired,
       trn_app_sponsor: validationRequired,
@@ -49,34 +56,53 @@ const ThreeAddInterventionModal = (props) => {
     }),
     onSubmit: async (values, { resetForm }) => {
       renderBusy(true);
-      await useAxiosHelper
-        .post(values, "new-training", item)
+      const refID =
+        reference?.cse_id === undefined ? "" : `/${reference?.cse_id}`;
+      const link =
+        endpoint === undefined ? "new-training" + refID : endpoint + refID;
+      await axios
+        .post(API_HOST + link, values)
         .then(() => {
+          let MESSAGE = "New Training was added successfully";
+          if (reference !== undefined)
+            MESSAGE = "Training was edited successfully";
+          popupAlert({
+            message: MESSAGE,
+            type: ALERT_ENUM.success,
+          });
           resetForm();
-          renderSucceed({ content: "Form Submitted" });
-          props.onClose();
+          onClose();
         })
-        .catch((err) => renderFailed({ content: err.message }));
+        .catch((error) => {
+          resetForm();
+          onClose();
+          popupAlert({
+            message: error?.response?.data?.message ?? error?.message,
+            type: ALERT_ENUM.fail,
+          });
+        });
       renderBusy(false);
     },
   });
 
-  // ===========================================================
-  // INIT STATE
-  // ===========================================================
-  useEffect(() => {}, [props.isDisplay]);
+  useEffect(() => {
+    if (isDisplay === false) {
+      trainingPdsForm.setTouched({}, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDisplay]);
 
   return (
     <React.Fragment>
       <ModalComponent
         title="Learning and Development Interventions"
         onSubmitName="Save"
-        onCloseName="Delete"
-        isDisplay={props.isDisplay}
-        onPressed={props.onPressed}
+        onCloseName={remove === undefined ? "Close" : "Delete"}
+        isDisplay={isDisplay}
+        onPressed={remove}
         onSubmit={trainingPdsForm.handleSubmit}
         onSubmitType="submit"
-        onClose={props.onClose}
+        onClose={onClose}
       >
         <div className="add-intervention-modal-container">
           <br />

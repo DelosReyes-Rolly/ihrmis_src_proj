@@ -42,7 +42,7 @@
 .noti-dropboard {
   z-index: 1000;
   @include containerFlexRow(true);
-  justify-content: start;
+  justify-content: flex-start;
   align-items: flex-start;
   position: absolute;
   top: 38px;
@@ -67,7 +67,7 @@
 .noti-card-style {
   border-top: 1px solid #00000022;
   @include containerFlexRow(false);
-  align-items: start;
+  align-items: flex-start;
   flex-grow: 0;
   padding: 2px 5px;
   cursor: pointer;

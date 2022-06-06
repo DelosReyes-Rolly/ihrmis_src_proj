@@ -1,14 +1,29 @@
-.input-component{
-    box-sizing: border-box;
-    width: 100%;
-    outline: none;
-    border-radius: 5px 5px 5px 5px;
-    border: 1px solid #55555555;
-    padding: 6px 8px; 
-    display: block;
+.input-component {
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  border-radius: 5px 5px 5px 5px;
+  border: 1px solid #55555555;
+  padding: 6px 8px;
+  color: #55555599;
+  display: block;
 }
 
-.input-component:focus{
-    border: 1px solid #55555599;
-
+.input-component:focus {
+  transition: 200ms;
+  border: 1px solid #55555599;
+  color: black;
 }
+
+input[type="date"] {
+  color: #55555599;
+}
+
+input[type="date"]:focus {
+  transition: 200ms;
+  color: black;
+}
+
+// input[type="date"]: {
+//   color: black;
+// }

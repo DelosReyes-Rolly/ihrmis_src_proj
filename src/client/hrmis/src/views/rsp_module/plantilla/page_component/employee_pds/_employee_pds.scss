@@ -9,3 +9,26 @@
   color: white;
   background-color: map-get($primaryColor, regular);
 }
+
+.blue-bg {
+  color: white;
+  background-color: map-get($primaryColor, regular);
+}
+
+.add-hobby-employee {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+
+  .alignment-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .input-icon:active {
+      transform: translateY(1px);
+    }
+  }
+}

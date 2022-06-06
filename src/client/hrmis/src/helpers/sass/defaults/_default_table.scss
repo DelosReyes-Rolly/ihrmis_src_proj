@@ -1,79 +1,79 @@
 .plantilla-table {
-	padding: 10px 20px;
+  padding: 10px 20px;
 }
 
 .fixed-label-table {
-	position: -webkit-sticky; /* Safari */
-	position: sticky;
-	z-index: 1;
-	top: 0;
-	background-color: whitesmoke;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background-color: whitesmoke;
 }
 
 #custom-table {
-	font-size: small;
-	border-collapse: collapse;
-	width: 100%;
+  font-size: small;
+  border-collapse: collapse;
+  width: 100%;
 }
 
 #custom-table td,
 #custom-table th {
-	text-align: start;
-	border: 1px solid #ddd;
-	padding: 8px;
-	color: rgba(70, 70, 70, 0.8);
+  text-align: start;
+  border: 1px solid #ddd;
+  padding: 8px;
+  color: rgba(70, 70, 70, 0.8);
 }
 
 #custom-table th {
-	font-size: 14px;
-	color: #4276a4;
+  font-size: 14px;
+  color: #4276a4;
 }
 
 #custom-table th button {
-	display: inline-flex;
-	align-items: center;
-	color: #4276a4;
-	background-color: transparent;
-	border: none;
-	padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  color: #4276a4;
+  background-color: transparent;
+  border: none;
+  padding: 2px;
 }
 
 #custom-table th button:hover {
-	transition: 0.3s;
-	color: #1da1f2;
+  transition: 0.3s;
+  color: #1da1f2;
 }
 
 #custom-table .trClass {
-	font-size: small;
+  font-size: small;
 }
 
 #custom-table .trClass:hover {
-	background-color: #ddd;
+  background-color: #ddd;
 }
 
 .column-option {
-	align-content: center;
+  align-content: center;
 }
 
 .column-option .inline-div-td-2 {
-	position: relative;
-	float: right;
+  position: relative;
+  float: right;
 }
 
 .column-option .inline-div-td-1 {
-	float: left;
+  float: left;
 }
 
 .column-option button {
-	display: flex;
-	align-items: center;
-	border: none;
-	padding: 0px;
-	background-color: transparent;
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
 }
 
 .column-option button:hover {
-	color: #1da1f2;
+  color: #1da1f2;
 }
 
 // .scrollable-div-table{
@@ -84,67 +84,72 @@
 // }
 
 .data-entry {
-	font-size: 12px;
-	margin-top: 10px;
-	color: rgba(54, 58, 63, 0.6);
+  font-size: 12px;
+  margin-top: 10px;
+  color: rgba(54, 58, 63, 0.6);
 }
 
 /* HEADERS */
 
 .main-headers {
-	background-color: rgba(1, 6, 15, 0.08);
+  background-color: rgba(1, 6, 15, 0.08);
 }
 
 .secondary-headers {
-	background-color: rgba(1, 6, 15, 0.03);
+  background-color: rgba(1, 6, 15, 0.03);
 }
 // =======================================================
 //  NEW TABLE DESIGN HERE.
 // =======================================================
 // Use this as standard default design
 .default-table {
-	margin: 10px 20px;
-	table {
-		text-align: left;
-		width: 100%;
-		border-collapse: collapse;
-	}
-	.main-header {
-		color: map-get($primaryColor, regular);
-	}
+  margin: 10px 20px;
+  table {
+    text-align: left;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .main-header {
+    color: map-get($primaryColor, regular);
+  }
 
-	.secondary-headers {
-		color: map-get($primaryColor, 800);
-	}
+  .secondary-headers {
+    color: map-get($primaryColor, 800);
+  }
 
-	th {
-		border: 1px solid map-get($blackColor, 200);
-		padding: 10px;
-	}
+  .secondary-headers-20 {
+    color: map-get($primaryColor, 800);
+    background-color: #00000008;
+    font-size: 14px;
+  }
 
-	td {
-		border: 1px solid map-get($blackColor, 200);
-		padding: 10px;
-		white-space: normal;
-		word-wrap: break-word;
-		color: map-get($blackColor, regular);
-	}
+  th {
+    border: 1px solid map-get($blackColor, 200);
+    padding: 10px;
+  }
 
-	.td-with-dropdown {
-		display: flex;
-		// align-items: ;
+  td {
+    border: 1px solid map-get($blackColor, 200);
+    padding: 10px;
+    white-space: normal;
+    word-wrap: break-word;
+    color: map-get($blackColor, regular);
+  }
 
-		justify-content: space-between;
-	}
+  .td-with-dropdown {
+    display: flex;
+    justify-content: space-between;
+  }
 
-	.trHoverBody:hover {
-		background-color: map-get($blackColor, 200);
-	}
+  .trHoverBody:hover {
+    transition: 200ms;
+    background-color: map-get($blackColor, 100);
+  }
 
-	.cell-color-one {
-		background-color: map-get($blackColor, 100);
-	}
-	.cell-color-two {
-		background-color: map-get($blackColor, 200);
-	}
+  .cell-color-one {
+    background-color: map-get($blackColor, 100);
+  }
+  .cell-color-two {
+    background-color: map-get($blackColor, 200);
+  }
 }
