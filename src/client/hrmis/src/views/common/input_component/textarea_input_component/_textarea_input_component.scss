@@ -4,9 +4,12 @@
   padding: 6px 8px;
   outline: none;
   border: 1px solid #55555555;
+  color: #55555599;
   border-radius: 5px 5px 5px 5px;
 }
 
 .textarea-component:focus {
+  transition: 200ms;
   border: 1px solid #55555599;
+  color: black;
 }

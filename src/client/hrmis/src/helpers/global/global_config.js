@@ -24,7 +24,9 @@ export const validationEmail = Yup.string()
   .email("Enter a valid email")
   .required("This field is required");
 
-export const validationDate = Yup.date().required("This field is required");
+export const validationDate = Yup.date()
+  .typeError("Must be a valid date.")
+  .required("This field is required.");
 
 export const yesterday = new Date(Date.now() - 86400000);
 
@@ -51,12 +53,9 @@ export const customStyles = {
     padding: 0,
     borderRadius: "5px 5px 5px 5px",
     fontSize: "small",
-    backgroundColor: "white",
     border: state.isFocused
       ? "1px solid 	#A9A9A9 !important"
       : "1px solid #DCDCDC !important",
-
-    fontSize: "small",
     boxShadow: "none",
   }),
 

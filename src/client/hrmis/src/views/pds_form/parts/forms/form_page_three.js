@@ -8,7 +8,11 @@ import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper";
 import ButtonComponent from "../../../common/button_component/button_component.js";
 import { MdAdd } from "react-icons/md";
 import ThreeAddEducationModal from "../add_modals/three_add_educ";
-import { educationInputItem, eligibilityInputItems, formThreeInput } from "../../static/input_items";
+import {
+  educationInputItem,
+  eligibilityInputItems,
+  formThreeInput,
+} from "../../static/input_items";
 import ThreeAddVoluntrayWorkModal from "../add_modals/three_add_voluntary";
 import ThreeAddCivilServiceModal from "../add_modals/three_add_csc";
 import ThreeAddWorkExperienceModal from "../add_modals/three_add_workexp";
@@ -454,7 +458,7 @@ const TableTwo = () => {
                         key={key}
                       >
                         <td colSpan="4" style={{ textAlign: "center" }}>
-                          { eligibilityInputItems[item.cse_app_title].label }
+                          {eligibilityInputItems[item.cse_app_title].label}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
                           {item.cse_app_rating}
