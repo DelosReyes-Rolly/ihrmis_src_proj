@@ -65,7 +65,7 @@ const FormPageOne = () => {
   const parameter = item?'/'+item:'';
   let position = undefined;
 
-  if(route[2] === 'admin'){
+  if(route[2] === 'applicant'){
     console.log(route[3]);
     position = '/'+route[3];
   }

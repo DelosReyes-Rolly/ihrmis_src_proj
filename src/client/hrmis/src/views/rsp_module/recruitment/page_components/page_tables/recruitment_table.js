@@ -230,7 +230,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 							onClick={() => {
 								console.log(position);
 								if (position !== '') {
-									navigate('/pds-applicant/admin/' + position);
+									navigate('/pds-applicant/applicant/' + position);
 								} else {
 									popupAlert({
 										message: 'Please Select a Vacant Position',

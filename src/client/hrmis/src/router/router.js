@@ -140,7 +140,7 @@ const MainRouter = () => {
 							</Route>
 
 							<Route
-								path='/pds-applicant/admin/:plantilla'
+								path='/pds-applicant/applicant/:plantilla'
 								element={<FormPageOne />}
 							/>
 
