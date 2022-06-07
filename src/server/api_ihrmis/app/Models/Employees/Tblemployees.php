@@ -2,6 +2,7 @@
 
 namespace App\Models\Employees;
 
+use App\Models\Employees\TblemployeeProfile;
 use App\Models\TblplantillaItems;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,11 +28,15 @@ class Tblemployees extends Model
 
     public $timestamps = false;
 
-    public function tblapplicantChildren(){
+    public function children(){
         return $this->hasMany(TblemployeeChildren::class, 'chi_emp_id' ,'emp_id');
     }
 
-    public function employee(){
+    public function family(){
+        return $this->hasOne(TblemployeeFamily::class, "emp_id", "emp_id");
+    }
+
+    public function profile(){
         return $this->hasOne(TblemployeeProfile::class, 'emp_id' ,'emp_id');
     }
 

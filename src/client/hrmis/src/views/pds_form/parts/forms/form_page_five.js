@@ -382,7 +382,7 @@ const UploadImageComponent = (props) => {
             className="app_photo"
             type="file"
             name="app_photo"
-            width="132px"
+            // width="132px"
             width="170px"
             onChange={props.onChange}
             hidden

@@ -6,6 +6,7 @@ import errorHandlerSlice from "../reducers/error_handler_slice";
 import jvscrwReducer from "../reducers/jvscrw_slice";
 import plantillaItemReducer from "../reducers/plantilla_item_slice";
 import vacantReducer from "../reducers/vacant_slice";
+import employeeReducer from "../reducers/employee_slice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     jvsform: jvscrwReducer,
     plantillaItem: plantillaItemReducer,
     vacant: vacantReducer,
+    employee: employeeReducer,
   },
 });
 
