@@ -116,6 +116,7 @@ class ApplicantProfileService
     {
         $applicant = new Tblapplicants();
         $applicant->app_id = $applicantData->app_id;
+        $applicant->app_emp_id = $applicantData->app_emp_id;
         $applicant->app_itm_id = $position;
         $applicant->save();
 
@@ -777,10 +778,6 @@ class ApplicantProfileService
             $report->AddPage();
             $report->writeHTML(view('reports/recruitment/oooReportPDF', $data));
         }
-
-
-
-
         return $report->output();
     }
 }

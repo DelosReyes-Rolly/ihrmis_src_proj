@@ -65,9 +65,9 @@ const FormPageOne = () => {
   const parameter = item?'/'+item:'';
   let position = undefined;
 
-  if(route[2] === 'applicant'){
-    console.log(route[3]);
-    position = '/'+route[3];
+  if(route[3] === 'applicant'){
+    console.log(route[4]);
+    position = '/'+route[4];
   }
   const getApplicantRecord = async () => {
     if(position === undefined){
