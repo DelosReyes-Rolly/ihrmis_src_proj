@@ -29,9 +29,10 @@ class VerifyApplicantMail extends Mailable
      */
     public function build()
     {
-        $pdf = new Mpdf();
-        $pdf->writeHTML(view('verifyEmailPdf', $this->someDetails));
+        // $pdf = new Mpdf();
+        // $pdf->writeHTML(view('verifyEmailPdf', $this->someDetails));
         return $this->from($this->someDetails['from_email'], $this->someDetails['recruiter'])->subject($this->someDetails['subject'])
-            ->view('verifyEmail')->attachData($pdf->output(), "verify-email.pdf");
+            ->view('verifyEmail');
+            // ->attachData($pdf->output(), "verify-email.pdf");
     }
 }
