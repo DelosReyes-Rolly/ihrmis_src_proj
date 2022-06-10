@@ -36,7 +36,7 @@ const ThreeAddInterventionModal = ({
   const trainingPdsForm = useFormik({
     enableReinitialize: true,
     initialValues: {
-      trn_app_id: item ?? "",
+      trn_app_id: item,
       trn_app_title: reference?.trn_app_title ?? "",
       trn_app_from: reference?.trn_app_from ?? "",
       trn_app_to: reference?.trn_app_to ?? "",
@@ -57,7 +57,7 @@ const ThreeAddInterventionModal = ({
     onSubmit: async (values, { resetForm }) => {
       renderBusy(true);
       const refID =
-        reference?.cse_id === undefined ? "" : `/${reference?.cse_id}`;
+        reference?.trn_id === undefined ? "" : `/${reference?.trn_id}`;
       const link =
         endpoint === undefined ? "new-training" + refID : endpoint + refID;
       await axios
@@ -82,6 +82,7 @@ const ThreeAddInterventionModal = ({
           });
         });
       renderBusy(false);
+      onClose();
     },
   });
 

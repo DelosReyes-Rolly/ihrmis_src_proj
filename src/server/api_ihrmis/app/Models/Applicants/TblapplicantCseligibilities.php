@@ -10,10 +10,9 @@ class TblapplicantCseligibilities extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_cseligibilities';
-    protected $primaryKey = 'cse_app_id';
+    protected $primaryKey = 'cse_id';
     protected $fillable = [
         'cse_app_id',
-        'cse_app_time',
         'cse_app_title',
         'cse_app_date',
         'cse_app_place',
