@@ -64,9 +64,9 @@ const ThreeAddEducationModal = ({
       await axios
         .post(API_HOST + link, values)
         .then(() => {
-          let MESSAGE = "New CS Elibility was added successfully";
+          let MESSAGE = "New Education was added successfully";
           if (reference !== undefined)
-            MESSAGE = "CS Elibility was edited successfully";
+            MESSAGE = "Education was edited successfully";
           resetForm();
 
           popupAlert({

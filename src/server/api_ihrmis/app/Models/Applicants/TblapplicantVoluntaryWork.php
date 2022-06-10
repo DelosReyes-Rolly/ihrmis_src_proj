@@ -10,10 +10,9 @@ class TblapplicantVoluntaryWork extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_voluntary_works';
-    protected $primaryKey = 'vol_app_id';
+    protected $primaryKey = 'vol_id';
     protected $fillable = [
         "vol_app_id",
-        "vol_app_time",
         "vol_app_org",
         "vol_app_addr",
         "vol_app_from",

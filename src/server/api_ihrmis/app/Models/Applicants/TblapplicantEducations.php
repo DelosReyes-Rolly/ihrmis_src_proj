@@ -10,10 +10,9 @@ class TblapplicantEducations extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_educations';
-    protected $primaryKey = 'edu_app_idref';
+    protected $primaryKey = 'edu_id';
     protected $fillable = [
         'edu_app_id',
-        'edu_app_idref',
         'edu_app_time',
         'edu_app_level',
         'edu_app_shcool',
