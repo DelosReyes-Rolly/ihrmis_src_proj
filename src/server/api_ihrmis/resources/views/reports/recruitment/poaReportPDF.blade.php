@@ -100,7 +100,7 @@
     </style>
 </head>
 
-<body class="dfs">
+<body class="dfs" style="font-family: Arial, Helvetica, sans-serif">
     <?php
     $eligibility_array = [];
     $eligibility_array[] = 'No Eligibility';

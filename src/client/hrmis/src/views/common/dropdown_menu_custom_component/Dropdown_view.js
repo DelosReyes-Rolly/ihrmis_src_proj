@@ -1,22 +1,25 @@
-import React, { useRef, useState } from "react";
-import { AiFillCaretUp } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import ReactTooltip from "react-tooltip";
+import React, { useEffect, useRef, useState } from 'react';
+import { AiFillCaretUp } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
+import usePositionSetter from '../../../helpers/use_hooks/position_setter';
 
 const DropdownViewComponent = ({
 	title = {},
 	className,
 	itemList,
-	alignItems = "start",
+	alignItems = 'start',
 	toolTipId,
 	textHelper,
-	position = "top",
-	effect = "solid",
+	position = 'top',
+	effect = 'solid',
 	setValue,
 }) => {
 	const [dropable, setDropable] = useState(false);
+	const [x, y, location, elementSize] = usePositionSetter(dropable);
 	const timerRef = useRef();
 	const navigate = useNavigate();
+	// const location = useRef();
 
 	const selectedProperty = (link = null) => {
 		if (link !== null) {
@@ -34,11 +37,12 @@ const DropdownViewComponent = ({
 	return (
 		<div
 			style={{
-				position: "relative",
-				display: "flex",
-				flexDirection: "column",
+				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
 				alignItems: alignItems,
 			}}
+			ref={location}
 			onBlur={() => selectedProperty()}
 		>
 			{toolTipId && (
@@ -51,7 +55,7 @@ const DropdownViewComponent = ({
 				data-tip
 				data-for={toolTipId}
 				className={className}
-				style={{ width: "max-content" }}
+				style={{ width: 'max-content' }}
 				onClick={() => {
 					setDropable(!dropable);
 				}}
@@ -61,9 +65,13 @@ const DropdownViewComponent = ({
 			{itemList && (
 				<DropList
 					itemList={itemList}
-					display={dropable ? "block" : "none"}
+					display={dropable ? 'block' : 'none'}
 					onClick={selectedProperty}
 					setValue={setValue}
+					location={location}
+					size={elementSize}
+					xPosition={x}
+					yPosition={y}
 				/>
 			)}
 		</div>
@@ -72,28 +80,30 @@ const DropdownViewComponent = ({
 
 export default DropdownViewComponent;
 
-const DropList = ({ itemList = [], display = "none", setValue }) => {
+const DropList = ({ itemList = [], display = 'none', setValue, size, xPosition, yPosition }) => {
 	const navigate = useNavigate();
-
 	const linkDetector = (item) => {
-		if (typeof item === "string" || item instanceof String)
+		if (typeof item === 'string' || item instanceof String)
 			return navigate(item);
-		else if (typeof item === "function") {
+		else if (typeof item === 'function') {
 			item();
 		}
 	};
-
 	return (
 		<React.Fragment>
-			<ul className="ul-dropdown-container" style={{ display: display }}>
-				<div className="ul-menu-item-arrow">
-					<AiFillCaretUp size="15px" />
+			<ul
+				className='ul-dropdown-container'
+				ref={size}
+				style={{ display: display, position: 'fixed', top: yPosition, left: xPosition }}
+			>
+				<div className='ul-menu-item-arrow'>
+					<AiFillCaretUp size='15px' />
 				</div>
 				{itemList?.map((element, key) => {
 					return (
 						<li
-							style={{ listStyle: "none" }}
-							className="ul-menu-item"
+							style={{ listStyle: 'none' }}
+							className='ul-menu-item'
 							onClick={() => {
 								setValue(element.id);
 								linkDetector(element);

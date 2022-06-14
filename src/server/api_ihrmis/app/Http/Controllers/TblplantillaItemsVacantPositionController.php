@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 class TblplantillaItemsVacantPositionController extends Controller {
 
     public function __construct() {
-
         $this->tblPantillaVacantPos = new PlantillaItemsService();
     }
 

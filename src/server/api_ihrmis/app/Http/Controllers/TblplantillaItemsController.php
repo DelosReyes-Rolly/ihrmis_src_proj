@@ -18,6 +18,11 @@ class TblplantillaItemsController extends Controller
         return TblplantillaItemsResource::collection($item_query);
     }
 
+    public function getOpenPlantillaItems(){
+        $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->get();
+        return CommonResource::collection($item_query);
+    }
+
     public function getPlantillaItemById($id) {
         $item_query = TblplantillaItems::find($id);
         return new CommonResource($item_query);

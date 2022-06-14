@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useFormik } from "formik";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router";
 import { setBusy } from "../../../../features/reducers/popup_response";
-import useAxiosRequestHelper from "../../../../helpers/use_hooks/axios_request_helper";
-import { useFormHelper } from "../../../../helpers/use_hooks/form_helper";
-import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
+import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
+import {
+  API_HOST,
+  validationEmail,
+  validationRequired,
+  validationRequiredNum,
+} from "../../../../helpers/global/global_config";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import ModalComponent from "../../../common/modal_component/modal_component";
-import ValidationComponent from "../../../common/response_component/validation_component/validation_component";
+import * as Yup from "yup";
 
-const FourAddReferenceModal = (props) => {
-  const [dataState, singleInput, multiInput, setter] = useFormHelper();
-
-  const { renderFail, renderSuccess } = usePopUpHelper();
-  // ===================================
-  // ERROR HANDLING STATE
-  // ===================================
-  const [serverErrorResponse, setServerErrorResponse] = useState();
-
+const FourAddReferenceModal = ({
+  onClose,
+  isDisplay,
+  onPressed,
+  reference,
+  endpoint,
+}) => {
   // ===================================
   // HANDLING ROUTES
   // ===================================
@@ -28,107 +32,132 @@ const FourAddReferenceModal = (props) => {
   // ===================================
   const dispatch = useDispatch();
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    dispatch(setBusy(true));
-    await useAxiosRequestHelper
-      .post(dataState, "new-reference", item)
-      .then(() => {
-        renderSuccess();
-        setServerErrorResponse(null);
-        props.onClose();
-        setter({
-          item: "",
-          ref_app_name: "",
-          ref_app_addr: "",
-          ref_app_email: "",
-          ref_app_tel_no: "",
+  const formHandler = useFormik({
+    enableReinitialize: true,
+    initialValues: {
+      ref_app_id: item,
+      ref_app_name: reference?.ref_app_name ?? "",
+      ref_app_addr: reference?.ref_app_addr ?? "",
+      ref_app_email: reference?.ref_app_email ?? "",
+      ref_app_tel_no: reference?.ref_app_tel_no ?? "",
+    },
+    validationSchema: Yup.object({
+      ref_app_name: validationRequired,
+      ref_app_addr: validationRequired,
+      ref_app_email: validationEmail,
+      ref_app_tel_no: validationRequiredNum,
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      const plantilla =
+        reference?.ref_id === undefined ? "" : `/${reference?.ref_id}`;
+      const link =
+        endpoint === undefined
+          ? "new-reference" + plantilla
+          : endpoint + plantilla;
+      dispatch(setBusy(true));
+      await axios
+        .post(API_HOST + link, values)
+        .then(() => {
+          resetForm();
+          let MESSAGE = "New reference was added successfully";
+          if (reference !== undefined)
+            MESSAGE = "Reference was edited successfully";
+          popupAlert({
+            message: MESSAGE,
+            type: ALERT_ENUM.success,
+          });
+          onClose();
+        })
+        .catch((error) => {
+          resetForm();
+          onClose();
+          popupAlert({
+            message: error?.response?.data?.message ?? error?.message,
+            type: ALERT_ENUM.fail,
+          });
         });
-      })
-      .catch((error) => {
-        if (typeof error === "object" && error !== null)
-          setServerErrorResponse([error.message]);
-        else setServerErrorResponse([error.message]);
-        renderFail();
-      });
-    dispatch(setBusy(false));
-  };
+      dispatch(setBusy(false));
+    },
+  });
 
   useEffect(() => {
-    setServerErrorResponse(null);
-    setter({
-      item: props.data ? props.data.ref_app_timestamp : "",
-      ref_app_name: props.data ? props.data.ref_app_name : "",
-      ref_app_addr: props.data ? props.data.ref_app_addr : "",
-      ref_app_email: props.data ? props.data.ref_app_email : "",
-      ref_app_tel_no: props.data ? props.data.ref_app_tel_no : "",
-    });
-  }, [props.isDisplay]);
+    if (isDisplay === false) {
+      formHandler.setTouched({}, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDisplay]);
+
   return (
     <React.Fragment>
       <ModalComponent
-        title="Civil Service Eligibility"
+        title="References"
         onSubmitName="Save"
-        onCloseName="Delete"
-        isDisplay={props.isDisplay}
-        onSubmit={submitHandler}
+        onCloseName={onPressed === undefined ? "Close" : "Delete"}
+        isDisplay={isDisplay}
+        onSubmit={formHandler.handleSubmit}
         onSubmitType="submit"
-        onPressed={props.onPressed}
-        onClose={props.onClose}
+        onPressed={onPressed}
+        onClose={onClose}
       >
         <div className="add-csc-modal-container">
-          {serverErrorResponse && (
-            <ValidationComponent title="FAILED TO SUBMIT">
-              {serverErrorResponse.map((item, key) => {
-                return <p key={key}>- {item}</p>;
-              })}
-            </ValidationComponent>
-          )}
-
-          <br />
-
           <div className="first-type-div">
             <label>Name</label>
             <InputComponent
               maxLenght="150"
               name="ref_app_name"
-              value={dataState.ref_app_name}
-              onChange={(e) => {
-                singleInput(e);
-              }}
+              value={formHandler.values.ref_app_name}
+              onChange={formHandler.handleChange}
             />
+            {formHandler.touched.ref_app_name &&
+            formHandler.errors.ref_app_name ? (
+              <span className="invalid-response">
+                {formHandler.errors.ref_app_name}
+              </span>
+            ) : null}
           </div>
           <div className="first-type-div">
             <label>Address</label>
             <InputComponent
               maxLenght="255"
               name="ref_app_addr"
-              value={dataState.ref_app_addr}
-              onChange={(e) => {
-                singleInput(e);
-              }}
+              value={formHandler.values.ref_app_addr}
+              onChange={formHandler.handleChange}
             />
+            {formHandler.touched.ref_app_addr &&
+            formHandler.errors.ref_app_addr ? (
+              <span className="invalid-response">
+                {formHandler.errors.ref_app_addr}
+              </span>
+            ) : null}
           </div>
           <div className="first-type-div">
             <label>Tel. no.</label>
             <InputComponent
               maxLenght="150"
               name="ref_app_tel_no"
-              value={dataState.ref_app_tel_no}
-              onChange={(e) => {
-                singleInput(e);
-              }}
+              value={formHandler.values.ref_app_tel_no}
+              onChange={formHandler.handleChange}
             />
+            {formHandler.touched.ref_app_tel_no &&
+            formHandler.errors.ref_app_tel_no ? (
+              <span className="invalid-response">
+                {formHandler.errors.ref_app_tel_no}
+              </span>
+            ) : null}
           </div>
           <div className="first-type-div">
             <label>Email Address</label>
             <InputComponent
               name="ref_app_email"
-              value={dataState.ref_app_email}
-              onChange={(e) => {
-                singleInput(e);
-              }}
+              value={formHandler.values.ref_app_email}
+              onChange={formHandler.handleChange}
             />
+            {formHandler.touched.ref_app_email &&
+            formHandler.errors.ref_app_email ? (
+              <span className="invalid-response">
+                {formHandler.errors.ref_app_email}
+              </span>
+            ) : null}
           </div>
         </div>
       </ModalComponent>

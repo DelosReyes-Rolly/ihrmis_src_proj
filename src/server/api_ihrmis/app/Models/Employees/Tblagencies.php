@@ -11,8 +11,8 @@ class Tblagencies extends Model
 
     protected $primaryKey = 'agn_id';
     protected $table = 'tblagencies';
-    
-    protected $fillable=[
+
+    protected $fillable = [
         'agn_name',
         'agn_acronym',
         'agn_sector',
@@ -21,5 +21,5 @@ class Tblagencies extends Model
         'agn_head_email',
         'agn_address',
     ];
-
+    public $timestamps = false;
 }

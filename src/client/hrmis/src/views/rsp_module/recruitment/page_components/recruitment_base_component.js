@@ -5,7 +5,6 @@ import {
 	recruitmentEmailTemplateList,
 	recruitmentReportList,
 } from "../static/menu_items";
-
 import RecruitmentTable from "./page_tables/recruitment_table";
 import IconComponent from "../../../common/icon_component/icon";
 import {
@@ -19,35 +18,58 @@ import DropdownViewComponent from "../../../common/dropdown_menu_custom_componen
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import RecruitmentStatusModal from "./page_modals/recruitment_status_modal";
 import { API_HOST } from "../../../../helpers/global/global_config";
+import axios from "axios";
 import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 import RecruitmentDateSelector from "./page_modals/recruitment_date_selector";
+import { useNavigate } from "react-router-dom";
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
 	const [emailModalToggleState, setEmailModalToggle] = useState("0");
 	const [value, setValue] = useState("");
-	const [position, setPosition] = useState(0);
+	const [position, setPosition] = useState("");
 	const [reportValue, setReportValue] = useState(null);
 	const toggleTab = (index) => {
 		setToggleState(index);
 	};
+	const navigate = useNavigate();
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
 	useEffect(() => {
-		if (reportValue === "POA") {
-			if (position !== 0) {
+		if (reportValue === "POA" || reportValue === "CM") {
+			if (position.length !== 0 || position !== 0) {
 				window.open(
 					API_HOST + "generate-" + reportValue + "/" + position,
-					"_self"
+					"_blank"
 				);
 			} else {
 				popupAlert({
-					message: "Please Select a Vacant Position",
+					message: "Please Select a Vacant Position for this report",
 					type: ALERT_ENUM.fail,
 				});
 			}
 		}
-
-		// setReportValue(null);
+		if (
+			reportValue === "OOO" ||
+			reportValue === "AFA" ||
+			reportValue === "CAD"
+		) {
+			if (selectedApplicants.length !== 0) {
+				let applicants = "";
+				selectedApplicants.forEach((element) => {
+					applicants = applicants + element.app_id + "-";
+				});
+				let finalString = applicants.slice(0, -1);
+				window.open(
+					API_HOST + "generate-" + reportValue + "/" + finalString,
+					"_tab"
+				);
+			} else {
+				popupAlert({
+					message: "Please Select Applicant/s for this report",
+					type: ALERT_ENUM.fail,
+				});
+			}
+		}
 	}, [reportValue]);
 	return (
 		<React.Fragment>
@@ -90,6 +112,21 @@ const RecruitmentBaseComponent = () => {
 							id="recruitment_all_ratings"
 							className="margin-left-1"
 							icon={<BsFillStarFill />}
+							onClick={() => {
+								if (position !== "" && position !== 0) {
+									console.log(position);
+									// window.open(
+									// 	API_HOST + 'generate-' + reportValue + '/' + position,
+									// 	'_blank'
+									navigate("./comparative-matrix/" + position);
+									// );
+								} else {
+									popupAlert({
+										message: "Please Select a Vacant Position",
+										type: ALERT_ENUM.fail,
+									});
+								}
+							}}
 							toolTipId="rc-ap-ratings"
 							textHelper="Show ratings of Selected Applicants"
 						/>

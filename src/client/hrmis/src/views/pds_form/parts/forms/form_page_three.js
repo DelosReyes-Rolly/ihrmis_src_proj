@@ -8,7 +8,11 @@ import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper";
 import ButtonComponent from "../../../common/button_component/button_component.js";
 import { MdAdd } from "react-icons/md";
 import ThreeAddEducationModal from "../add_modals/three_add_educ";
-import { educationInputItem, eligibilityInputItems, formThreeInput } from "../../static/input_items";
+import {
+  educationInputItem,
+  eligibilityInputItems,
+  formThreeInput,
+} from "../../static/input_items";
 import ThreeAddVoluntrayWorkModal from "../add_modals/three_add_voluntary";
 import ThreeAddCivilServiceModal from "../add_modals/three_add_csc";
 import ThreeAddWorkExperienceModal from "../add_modals/three_add_workexp";
@@ -96,6 +100,7 @@ const TableOne = () => {
       })
       .catch((err) => renderFailed({ content: err.message }));
     renderBusy(false);
+    toggleSetter("updateModal")
   };
 
   // ===========================================
@@ -106,7 +111,11 @@ const TableOne = () => {
     updateModal: false,
   });
 
+  const [addModal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
   const toggleSetter = (name) => {
+    console.log(dataContainer);
     setToggle({ ...toogle, [name]: !toogle[name] });
   };
 
@@ -132,12 +141,11 @@ const TableOne = () => {
       */}
       <ThreeAddEducationModal
         isDisplay={toogle.updateModal}
-        onPressed={() => {
-          removeEducationRecord(dataContainer.item);
-          toggleSetter("updateModal");
-        }}
+        reference={dataContainer}
         onClose={() => toggleSetter("updateModal")}
-        data={dataContainer}
+        remove={() => {
+          removeEducationRecord(dataContainer.edu_id);
+        }}
       />
 
       <div className="scrollable-div-table">
@@ -221,6 +229,7 @@ const TableOne = () => {
               // ===========================================
           */}
           {showData && (
+            
             <tbody>
               {educationRecord == null
                 ? null
@@ -235,19 +244,19 @@ const TableOne = () => {
                         }}
                       >
                         <td colSpan="5" style={{ textAlign: "center" }}>
-                          {item.school}
+                          {item.edu_app_school}
                         </td>
                         <td colSpan="4" style={{ textAlign: "center" }}>
-                          {educationInputItem[item.level].title}
+                          {educationInputItem[item.edu_app_level].title}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
-                          {item.from}
+                          {item.edu_app_from}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
-                          {item.to}
+                          {item.edu_app_to}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
-                          {item.unit_earned}
+                          {item.edu_app_units}
                         </td>
                       </tr>
                     );
@@ -309,6 +318,7 @@ const TableTwo = () => {
       .then(() => renderSucceed({ content: "Deleted Successfully" }))
       .catch((err) => renderFailed({ content: err.message }));
     renderBusy(false);
+    toggleSetter("updateModal");
   };
 
   // ===========================================
@@ -345,12 +355,11 @@ const TableTwo = () => {
       */}
       <ThreeAddCivilServiceModal
         isDisplay={toogle.updateModal}
-        onPressed={() => {
-          removeCseligibilityRecord(dataContainer.cse_app_time);
-          toggleSetter("updateModal");
-        }}
         onClose={() => toggleSetter("updateModal")}
-        data={dataContainer}
+        reference={dataContainer}
+        remove= {() => {
+          removeCseligibilityRecord(dataContainer.cse_id);
+        }}
       />
       <div className="scrollable-div-table">
         {/* 
@@ -454,7 +463,7 @@ const TableTwo = () => {
                         key={key}
                       >
                         <td colSpan="4" style={{ textAlign: "center" }}>
-                          { eligibilityInputItems[item.cse_app_title].label }
+                          {eligibilityInputItems[item.cse_app_title].label}
                         </td>
                         <td colSpan="1" style={{ textAlign: "center" }}>
                           {item.cse_app_rating}
@@ -533,6 +542,7 @@ const TableThree = () => {
       .then(() => renderSucceed({ content: "Deleted Successfully" }))
       .catch((err) => renderFailed({ content: err.message }));
     renderBusy(false);
+    toggleSetter("updateModal");
   };
 
   // ===========================================
@@ -578,12 +588,11 @@ const TableThree = () => {
         */}
       <ThreeAddWorkExperienceModal
         isDisplay={toogle.updateModal}
-        onPressed={() => {
-          removeWorkExpRecord(dataContainer.exp_app_time);
-          toggleSetter("updateModal");
-        }}
         onClose={() => toggleSetter("updateModal")}
-        data={dataContainer}
+        reference={dataContainer}
+        remove= {() => {
+          removeWorkExpRecord(dataContainer.exp_id);
+        }}
       />
 
       <div className="scrollable-div-table">
@@ -677,7 +686,7 @@ const TableThree = () => {
                         }}
                       >
                         <td colSpan="1" style={{ textAlign: "center" }}>
-                          {item.enclusive}
+                          {`${item.exp_app_from} to ${item.exp_app_to}`}
                         </td>
                         <td colSpan="3" style={{ textAlign: "center" }}>
                           {item.exp_app_position}
@@ -756,6 +765,7 @@ const TableFour = () => {
       .then(() => renderSucceed({ content: "Deleted Successfully" }))
       .catch((err) => renderFailed({ content: err.message }));
     renderBusy(false);
+    toggleSetter("updateModal")
   };
 
   // ===========================================
@@ -792,12 +802,11 @@ const TableFour = () => {
         */}
       <ThreeAddVoluntrayWorkModal
         isDisplay={toogle.updateModal}
-        onPressed={() => {
-          removeVoluntaryWorkRecord(dataContainer.vol_app_time);
-          toggleSetter("updateModal");
-        }}
+        reference={dataContainer}
         onClose={() => toggleSetter("updateModal")}
-        data={dataContainer}
+        remove= {() => {
+          removeVoluntaryWorkRecord(dataContainer.vol_id);
+        }}
       />
 
       <div className="scrollable-div-table">
@@ -969,6 +978,7 @@ const TableFive = () => {
       .then(() => renderSucceed({ content: "Deleted Successfully" }))
       .catch((err) => renderFailed({ content: err.message }));
     renderBusy(false);
+    toggleSetter("updateModal")
   };
 
   // ===========================================
@@ -1006,12 +1016,11 @@ const TableFive = () => {
             */}
       <ThreeAddInterventionModal
         isDisplay={toogle.updateModal}
-        onPressed={() => {
-          removeTrainingRecord(dataContainer.trn_app_time);
-          toggleSetter("updateModal");
-        }}
+        reference={dataContainer}
         onClose={() => toggleSetter("updateModal")}
-        data={dataContainer}
+        remove= {() => {
+          removeTrainingRecord(dataContainer.trn_id);
+        }}
       />
 
       <div className="scrollable-div-table">
@@ -1129,10 +1138,10 @@ const TableFive = () => {
                         <td colSpan="1" style={{ textAlign: "center" }}>
                           {item.trn_app_hours}
                         </td>
-                        <td colSpan="1" style={{ textAlign: "center" }}>
+                        <td colSpan="2" style={{ textAlign: "center" }}>
                           {item.trn_app_type}
                         </td>
-                        <td colSpan="4" style={{ textAlign: "center" }}>
+                        <td colSpan="3" style={{ textAlign: "center" }}>
                           {item.trn_app_sponsor}
                         </td>
                       </tr>

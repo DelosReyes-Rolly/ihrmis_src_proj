@@ -1,5 +1,5 @@
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
-import { MdMoreHoriz } from "react-icons/md";
+import { MdAdd, MdMoreHoriz } from "react-icons/md";
 import axios from "axios";
 import {
 	useTable,
@@ -23,6 +23,10 @@ import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper.js
 import RecruitmentStatusModal from "../page_modals/recruitment_status_modal.js";
 import { useSelector } from "react-redux";
 import SearchComponent from "../../../../common/input_component/search_input/search_input.js";
+import {
+	ALERT_ENUM,
+	popupAlert,
+} from "../../../../../helpers/alert_response.js";
 const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 	const { renderBusy } = usePopUpHelper();
 	const { refresh } = useSelector((state) => state.popupResponse);
@@ -31,7 +35,29 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 	const [value, setValue] = useState(0);
 	const [modalData, setModalData] = useState([]);
 	const [filterInput, setFilterInput] = useState("");
+	const [position, setPositions] = useState("");
 	const navigate = useNavigate();
+	const openPositionApi = async () => {
+		await axios.get(API_HOST + "get-open-positions").then((response) => {
+			const data = response.data.data;
+			console.log(data);
+			let positions = [];
+			data.forEach((element) => {
+				let values2 = [];
+				values2 = {
+					pos_id: element.itm_id,
+					pos_title: element.tblpositions.pos_title,
+				};
+				let exists = positions.some(
+					(position) => position.pos_id === element.itm_id
+				);
+				if (!exists) {
+					positions.push(values2);
+				}
+			});
+			setPositionsFilter(positions);
+		});
+	};
 	const applicantDataApi = async () => {
 		renderBusy(true);
 		await axios
@@ -39,14 +65,12 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 			.then((response) => {
 				const data = response.data.data;
 				let dataPlot = [];
-				let positions = [];
 				if (data.length === 0) {
 					let values = {
 						app_name: "No data available",
 					};
 					dataPlot.push(values);
 				} else {
-					let positionChecker = [];
 					for (let i = 0; i < data.length; i++) {
 						let profile_message = data[i].profile_message
 							.split("\n")
@@ -67,22 +91,17 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 							app_qualifications: qualification_message ?? "N/A",
 							sts_App_remarks: "To be done",
 						};
-						let values2 = [];
-						let fail = false;
-						values2 = {
-							pos_id: data[i].plantilla,
-							pos_title: data[i].position,
-						};
-						positions.push(values2);
 						dataPlot.push(values);
 					}
 				}
-				setPositionsFilter(positions);
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
 		renderBusy(false);
 	};
+	useEffect(() => {
+		openPositionApi();
+	}, [refresh]);
 	useEffect(() => {
 		applicantDataApi();
 	}, [type, refresh]);
@@ -209,7 +228,17 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 						{/* <ButtonComponent/> */}
 						<button
 							className="filter_buttons button-components"
-							onClick={() => navigate("/pds-applicant")}
+							onClick={() => {
+								console.log(position);
+								if (position !== "") {
+									navigate("/pds-applicant/applicant/" + position);
+								} else {
+									popupAlert({
+										message: "Please Select a Vacant Position",
+										type: ALERT_ENUM.fail,
+									});
+								}
+							}}
 							style={{
 								cursor: "pointer",
 								display: "flex",
@@ -218,7 +247,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 								textAlign: "center",
 							}}
 						>
-							<p>Applicant</p>
+							<MdAdd style={{ padding: 0, margin: 0 }} size="14" />
+							<span>Applicant</span>
 						</button>
 						{/* </span> */}
 						<span className="filter_buttons margin-left-1 selector-span-1">
@@ -226,15 +256,16 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 								defaultValue={"DEFAULT"}
 								onChange={(e) => {
 									setFilter("position", e.target.value);
+									setPositions(e.target.value);
 									setPosition(e.target.value);
 								}}
 							>
 								<option value="">Vacant Position</option>
-								{positionsFilter.map((item) => {
+								{positionsFilter.map((item, key) => {
 									return (
 										<option
 											className="options"
-											key={item.pos_id}
+											key={key}
 											defaultValue={item.pos_id}
 											value={item.pos_id}
 										>
@@ -262,12 +293,6 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 				</div>
 			</div>
 			<br />
-			{/* <AddPlantillaItems
-          type={type}
-          search={globalFilter}
-          setSearch={setGlobalFilter}
-          statusFilter={setFilter}
-        /> */}
 			<div className="default-table document-table">
 				<table className="table-design" {...getTableProps()}>
 					<thead>
@@ -325,22 +350,20 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 															justifyContent: "space-between",
 														}}
 													>
-														<div>{cell.render("Cell")}</div>
-														<div>
-															<DropdownViewComponent
-																className={"recruitmentTableDrop"}
-																itemList={
-																	type === 1
-																		? recruitmentMenuItem
-																		: recruitmentDisqualifiedMenuItem
-																}
-																title={<MdMoreHoriz size="15" />}
-																alignItems="end"
-																toolTipId="other-actions"
-																textHelper="Click to view other actions"
-																setValue={setValue}
-															/>
-														</div>
+														{cell.render("Cell")}
+														<DropdownViewComponent
+															className={"recruitmentTableDrop"}
+															itemList={
+																type === 1
+																	? recruitmentMenuItem
+																	: recruitmentDisqualifiedMenuItem
+															}
+															title={<MdMoreHoriz size="15" />}
+															alignItems="end"
+															toolTipId="other-actions"
+															textHelper="Click to view other actions"
+															setValue={setValue}
+														/>
 													</div>
 												</td>
 											);
@@ -350,7 +373,9 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 												{...cell.getCellProps()}
 												style={{ cursor: "pointer" }}
 												onClick={() => {
-													openPDS(applicantData, index, arr.length - 1);
+													if (applicantData.app_id !== undefined) {
+														openPDS(applicantData, index, arr.length - 1);
+													}
 												}}
 											>
 												{cell.render("Cell")}
@@ -362,16 +387,17 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 						})}
 					</tbody>
 				</table>
-				<p
-					style={{
-						fontSize: "small",
-						color: "rgba(70, 70, 70, 0.6)",
-						marginTop: "10px",
-					}}
-				>
-					Total of {rows.length} entries
-				</p>
 			</div>
+			<p
+				style={{
+					fontSize: "small",
+					color: "rgba(70, 70, 70, 0.6)",
+					marginTop: "10px",
+					marginLeft: "20px",
+				}}
+			>
+				Total of {rows.length} entries
+			</p>
 			<RecruitmentDocumentModal
 				isDisplay={value === 2 ? true : false}
 				onClose={() => {

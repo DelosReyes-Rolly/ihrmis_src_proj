@@ -1,49 +1,46 @@
 import { useFormik } from "formik";
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
-import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../common/input_component/select_component/select_component";
 import ModalComponent from "../../../common/modal_component/modal_component";
-import { educationInputItem, formThreeInput } from "../../static/input_items";
+import { educationInputItem } from "../../static/input_items";
 import * as Yup from "yup";
 import {
+  API_HOST,
   validationRequired,
   validationRequiredNum,
 } from "../../../../helpers/global/global_config";
-
-import useAxiosHelper from "../../../../helpers/use_hooks/axios_helper";
+import { useDispatch } from "react-redux";
+import { setBusy } from "../../../../features/reducers/popup_response";
+import axios from "axios";
+import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 // ===========================================================
 // USED IN FORM PAGE THREE
 // ===========================================================
 
-const ThreeAddEducationModal = (props) => {
-  // ===========================================================
-  // CUSTOM HOOK SERVICE
-  // ===========================================================
-  const { renderFailed, renderBusy, renderSucceed } = usePopUpHelper();
-
-  // ===================================
-  // HANDLING ROUTES
-  // ===================================
+const ThreeAddEducationModal = ({
+  isDisplay,
+  onClose,
+  reference,
+  endpoint,
+  remove,
+}) => {
   const { item } = useParams();
-
-  // ===========================================================
-  // SUBMIT HANDLER
-  // ===========================================================
+  const dispatch = useDispatch();
 
   const educationPdsForm = useFormik({
     enableReinitialize: true,
     initialValues: {
-      item: props?.data?.item ?? "",
-      edu_app_level: props?.data?.level ?? "",
-      edu_app_school: props?.data?.school ?? "",
-      edu_app_degree: props?.data?.degree ?? "",
-      edu_app_from: props?.data?.from ?? "",
-      edu_app_to: props?.data?.to ?? "",
-      edu_app_graduated: props?.data?.graduated ?? "",
-      edu_app_units: props?.data?.unit_earned ?? "",
-      edu_app_honors: props?.data?.honors ?? "",
+      edu_app_id: item ?? "",
+      edu_app_level: reference?.edu_app_level ?? "",
+      edu_app_school: reference?.edu_app_school ?? "",
+      edu_app_degree: reference?.edu_app_degree ?? "",
+      edu_app_from: reference?.edu_app_from ?? "",
+      edu_app_to: reference?.edu_app_to ?? "",
+      edu_app_graduated: reference?.edu_app_graduated ?? "",
+      edu_app_units: reference?.edu_app_units ?? "",
+      edu_app_honors: reference?.edu_app_honors ?? "",
     },
     validationSchema: Yup.object({
       edu_app_level: validationRequired,
@@ -56,32 +53,60 @@ const ThreeAddEducationModal = (props) => {
       edu_app_honors: validationRequired,
     }),
     onSubmit: async (values, { resetForm }) => {
-      renderBusy(true);
-      await useAxiosHelper
-        .post(values, "new-education", item)
+      dispatch(setBusy(true));
+      const plantilla =
+        reference?.edu_id === undefined ? "" : `/${reference?.edu_id}`;
+      const link =
+        endpoint === undefined
+          ? "new-education" + plantilla
+          : endpoint + plantilla;
+
+      await axios
+        .post(API_HOST + link, values)
         .then(() => {
+          let MESSAGE = "New Education was added successfully";
+          if (reference !== undefined)
+            MESSAGE = "Education was edited successfully";
           resetForm();
-          renderSucceed({ content: "Form submitted" });
-          props.onClose();
+
+          popupAlert({
+            message: MESSAGE,
+            type: ALERT_ENUM.success,
+          });
+
+          onClose();
         })
-        .catch((err) => renderFailed({ content: err.message }));
-      renderBusy(false);
+        .catch((error) => {
+          resetForm();
+          popupAlert({
+            message: error?.response?.data?.message ?? error?.message,
+            type: ALERT_ENUM.fail,
+          });
+          onClose();
+        });
+
+      dispatch(setBusy(false));
     },
   });
 
-  useEffect(() => {}, [props.isDisplay]);
+  useEffect(() => {
+    if (isDisplay === false) {
+      educationPdsForm.setTouched({}, false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDisplay]);
 
   return (
     <React.Fragment>
       <ModalComponent
         title="Educational Background"
         onSubmitName="Save"
-        onCloseName="Delete"
-        isDisplay={props.isDisplay}
+        onCloseName={remove === undefined ? "Close" : "Delete"}
+        isDisplay={isDisplay}
         onSubmit={educationPdsForm.handleSubmit}
         onSubmitType="submit"
-        onPressed={props.onPressed}
-        onClose={props.onClose}
+        onPressed={remove}
+        onClose={onClose}
       >
         <br />
         <div className="add-educ-modal-container">
@@ -91,13 +116,13 @@ const ThreeAddEducationModal = (props) => {
               defaultTitle="Education Level"
               name="edu_app_level"
               itemList={educationInputItem}
-              value={educationPdsForm.values.educationInputItem}
+              value={educationPdsForm.values.edu_app_level}
               onChange={educationPdsForm.handleChange}
             />
-            {educationPdsForm.touched.educationInputItem &&
-            educationPdsForm.errors.educationInputItem ? (
+            {educationPdsForm.touched.edu_app_level &&
+            educationPdsForm.errors.edu_app_level ? (
               <span className="invalid-response">
-                {educationPdsForm.errors.educationInputItem}
+                {educationPdsForm.errors.edu_app_level}
               </span>
             ) : null}
           </div>

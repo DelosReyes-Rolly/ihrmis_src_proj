@@ -43,23 +43,49 @@ export const SidebarOption = [
   },
   {
     title: "Recruitment",
-    id: 4,
+    id: 6,
     icon: <AiOutlineFileSearch size="20" />,
     more: null,
     link: "/rsp/recruitment",
   },
   {
     title: "Compensation",
-    id: 5,
+    id: 7,
     icon: <AiOutlineWallet size="20" />,
     more: null,
     link: "/rsp/compensation",
   },
   {
     title: "Library",
-    id: 6,
+    id: 8,
     icon: <IoAlbumsOutline size="20" />,
-    more: null,
-    link: "/rsp/library",
+    more: [
+      {
+        id: 1,
+        title: "Office / Agency",
+        link: "/library/office",
+      },
+      {
+        id: 2,
+        title: "Category Groups",
+        link: "/library/category-groups",
+      },
+      {
+        id: 3,
+        title: "Documentary Requirements",
+        link: "/library/documents",
+      },
+      {
+        id: 4,
+        title: "Email Templates",
+        link: "/rsp/plantilla/plantilla-items",
+      },
+      {
+        id: 5,
+        title: "Positions",
+        link: "/rsp/plantilla/plantilla-items",
+      },
+    ],
+    link: "/library",
   },
 ];

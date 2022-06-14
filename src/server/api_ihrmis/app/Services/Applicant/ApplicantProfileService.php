@@ -2,21 +2,24 @@
 
 namespace App\Services\Applicant;
 
+use App\Mail\VerifyApplicantMail;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
+use App\Models\Applicants\TblapplicantVerification;
 use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Mpdf\Mpdf;
 use NumberFormatter;
 
 class ApplicantProfileService
 {
 
-    public function createApplicant($request)
+    public function createApplicant($request, $position)
     {
-
         //IMPLODING ADDRESSES
         $fullAddress = [];
         array_push($fullAddress, $request->res_block_lot);
@@ -106,8 +109,55 @@ class ApplicantProfileService
         $applicantData->app_agree = $request->app_agree ?? 0;
 
         $applicantData->save();
+        $this->createdApplicant($applicantData, $position);
+    }
 
-        return $applicantData->id;
+    public function createdApplicant($applicantData, $position)
+    {
+        $applicant = new Tblapplicants();
+        $applicant->app_id = $applicantData->app_id;
+        $applicant->app_emp_id = $applicantData->app_emp_id;
+        $applicant->app_itm_id = $position;
+        $applicant->save();
+
+        $fullnameArray = [];
+        $APPLICANT_TOKEN = Str::random(64);
+
+
+        $createVerification = new TblapplicantVerification();
+        $createVerification->vry_app_id = $applicantData->app_id;
+        $createVerification->vry_app_token = $APPLICANT_TOKEN;
+        $createVerification->save();
+
+        if ($applicantData->app_nm_extn !== 'N/A') {
+            $fullnameArray = [
+                $applicantData->app_nm_first,
+                $applicantData->app_nm_mid,
+                $applicantData->app_nm_last,
+                $applicantData->app_nm_extn,
+            ];
+        } else {
+            $fullnameArray = [
+                $applicantData->app_nm_first,
+                $applicantData->app_nm_mid,
+                $applicantData->app_nm_last
+            ];
+        }
+
+        $fullname = implode(" ", $fullnameArray);
+
+        $details = [
+            'subject' => 'APPLICATION EMAIL VERICATION',
+            'applicant_email' => $applicantData->app_email_addr,
+            'applicant_name' => $fullname,
+            'position' => 'Administrative Officer II',
+            'from_email' => env('MAIL_FROM_ADDRESS'),
+            'recruiter' => env('MAIL_FROM_RECUITER'),
+            'redirect_link' =>  env('APP_API_URL') . 'verify-email?token=' . $APPLICANT_TOKEN . '&applicant=' . $applicantData->app_id
+        ];
+
+        Mail::to($details['applicant_email'])->send(new VerifyApplicantMail($details));
+        return $applicantData->app_id;
     }
 
     public function modifyApplicant($id, $request)
@@ -642,6 +692,92 @@ class ApplicantProfileService
             'suppress' => 'off'
         ];
         $report->writeHTML(view('reports/recruitment/raiReportPDF', $data));
+        return $report->output();
+    }
+
+    public function generateCMReport($applicants, $positionRequirements)
+    {
+        $report = new Mpdf([
+            'format' => 'Legal', 'orientation' => 'L', 'setAutoTopMargin' => 'stretch',
+            'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
+        ]);
+        $data = [
+            'office' => $applicants[0]->TblOffices->ofc_name,
+            'pos_title' => $applicants[0]->TblPositions->pos_title,
+            'salary' => $applicants[0]->TblPositions->pos_salary_grade,
+            'item_no' => $applicants[0]->TblplantillaItems->itm_no,
+            'applicants' => $applicants,
+            'requirements' => $positionRequirements,
+        ];
+
+        // return $applicants[0]->TblOffices->ofc_name;
+        $report->writeHTML(view('reports/recruitment/cmReportPDF', $data));
+        $report->AddPage('L');
+        $report->page = 0;
+        $report->state = 0;
+        unset($report->pages[0]);
+        $report->PageNumSubstitutions[] = [
+            'from' => 0,
+            'reset' => 0,
+            'type' => 'num',
+            'suppress' => 'off'
+        ];
+        $report->writeHTML(view('reports/recruitment/cmReportPDF', $data));
+        $report->AddPage('L');
+
+        $report->writeHTML(view('reports/recruitment/cmReportPDF-part2', $data));
+
+        return $report->output();
+    }
+    public function getApplicantData($applicant_id)
+    {
+        $applicant_query = Tblapplicants::with(
+            'TblapplicantsProfile',
+            'TblplantillaItems',
+            'TblPositions',
+            'TblOffices'
+        )->where('app_id', $applicant_id)->first();
+
+        return $applicant_query;
+    }
+
+    public function generateOOOReport($applicants)
+    {
+        $report = new Mpdf([
+            'format' => [215.9, 279.4], 'orientation' => 'P', 'setAutoTopMargin' => 'stretch',
+            'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
+        ]);
+        $applicantsId = explode('-', $applicants);
+        // $data = [
+        //     'office' => $applicants[0]->TblOffices->ofc_name,
+        //     'pos_title' => $applicants[0]->TblPositions->pos_title,
+        //     'salary' => $applicants[0]->TblPositions->pos_salary_grade,
+        //     'item_no' => $applicants[0]->TblplantillaItems->itm_no,
+        //     'applicants' => $applicants,
+        // ];
+
+        // return $applicants[0]->TblOffices->ofc_name;
+        $report->writeHTML('');
+        $report->page = 0;
+        $report->state = 0;
+        unset($report->pages[0]);
+        $report->PageNumSubstitutions[] = [
+            'from' => 0,
+            'reset' => 0,
+            'type' => 'num',
+            'suppress' => 'off'
+        ];
+        $applicantData = [];
+        foreach ($applicantsId as $applicant) {
+        $applicantData = $this->getApplicantData($applicant);
+            $data = [
+                'applicants_profile' =>  $applicantData['TblapplicantsProfile'],
+                'applicants_position' =>  $applicantData['TblPositions'],
+            ];
+            // return $data;
+            $report->AddPage();
+            $report->writeHTML(view('reports/recruitment/oooReportPDF', $data));
+        }
         return $report->output();
     }
 }

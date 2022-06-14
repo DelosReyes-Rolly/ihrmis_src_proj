@@ -16,6 +16,7 @@ use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Jvs\TbljvsController;
+use App\Http\Controllers\Library\CategoryGroup;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TblofficesController;
@@ -45,7 +46,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //=======================================================================================
 // APPLICANT ENDPOINTS
 //=======================================================================================
-Route::post('new-applicant/{id?}', [TblapplicantProfileController::class, "createApplicant"]);
+Route::post('new-applicant/{position?}', [TblapplicantProfileController::class, "createApplicant"]);
+Route::post('modify-applicant/{id?}', [TblapplicantProfileController::class, "modifyApplicant"]);
 Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamilyChildren"]);
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id?}', [TblapplicantProfileController::class, "getApplicant"]);
@@ -54,37 +56,40 @@ Route::get('get-complete-applicant/{id}', [TblapplicantProfileController::class,
 //Reports
 Route::get('generate-POA/{plantillaId}', [TblapplicantProfileController::class, "generatePOAReport"]);
 Route::get('generate-RAI/{month}/{year}', [TblapplicantProfileController::class, "generateRAIReport"]);
+Route::get('generate-CM/{plantillaId}', [TblapplicantProfileController::class, "generateCMReport"]);
+Route::get('generate-OOO/{applicant}', [TblapplicantProfileController::class, "generateOOOReport"]);
+Route::get('generate-CAD/{applicant}', [TblapplicantProfileController::class, "generateCADReport"]);
 //crud-child
 Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChildrenRecord"]);
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
 Route::delete('new-children/{id}', [TblapplicantChildrenController::class, "removeChildrenRecord"]);
 //crud-educ
-Route::post('new-education/{id}', [TblapplicantEducationsController::class, "addEducationRecord"]);
+Route::post('new-education/{id?}', [TblapplicantEducationsController::class, "addEducationRecord"]);
 Route::get('new-education/{id}', [TblapplicantEducationsController::class, "getEducationRecord"]);
 Route::delete('new-education/{id}', [TblapplicantEducationsController::class, "removeEducationRecord"]);
 //crud-csc
 Route::get('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "getCseligibilityRecord"]);
-Route::post('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
+Route::post('new-csc-eleigibility/{id?}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
 Route::delete('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "removeCseligibilityRecord"]);
 //crud-exp
 Route::get('new-work-experience/{id}', [TblapplicantExperiencesController::class, "getExperienceRecord"]);
-Route::post('new-work-experience/{id}', [TblapplicantExperiencesController::class, "addExperienceRecord"]);
+Route::post('new-work-experience/{id?}', [TblapplicantExperiencesController::class, "addExperienceRecord"]);
 Route::delete('new-work-experience/{id}', [TblapplicantExperiencesController::class, "removeExperienceRecord"]);
 //crud-vol
 Route::get('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "getVoluntaryRecord"]);
-Route::post('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "addVoluntaryRecord"]);
+Route::post('new-voluntary-work/{id?}', [TblapplicantVoluntaryController::class, "addVoluntaryRecord"]);
 Route::delete('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "removeVoluntaryRecord"]);
 //crud-trn
 Route::get('new-training/{id}', [TblapplicantTrainingsController::class, "getTrainingRecord"]);
-Route::post('new-training/{id}', [TblapplicantTrainingsController::class, "addTrainingRecord"]);
+Route::post('new-training/{id?}', [TblapplicantTrainingsController::class, "addTrainingRecord"]);
 Route::delete('new-training/{id}', [TblapplicantTrainingsController::class, "removeTrainingRecord"]);
 //crud-otr
 Route::get('new-other-info/{id}', [TblapplicantOtherInfoController::class, "getOtherInfoRecord"]);
-Route::post('new-other-info/{id}', [TblapplicantOtherInfoController::class, "addOtherInfoRecord"]);
+Route::post('new-other-info/{id?}', [TblapplicantOtherInfoController::class, "addOtherInfoRecord"]);
 Route::delete('new-other-info/{id}', [TblapplicantOtherInfoController::class, "removeOtherInfoRecord"]);
 //crud-ref
 Route::get('new-reference/{id}', [TblapplicantReferencesController::class, "getReferenceRecord"]);
-Route::post('new-reference/{id}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
+Route::post('new-reference/{id?}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
 Route::delete('new-reference/{id}', [TblapplicantReferencesController::class, "removeReferenceRecord"]);
 
 //Info
@@ -106,8 +111,8 @@ Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDut
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
 Route::get('get-signature-image/{id}', [TbljvsController::class, "getSignatureDisplay"]);
 
-Route::get('get-generated-pdf/{id}',[TbljvsController::class, "generatedPdf"]);
-Route::get('get-option-employee/{plantillaId}',[TbljvsController::class, "getEmployeeAsOption"]);
+Route::get('get-generated-pdf/{id}', [TbljvsController::class, "generatedPdf"]);
+Route::get('get-option-employee/{plantillaId}', [TbljvsController::class, "getEmployeeAsOption"]);
 Route::get('new-jvs-version/{item}', [TbljvsController::class, "newVersion"]);
 
 Route::post('jvscrw-competency-rating', [TbljvsController::class, "addCompetencyAndRating"]);
@@ -115,17 +120,6 @@ Route::post('jvscrw-sign-upload/{id}/type/{signType}', [TbljvsController::class,
 Route::post('save-generate-jvscrw', [TbljvsController::class, "saveSignaturesAndName"]);
 
 Route::delete('remove-signed-image/{id}/{type}', [TbljvsController::class, "removeImage"]);
-
-
-
-// Route::post('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
-// Route::post('jvscrw-competency-rating/{id}/sequence/{order?}', [TbljvsController::class, "addCompenencyAndRating"]);
-// Route::resource('jvscrw/{id}', JvscrwMainController::class);
-// Route::get('competency/{jvs_id}', [JvsCompetencyController::class, "updateCompetency"]);
-// Route::post('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "addDutiesAndResponsibilities"]);
-// Competency
-// Route::delete('jvscrw-rating/{id}/order/{order}/type/{type}',[TbljvsController::class, "removeCompetencyRating"]);
-// SIGNATURE UPLOAD
 
 //=======================================================================================
 // POSITION AND OFFICE END POINTS
@@ -146,7 +140,7 @@ Route::get('plantilla-duties-responsibility/{id}', [TblplantillaItemsController:
 Route::get('get-plantilla-by-office/{id}', [TblplantillaItemsController::class, "getPlantillaItemByOffice"]);
 Route::get('get-next-rank-/{id}', [TblplantillaItemsController::class, "getNextInRank"]);
 Route::get('get-vacant-plantilla', [TblplantillaItemsController::class, "getAllVacantPlantillaItems"]);
-
+Route::get('get-open-positions', [TblplantillaItemsController::class, "getOpenPlantillaItems"]);
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
 Route::delete("remove-plantilla/{id}", [TblplantillaItemsController::class, "removePlantilla"]);
@@ -162,8 +156,14 @@ Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class,
 //=======================================================================================
 Route::resource('plantilla-items', TblplantillaItemsController::class);
 Route::resource('offices', TblofficesController::class);
+Route::post('save-agency', [TblofficesController::class, "saveAgency"]);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
+
+//=======================================================================================
+//  Library Resources
+//=======================================================================================
+Route::resource('category-groups', CategoryGroup::class);
 
 //=======================================================================================
 // AUTH END POINTS
@@ -203,6 +203,8 @@ Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 
 // OFFICEC POSITION CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
+Route::get('agency', [TblofficesController::class, "agency"]);
+
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
 Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
@@ -228,11 +230,35 @@ Route::get('get-transaction-stage-select/{cluster}', [TblTransactionStagesContro
 /**
  * Applicant Status Endpoints
  */
- Route::post('add-applicant-status',[TblapplicantStatusController::class,'saveStatus']);
+Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveStatus']);
 
 
 //=======================================================================================
 // EMPLOYEE CONTROLLER ENDPOINTS
 //=======================================================================================
-
 Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);
+Route::get('get-single-employee/{id}',[EmployeeController::class, "getSingleEmployee"]);
+
+Route::post('add-update-emp_ref/{ref_id?}',[EmployeeController::class, "addUpdateReference"]);
+Route::get('get-emp_ref/{emp_id}',[EmployeeController::class, "getEmployeeReference"]);
+Route::delete('remove-emp_ref/{ref_id}',[EmployeeController::class, "removeEmployeeReference"]);
+
+Route::post('add-update-emp_trn/{trn_id?}',[EmployeeController::class, "addUpdateTraining"]);
+Route::get('get-emp_trn/{emp_id}',[EmployeeController::class, "getEmployeeTraining"]);
+Route::delete('remove-emp_trn/{trn_id}',[EmployeeController::class, "removeEmployeeTraining"]);
+
+Route::post('add-update-emp_vol/{vol_id?}',[EmployeeController::class, "addUpdateVoluntary"]);
+Route::get('get-emp_vol/{emp_id}',[EmployeeController::class, "getEmployeeVoluntary"]);
+Route::delete('remove-emp_vol/{vol_id}',[EmployeeController::class, "removeEmployeeVoluntary"]);
+
+Route::post('add-update-emp_exp/{exp_id?}',[EmployeeController::class, "addUpdateExperience"]);
+Route::get('get-emp_exp/{emp_id}',[EmployeeController::class, "getEmployeeExperience"]);
+Route::delete('remove-emp_exp/{exp_id}',[EmployeeController::class, "removeEmployeeExperience"]);
+
+Route::post('add-update-emp_cse/{cse_id?}',[EmployeeController::class, "addUpdateEligibility"]);
+Route::get('get-emp_cse/{emp_id}',[EmployeeController::class, "getEmployeeEligibility"]);
+Route::delete('remove-emp_cse/{cse_id}',[EmployeeController::class, "removeEmployeeEligibility"]);
+
+Route::post('add-update-emp_edu/{edu_id?}',[EmployeeController::class, "addUpdateEducation"]);
+Route::get('get-emp_edu/{emp_id}',[EmployeeController::class, "getEmployeeEducation"]);
+Route::delete('remove-emp_edu/{edu_id}',[EmployeeController::class, "removeEmployeeEducation"]);

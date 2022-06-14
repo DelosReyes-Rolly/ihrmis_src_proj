@@ -98,25 +98,32 @@ class QualifiedApplicantsResource extends JsonResource
             $start = new Carbon($appExperience->exp_app_from, 'Asia/Manila');
             $end = new Carbon($appExperience->exp_app_to, 'Asia/Manila');
             $related_fields = explode(',', $appExperience->exp_app_rel_fields);
-            foreach ($related_fields as $field) {
-                $applicantExpField[$field]['field'] = $field;
-                if (empty($applicantExpField[$field]['years'])) {
-                    $applicantExpField[$field]['years'] = $start->diffInYears($end, true);
-                } else {
-                    $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
-                }
-                $current = $applicantExpField[$field]['years'] += $start->diffInYears($end, true);
-                if ($current > $highest['experience_years']) {
-                    $highest['experience_years'] = $current;
-                    $highest['experience'] = $field;
-                }
-            }
+            // foreach ($related_fields as $field) {
+            //     $applicantExpField['field'] = $field;
+            //     if (empty($applicantExpField['years'])) {
+            //         $applicantExpField['years'] = $start->diffInYears($end, true);
+            //     } else {
+            //         $applicantExpField['years'] += $start->diffInYears($end, true);
+            //     }
+            // $current = $applicantExpField['years'] += $start->diffInYears($end, true);
+            //     if ($current > $highest['experience_years']) {
+            $highest['experience_years'] += $start->diffInYears($end, true);
+            $highest['experience'] = $appExperience->exp_app_rel_fields;
+            //     }
+            // }
         }
-        $name = $this->TblapplicantsProfile->app_nm_last. ", ". $this->TblapplicantsProfile->app_nm_first;
+        $year_text = "";
+        if ($highest['experience_years'] == 1) {
+            $year_text = " year of experience";
+        } else {
+            $year_text = " years of experience";
+        }
+
+        $name = $this->TblapplicantsProfile->app_nm_last . ", " . $this->TblapplicantsProfile->app_nm_first;
         $email = $this->TblapplicantsProfile->app_email_addr;
-        $position_message = $this->TblPositions->pos_title. ";\n". $this->TblOffices->ofc_acronym;
+        $position_message = $this->TblPositions->pos_title . ";\n" . $this->TblOffices->ofc_acronym;
         $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
-            $highest['experience_years'] . " years experience in " . $highest['experience'] . ";\n". $highest['training_hours'] . " hours training in " .
+            $highest['experience_years'] . $year_text . "\n" . $highest['training_hours'] . " hours training in " .
             $highest['training'] . "; " . $highest['eligibility'] . "";
 
         return [

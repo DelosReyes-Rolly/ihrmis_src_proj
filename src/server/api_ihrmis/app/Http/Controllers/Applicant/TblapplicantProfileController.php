@@ -27,19 +27,19 @@ class TblapplicantProfileController extends Controller
     }
 
 
-    public function createApplicant($id = null, Request $request)
+    public function createApplicant($position, Request $request)
     {
+        $item = $this->appProfileService->createApplicant($request, $position);
+        return response()->json([
+            'item' => $item,
+            'status' => 200,
+            'message' => "Added Successfully",
+        ]);
+        return 'create';
+    }
 
-        if ($id == null) {
-            $item = $this->appProfileService->createApplicant($request);
-
-            return response()->json([
-                'item' => $item,
-                'status' => 200,
-                'message' => "Added Successfully",
-            ]);
-        }
-
+    public function modifyApplicant($id, Request $request)
+    {
         $item = $this->appProfileService->modifyApplicant($id, $request);
 
         return response()->json([
@@ -47,8 +47,9 @@ class TblapplicantProfileController extends Controller
             'status' => 200,
             'message' => "Added Successfully",
         ]);
-    }
+        return 'edit';
 
+    }
 
     public function createFamilyChildren($id, Request $request)
     {
@@ -229,6 +230,22 @@ class TblapplicantProfileController extends Controller
     public function generateRAIReport($month, $year)
     {
         return $this->appProfileService->generateRAIReport($month, $year);
+    }
+
+    public function generateCMReport($plantillaId)
+    {
+        $qualified_applicants = $this->appProfileService->getQualifiedApplicants_report($plantillaId);
+        $requirements = $this->appProfileService->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
+        return $this->appProfileService->generateCMReport($qualified_applicants, $requirements);
+    }
+
+    public function generateOOOReport($applicants)
+    {
+        return $this->appProfileService->generateOOOReport($applicants);
+    }
+    public function generateCADReport($applicants)
+    {
+        return $this->appProfileService->generateOOOReport($applicants);
     }
 
     public function getFamilyChildren($id)
