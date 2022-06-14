@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use App\Http\Resources\Plantilla\GetVacantPositionsResource;
-use Barryvdh\DomPDF\Facade as PDF;
+use Mpdf\Mpdf as MPDF;
 
 class TblplantillaVacantPositions extends TblplantillaItems
 {
@@ -26,19 +25,28 @@ class TblplantillaVacantPositions extends TblplantillaItems
     public function generatePdf()
     {
     
-        date_default_timezone_set('Asia/Manila'); //define local time
-        
-        $data = $this->getVacantPositions(1);
+		date_default_timezone_set('Asia/Manila'); //define local time
+		
+		$data = $this->getVacantPositions(1);
 
-        $new_data = [];
+		$new_data = [];
 
-        $new_data['vacantpositions'] = $data;
-        
-        $date = date('m/d/Y');
-        $pdf = PDF::loadView('vacantPositionsPdf', $new_data);
-        $pdf->setPaper('a4', 'landscape')->setWarnings(false)
-        ->setOptions(['dpi' => 150, 'defaultFont' => 'Courier']);
-        return $pdf->stream('DOST-CO Vacant Position_'.$date.'.pdf');
+		$new_data['vacantpositions'] = $data;
+		
+		$date = date('m/d/Y');
+
+		$pdf = new MPDF();
+		$pdf->writeHTML(view('vacantPositionsPdf',$new_data,[], [
+		'title'				=> 	'Notice of Vacancy',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'L',
+		'format' => 'A4'
+		]));
+  
+		return $pdf->output('DOST-CO Vacant Position_'.$date.'.pdf',"I");
     }
 
 }

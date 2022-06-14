@@ -62,18 +62,20 @@ class TblplantillaItemsVacantPositionController extends Controller {
      * generateMemoOnPostingVPForCsc
      * Todo generate PDF file
      */
-    public function generateMemoOnPostingVPForCsc()
+    public function generateMemoOnPostingVPForCsc($selected_agency)
     {
-        return $this->tblPantillaVacantPos->generateMemoOnPostingVpReport();
+        
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForCscReport($selected_agency);
     }
 
      /**
      * generateMemoOnPostingVPForDostAgencies
      * Todo generate PDF file
      */
-    public function generateMemoOnPostingVPForDostAgencies()
+    public function generateMemoOnPostingVPForDostAgencies($selected_agency)
     {
-        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport();
+
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport($selected_agency);
     }
 
     public function closeSelectedVacantPositions(Request $request){
@@ -107,6 +109,16 @@ class TblplantillaItemsVacantPositionController extends Controller {
 	public function getAllAgencies()
     {
         return $this->tblPantillaVacantPos->getAllAgencies();
+    }
+
+    /**
+	 * getAllDostAgencies
+	 * Todo get all DOST Agencies
+	 * @return array 
+	 */
+	public function getAgency($id)
+    {
+        return $this->tblPantillaVacantPos->getAgency($id);
     }
 
      /** get all agency employees

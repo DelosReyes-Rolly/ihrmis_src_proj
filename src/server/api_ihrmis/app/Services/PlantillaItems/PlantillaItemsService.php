@@ -13,8 +13,10 @@ use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf as MPDF;
+
 // use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 class PlantillaItemsService
 {
@@ -27,6 +29,7 @@ class PlantillaItemsService
 	public function getAllPlantillaItems() {
 
 		$item_query = TblplantillaItems::with('tbloffices', 'tblpositions','tblapplicants')->get();
+		
 		return $item_query;
 
 	}
@@ -113,26 +116,44 @@ class PlantillaItemsService
 	 * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
 	 * @return void
 	 */
-	public function generateMemoOnPostingVpReport()
+	public function generateMemoOnPostingVpForCscReport($selected_agency)
 	{
   
 		date_default_timezone_set('Asia/Manila'); //define local time
+		
 		
 		$data = $this->getVacantPositions(0);
 
 		$new_data = [];
 
 		foreach($data as $itm){
+
 			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
 			$itm->positionswithcscstandards = $positionswithcscstandards;
 		}
 	
-		$new_data['vacantpositions'] = $data;
-		$date = date('m/d/Y');
+		$decoded_selected_agency = json_decode($selected_agency,true);
 
+		$new_selected_agency_data = [];
+		foreach($decoded_selected_agency as $itm){
+			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
+		}
+
+		// $date = date('m/d/Y');
+		$date = date("j F Y");
+		
+		$new_data['vacantpositions'] = $data;
+		$new_data['selected_agencies'] = $new_selected_agency_data;
+		$new_data['date_memo'] = $date;
+		$new_data['memo'] = 'CSC';
+		$new_data['memo_from_name'] = config('constants.ADMIN_NAME');
+
+
+		// return $new_data;
+		
 		$pdf = new MPDF();
 		
-		$pdf->writeHTML(view('memoOnPostingVPForCsc',$new_data,[], [
+		$pdf->writeHTML(view('memoonpostingofvacancydostcsc',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
 		'margin_right'      => 10,
@@ -150,27 +171,43 @@ class PlantillaItemsService
 	 * Todo this function will generate Memo On Posting Vacant Position For DOST Agencies report in PDF form
 	 * @return void
 	 */
-	public function generateMemoOnPostingVpForDostReport()
+	public function generateMemoOnPostingVpForDostReport($selected_agency)
 	{
   
 		date_default_timezone_set('Asia/Manila'); //define local time
 		
-		//1 for vacant positions
-		$data = $this->getVacantPositions(1);
+		
+		$data = $this->getVacantPositions(0);
 
 		$new_data = [];
 
 		foreach($data as $itm){
+
 			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
 			$itm->positionswithcscstandards = $positionswithcscstandards;
 		}
 	
-		$new_data['vacantpositions'] = $data;
-		
-		$date = date('m/d/Y');
+		$decoded_selected_agency = json_decode($selected_agency,true);
 
+		$new_selected_agency_data = [];
+		foreach($decoded_selected_agency as $itm){
+
+			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
+		}
+
+
+		// $date = date('m/d/Y');
+		$date = date("j F Y");
+		
+		$new_data['vacantpositions'] = $data;
+		$new_data['selected_agencies'] = $new_selected_agency_data;
+		$new_data['date_memo'] = $date;
+		$new_data['memo'] = 'DOST';
+
+		// return $new_data;
+		
 		$pdf = new MPDF();
-		$pdf->writeHTML(view('memoOnPostingVpForDostAgencies',$new_data,[], [
+		$pdf->writeHTML(view('memoonpostingofvacancydostcsc',$new_data,[], [
 		'title'				=> 	'Notice of Vacancy',
 		'margin_left'     	=> 10,
 		'margin_right'      => 10,
@@ -191,7 +228,7 @@ class PlantillaItemsService
 	public function closeVacantPositions(Request $request){
 
 		$is_save = null;
-
+		$applicantDataQry = null;
         foreach ($request->all()['positions'] as $value) {
 
             $vacantpos = TblplantillaItems::find($value['itm_id']);
@@ -242,7 +279,7 @@ class PlantillaItemsService
 
 			"code" => $is_save ? 200 : 500,
 			"message" => $message,
-			"applicant_profile" => ''//$applicant_query
+			"applicant_profile" => $applicantDataQry//$applicant_query
 		]);
 	
 	}
@@ -303,7 +340,7 @@ class PlantillaItemsService
 	/**
 	 * getAllDostAgencies
 	 * Todo get all DOST Agencies
-	 * @return array 
+	 * @return object 
 	 */
 	public function getAllDostAgencies() {
 
@@ -315,14 +352,36 @@ class PlantillaItemsService
 
 	/**
 	 * getAllDostAgencies
-	 * Todo get all DOST Agencies
-	 * @return array 
+	 * Todo get all Agencies
+	 * @return object 
 	 */
 	public function getAllAgencies()
     {
-        return CommonResource::collection(
-            Tblagencies::get(),
-        );
+		$item_query = Tblagencies::get();
+		return json_decode($item_query);
+    }
+
+	/**
+	 * getAgency
+	 * Todo get Agency
+	 * @return array 
+	 */
+	public function getAgency($id)
+    {
+		$item_query = Tblagencies::where("agn_id",$id)->first();
+		$item_query->office = $this->getOffice($item_query->agn_id);
+		return $item_query;
+    }
+
+	/**
+	 * getAgency
+	 * Todo get Office
+	 * @return array 
+	 */
+	public function getOffice($id)
+    {
+		$item_query = Tbloffices::where("ofc_agn_id",$id)->first();
+		return $item_query;
     }
 
 	public function generateVacantMemoPdf($type){

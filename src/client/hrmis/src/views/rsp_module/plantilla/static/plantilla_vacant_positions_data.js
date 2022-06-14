@@ -24,6 +24,10 @@ export const tableHeaderColumnName = [
 		accessor: "ofc_acronym",
 	},
 	{
+		Header: "Agency ID",
+		accessor: "ofc_agn_id",
+	},
+	{
 		Header: "Status",
 		accessor: "itm_status",
 	},
@@ -94,5 +98,18 @@ export const EMPLOYEE_DROPDOWN = [
 		id: 3,
 		label: "Remarks",
 		link: "#",
+	},
+];
+
+export const memoOnPostingOfVacancyItemList = [
+	{
+		id: 1,
+		label: "To DOST Agencies",
+		link: true,
+	},
+	{
+		id: 2,
+		label: "To CSC",
+		link: printVacantPositions,
 	},
 ];
