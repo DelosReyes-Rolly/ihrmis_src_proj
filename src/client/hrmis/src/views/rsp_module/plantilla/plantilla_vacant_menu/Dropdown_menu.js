@@ -16,6 +16,7 @@ const DropdownMenu = ({
   tooltipData = { position: "top", effect: "solid" },
   customData,
   callback,
+  itemId,
 }) => {
   const [dropable, setDropable] = useState(false);
   const timerRef = useRef();
@@ -73,6 +74,7 @@ const DropdownMenu = ({
           onClick={selectedProperty}
           customData={customData}
           callback={callback}
+          itemId={itemId}
         />
       )}
     </div>
@@ -81,29 +83,24 @@ const DropdownMenu = ({
 
 export default DropdownMenu;
 
-const DropList = ({
-  itemList = [],
-  display = "none",
-  customData,
-  callback,
-}) => {
+const DropList = ({ itemList = [], display = "none", itemId }) => {
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const linkDetector = (item) => {
-    let itemlink = item.link;
-    if (typeof itemlink === "string" || itemlink instanceof String)
+    const itemlink = item.link;
+
+    if (typeof itemlink === "string" || itemlink instanceof String) {
+      if (item.label === "JVS &CRW") return navigate(itemlink + "/" + itemId);
       return navigate(itemlink);
-    else if (typeof itemlink === "function") {
-      itemlink();
-    } else if (typeof item.link === "boolean" && item.link) {
-      if (item.label.includes("Notify")) {
-        dispatch(setRankEmail());
-      } else if (item.label.includes("Next-in")) {
-        dispatch(setNextRank());
-      }
     }
+
+    if (typeof itemlink === "boolean" && item.link) {
+      if (item.label.includes("Notify")) return dispatch(setRankEmail());
+      return dispatch(setNextRank());
+    }
+
+    return itemlink();
   };
 
   return (

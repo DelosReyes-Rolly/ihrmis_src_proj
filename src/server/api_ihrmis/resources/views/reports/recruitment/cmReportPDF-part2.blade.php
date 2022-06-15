@@ -136,12 +136,7 @@ $civilStatus['SP'] = 'Separated';
                     <?php foreach ($applicant->tblapplicantExperience as $experience) { ?>
                     <?php }?>
                 </td>
-                <td class="td center">
-                    <?php
-                    // foreach($applicant->tblapplicantTrainings as $training){
-                    ?>
-                    {{-- <?php }?> --}}
-                </td>
+                <td class="td center"></td>
 
                 <td class="td"></td>
                 <td class="td"></td>

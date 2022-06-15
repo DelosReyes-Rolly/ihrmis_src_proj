@@ -8,17 +8,20 @@ import plantillaItemReducer from "../reducers/plantilla_item_slice";
 import vacantReducer from "../reducers/vacant_slice";
 import employeeReducer from "../reducers/employee_slice";
 
-const store = configureStore({
-  reducer: {
-    user: userReducer,
-    mobileView: mobileViewReducer,
-    popupResponse: popupResponceReducer,
-    error: errorHandlerSlice,
-    jvsform: jvscrwReducer,
-    plantillaItem: plantillaItemReducer,
-    vacant: vacantReducer,
-    employee: employeeReducer,
+const store = configureStore(
+  {
+    reducer: {
+      user: userReducer,
+      mobileView: mobileViewReducer,
+      popupResponse: popupResponceReducer,
+      error: errorHandlerSlice,
+      jvsform: jvscrwReducer,
+      plantillaItem: plantillaItemReducer,
+      vacant: vacantReducer,
+      employee: employeeReducer,
+    },
   },
-});
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 export default store;

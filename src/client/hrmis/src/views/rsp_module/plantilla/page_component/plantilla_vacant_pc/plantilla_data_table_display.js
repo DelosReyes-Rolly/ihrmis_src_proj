@@ -37,6 +37,7 @@ import {
 export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
+
   const [filters, setFiltersTable] = useState([]);
   const plantillaItemApi = async () => {
     await axios
@@ -180,8 +181,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     // console.log(setFilter);
   }, [selectedFlatRows]);
 
-  const [rank_email, setRankEmail] = useState(false);
-  const [next_rank, setNextRank] = useState(false);
+  const [itemID, setItemID] = useState(null);
 
   return (
     <React.Fragment>
@@ -196,12 +196,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
         setAllFilters={setAllFilters}
         setFiltersTable={setFiltersTable}
       />
-      <SelectAction
-        next_rank={next_rank}
-        rank_email={rank_email}
-        setNextRank={setNextRank}
-        setRankEmail={setRankEmail}
-      />
+      <SelectAction itemID={itemID} />
       {/* <SelectTableComponent list={plotData} /> */}
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
@@ -247,16 +242,22 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
                               justifyContent: "space-between",
                             }}
                           >
-                            <div>{cell.render("Cell")}</div>
-                            <DropdownMenu
-                              itemList={plantillaItemsVacantPosMenuItems}
-                              title={<MdMoreHoriz size="15" />}
-                              alignItems="end"
-                              tooltipData={{
-                                toolTipId: "other-actions",
-                                textHelper: "Click to view other actions",
-                              }}
-                            />
+                            <div>{cell.render("Cell")} </div>
+
+                            <div
+                              onBlur={() => setItemID(cell.row.values.itm_id)}
+                            >
+                              <DropdownMenu
+                                itemList={plantillaItemsVacantPosMenuItems}
+                                title={<MdMoreHoriz size="15" />}
+                                alignItems="end"
+                                tooltipData={{
+                                  toolTipId: "other-actions",
+                                  textHelper: "Click to view other actions",
+                                }}
+                                itemId={cell.row.values.itm_id}
+                              />
+                            </div>
                           </div>
                         </td>
                       );
@@ -284,7 +285,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   );
 };
 
-const SelectAction = () => {
+const SelectAction = ({ itemID = null }) => {
   const dispatch = useDispatch();
   const { next_rank, context_menu, rank_email } = useSelector(
     (state) => state.plantillaItem
@@ -292,6 +293,7 @@ const SelectAction = () => {
   return (
     <React.Fragment>
       <NextInRankModal
+        plantilla={{ itm_id: itemID }}
         isDisplay={next_rank}
         onClose={() => dispatch(setNextRank())}
       />

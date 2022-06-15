@@ -56,7 +56,7 @@ export const plantillaItemsVacantPosMenuItems = [
   {
     id: 3,
     label: "JVS &CRW",
-    link: "#",
+    link: "/jvs-crw/",
   },
   {
     id: 4,

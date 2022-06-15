@@ -14,7 +14,7 @@ import NotificationComponent from "../notification/notification_component";
 import navbarLogo from "../../../assets/images/ilogo.png";
 import { useNavigate } from "react-router-dom";
 
-const NavbarComponent = ({}) => {
+const NavbarComponent = () => {
   let [dropState, updateDropState] = useToggleHelper(false);
   let dispatch = useDispatch();
   const [timeDataState, setTimeDataState] = useState();
@@ -96,7 +96,9 @@ const NavbarComponent = ({}) => {
               <span className="user-avatar">
                 <img src={dostLogo} width="20" height="20" alt="avatar" />
               </span>
-              <span className="user-name-display">Juan Dela Cruz </span>
+              <span className="user-name-display">
+                {window.sessionStorage.getItem("user")}
+              </span>
               <span className="user-drop-arrow">
                 <AiFillCaretDown size="12px" />
               </span>

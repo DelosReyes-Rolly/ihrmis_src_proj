@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Applicant\TblapplicantChildrenController;
 use App\Http\Controllers\Applicant\TblapplicantCseligibilitiesController;
 use App\Http\Controllers\Applicant\TblapplicantDeclarationController;
@@ -39,9 +40,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
 });
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 //=======================================================================================
 // APPLICANT ENDPOINTS
@@ -168,8 +173,14 @@ Route::resource('category-groups', CategoryGroup::class);
 //=======================================================================================
 // AUTH END POINTS
 //=======================================================================================
-Route::post('login', [AuthenticationController::class, "loginUser"]);
-Route::post('register', [AuthenticationController::class, "registerUser"]);
+// Route::post('login', [AuthenticationController::class, "loginUser"]);
+// Route::post('register', [AuthenticationController::class, "registerUser"]);
+
+Route::post('login', [AuthController::class, "login"]);
+Route::post('register', [AuthController::class, "register"]);
+
+
+
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -199,14 +210,14 @@ Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::cla
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 
 //=======================================================================================
-// OFFICEC POSITION CONTROLLER ENDPOINTS
+// OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('agency', [TblofficesController::class, "agency"]);
 
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
-Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
+
 
 //=======================================================================================
 // NOTIFICATION CONTROLLER ENDPOINTS

@@ -24,7 +24,7 @@ import { useScrollToTop } from "../../../../helpers/use_hooks/useScollTop";
 const FormPageThree = () => {
   useScrollToTop();
   let navigate = useNavigate();
-  let { item } = useParams();
+  const { item } = useParams();
 
   return (
     <React.Fragment>
