@@ -192,11 +192,12 @@ Route::get('getAllPositions', [TblplantillaItemsVacantPositionController::class,
 Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController::class, "getVacantPositions"]);
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
-Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
-Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::get('generateMemoOnPVPForCsc/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generateMemoOnPVPForDost/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
+Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS
