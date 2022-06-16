@@ -12,6 +12,7 @@ use App\Models\Employees\TblnextInRank;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -376,14 +377,30 @@ class PlantillaItemsService
 
 	public function generateVacantMemoPdf($type){
 
-		$query = TblnextInRank::where("nir_itm_id", $type)->get();
-		$arrHolder = [];
+		$idAndNextInRank = json_decode($type);
+		$query = TblnextInRank::where("nir_itm_id", $idAndNextInRank->id)->get();
+		$plantilla = TblplantillaItems::where("itm_id", $idAndNextInRank->id)->with("tblpositions")->first();
+		$queryHolder = [];
 		foreach ($query as $value) {
+			foreach ($idAndNextInRank->next_rank as $addValue) {
+				if($addValue == $value->nir_emp_id){
+					array_push($queryHolder, $value);
+				}
+			}
+		}
+		
+
+		$arrHolder = [];
+		foreach ($queryHolder as $value) {
 			array_push($arrHolder, "<strong>".$value["nir_name"]."</strong>".", ".$value["nir_pos_title"].", ".$value["nir_office"]);
 		}
 		
 		$data = [
-			"employee" => implode("<br>" ,$arrHolder)
+			"employee" => implode("<br>" ,$arrHolder),
+			"date_now" => Carbon::now()->format('d F Y'),
+			"title" => "Filling up one (1) ". $plantilla->tblpositions->pos_title, 
+			"grade" => $plantilla->tblpositions->pos_salary_grade,
+			"item" => $plantilla->itm_no
 		];
 		$report = new MPDF();
 		$report->writeHTML(view('reports/vacantMemoReportPdf', $data ));

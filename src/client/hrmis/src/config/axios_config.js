@@ -1,8 +1,13 @@
-import axios from "axios";
-
-// axios.defaults.headers.common["Authorization"] =
-//   "Bearer" + localStorage.getItem("XSRF-TOKEN");
-axios.defaults.withCredentials = true;
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-axios.defaults.headers.common["xsrfCookieName"] = "XSRF-TOKEN";
-axios.defaults.headers.common["xsrfHeaderName"] = "X-XSRF-TOKEN";
+export const axiosHeader = {
+  withCredentials: true,
+  headers: {
+    Authorization:
+      sessionStorage.getItem("token_type") +
+      " " +
+      sessionStorage.getItem("token"),
+    "Access-Control-Allow-Origin": "*",
+  },
+};
+// sessionStorage.removeItem("token");
+// sessionStorage.removeItem("user");
+// sessionStorage.removeItem("token_token");

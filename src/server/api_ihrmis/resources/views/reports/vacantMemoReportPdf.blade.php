@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Next-in-Rank Memo</title>
 </head>
+
 <style>
   .header-tag{
     font-weight: bold;
@@ -35,6 +36,7 @@
     border-bottom: 1px solid black;
   }
 </style>
+
 <body>
   <p class="header-tag">MEMORANDUM</p>
   <table>
@@ -49,18 +51,18 @@
       </tr>
       <tr>
         <td>DATE:</td>
-        <td></td>
+        <td>{{ $date_now }}</td>
       </tr>
       <tr>
         <td>SUBJECT:</td>
-        <td></td>
+        <td>{{$title}}</td>
       </tr>
     </tbody>
   </table>
   <hr/>
   <p>
-    Please be informed that one (1) vacant position of <strong>Development Officer IV, SG-22,
-    Item No. OSEC-DOSTB-PDO4-2-1998</strong>, under the Special Projects Division, Office of the
+    Please be informed that one (1) vacant position of <strong>{{$title}}, SG-{{ $grade }},
+    Item No. {{ $item }}</strong>, under the Special Projects Division, Office of the
     Undersecretary for R&D, was published on _______________________ and is scheduled for
     filling up.
     <br/><br/>
@@ -112,7 +114,5 @@
       position.</u><br/><br/>
     Thank you.
   </p>
-
-
 </body>
 </html>
