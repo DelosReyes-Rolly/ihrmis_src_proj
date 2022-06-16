@@ -26,33 +26,40 @@ import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
 import {
   setContextMenu,
   setNextRank,
+  setNotifyOffice,
   setRankEmail,
+  setEmailRecepients,
 } from "../../../../../features/reducers/plantilla_item_slice";
+import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 
 /**
  * PlantillaDataTableDisplay
  * @param type
+ * @param selectedPlantillaItems
  * @returns
  */
 export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
-  const [filters, setFiltersTable] = useState([]);
+  // const [filters, setFiltersTable] = useState([]);
+  const dispatch = useDispatch();
+  const [axiosCall] = useAxiosCallHelper();
   const plantillaItemApi = async () => {
     await axios
       .get(API_HOST + "getAllPositions")
       .then((response) => {
         //console.log(response.data);
-        let data = response.data.data ?? [];
+        let data = response?.data.data ?? [];
 
         if (data.length > 0) {
           let dataPlot = [];
-          data?.forEach((element) => {
+          data.forEach((element) => {
             dataPlot.push({
               itm_id: element.itm_id,
               itm_no: element.itm_no,
               pos_title: element.position.pos_title,
               ofc_acronym: element?.office?.ofc_acronym,
+              ofc_agn_id: element?.office?.ofc_agn_id,
               itm_status: statusDisplay[element.itm_status],
               pos_category: element.position.pos_category,
               itm_state: element.itm_state,
@@ -67,8 +74,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
       });
   };
 
-  const dispatch = useDispatch();
-
   useLayoutEffect(() => {
     plantillaItemApi();
   }, [refresh]);
@@ -78,7 +83,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   const columns = useMemo(() => tableHeaderColumnName, []);
 
   const initialState = {
-    hiddenColumns: ["pos_category", "itm_id", "itm_state"],
+    hiddenColumns: ["pos_category", "itm_id", "itm_state", "ofc_agn_id"],
     filters: [
       {
         id: "itm_state",
@@ -173,15 +178,32 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     selectedPlantillaItems(selectedItems);
   };
 
+  const getAgency = (id) => {
+    axiosCall("get", API_HOST + "getAgency/" + id).then(
+      (response) => {
+        let data = response.data;
+        let arr = [];
+        arr.push(data.agn_head_email);
+        dispatch(setEmailRecepients(arr));
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   useLayoutEffect(() => {
     let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
-    setSelectedRowsData(selectedFlatRowsData);
-    console.log(selectedFlatRowsData);
+    if (selectedFlatRowsData.length > 0) {
+      setSelectedRowsData(selectedFlatRowsData);
+      getAgency(selectedFlatRowsData[0].ofc_agn_id);
+      console.log(selectedFlatRowsData);
+    }
+
     // console.log(setFilter);
   }, [selectedFlatRows]);
 
-  const [rank_email, setRankEmail] = useState(false);
-  const [next_rank, setNextRank] = useState(false);
+  const [itemID, setItemID] = useState(null);
 
   return (
     <React.Fragment>
@@ -194,14 +216,9 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
         globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
         setAllFilters={setAllFilters}
-        setFiltersTable={setFiltersTable}
+        // setFiltersTable={setFiltersTable}
       />
-      <SelectAction
-        next_rank={next_rank}
-        rank_email={rank_email}
-        setNextRank={setNextRank}
-        setRankEmail={setRankEmail}
-      />
+      <SelectAction itemID={itemID} />
       {/* <SelectTableComponent list={plotData} /> */}
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
@@ -247,16 +264,23 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
                               justifyContent: "space-between",
                             }}
                           >
-                            <div>{cell.render("Cell")}</div>
-                            <DropdownMenu
-                              itemList={plantillaItemsVacantPosMenuItems}
-                              title={<MdMoreHoriz size="15" />}
-                              alignItems="end"
-                              tooltipData={{
-                                toolTipId: "other-actions",
-                                textHelper: "Click to view other actions",
-                              }}
-                            />
+                            <div>
+                              {cell.render("Cell")} {itemID}
+                            </div>
+                            <div
+                              onClick={() => setItemID(cell.row.values.itm_id)}
+                            >
+                              <DropdownMenu
+                                itemList={plantillaItemsVacantPosMenuItems}
+                                title={<MdMoreHoriz size="15" />}
+                                alignItems="end"
+                                tooltipData={{
+                                  toolTipId: "other-actions",
+                                  textHelper: "Click to view other actions",
+                                }}
+                                itemId={itemID}
+                              />
+                            </div>
                           </div>
                         </td>
                       );
@@ -284,14 +308,15 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   );
 };
 
-const SelectAction = () => {
+const SelectAction = ({ itemID = null }) => {
   const dispatch = useDispatch();
-  const { next_rank, context_menu, rank_email } = useSelector(
+  const { next_rank, context_menu, rank_email, notify_office } = useSelector(
     (state) => state.plantillaItem
   );
   return (
     <React.Fragment>
       <NextInRankModal
+        plantilla={{ itm_id: itemID }}
         isDisplay={next_rank}
         onClose={() => dispatch(setNextRank())}
       />
@@ -300,16 +325,17 @@ const SelectAction = () => {
         onClose={() => dispatch(setContextMenu())}
       />
       <PlantillaEmailModal
+        isDisplay={notify_office}
+        onClose={() => dispatch(setNotifyOffice())}
+        type={EMAIL_ENUM.regular}
+        endpoint={API_HOST + "notify-vacant-office"}
+      />
+      <PlantillaEmailModal
         isDisplay={rank_email}
         onClose={() => dispatch(setRankEmail())}
         type={EMAIL_ENUM.next_rank}
         endpoint={API_HOST + "notify-next-rank"}
       />
-
-      {/* <PlantillaEmailModal
-        isDisplay={rank_email}
-        onClose={() => dispatch(setRankEmail())}
-      /> */}
     </React.Fragment>
   );
 };

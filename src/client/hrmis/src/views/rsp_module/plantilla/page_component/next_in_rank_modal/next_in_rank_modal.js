@@ -37,7 +37,21 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   };
 
   const generateMemo = async () => {
-    printNextRankMemoReport(fetch_id);
+    if (selectedItems.length > 0) {
+      const arrHolder = [];
+      selectedItems?.forEach((element) => {
+        arrHolder.push(element?.nir_emp_id);
+      });
+      const toSend = {
+        id: fetch_id,
+        next_rank: arrHolder,
+      };
+      return printNextRankMemoReport(JSON.stringify(toSend));
+    }
+    popupAlert({
+      message: "Please Select Next-in-Rank Employee",
+      type: ALERT_ENUM.fail,
+    });
   };
 
   const onRemoveEmp = async () => {
@@ -106,7 +120,7 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   const onPressedNotify = () => {
     if (selectedItems.length != 0) {
       let arrHolder = [];
-      selectedItems?.forEach((element) => {
+      selectedItems.forEach((element) => {
         arrHolder.push(element.nir_email);
       });
       dispatch(setEmailRecepients(arrHolder));

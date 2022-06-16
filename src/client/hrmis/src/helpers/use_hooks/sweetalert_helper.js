@@ -4,7 +4,7 @@ import withReactContent from "sweetalert2-react-content";
 const useSweetAlertHelper = () => {
 	let MySwal = withReactContent(Swal);
 
-	const useSwal = (title, body, icon) => {
+	const simpleSwal = (title, body, icon) => {
 		Swal.fire(title, body, icon);
 	};
 
@@ -12,39 +12,46 @@ const useSweetAlertHelper = () => {
 		title,
 		html,
 		icon,
-		showCancelButton,
-		preConfirm,
-		confirmCallback
+		preConfirmCallback,
+		confirmCallback,
+		cancelCallback,
+		showCancelButton = true,
+		confirmButtonText = "OK",
+		cancelButtonColor = "#d33",
+		cancelButtonText = "Cancel"
 	) => {
 		MySwal.fire({
 			title: <span>{title}</span>,
-			html: html,
+			html: <i>{html}</i>,
 			icon: icon,
+			showCloseButton: true,
 			showCancelButton: showCancelButton,
 			confirmButtonColor: "#3085d6",
-			cancelButtonColor: "#d33",
-			confirmButtonText: "OK",
+			confirmButtonText: confirmButtonText,
+			cancelButtonColor: cancelButtonColor,
+			cancelButtonText: cancelButtonText,
 			preConfirm: () => {
-				return preConfirm();
+				return preConfirmCallback();
 			},
 		}).then((result) => {
 			if (result.isConfirmed) {
 				confirmCallback();
 			} else if (
-				result.dismiss === Swal.DismissReason.cancel ||
-				result.dismiss === Swal.DismissReason.close ||
-				result.dismiss === Swal.DismissReason.esc // ||
-				//                    result.dismiss === Swal.DismissReason.backdrop
+				result.dismiss === Swal.DismissReason.cancel
+				// ||
+				// result.dismiss === Swal.DismissReason.close ||
+				// result.dismiss === Swal.DismissReason.esc // ||
+				//  result.dismiss === Swal.DismissReason.backdrop
 			) {
-				//do nothing
+				cancelCallback();
 			}
 		});
 	};
 
-	const toastSuccessFailMessage = (response) => {
+	const toastSuccessFailMessage = (response, position = "top-end") => {
 		const Toast = Swal.mixin({
 			toast: true,
-			position: "top-end",
+			position: position,
 			showConfirmButton: false,
 			showCloseButton: true,
 			timer: 2000,
@@ -61,7 +68,7 @@ const useSweetAlertHelper = () => {
 		});
 	};
 
-	return { useSwal, sweetAlertConfirm, toastSuccessFailMessage };
+	return { simpleSwal, sweetAlertConfirm, toastSuccessFailMessage };
 };
 
 export default useSweetAlertHelper;

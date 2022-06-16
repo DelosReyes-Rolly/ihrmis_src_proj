@@ -9,11 +9,11 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 const LibraryView = () => {
-  return (
-    <React.Fragment>
-      <Outlet />
-    </React.Fragment>
-  );
+	return (
+		<React.Fragment>
+			<Outlet />
+		</React.Fragment>
+	);
 };
 
 export default LibraryView;

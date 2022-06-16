@@ -30,8 +30,13 @@ class EmployeeController extends Controller
     public function getAllEmployee(){
         $empQry = Tblemployees::with(["plantilla" => function($q){
             $q->with("tbloffices", "tblpositions");
-        }, "serviceHistory"])->get();     
+        }, "serviceHistory"])->get();
+      
         return GetEmployeeResource::collection($empQry);
+      
+
+
+       
     }
 
     public function getSingleEmployee($id){

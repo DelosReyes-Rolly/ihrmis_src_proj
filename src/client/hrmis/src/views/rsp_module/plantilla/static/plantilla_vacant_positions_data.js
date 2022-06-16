@@ -2,10 +2,6 @@ import {
   printVacantPositions,
   printNoticeOFVacany,
 } from "../../../../router/outside_routes";
-import {
-  setNextRank,
-  setRankEmail,
-} from "../../../../features/reducers/plantilla_item_slice";
 /**
  *  tableHeaderColumnName
  *  @description static data
@@ -28,6 +24,10 @@ export const tableHeaderColumnName = [
     accessor: "ofc_acronym",
   },
   {
+    Header: "Agency ID",
+    accessor: "ofc_agn_id",
+  },
+  {
     Header: "Status",
     accessor: "itm_status",
   },
@@ -46,17 +46,17 @@ export const plantillaItemsVacantPosMenuItems = [
   {
     id: 1,
     label: "Notify Office",
-    link: true,
+    link: "#",
   },
   {
     id: 2,
     label: "Next-in-rank",
-    link: true,
+    link: "#",
   },
   {
     id: 3,
-    label: "JVS &CRW",
-    link: "#",
+    label: "JVS & CRW",
+    link: "/jvs-crw/",
   },
   {
     id: 4,
@@ -69,7 +69,7 @@ export const plantillaItemsReportsMenuItems = [
   {
     id: 1,
     label: "Memo on Posting of Vacancy",
-    link: true,
+    link: "#",
   },
   {
     id: 2,
@@ -98,5 +98,18 @@ export const EMPLOYEE_DROPDOWN = [
     id: 3,
     label: "Remarks",
     link: "#",
+  },
+];
+
+export const memoOnPostingOfVacancyItemList = [
+  {
+    id: 1,
+    label: "To DOST Agencies",
+    link: true,
+  },
+  {
+    id: 2,
+    label: "To CSC",
+    link: printVacantPositions,
   },
 ];

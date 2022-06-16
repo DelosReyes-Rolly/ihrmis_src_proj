@@ -21,4 +21,6 @@ class Tblagencies extends Model
         'agn_head_email',
         'agn_address' 
     ];
+
+    public $timestamps = false;
 }
