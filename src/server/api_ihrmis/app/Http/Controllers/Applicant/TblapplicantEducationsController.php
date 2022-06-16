@@ -1,41 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Applicant;
-
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Applicant\ApplicantEducationalResource;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantEducations;
-use App\Models\Second\SecApplicantEducation;
 use Illuminate\Http\Request;
 
 class TblapplicantEducationsController extends Controller
 {
-    public function getEducationRecord($id)
-    {
+    public function getEducationRecord($id) {
         $education = TblapplicantEducations::where('edu_app_id', $id)->get();
         return CommonResource::collection($education);
     }
 
-    public function addEducationRecord($id = null, Request $request)
-    {
-        $request->validate([
-            // 'edu_app_level' => 'required',
-            'edu_app_school' => 'required',
-            'edu_app_from' => 'required|date_format:Y|before:' . $request->edu_app_to,
-            'edu_app_to' => 'required|date_format:Y|after:' . $request->edu_app_from,
-            'edu_app_degree' => 'required|regex:/^[\pL\s\-]+$/u',
-            'edu_app_graduated' => 'required',
-            'edu_app_units' => 'required|numeric',
-            'edu_app_honors' => 'required',
-        ], [
-            "required" => "This field is required",
-            "regex" => "Invalid input",
-            "before" => "Invalid input",
-            "after" => "Invalid input",
-            "date_format" => "Invalid input"
-        ]);
-
+    public function addEducationRecord($id = null, Request $request) {
         if ($id != NULL) {
             TblapplicantEducations::where('edu_id', $id)->update([
                 'edu_app_id' => $request->edu_app_id,
@@ -75,8 +53,8 @@ class TblapplicantEducationsController extends Controller
         ]);
     }
 
-    public function removeEducationRecord($id)
-    {
+    public function removeEducationRecord($id){
+
         TblapplicantEducations::where('edu_id', $id)->delete();
         return response()->json([
             'status' => 200,

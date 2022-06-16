@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Applicant\TblapplicantChildrenController;
 use App\Http\Controllers\Applicant\TblapplicantCseligibilitiesController;
 use App\Http\Controllers\Applicant\TblapplicantDeclarationController;
@@ -39,9 +40,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
 });
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 //=======================================================================================
 // APPLICANT ENDPOINTS
@@ -169,8 +174,14 @@ Route::resource('category-groups', CategoryGroup::class);
 //=======================================================================================
 // AUTH END POINTS
 //=======================================================================================
-Route::post('login', [AuthenticationController::class, "loginUser"]);
-Route::post('register', [AuthenticationController::class, "registerUser"]);
+// Route::post('login', [AuthenticationController::class, "loginUser"]);
+// Route::post('register', [AuthenticationController::class, "registerUser"]);
+
+Route::post('login', [AuthController::class, "login"]);
+Route::post('register', [AuthController::class, "register"]);
+
+
+
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -193,21 +204,22 @@ Route::get('getAllPositions', [TblplantillaItemsVacantPositionController::class,
 Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController::class, "getVacantPositions"]);
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
-Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
-Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::get('generateMemoOnPVPForCsc/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generateMemoOnPVPForDost/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
+Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
 
 //=======================================================================================
-// OFFICEC POSITION CONTROLLER ENDPOINTS
+// OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------
 //=======================================================================================
 Route::get('office', [TblofficesController::class, "office"]);
 Route::get('agency', [TblofficesController::class, "agency"]);
 
 Route::get('plantilla-positions/{id}', [TblofficesController::class, "plantillaPositions"]);
 Route::get('plantilla-positions', [TblofficesController::class, "plantillaPosition"]);
-Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
+
 
 //=======================================================================================
 // NOTIFICATION CONTROLLER ENDPOINTS

@@ -87,12 +87,10 @@ const AddPlantillaItemModal = ({
       itm_creation: Yup.number()
         .typeError("Must be a number")
         .required("This field is required"),
-      itm_supv1_itm_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
-      itm_supv2_itm_id: Yup.number()
-        .typeError("Must be a number")
-        .required("This field is required"),
+      itm_supv1_itm_id: Yup.number().typeError("Must be a number"),
+      // .required("This field is required"),
+      itm_supv2_itm_id: Yup.number().typeError("Must be a number"),
+      // .required("This field is required"),
     }),
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);

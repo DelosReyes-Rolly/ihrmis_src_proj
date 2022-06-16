@@ -59,11 +59,11 @@ const EmployeePds = () => {
             <img
               style={{ width: "200px", height: "200px", borderRadius: "5px" }}
               src={
-                employee?.profile?.emp_photo !== ""
+                employee?.profile?.emp_photo
                   ? employee?.profile?.emp_photo
                   : "https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg"
               }
-              alt="user image"
+              alt="user-image"
             />
           </div>
           <div

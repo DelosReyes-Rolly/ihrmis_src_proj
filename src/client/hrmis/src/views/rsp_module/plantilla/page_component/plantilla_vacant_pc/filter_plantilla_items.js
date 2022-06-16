@@ -25,16 +25,22 @@ export const FilterPlantillaItems = ({
 	globalFilter,
 	setGlobalFilter,
 	setAllFilters,
-	setFiltersTable,
+	// setFiltersTable,
 }) => {
 	const [selected, setSelected] = useState({
-		value: 0,
+		value: undefined,
 	});
 
 	const [value, setValue] = useState(globalFilter);
-
-	const handleChange = useAsyncDebounce((tvalue) => {
+	const [disabledOption, setDisabledOption] = useState(false);
+	const [counter, setcounter] = useState(0);
+	const handleChange = useAsyncDebounce((e) => {
+		let tvalue = e.target.value;
 		// console.log("selected: " + selected.value);
+		if (counter === 0 && selected.value !== "FB") {
+			setDisabledOption(true);
+			setcounter(+1);
+		}
 
 		if (isNaN(tvalue) && tvalue.length === 0) {
 			setGlobalFilter(value || undefined);
@@ -48,35 +54,43 @@ export const FilterPlantillaItems = ({
 		console.log(preFilteredRows);
 	});
 
-	useLayoutEffect(() => {
-		setFiltersTable(selected);
-	});
+	// useLayoutEffect(() => {
+	// 	setFiltersTable(selected);
+	// });
 
 	return (
 		<React.Fragment>
-			<div className="selector-container">
-				<span className="vacant-position-filter selector-span-1">
-					<select
-						value={selected.value}
-						onChange={(e) => {
-							setSelected({ value: e.target.value });
-							setValue(e.target.value);
-							setAllFilters([]);
-							handleChange(e.target.value);
-						}}
-					>
-						<option className="options" disabled>
-							Filter By
-						</option>
-						{plantillaItemSelectFilter.map((item, i) => {
-							return (
-								<option className="options" key={i} value={item.value}>
-									{item.title}
-								</option>
-							);
-						})}
-					</select>
-				</span>
+			<div className="selector-buttons">
+				<div className="selector-container">
+					<span className="selector-span-1">
+						<select
+							value={selected.value}
+							onChange={(e) => {
+								setSelected({ value: e.target.value });
+								setValue(e.target.value);
+								setAllFilters([]);
+								handleChange(e);
+							}}
+						>
+							{plantillaItemSelectFilter.map((item, i) => {
+								return (
+									<option
+										className="options"
+										key={i}
+										value={item.value}
+										disabled={
+											item.title === "Filter By" && disabledOption
+												? "disabled"
+												: ""
+										}
+									>
+										{item.title}
+									</option>
+								);
+							})}
+						</select>
+					</span>
+				</div>
 				<SearchFilter
 					type={type}
 					search={search}
@@ -93,19 +107,17 @@ export default FilterPlantillaItems;
 const SearchFilter = ({ type, search, setSearch, statusFilter }) => {
 	return (
 		<React.Fragment>
-			<div className="selector-buttons">
-				<div className="search-container">
-					<span className="margin-right-1 selector-search-label">
-						<label>Search</label>
-					</span>
-					<span>
-						<SearchComponent
-							placeholder="Search"
-							value={search || ""}
-							onChange={(e) => setSearch(e.target.value)}
-						/>
-					</span>
-				</div>
+			<div className="search-container">
+				<span className="margin-right-1 selector-search-label">
+					<label>Search</label>
+				</span>
+				<span>
+					<SearchComponent
+						placeholder="Search"
+						value={search || ""}
+						onChange={(e) => setSearch(e.target.value)}
+					/>
+				</span>
 			</div>
 		</React.Fragment>
 	);

@@ -40,7 +40,13 @@ const PersonalTab = () => {
               <td>{employee?.emp_title}</td>
               <td>{employee?.profile?.emp_birth_place ?? ""}</td>
               <td>{employee?.profile?.emp_birth_date ?? ""}</td>
-              <td>{employee?.profile?.emp_sex === "M" ? "Male" : "Female"}</td>
+              <td>
+                {employee?.profile?.emp_sex === "M"
+                  ? "Male"
+                  : employee?.profile?.emp_sex === "F"
+                  ? "Female"
+                  : null}
+              </td>
               <td>{employee?.profile?.emp_blood_type ?? ""}</td>
               <td>{employee?.profile?.emp_height ?? ""}</td>
             </tr>
@@ -128,7 +134,8 @@ const PersonalTab = () => {
             </tr>
             <tr>
               <td>
-                {employee?.family?.emp_sps_nm_last},{" "}
+                {employee?.family?.emp_sps_nm_last}
+                {employee?.family?.emp_fthr_nm_last ? ", " : ""}
                 {employee?.family?.emp_sps_nm_first}{" "}
                 {employee?.family?.emp_sps_nm_mid}{" "}
                 {employee?.family?.emp_sps_nm_extn}
@@ -155,13 +162,15 @@ const PersonalTab = () => {
             </tr>
             <tr>
               <td>
-                {employee?.family?.emp_fthr_nm_last},{" "}
+                {employee?.family?.emp_fthr_nm_last}
+                {employee?.family?.emp_fthr_nm_last ? ", " : ""}
                 {employee?.family?.emp_fthr_nm_first}{" "}
                 {employee?.family?.emp_fthr_nm_mid}{" "}
                 {employee?.family?.emp_fthr_nm_extn}
               </td>
               <td>
-                {employee?.family?.emp_mthr_nm_last},{" "}
+                {employee?.family?.emp_mthr_nm_last}
+                {employee?.family?.emp_mthr_nm_last ? ", " : ""}
                 {employee?.family?.emp_mthr_nm_first}{" "}
                 {employee?.family?.emp_mthr_nm_mid}{" "}
                 {employee?.family?.emp_mthr_nm_extn}

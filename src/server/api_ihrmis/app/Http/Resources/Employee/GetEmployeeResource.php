@@ -14,11 +14,14 @@ class GetEmployeeResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {   
+        $service = "";
 
         $statusHolder = ['Permanent', 'Provisional', 'Temporary', 'Substitute', 'Coterminous', 'Casual', 'Contractual', 'Job Order'];
         $svcStatusHolder = ['In Service', 'Transferred', 'Retired', 'Resigned', 'Rationalized', 'End of Contract', 'Deceased', 'Drop from Rolls', 'Awol'];
-        $service = ", " . $svcStatusHolder[$this->serviceHistory->svc_status ?? null] ?? null . "\n" . $this->serviceHistory->svc_remarks;
+        if($this->serviceHistory->svc_status ?? null != null){
+            $service = ", " . $svcStatusHolder[$this->serviceHistory->svc_status ?? 0] ?? null . "\n" . $this->serviceHistory->svc_remarks;
+        }
 
         return [
             "emp_id" => $this->emp_id,
@@ -27,7 +30,7 @@ class GetEmployeeResource extends JsonResource
             "emp_itm_no" => $this->plantilla->itm_no ?? null,
             "emp_ofc_pos" => $this->plantilla->tbloffices->ofc_acronym  ?? null . "\n" . $this->emp_title,
             "emp_status" => $statusHolder[$this->plantilla->itm_status ?? 0]. $service,
-            "svc_status" => $this->serviceHistory->svc_status
+            "svc_status" => $this->serviceHistory->svc_status ?? null
         ];
     }
 }

@@ -6,37 +6,58 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
-import { usePopUpHelper } from "../../helpers/use_hooks/popup_helper";
 import { useNavigate } from "react-router-dom";
 import { ALERT_ENUM, popupAlert } from "../../helpers/alert_response";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../features/reducers/popup_response";
+import { axiosHeader } from "../../config/axios_config";
+
+const USER_INFO = {
+  user: "user",
+  token: "token",
+  token_type: "token_type",
+};
 
 const LoginView = () => {
-  const { renderBusy } = usePopUpHelper();
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const loginForm = useFormik({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
+      username: Yup.string()
         .required("This field is required")
-        .max(255, "Invalid input")
-        .email(),
+        .max(255, "Invalid input"),
       password: Yup.string()
         .required("This field is required")
         .max(255, "Invalid input"),
     }),
     onSubmit: async (values) => {
-      renderBusy(true);
+      dispatch(setRefresh(true));
       await axios
         .get(SANCTUM + "sanctum/csrf-cookie")
-        .then(() => {
-          axios
-            .post(API_HOST + "login", values)
-            .then(() => {
+        .then(async (res) => {
+          console.log(res);
+          await axios
+            .post(API_HOST + "login", values, { axiosHeader })
+            .then((res) => {
+              const data = res.data;
+              window.sessionStorage.getItem(USER_INFO.user);
+              window.sessionStorage.getItem(USER_INFO.token);
+              window.sessionStorage.getItem(USER_INFO.token_type);
+              window.sessionStorage.setItem(USER_INFO.user, data?.user);
+              window.sessionStorage.setItem(
+                USER_INFO.token,
+                data?.access_token
+              );
+              window.sessionStorage.setItem(
+                USER_INFO.token_type,
+                data?.token_type
+              );
               popupAlert({ message: "Login Successfully" });
               navigate("/rsp/dashboard");
             })
@@ -51,7 +72,7 @@ const LoginView = () => {
         .catch((err) => {
           popupAlert({ message: err.message, type: ALERT_ENUM.fail });
         });
-      renderBusy(false);
+      dispatch(setRefresh(false));
     },
   });
 
@@ -60,7 +81,7 @@ const LoginView = () => {
       <div>
         <div className="blue-div">
           <div className="img-div">
-            <img className="image-dost" src={masthead} />
+            <img className="image-dost" src={masthead} alt="DOST IHRMIS" />
           </div>
           <div className="title-div">
             <h1>Integrated Human Resource Management Information System</h1>
@@ -73,13 +94,13 @@ const LoginView = () => {
                 <strong>Username</strong>
               </label>
               <InputComponent
-                name="email"
+                name="username"
                 onChange={loginForm.handleChange}
                 className="input-div"
               />
-              {loginForm.touched.email && loginForm.errors.email ? (
+              {loginForm.touched.username && loginForm.errors.username ? (
                 <p className="error-validation-styles">
-                  {loginForm.errors.email}
+                  {loginForm.errors.username}
                 </p>
               ) : null}
             </span>
@@ -103,7 +124,11 @@ const LoginView = () => {
             <br />
             <br />
             <span>
-              <ButtonComponent className="login-button" buttonName="Login" />
+              <ButtonComponent
+                type="submit"
+                className="login-button"
+                buttonName="Login"
+              />
             </span>
             <br />
             <br />
