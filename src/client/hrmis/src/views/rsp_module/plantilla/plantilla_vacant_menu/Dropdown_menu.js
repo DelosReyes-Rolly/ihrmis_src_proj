@@ -1,12 +1,16 @@
 import React, { useRef, useState } from "react";
 import { AiFillCaretUp } from "react-icons/ai";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import {
+  setEmailRecepients,
   setNextRank,
+  setNotifyOffice,
   setRankEmail,
+  setSelectAgency,
 } from "../../../../features/reducers/plantilla_item_slice";
+import usePositionSetter from "../../../../helpers/use_hooks/position_setter";
 
 const DropdownMenu = ({
   title,
@@ -14,11 +18,11 @@ const DropdownMenu = ({
   itemList,
   alignItems = "start",
   tooltipData = { position: "top", effect: "solid" },
-  customData,
-  callback,
   itemId,
 }) => {
   const [dropable, setDropable] = useState(false);
+  const [Xpos, Ypos, location, size] = usePositionSetter(dropable);
+
   const timerRef = useRef();
 
   const navigate = useNavigate();
@@ -45,6 +49,7 @@ const DropdownMenu = ({
         alignItems: alignItems,
       }}
       onBlur={() => selectedProperty()}
+      ref={location}
     >
       {tooltipData.toolTipId && (
         <ReactTooltip
@@ -72,9 +77,10 @@ const DropdownMenu = ({
           itemList={itemList}
           display={dropable ? "block" : "none"}
           onClick={selectedProperty}
-          customData={customData}
-          callback={callback}
           itemId={itemId}
+          xpos={Xpos}
+          ypos={Ypos}
+          size={size}
         />
       )}
     </div>
@@ -83,29 +89,70 @@ const DropdownMenu = ({
 
 export default DropdownMenu;
 
-const DropList = ({ itemList = [], display = "none", itemId }) => {
+const DropList = ({
+  itemList = [],
+  display = "none",
+  itemId,
+  xpos,
+  ypos,
+  size,
+}) => {
   const navigate = useNavigate();
+  const { selected_agency } = useSelector((state) => state.plantillaItem);
   const dispatch = useDispatch();
 
-  const linkDetector = (item) => {
+  const linkNavigationHandler = (item) => {
     const itemlink = item.link;
 
-    if (typeof itemlink === "string" || itemlink instanceof String) {
-      if (item.label === "JVS &CRW") return navigate(itemlink + "/" + itemId);
-      return navigate(itemlink);
+    /**
+     * For specific cases of routes or navigate through redux dispatches
+     */
+
+    if (item.label.includes("JVS & CRW")) {
+      navigate(itemlink + "/" + itemId);
+      return;
     }
 
-    if (typeof itemlink === "boolean" && item.link) {
-      if (item.label.includes("Notify")) return dispatch(setRankEmail());
-      return dispatch(setNextRank());
+    if (item.label.includes("Memo on Posting")) {
+      dispatch(setSelectAgency());
+      return;
     }
 
-    return itemlink();
+    if (item.label.includes("Notify")) {
+      dispatch(setNotifyOffice());
+      dispatch(setEmailRecepients(selected_agency.agn_head_email));
+      return;
+    }
+
+    if (item.label.includes("Next-in")) {
+      dispatch(setNextRank());
+      return;
+    }
+
+    /**
+     * General cases of routing
+     */
+
+    if (typeof itemlink === "string" && itemlink !== "#") {
+      navigate(itemlink);
+      return;
+    }
+
+    if (typeof itemlink === "function") {
+      itemlink();
+      return;
+    }
+
+    return;
   };
 
   return (
     <React.Fragment>
-      <ul className="ul-dropdown-container" style={{ display: display }}>
+      <ul
+        className="ul-dropdown-container"
+        style={{ display: display, position: "fixed", top: ypos, left: xpos }}
+        ref={size}
+      >
         <div className="ul-menu-item-arrow">
           <AiFillCaretUp size="15px" />
         </div>
@@ -114,10 +161,10 @@ const DropList = ({ itemList = [], display = "none", itemId }) => {
             <li
               style={{ listStyle: "none" }}
               className="ul-menu-item"
-              onClick={() => linkDetector(element)}
+              onClick={() => linkNavigationHandler(element)}
               key={key}
             >
-              {element.label}
+              {element?.label}
             </li>
           );
         })}

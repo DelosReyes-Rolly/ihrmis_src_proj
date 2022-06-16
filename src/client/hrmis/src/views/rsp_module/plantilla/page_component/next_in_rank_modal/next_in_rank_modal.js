@@ -118,9 +118,9 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
   const data = useMemo(() => dataFetched, [dataFetched]);
 
   const onPressedNotify = () => {
-    if (selectedItems.length > 0) {
+    if (selectedItems.length != 0) {
       let arrHolder = [];
-      selectedItems?.forEach((element) => {
+      selectedItems.forEach((element) => {
         arrHolder.push(element.nir_email);
       });
       dispatch(setEmailRecepients(arrHolder));

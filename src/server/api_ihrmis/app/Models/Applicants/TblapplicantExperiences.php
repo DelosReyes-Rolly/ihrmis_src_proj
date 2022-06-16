@@ -10,10 +10,9 @@ class TblapplicantExperiences extends Model
     use HasFactory;
     
     protected $table = 'tblapplicants_experiences';
-    protected $primaryKey = 'exp_app_id';
+    protected $primaryKey = 'exp_id';
     protected $fillable = [
         'exp_app_id',
-        'exp_app_time',
         'exp_app_from',
         'exp_app_to',
         'exp_app_position',

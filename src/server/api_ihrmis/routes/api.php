@@ -69,32 +69,32 @@ Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChil
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
 Route::delete('new-children/{id}', [TblapplicantChildrenController::class, "removeChildrenRecord"]);
 //crud-educ
-Route::post('new-education/{id}', [TblapplicantEducationsController::class, "addEducationRecord"]);
+Route::post('new-education/{id?}', [TblapplicantEducationsController::class, "addEducationRecord"]);
 Route::get('new-education/{id}', [TblapplicantEducationsController::class, "getEducationRecord"]);
 Route::delete('new-education/{id}', [TblapplicantEducationsController::class, "removeEducationRecord"]);
 //crud-csc
 Route::get('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "getCseligibilityRecord"]);
-Route::post('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
+Route::post('new-csc-eleigibility/{id?}', [TblapplicantCseligibilitiesController::class, "addCseligibilityRecord"]);
 Route::delete('new-csc-eleigibility/{id}', [TblapplicantCseligibilitiesController::class, "removeCseligibilityRecord"]);
 //crud-exp
 Route::get('new-work-experience/{id}', [TblapplicantExperiencesController::class, "getExperienceRecord"]);
-Route::post('new-work-experience/{id}', [TblapplicantExperiencesController::class, "addExperienceRecord"]);
+Route::post('new-work-experience/{id?}', [TblapplicantExperiencesController::class, "addExperienceRecord"]);
 Route::delete('new-work-experience/{id}', [TblapplicantExperiencesController::class, "removeExperienceRecord"]);
 //crud-vol
 Route::get('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "getVoluntaryRecord"]);
-Route::post('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "addVoluntaryRecord"]);
+Route::post('new-voluntary-work/{id?}', [TblapplicantVoluntaryController::class, "addVoluntaryRecord"]);
 Route::delete('new-voluntary-work/{id}', [TblapplicantVoluntaryController::class, "removeVoluntaryRecord"]);
 //crud-trn
 Route::get('new-training/{id}', [TblapplicantTrainingsController::class, "getTrainingRecord"]);
-Route::post('new-training/{id}', [TblapplicantTrainingsController::class, "addTrainingRecord"]);
+Route::post('new-training/{id?}', [TblapplicantTrainingsController::class, "addTrainingRecord"]);
 Route::delete('new-training/{id}', [TblapplicantTrainingsController::class, "removeTrainingRecord"]);
 //crud-otr
 Route::get('new-other-info/{id}', [TblapplicantOtherInfoController::class, "getOtherInfoRecord"]);
-Route::post('new-other-info/{id}', [TblapplicantOtherInfoController::class, "addOtherInfoRecord"]);
+Route::post('new-other-info/{id?}', [TblapplicantOtherInfoController::class, "addOtherInfoRecord"]);
 Route::delete('new-other-info/{id}', [TblapplicantOtherInfoController::class, "removeOtherInfoRecord"]);
 //crud-ref
 Route::get('new-reference/{id}', [TblapplicantReferencesController::class, "getReferenceRecord"]);
-Route::post('new-reference/{id}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
+Route::post('new-reference/{id?}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
 Route::delete('new-reference/{id}', [TblapplicantReferencesController::class, "removeReferenceRecord"]);
 
 //Info
@@ -203,11 +203,12 @@ Route::get('getAllPositions', [TblplantillaItemsVacantPositionController::class,
 Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController::class, "getVacantPositions"]);
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
-Route::get('generate-MemoOnPostingVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
-Route::get('generate-MemoOnPostingVPForDost', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::get('generateMemoOnPVPForCsc/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generateMemoOnPVPForDost/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
+Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------

@@ -20,15 +20,14 @@ import { axiosHeader } from "../../../../config/axios_config.js";
 
 const OfficeLibraryTable = () => {
   const [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-
   const [plotOfficeData, setOfficeData] = useState([]);
-  const { refresh } = useSelector((state) => state.popupResponse);
+  // const { refresh } = useSelector((state) => state.popupResponse);
   const { trueValue } = useSelectValueCon();
 
   const getAgency = async () => {
     let agencies = [];
     await axios
-      .get(API_HOST + "agency")
+      .get(API_HOST + "agency", axiosHeader)
       .then((response) => {
         response.data.data.map((data) => {
           let obj = {};
@@ -45,7 +44,7 @@ const OfficeLibraryTable = () => {
   useEffect(() => {
     getAgency();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [toggleOfficeModal]);
 
   const offceDataApi = async (agencies) => {
     await axios

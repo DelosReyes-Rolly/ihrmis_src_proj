@@ -10,10 +10,9 @@ class TblapplicantTrainings extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_trainings';
-    protected $primaryKey = 'trn_app_id';
+    protected $primaryKey = 'trn_id';
     protected $fillable = [
         "trn_app_id",
-        "trn_app_time",
         "trn_app_title",
         "trn_app_from",
         "trn_app_to",

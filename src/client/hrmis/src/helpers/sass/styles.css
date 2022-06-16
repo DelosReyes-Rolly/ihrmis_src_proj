@@ -4348,7 +4348,6 @@ select:focus {
   scroll-behavior: smooth;
 }
 .modal-component-div form {
-  transition: 0.3s;
   padding: 10px 0px;
   border-radius: 5px;
   max-width: 50rem;
@@ -4383,6 +4382,27 @@ select:focus {
 }
 .modal-component-div form .mcf-footer .ft-button:hover {
   background-color: rgb(196, 196, 196) !important;
+}
+
+.modal-trans-enter {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+.modal-trans-enter-active {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: transform 400ms, opacity 400ms;
+}
+
+.modal-trans-exit {
+  opacity: 1;
+}
+
+.modal-trans-exit-active {
+  opacity: 0;
+  transform: translateY(-50px);
+  transition: transform 400ms, opacity 400ms;
 }
 
 .switch {

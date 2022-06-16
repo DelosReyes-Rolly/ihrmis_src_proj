@@ -12,6 +12,7 @@ class Tbloffices extends Model
     protected $primaryKey = 'ofc_id';
     
     protected $fillable=[
+        'ofc_id',
         'ofc_type',
         'ofc_name',
         'ofc_acronym',
@@ -21,7 +22,6 @@ class Tbloffices extends Model
         'ofc_head_itm_id',
         'ofc_oic_itm_id',
         'ofc_ofc_id',
-        'ofc_agn_id',
     ];
 
     public $timestamps = false;
