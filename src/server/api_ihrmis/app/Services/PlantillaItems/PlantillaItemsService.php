@@ -92,6 +92,8 @@ class PlantillaItemsService
 		}
 	
 		$new_data['vacantpositions'] = $data;
+		$new_data['letter_head'] = Config::get('memorandum.letter_head');
+		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
 		
 		$pdf = new MPDF();
 		$date = date('m/d/Y');
@@ -144,7 +146,7 @@ class PlantillaItemsService
 		$new_data['selected_agencies'] = $new_selected_agency_data;
 		$new_data['date_memo'] = $date;
 		$new_data['memo'] = 'CSC';
-		$new_data['memo_from_name'] = config('constants.ADMIN_NAME');
+		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
 
 
 		// return $new_data;

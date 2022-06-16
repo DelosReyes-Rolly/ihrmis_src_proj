@@ -21,6 +21,7 @@
         font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
         .tg .tg-km2t{border-color:#ffffff;font-weight:bold;text-align:left;text-justify:distribute: fit-content}
         .tg .tg-zv4m{border-color:#ffffff;text-align:justify;vertical-align:top}
+        .tg .tg-zv4m1{border-color:#ffffff;vertical-align:top}
         .tg .tg-8jgo{border-color:#ffffff;vertical-align:top;padding-left: 15%}
         .tg .tg-8jgo1{border-color:#ffffff;vertical-align:top;}
         .tg .tg-b8y7{border-color:#ffffff;font-size:20px;text-align:center;vertical-align:top}
@@ -89,11 +90,12 @@
             <tr>
                 <td class="tg-8jgo">FROM</td>
                 <td class="tg-8jgo1">:</td>
-                <td class="tg-zv4m">
-                    <b>{{$memo_from_name}}</b><br>
-                    Attorney V, Legal Division, and<br>
-                    Officer-in-Charge, Office of the Director<br>
-                    Administrative and Legal Service
+                <td class="tg-zv4m1">
+                    <b>{{$memo_from_name['memo_name']}}</b><br>
+                    {{-- {{ explode("and", $memo_from_name['memo_position'])[0] . "and" }} <br> 
+                    {{ explode("and", $memo_from_name['memo_position'])[1]}},  --}}
+                    {{ $memo_from_name['memo_position'] }}, 
+                    {{ $memo_from_name['memo_office'] }}
                 </td>
             </tr>
             <tr>
