@@ -7,6 +7,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openSideBar } from "../features/reducers/mobile_view_slice";
 import { useDetectScreenHelper } from "../helpers/use_hooks/detect_screen_helper";
+import "../config/axios_config";
 
 const MainPageLayout = () => {
   const isNavbarEnable = useSelector((state) => state.mobileView.sidebar);

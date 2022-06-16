@@ -4,129 +4,171 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import {
-	setEmailRecepients,
-	setNextRank,
-	setNotifyOffice,
-	setRankEmail,
-	setSelectAgency,
+  setEmailRecepients,
+  setNextRank,
+  setNotifyOffice,
+  setRankEmail,
+  setSelectAgency,
 } from "../../../../features/reducers/plantilla_item_slice";
+import usePositionSetter from "../../../../helpers/use_hooks/position_setter";
 
 const DropdownMenu = ({
-	title,
-	className,
-	itemList,
-	alignItems = "start",
-	tooltipData = { position: "top", effect: "solid" },
+  title,
+  className,
+  itemList,
+  alignItems = "start",
+  tooltipData = { position: "top", effect: "solid" },
+  itemId,
 }) => {
-	const [dropable, setDropable] = useState(false);
-	const timerRef = useRef();
+  const [dropable, setDropable] = useState(false);
+  const [Xpos, Ypos, location, size] = usePositionSetter(dropable);
 
-	const navigate = useNavigate();
+  const timerRef = useRef();
 
-	const selectedProperty = (link = null) => {
-		if (link !== null) {
-			navigate(link);
-			setDropable(false);
-		}
+  const navigate = useNavigate();
 
-		if (link === null) {
-			timerRef.current = setTimeout(() => {
-				setDropable(false);
-			}, 200);
-		}
-	};
+  const selectedProperty = (link = null) => {
+    if (link !== null) {
+      navigate(link);
+      setDropable(false);
+    }
 
-	return (
-		<div
-			style={{
-				position: "relative",
-				display: "flex",
-				flexDirection: "column",
-				alignItems: alignItems,
-			}}
-			onBlur={() => selectedProperty()}
-		>
-			{tooltipData.toolTipId && (
-				<ReactTooltip
-					id={tooltipData.toolTipId}
-					place={tooltipData.position}
-					effect={tooltipData.effect}
-				>
-					{tooltipData.textHelper}
-				</ReactTooltip>
-			)}
+    if (link === null) {
+      timerRef.current = setTimeout(() => {
+        setDropable(false);
+      }, 200);
+    }
+  };
 
-			<button
-				data-tip
-				data-for={tooltipData.toolTipId}
-				className={className}
-				style={{ width: "max-content" }}
-				onClick={() => {
-					setDropable(!dropable);
-				}}
-			>
-				{title}
-			</button>
-			{itemList && (
-				<DropList
-					itemList={itemList}
-					display={dropable ? "block" : "none"}
-					onClick={selectedProperty}
-				/>
-			)}
-		</div>
-	);
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: alignItems,
+      }}
+      onBlur={() => selectedProperty()}
+      ref={location}
+    >
+      {tooltipData.toolTipId && (
+        <ReactTooltip
+          id={tooltipData.toolTipId}
+          place={tooltipData.position}
+          effect={tooltipData.effect}
+        >
+          {tooltipData.textHelper}
+        </ReactTooltip>
+      )}
+
+      <button
+        data-tip
+        data-for={tooltipData.toolTipId}
+        className={className}
+        style={{ width: "max-content" }}
+        onClick={() => {
+          setDropable(!dropable);
+        }}
+      >
+        {title}
+      </button>
+      {itemList && (
+        <DropList
+          itemList={itemList}
+          display={dropable ? "block" : "none"}
+          onClick={selectedProperty}
+          itemId={itemId}
+          xpos={Xpos}
+          ypos={Ypos}
+          size={size}
+        />
+      )}
+    </div>
+  );
 };
 
 export default DropdownMenu;
 
-const DropList = ({ itemList = [], display = "none", itemId }) => {
-	const navigate = useNavigate();
-	const { selected_agency } = useSelector((state) => state.plantillaItem);
-	const dispatch = useDispatch();
+const DropList = ({
+  itemList = [],
+  display = "none",
+  itemId,
+  xpos,
+  ypos,
+  size,
+}) => {
+  const navigate = useNavigate();
+  const { selected_agency } = useSelector((state) => state.plantillaItem);
+  const dispatch = useDispatch();
 
-	const linkDetector = (item) => {
-		let itemlink = item.link;
+  const linkNavigationHandler = (item) => {
+    const itemlink = item.link;
 
-		if (typeof itemlink === "string" || itemlink instanceof String) {
-			if (item.label === "JVS &CRW") {
-				return navigate(itemlink + "/" + itemId);
-			}
-			return navigate(itemlink);
-		} else if (typeof item.link === "boolean" && item.link) {
-			console.log(item.label);
-			if (item.label.includes("Memo on Posting")) {
-				dispatch(setSelectAgency());
-			} else if (item.label.includes("Notify")) {
-				dispatch(setNotifyOffice());
-				dispatch(setEmailRecepients(selected_agency.agn_head_email));
-			} else if (item.label.includes("Next-in")) {
-				dispatch(setNextRank());
-			}
-		} else {
-			return itemlink();
-		}
-	};
+    /**
+     * For specific cases of routes or navigate through redux dispatches
+     */
 
-	return (
-		<React.Fragment>
-			<ul className="ul-dropdown-container" style={{ display: display }}>
-				<div className="ul-menu-item-arrow">
-					<AiFillCaretUp size="15px" />
-				</div>
-				{itemList?.map((element, key) => {
-					return (
-						<li
-							style={{ listStyle: "none" }}
-							className="ul-menu-item"
-							onClick={() => linkDetector(element)}
-							key={key}
-						>
-							{element.label}
-						</li>
-					);
-				})}
-			</ul>
-		</React.Fragment>
-	);
+    if (item.label.includes("JVS & CRW")) {
+      navigate(itemlink + "/" + itemId);
+      return;
+    }
+
+    if (item.label.includes("Memo on Posting")) {
+      dispatch(setSelectAgency());
+      return;
+    }
+
+    if (item.label.includes("Notify")) {
+      dispatch(setNotifyOffice());
+      dispatch(setEmailRecepients(selected_agency.agn_head_email));
+      return;
+    }
+
+    if (item.label.includes("Next-in")) {
+      dispatch(setNextRank());
+      return;
+    }
+
+    /**
+     * General cases of routing
+     */
+
+    if (typeof itemlink === "string" && itemlink !== "#") {
+      navigate(itemlink);
+      return;
+    }
+
+    if (typeof itemlink === "function") {
+      itemlink();
+      return;
+    }
+
+    return;
+  };
+
+  return (
+    <React.Fragment>
+      <ul
+        className="ul-dropdown-container"
+        style={{ display: display, position: "fixed", top: ypos, left: xpos }}
+        ref={size}
+      >
+        <div className="ul-menu-item-arrow">
+          <AiFillCaretUp size="15px" />
+        </div>
+        {itemList?.map((element, key) => {
+          return (
+            <li
+              style={{ listStyle: "none" }}
+              className="ul-menu-item"
+              onClick={() => linkNavigationHandler(element)}
+              key={key}
+            >
+              {element?.label}
+            </li>
+          );
+        })}
+      </ul>
+    </React.Fragment>
+  );
 };
