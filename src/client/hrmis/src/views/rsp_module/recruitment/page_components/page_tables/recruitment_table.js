@@ -351,13 +351,13 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 													>
 														{cell.render('Cell')}
 														<DropdownViewComponent
-															className={'recruitmentTableDrop'}
+															className={'dropdown-three-dots'}
 															itemList={
 																type === 1
 																	? recruitmentMenuItem
 																	: recruitmentDisqualifiedMenuItem
 															}
-															title={<MdMoreHoriz size='15' />}
+															title={<MdMoreHoriz size='20' />}
 															alignItems='end'
 															toolTipId='other-actions'
 															textHelper='Click to view other actions'

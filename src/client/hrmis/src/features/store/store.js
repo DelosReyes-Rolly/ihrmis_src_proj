@@ -19,6 +19,6 @@ const store = configureStore({
     vacant: vacantReducer,
     employee: employeeReducer,
   },
-});
+},window.REDUX_DEVTOOLS_EXTENSION && window.REDUX_DEVTOOLS_EXTENSION());
 
 export default store;

@@ -23,7 +23,7 @@ const MainPageLayout = () => {
           </div>
 
           {/* This div is for shaded part of mobile sidebar*/}
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%",height:"95.5vh" }}>
             {isMobile && isNavbarEnable && (
               <div
                 style={{
