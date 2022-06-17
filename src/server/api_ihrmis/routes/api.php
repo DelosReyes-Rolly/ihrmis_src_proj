@@ -64,6 +64,8 @@ Route::get('generate-RAI/{month}/{year}', [TblapplicantProfileController::class,
 Route::get('generate-CM/{plantillaId}', [TblapplicantProfileController::class, "generateCMReport"]);
 Route::get('generate-OOO/{applicant}', [TblapplicantProfileController::class, "generateOOOReport"]);
 Route::get('generate-CAD/{applicant}', [TblapplicantProfileController::class, "generateCADReport"]);
+Route::get('generate-AFA/{applicant}', [TblapplicantProfileController::class, "generateAFAReport"]);
+Route::get('getApplicantAgency/{offceId}', [TblapplicantProfileController::class, "getApplicantAgency"]);
 //crud-child
 Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChildrenRecord"]);
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
@@ -169,7 +171,6 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 //  Library Resources
 //=======================================================================================
 Route::resource('category-groups', CategoryGroup::class);
-
 //=======================================================================================
 // AUTH END POINTS
 //=======================================================================================
