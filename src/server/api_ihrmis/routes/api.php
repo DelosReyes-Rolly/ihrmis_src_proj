@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
+    Route::get('logout', [AuthController::class, "logout"]);
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -176,11 +177,9 @@ Route::resource('category-groups', CategoryGroup::class);
 //=======================================================================================
 // AUTH END POINTS
 //=======================================================================================
-// Route::post('login', [AuthenticationController::class, "loginUser"]);
-// Route::post('register', [AuthenticationController::class, "registerUser"]);
-
 Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
+
 
 
 

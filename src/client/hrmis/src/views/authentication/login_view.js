@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import masthead from "../../assets/images/masthead.png";
 import InputComponent from "../common/input_component/input_component/input_component";
 import ButtonComponent from "../common/button_component/button_component.js.js";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
+import {
+  API_HOST,
+  BASE_URL,
+  SANCTUM,
+} from "../../helpers/global/global_config";
 import { useNavigate } from "react-router-dom";
 import { ALERT_ENUM, popupAlert } from "../../helpers/alert_response";
 import { useDispatch } from "react-redux";
-import { setRefresh } from "../../features/reducers/popup_response";
+import { setBusy } from "../../features/reducers/popup_response";
 import { axiosHeader } from "../../config/axios_config";
 
 const USER_INFO = {
@@ -37,13 +41,12 @@ const LoginView = () => {
         .max(255, "Invalid input"),
     }),
     onSubmit: async (values) => {
-      dispatch(setRefresh(true));
       await axios
         .get(SANCTUM + "sanctum/csrf-cookie")
-        .then(async (res) => {
-          console.log(res);
+        .then(async () => {
+          dispatch(setBusy(true));
           await axios
-            .post(API_HOST + "login", values, { axiosHeader })
+            .post(API_HOST + "login", values, axiosHeader)
             .then((res) => {
               const data = res.data;
               window.sessionStorage.getItem(USER_INFO.user);
@@ -58,21 +61,26 @@ const LoginView = () => {
                 USER_INFO.token_type,
                 data?.token_type
               );
-              popupAlert({ message: "Login Successfully" });
-              navigate("/rsp/dashboard");
+              popupAlert({
+                message: "Successfully Login",
+                type: ALERT_ENUM.success,
+              });
+              navigate("/rsp/dashboard", { replace: true });
             })
             .catch((err) => {
-              console.log(err.response.data.message);
               popupAlert({
-                message: err.response.data.message,
+                message: err.response.data.message ?? err?.message,
                 type: ALERT_ENUM.fail,
               });
             });
         })
         .catch((err) => {
-          popupAlert({ message: err.message, type: ALERT_ENUM.fail });
+          popupAlert({
+            message: err.response.data.message ?? err?.message,
+            type: ALERT_ENUM.fail,
+          });
         });
-      dispatch(setRefresh(false));
+      dispatch(setBusy(false));
     },
   });
 
