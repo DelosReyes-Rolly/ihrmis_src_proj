@@ -6,14 +6,17 @@ use App\Mail\VerifyApplicantMail;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Applicants\TblapplicantVerification;
+use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Mpdf\Mpdf;
 use NumberFormatter;
+use Throwable;
 
 class ApplicantProfileService
 {
@@ -741,22 +744,21 @@ class ApplicantProfileService
         return $applicant_query;
     }
 
-    public function generateOOOReport($applicants)
+    public function getApplicantAgency($office_id)
+    {
+        $query = Tbloffices::with('officeAgency')->where('ofc_id', $office_id)->first();
+        if (empty($query)) {
+            return response()->json(['message' => "Selected Office does not exist"], 404);
+        } else {
+            return $query;
+        }
+    }
+    public function setPDFDetails_ooo_cad_afa()
     {
         $report = new Mpdf([
             'format' => [215.9, 279.4], 'orientation' => 'P', 'setAutoTopMargin' => 'stretch',
             'setAutoBottomMargin' => 'stretch', 'pagenumPrefix' => 'Page ', 'nbpgPrefix' => ' of ',
         ]);
-        $applicantsId = explode('-', $applicants);
-        // $data = [
-        //     'office' => $applicants[0]->TblOffices->ofc_name,
-        //     'pos_title' => $applicants[0]->TblPositions->pos_title,
-        //     'salary' => $applicants[0]->TblPositions->pos_salary_grade,
-        //     'item_no' => $applicants[0]->TblplantillaItems->itm_no,
-        //     'applicants' => $applicants,
-        // ];
-
-        // return $applicants[0]->TblOffices->ofc_name;
         $report->writeHTML('');
         $report->page = 0;
         $report->state = 0;
@@ -767,9 +769,15 @@ class ApplicantProfileService
             'type' => 'num',
             'suppress' => 'off'
         ];
+        return $report;
+    }
+    public function generateOOOReport($applicants)
+    {
+        $report = $this->setPDFDetails_ooo_cad_afa();
+        $applicantsId = explode('-', $applicants);
         $applicantData = [];
         foreach ($applicantsId as $applicant) {
-        $applicantData = $this->getApplicantData($applicant);
+            $applicantData = $this->getApplicantData($applicant);
             $data = [
                 'applicants_profile' =>  $applicantData['TblapplicantsProfile'],
                 'applicants_position' =>  $applicantData['TblPositions'],
@@ -777,6 +785,44 @@ class ApplicantProfileService
             // return $data;
             $report->AddPage();
             $report->writeHTML(view('reports/recruitment/oooReportPDF', $data));
+        }
+        return $report->output();
+    }
+
+    public function generateCADReport($applicants)
+    {
+        $report = $this->setPDFDetails_ooo_cad_afa();
+        $applicantsId = explode('-', $applicants);
+        $applicantData = [];
+        foreach ($applicantsId as $applicant) {
+            $applicantData = $this->getApplicantData($applicant);
+            $data = [
+                'applicants_profile' =>  $applicantData['TblapplicantsProfile'],
+                'applicants_position' =>  $applicantData['TblPositions'],
+                'applicants_office' =>  $this->getApplicantAgency($applicantData['TblOffices']['ofc_id']),
+            ];
+            // return $data;
+            $report->AddPage();
+            $report->writeHTML(view('reports/recruitment/cadReportPDF', $data));
+        }
+        return $report->output();
+    }
+
+    public function generateAFAReport($applicants)
+    {
+        $report = $this->setPDFDetails_ooo_cad_afa();
+        $applicantsId = explode('-', $applicants);
+        $applicantData = [];
+        foreach ($applicantsId as $applicant) {
+            $applicantData = $this->getApplicantData($applicant);
+            $data = [
+                'applicants_profile' =>  $applicantData['TblapplicantsProfile'],
+                'applicants_position' =>  $applicantData['TblPositions'],
+                'applicant_plantilla_item' => $applicantData['TblplantillaItems'],
+                'applicants_office' =>  $this->getApplicantAgency($applicantData['TblOffices']['ofc_id']),
+            ];
+            $report->AddPage();
+            $report->writeHTML(view('reports/recruitment/afaReportPDF', $data));
         }
         return $report->output();
     }

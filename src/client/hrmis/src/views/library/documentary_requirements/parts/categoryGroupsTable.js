@@ -12,7 +12,7 @@ import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js'
 import { Outlet } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import { GroupClusterData } from '../static/input_items.js';
-import GroupClusterModal from './category_groups_modal.js';
+import GroupClusterModal from './documentaryRequirementsModal.js';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';

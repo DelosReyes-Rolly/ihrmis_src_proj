@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 /**
  * This hook is calculates for the location of a parent element and
  * returns the coordinates for the child element for use in a position:fixed css
@@ -25,7 +25,7 @@ const usePositionSetter = (event) => {
 		}
 	};
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		setPosition();
 		window.addEventListener('resize', setPosition, false);
 		window.addEventListener('scroll', setPosition, false);

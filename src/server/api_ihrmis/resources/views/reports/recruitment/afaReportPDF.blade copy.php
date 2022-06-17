@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Oath Of Office</title>
+    <title>Appointment Form - Accredited</title>
     <style>
         .w100 {
             width: 100%;
         }
 
-        .w75 {
-            width: 90%;
+        .w85 {
+            width: 85%;
         }
 
         .w80 {
@@ -145,73 +145,81 @@
 </head>
 
 <body style="font-family: Arial, Helvetica, sans-serif">
+    <?php
+    $plantilla_item_status = ['Permanent', 'Provisional', 'Temporary', 'Substitute', 'Coterminous', 'Casual', 'Contractual', 'Job Order'];
+    ?>
     <htmlpageheader name="header">
-        <p class="w75 mauto m0">CS Form No. 4</p>
+        <p class="w75 mauto m0">CS Form No. 33-B</p>
         <p class="w75 mauto m0 dfs">Revised 2018</p>
     </htmlpageheader>
     <sethtmlpageheader name="header" value="on" show-this-page="1" />
     <br><br>
-    <p class="w75 mauto center">REPUBLIC OF THE PHILIPPINES
-        <br>
-        {{$applicants_office['officeAgency']->agn_name}}
+    <p class="w75 mauto center">
+        <b>
+            REPUBLIC OF THE PHILIPPINES
+            <br>
+            {{ $applicants_office['officeAgency']->agn_name }}
+        </b>
     </p>
     <br>
-    <p class="w75 mauto center" style="font-size: 1.5rem;">CERTIFICATION OF ASSUMPTION TO DUTY</p>
-    <p class="w75 mauto tj">
-        This is to certify that Ms./Mr. <span
+    <p class="w85 mauto">
+        Mr./Mrs./ Ms.: <span
             class="underline w65">{{ $applicants_profile['app_nm_last'] . ' ' . $applicants_profile['app_nm_first'] }}{{ $applicants_profile['app_nm_ext'] != null ? ' ' . $applicants_profile['app_nm_ext'] : '' }}{{ ', ' . strtoupper(substr($applicants_profile['app_nm_mid'], 0, 1)) . '.' }}
         </span>
-        has assumed the duties and responsibilities as
-        <?php $addressArr = explode('|', $applicants_profile['app_resident_addr']); ?>
+    </p>
+    <p class="w85 mauto tj">
+        You are hereby appointed as
         <span class="underline">
             {{ $applicants_position['pos_title'] }}
         </span>
-        of
+        &nbsp;(SG/JG/PG
+        <span class="underline">&nbsp;{{ $applicants_position['pos_salary_grade'] }}&nbsp;</span>)
+        under
+        <span class="underline">{{ $plantilla_item_status[$applicant_plantilla_item['itm_status']] }}</span>
+        status at the
         <span class="underline">{{ $applicants_office['ofc_name'] }}</span>
-        effective
-        <span class="underline">{{ date('F jS, Y') }}</span>
+        with a compensation rate of ____________________________________ (P ________________)
+        pesos per month
     </p>
-    <p class="w75 mauto tj">
-        This certification is issued in connection with the issuance of the
-        appointment of Ms./Mr. <span
-            class="underline w65">{{ $applicants_profile['app_nm_last'] . ' ' . $applicants_profile['app_nm_first'] }}{{ $applicants_profile['app_nm_ext'] != null ? ' ' . $applicants_profile['app_nm_ext'] : '' }}{{ ', ' . strtoupper(substr($applicants_profile['app_nm_mid'], 0, 1)) . '.' }}
+    <p class="w85 mauto tj">
+        The nature of this appointment is
+        ____________________________ vice ____________________________, who ____________________________ with Plantilla
+        Item No.
+        <span class="underline w65">{{ $applicant_plantilla_item['itm_no'] }}
         </span>
-        as
-        <span class="underline">
-            {{ $applicants_position['pos_title'] }}
-        </span>
+        PAGE ________________
     </p>
-    <p class="w75 mauto tj">
-        Done this
-        <span class="underline">{{ date('jS') }}</span>
-        of
-        <span class="underline">{{ date('F') }}</span>
-        in
-        <span class="underline">{{ date('Y') }}</span>
+    <p class="w85 mauto tj">
+        This appointment shall take effect on the date of signing by the appointing officer/authority.
     </p>
-    <p class="w75 mauto tj">SO HELP ME GOD</p>
-    <table class="w75 mauto">
+    <table class="w85 mauto">
+        <tr>
+            <td class="w65"></td>
+            <td class="w35 center">
+                Very truly yours,
+                <br><br><br>
+            </td>
+        </tr>
         <tr>
             <td class="w65"></td>
             <td class="w35 center">
                 <b>___________________________________</b><br>
-                Head of Office/Department/Unit
+                Appointing Officer/Authority,
+                <br><br><br>
+            </td>
+        </tr>
+        <tr>
+            <td class="w65"></td>
+            <td class="w35 center">
+                <b>___________________________________</b><br>
+                Date of Signing,
             </td>
         </tr>
     </table>
-    <p class="w75 mauto">
-        Date: ______________<br><br><br>
-        Attested by:<br><br><br>
-        <b>___________________________________</b><br>
-        <b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            HRMO
-        </b>
-        <br><br><br>
-        201 file<br>
-        Admin<br>
-        COA<br>
-        CSC<br>
+    <p class="w85 mauto">
+        Accredited/Deregulated Pursuant to<br>
+        CSC Resolution No. _____, s. _____<br>
+        dated _____
     </p>
 </body>
 
