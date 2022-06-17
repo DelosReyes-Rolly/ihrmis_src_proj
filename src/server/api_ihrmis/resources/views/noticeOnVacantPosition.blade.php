@@ -12,7 +12,6 @@
 			font-weight:normal;overflow:hidden;padding:1px 1px;word-break:normal;}
 			.tg .tg-wp8o{border-color:white;text-align:center;vertical-align:top}
 			.tg .tg-73oq{border-color:white;text-align:left;vertical-align:top}
-			.tg .tg-73oq1{}
 			.tg .tg-mcqj{border-color:white;font-weight:bold;text-align:left;vertical-align:top}
 			.tg .tg-mqa1{border-color:white;text-align:center;vertical-align:top}
 			.tg .tg-custom{padding-left: 20px;width: fit-content}

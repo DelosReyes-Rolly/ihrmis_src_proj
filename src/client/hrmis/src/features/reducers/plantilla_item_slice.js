@@ -32,7 +32,7 @@ export const plantillaItemSlice = createSlice({
 		},
 
 		setEmailRecepients: (state, action) => {
-			console.log(action.payload);
+			console.log(action);
 			let emailArr = action.payload;
 			state.email_recepients = implodeArray(", ", emailArr);
 			console.log(state.email_recepients);
