@@ -34,9 +34,14 @@ class AuthController extends Controller{
     }
 
     public function login(Request $request){
-
-        $authUser = User::where('username', $request['username'])->firstOrFail();
-        $request->merge(['email' => $authUser->email]);
+        
+        try {
+            $authUser = User::where('username', $request['username'])->firstOrFail();
+            $request->merge(['email' => $authUser->email]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Username doesn\'t exist'], 401);
+        }
+        
 
         if (!Auth::attempt($request->only('email', 'password')))
         {
