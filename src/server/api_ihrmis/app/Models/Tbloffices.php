@@ -31,7 +31,7 @@ class Tbloffices extends Model
     }
 
     public function officeAgency() {
-        return $this->hasMany(Tblagencies::class, 'agn_id', 'ofc_agn_id');
+        return $this->hasOne(Tblagencies::class, 'agn_id', 'ofc_agn_id');
     }
 
     // public function plantillaItems(){
