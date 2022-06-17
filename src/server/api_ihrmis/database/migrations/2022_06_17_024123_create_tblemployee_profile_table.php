@@ -21,8 +21,8 @@ class CreateTblemployeeProfileTable extends Migration
             $table->string('emp_blood_type', 3)->comment('Blood type. [AB+, AB-, A+, A-, B+, B-, O+, O-]');
             $table->char('emp_civil_status', 2)->comment('Civil status. [SG-Single, MR-Married, WD-Widowed, SP-Separated, OT-Others]');
             $table->string('emp_civil_others', 50)->comment('Specific civil status if others.');
-            $table->float('emp_height', 6, 3)->unsigned()->comment('Height in meters.');
-            $table->float('emp_weight', 6, 3)->unsigned()->comment('Weight in kilograms.');
+            $table->double('emp_height', 6, 3)->unsigned()->comment('Height in meters.');
+            $table->double('emp_weight', 6, 3)->unsigned()->comment('Weight in kilograms.');
             $table->string('emp_gsis', 20)->comment('GSIS ID number.');
             $table->string('emp_pagibig', 20)->comment('Pag-IBIG (Home Development Mutual Fund) ID number.');
             $table->string('emp_philhealth', 20)->comment('PhilHealth (Philippine Health Insurance Corp.) ID number.');

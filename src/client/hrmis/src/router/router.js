@@ -41,7 +41,6 @@ const MainRouter = () => {
 
   useEffect(() => {
     if (window.sessionStorage.getItem("token") == null) navigate("/");
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
