@@ -21,5 +21,5 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 ## Contributors
 
 - Terrence Calzada
-- Jam Dampil
-- Leege
+- JC Dampil
+- Legee
