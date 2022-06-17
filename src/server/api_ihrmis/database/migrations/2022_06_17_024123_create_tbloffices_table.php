@@ -21,8 +21,8 @@ class CreateTblofficesTable extends Migration
             $table->integer('ofc_agn_id')->comment('Agency identifier');
             $table->char('ofc_area_code', 3)->default('000')->comment('Area code refers to Regional Code based on geographical location of the position.');
             $table->char('ofc_area_type', 1)->default('R')->comment('Area type refers to the geographical location of the position in terms of: R-Region, P-Province, D-District, M-Municipality, or F-Foreign Post.');
-            $table->unsignedInteger('ofc_head_itm_id')->comment('Plantilla position of the head of the office.');
-            $table->unsignedInteger('ofc_oic_itm_id')->comment('Plantilla position of the current officer-in-charge of the office.');
+            $table->unsignedInteger('ofc_head_itm_id')->nullable()->comment('Plantilla position of the head of the office.');
+            $table->unsignedInteger('ofc_oic_itm_id')->nullable()->comment('Plantilla position of the current officer-in-charge of the office.');
             $table->unsignedInteger('ofc_ofc_id')->comment('Parent office ID.');
         });
     }

@@ -245,9 +245,18 @@ class TblapplicantProfileController extends Controller
     }
     public function generateCADReport($applicants)
     {
-        return $this->appProfileService->generateOOOReport($applicants);
+        return $this->appProfileService->generateCADReport($applicants);
+    }
+    public function generateAFAReport($applicants)
+    {
+        return $this->appProfileService->generateAFAReport($applicants);
     }
 
+    public function getApplicantAgency($office_id)
+    {
+        return $this->appProfileService->getApplicantAgency($office_id);
+    }
+    
     public function getFamilyChildren($id)
     {
         $getFamQry = TblapplicantsFamily::where("app_id", $id)->first();
