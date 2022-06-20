@@ -44,7 +44,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	const [plotData, setPlotData] = useState([]);
 	// const [filters, setFiltersTable] = useState([]);
 	const dispatch = useDispatch();
-	const [axiosCall] = useAxiosCallHelper();
 	const plantillaItemApi = async () => {
 		await axios
 			.get(API_HOST + "getAllPositions")
@@ -186,25 +185,10 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		selectedPlantillaItems(selectedItems);
 	};
 
-	const getAgency = (id) => {
-		axiosCall("get", API_HOST + "getAgency/" + id).then(
-			(response) => {
-				let data = response.data;
-				let arr = [];
-				arr.push(data.agn_head_email);
-				dispatch(setEmailRecepients(arr));
-			},
-			(error) => {
-				console.log(error);
-			}
-		);
-	};
-
 	useLayoutEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		if (selectedFlatRowsData.length > 0) {
 			setSelectedRowsData(selectedFlatRowsData);
-			getAgency(selectedFlatRowsData[0].ofc_agn_id);
 			console.log(selectedFlatRowsData);
 		}
 
@@ -278,9 +262,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 														<div
 															onClick={() => {
 																setItemID(cell.row.values.itm_id);
-																setEmailRecepients(
-																	cell.row.values.agn_head_email
-																);
+																dispatch(setEmailRecepients("gago"));
 																console.log(cell.row.values);
 															}}
 														>
