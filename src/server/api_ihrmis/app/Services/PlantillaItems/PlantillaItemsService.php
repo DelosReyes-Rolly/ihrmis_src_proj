@@ -29,7 +29,7 @@ class PlantillaItemsService
 	 */
 	public function getAllPlantillaItems() {
 
-		$item_query = TblplantillaItems::with('tbloffices', 'tblpositions','tblapplicants')->get();
+		$item_query = TblplantillaItems::with('tbloffices','tbloffices.officeAgency', 'tblpositions','tblapplicants')->get();
 		
 		return $item_query;
 
@@ -119,52 +119,7 @@ class PlantillaItemsService
 	 */
 	public function generateMemoOnPostingVpForCscReport($selected_agency)
 	{
-  
-		date_default_timezone_set('Asia/Manila'); //define local time
-		
-		
-		$data = $this->getVacantPositions(0);
-
-		$new_data = [];
-
-		foreach($data as $itm){
-
-			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
-			$itm->positionswithcscstandards = $positionswithcscstandards;
-		}
-	
-		$decoded_selected_agency = json_decode($selected_agency,true);
-
-		$new_selected_agency_data = [];
-		foreach($decoded_selected_agency as $itm){
-			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
-		}
-
-		// $date = date('m/d/Y');
-		$date = date("j F Y");
-		
-		$new_data['vacantpositions'] = $data;
-		$new_data['selected_agencies'] = $new_selected_agency_data;
-		$new_data['date_memo'] = $date;
-		$new_data['memo'] = 'CSC';
-		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
-
-
-		// return $new_data;
-		
-		$pdf = new MPDF();
-		
-		$pdf->writeHTML(view('memoonpostingofvacancydostcsc',$new_data,[], [
-		'title'				=> 	'Notice of Vacancy',
-		'margin_left'     	=> 10,
-		'margin_right'      => 10,
-		'margin_top'        => 10,
-		'margin_bottom'     => 10,
-		'orientation'       => 'P',
-		'format' => 'A4'
-		]));
-
-		return $pdf->output('Memo On Posting Vacant Position For CSC_'.$date.'.pdf',"I");
+		$this->generateMemoOnPostingFor($selected_agency,'CSC');
   	}
 	  
 	/**
@@ -175,51 +130,9 @@ class PlantillaItemsService
 	public function generateMemoOnPostingVpForDostReport($selected_agency)
 	{
   
-		date_default_timezone_set('Asia/Manila'); //define local time
-		
-		
-		$data = $this->getVacantPositions(0);
-
-		$new_data = [];
-
-		foreach($data as $itm){
-
-			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
-			$itm->positionswithcscstandards = $positionswithcscstandards;
-		}
-	
-		$decoded_selected_agency = json_decode($selected_agency,true);
-
-		$new_selected_agency_data = [];
-		foreach($decoded_selected_agency as $itm){
-
-			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
-		}
-
-
-		// $date = date('m/d/Y');
-		$date = date("j F Y");
-		
-		$new_data['vacantpositions'] = $data;
-		$new_data['selected_agencies'] = $new_selected_agency_data;
-		$new_data['date_memo'] = $date;
-		$new_data['memo'] = 'DOST';
-
-		// return $new_data;
-		
-		$pdf = new MPDF();
-		$pdf->writeHTML(view('memoonpostingofvacancydostcsc',$new_data,[], [
-		'title'				=> 	'Notice of Vacancy',
-		'margin_left'     	=> 10,
-		'margin_right'      => 10,
-		'margin_top'        => 10,
-		'margin_bottom'     => 10,
-		'orientation'       => 'P',
-		'format' => 'A4'
-		]));
-		
-		return $pdf->output('Memo On Posting Vacant Position For DOST Agencies_'.$date.'.pdf',"I");
+		$this->generateMemoOnPostingFor($selected_agency,'DOST');
   	} 
+	
 
 	/**
 	 * closeVacantPositions
@@ -463,5 +376,57 @@ class PlantillaItemsService
 		], 200);
 	}
 
+	/**
+	 * generateMemoOnPostingFor
+	 */
+	private function 	generateMemoOnPostingFor($selected_agency,$memo){
+
+		date_default_timezone_set('Asia/Manila'); //define local time
+		
+		
+		$data = $this->getVacantPositions(0);
+
+		$new_data = [];
+
+		foreach($data as $itm){
+
+			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
+			$itm->positionswithcscstandards = $positionswithcscstandards;
+		}
+	
+		$decoded_selected_agency = json_decode($selected_agency,true);
+
+		$new_selected_agency_data = [];
+		foreach($decoded_selected_agency as $itm){
+
+			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
+		}
+
+
+		// $date = date('m/d/Y');
+		$date = date("j F Y");
+		
+		$new_data['vacantpositions'] = $data;
+		$new_data['selected_agencies'] = $new_selected_agency_data;
+		$new_data['date_memo'] = $date;
+		$new_data['memo'] = $memo;
+		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
+
+		// return $new_data;
+		
+		$pdf = new MPDF();
+		$pdf->writeHTML(view('memoonpostingofvacancydostcsc',$new_data,[], [
+		'title'				=> 	'Notice of Vacancy',
+		'margin_left'     	=> 10,
+		'margin_right'      => 10,
+		'margin_top'        => 10,
+		'margin_bottom'     => 10,
+		'orientation'       => 'P',
+		'format' => 'A4'
+		]));
+		
+		return $pdf->output('Memo On Posting Vacant Position For ' 
+		. ($memo == 'DOST' ? 'DOST Agencies_' : 'CSC_'). $date.'.pdf',"I");
+	}
 
 }

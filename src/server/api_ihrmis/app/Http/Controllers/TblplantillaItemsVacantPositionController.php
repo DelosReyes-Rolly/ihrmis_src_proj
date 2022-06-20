@@ -33,9 +33,11 @@ class TblplantillaItemsVacantPositionController extends Controller {
      * getVacantPositions
      * Todo get all positions fro Plantilla Items
      */
-    public function getAllPositions() {
+    public function getAllPlantillaItems() {
         
-        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos->getAllPlantillaItems()) ;
+        return GetVacantPositionsResource::collection(
+            $this->tblPantillaVacantPos->getAllPlantillaItems()
+        ) ;
 
     }
 

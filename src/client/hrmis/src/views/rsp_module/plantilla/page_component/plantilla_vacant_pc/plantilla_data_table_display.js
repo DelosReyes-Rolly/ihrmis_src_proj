@@ -21,7 +21,7 @@ import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
 import PlantillaEmailModal, {
 	EMAIL_ENUM,
 } from "../plantilla_email_modal/plantilla_email_modal";
-import DropdownMenu from "../../plantilla_vacant_menu/Dropdown_menu";
+import DropdownMenu from "./plantilla_vp_menu/Dropdown_menu";
 import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
 import {
 	setContextMenu,
@@ -31,6 +31,7 @@ import {
 	setEmailRecepients,
 } from "../../../../../features/reducers/plantilla_item_slice";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
+import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email_modal";
 
 /**
  * PlantillaDataTableDisplay
@@ -63,6 +64,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 							itm_status: statusDisplay[element.itm_status],
 							pos_category: element.position.pos_category,
 							itm_state: element.itm_state,
+							agn_head_email: element?.office?.office_agency?.agn_head_email,
 						});
 					});
 
@@ -83,7 +85,13 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	const columns = useMemo(() => tableHeaderColumnName, []);
 
 	const initialState = {
-		hiddenColumns: ["pos_category", "itm_id", "itm_state", "ofc_agn_id"],
+		hiddenColumns: [
+			"pos_category",
+			"itm_id",
+			"itm_state",
+			"ofc_agn_id",
+			"agn_head_email",
+		],
 		filters: [
 			{
 				id: "itm_state",
@@ -268,7 +276,13 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 															{cell.render("Cell")} {itemID}
 														</div>
 														<div
-															onClick={() => setItemID(cell.row.values.itm_id)}
+															onClick={() => {
+																setItemID(cell.row.values.itm_id);
+																setEmailRecepients(
+																	cell.row.values.agn_head_email
+																);
+																console.log(cell.row.values);
+															}}
 														>
 															<DropdownMenu
 																itemList={plantillaItemsVacantPosMenuItems}
@@ -308,14 +322,15 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	);
 };
 
-const SelectAction = ({ itemID = null }) => {
+const SelectAction = ({ itemID = null, officeAgencyEmail = null }) => {
 	const dispatch = useDispatch();
 	const { next_rank, context_menu, rank_email, notify_office } = useSelector(
 		(state) => state.plantillaItem
 	);
 	return (
 		<React.Fragment>
-			<PlantillaEmailModal
+			<PlantillaVpEmailModal
+				plantilla={{ itm_id: itemID }}
 				isDisplay={notify_office}
 				onClose={() => dispatch(setNotifyOffice())}
 				type={EMAIL_ENUM.regular}

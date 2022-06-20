@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from "react";
-import ModalComponent from "../../../../common/modal_component/modal_component";
-import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
+import ModalComponent from "../../../../../common/modal_component/modal_component";
+import TextAreaComponent from "../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import SelectComponent from "../../../../common/input_component/select_component/select_component";
-import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
-import InputComponent from "../../../../common/input_component/input_component/input_component";
+import SelectComponent from "../../../../../common/input_component/select_component/select_component";
+import UploadAttachmentComponent from "../../../../../common/input_component/upload_attachment_component/upload_attachment_component";
 import { useFormik } from "formik";
 import {
 	API_HOST,
 	validationRequired,
-} from "../../../../../helpers/global/global_config";
+} from "../../../../../../helpers/global/global_config";
 import * as Yup from "yup";
 import axios from "axios";
-import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
-import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
+import RichTextEditorComponent from "../../../../../common/rich_text_editor_component/rich_text_editor_component";
+import { usePopUpHelper } from "../../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
+import { setEmailRecepients } from "../../../../../../features/reducers/plantilla_item_slice";
 import {
 	ALERT_ENUM,
 	ALER_ENUM,
 	popupAlert,
-} from "../../../../../helpers/alert_response";
+} from "../../../../../../helpers/alert_response";
+import InputComponent from "../../../../../common/input_component/input_component/input_component";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
 	next_rank: "NextRank",
 };
 
-const PlantillaEmailModal = ({
+const PlantillaVpEmailModal = ({
 	isDisplay,
 	onClose,
 	plantilla,
@@ -51,7 +51,7 @@ const PlantillaEmailModal = ({
 
 	const getMessageType = async () => {
 		await axios
-			.get(API_HOST + "mail-template")
+			.get(API_HOST + "mail-template/URS")
 			.then((res) => {
 				let arrHolder = [];
 				const dataMType = res?.data?.data;
@@ -64,7 +64,8 @@ const PlantillaEmailModal = ({
 					});
 				});
 				setmType(arrHolder);
-				console.log(arrHolder);
+				console.log("gago:\n");
+				console.log(dataMType);
 			})
 			.catch((err) => {});
 	};
@@ -134,12 +135,12 @@ const PlantillaEmailModal = ({
 	});
 
 	useEffect(() => {
-		getMessageType();
-	}, []);
-
-	useEffect(() => {
 		emailFormik.setFieldValue("recepient", email_recepients);
 	}, [email_recepients]);
+
+	useEffect(() => {
+		getMessageType();
+	}, []);
 
 	return (
 		<React.Fragment>
@@ -262,7 +263,7 @@ const PlantillaEmailModal = ({
 	);
 };
 
-export default PlantillaEmailModal;
+export default PlantillaVpEmailModal;
 
 const senderDefault =
 	"Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City";

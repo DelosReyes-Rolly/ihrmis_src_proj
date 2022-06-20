@@ -9,14 +9,15 @@ class TblemailTemplate extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'eml_id';
     protected $table = 'tblemail_templates';
+    protected $primaryKey = 'eml_id';
     
     protected $fillable=[
         'eml_type',
         'eml_link',
         'eml_name',
         'eml_message',
+        'eml_time'
     ];
 
     public $timestamps = false;
