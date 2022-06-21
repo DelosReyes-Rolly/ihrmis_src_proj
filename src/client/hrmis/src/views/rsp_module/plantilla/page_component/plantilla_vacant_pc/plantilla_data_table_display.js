@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { statusDisplay } from "../../static/display_option";
 import {
@@ -21,7 +21,7 @@ import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
 import PlantillaEmailModal, {
 	EMAIL_ENUM,
 } from "../plantilla_email_modal/plantilla_email_modal";
-import DropdownMenu from "./plantilla_vp_menu/Dropdown_menu";
+import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
 import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
 import {
 	setContextMenu,
@@ -29,8 +29,9 @@ import {
 	setNotifyOffice,
 	setRankEmail,
 	setEmailRecepients,
+	setItemID,
+	setSelectedPlantilla,
 } from "../../../../../features/reducers/plantilla_item_slice";
-import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email_modal";
 
 /**
@@ -42,8 +43,27 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
 export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
+	const { item_id } = useSelector((state) => state.plantillaItem);
 	// const [filters, setFiltersTable] = useState([]);
 	const dispatch = useDispatch();
+
+	const getPlantillaData = async (item_id) => {
+		await axios
+			.get(API_HOST + "getPlantillaVpById/" + item_id)
+			.then((res) => {
+				// const dataPlantilla = res;
+				dispatch(setSelectedPlantilla(res.data.data));
+				console.log(res);
+			})
+			.catch((err) => console.log(err?.message));
+	};
+
+	const onCLickRow = (rowData) => {
+		dispatch(setItemID(rowData?.itm_id));
+		dispatch(setEmailRecepients([rowData?.agn_head_email]));
+		getPlantillaData(rowData?.itm_id);
+	};
+
 	const plantillaItemApi = async () => {
 		await axios
 			.get(API_HOST + "getAllPositions")
@@ -185,7 +205,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 		selectedPlantillaItems(selectedItems);
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		if (selectedFlatRowsData.length > 0) {
 			setSelectedRowsData(selectedFlatRowsData);
@@ -194,8 +214,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 
 		// console.log(setFilter);
 	}, [selectedFlatRows]);
-
-	const [itemID, setItemID] = useState(null);
 
 	return (
 		<React.Fragment>
@@ -210,7 +228,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 				setAllFilters={setAllFilters}
 				// setFiltersTable={setFiltersTable}
 			/>
-			<SelectAction itemID={itemID} />
+			<SelectAction />
 			{/* <SelectTableComponent list={plotData} /> */}
 			<div className="default-table">
 				<table className="table-design" {...getTableProps()}>
@@ -257,16 +275,15 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 														}}
 													>
 														<div>
-															{cell.render("Cell")} {itemID}
+															{cell.render("Cell")} {item_id}
 														</div>
 														<div
 															onClick={() => {
-																setItemID(cell.row.values.itm_id);
-																dispatch(setEmailRecepients("gago"));
-																console.log(cell.row.values);
+																onCLickRow(cell.row.values);
+																console.log(cell.row.values.itm_id);
 															}}
 														>
-															<DropdownMenu
+															<DropdownVpMenu
 																itemList={plantillaItemsVacantPosMenuItems}
 																title={<MdMoreHoriz size="15" />}
 																alignItems="end"
@@ -274,7 +291,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 																	toolTipId: "other-actions",
 																	textHelper: "Click to view other actions",
 																}}
-																itemId={itemID}
 															/>
 														</div>
 													</div>
@@ -304,22 +320,20 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	);
 };
 
-const SelectAction = ({ itemID = null, officeAgencyEmail = null }) => {
+const SelectAction = () => {
 	const dispatch = useDispatch();
-	const { next_rank, context_menu, rank_email, notify_office } = useSelector(
-		(state) => state.plantillaItem
-	);
+	const { next_rank, context_menu, rank_email, notify_office, item_id } =
+		useSelector((state) => state.plantillaItem);
 	return (
 		<React.Fragment>
 			<PlantillaVpEmailModal
-				plantilla={{ itm_id: itemID }}
 				isDisplay={notify_office}
 				onClose={() => dispatch(setNotifyOffice())}
 				type={EMAIL_ENUM.regular}
 				endpoint={API_HOST + "notify-vacant-office"}
 			/>
 			<NextInRankModal
-				plantilla={{ itm_id: itemID }}
+				plantilla={{ itm_id: item_id }}
 				isDisplay={next_rank}
 				onClose={() => dispatch(setNextRank())}
 			/>

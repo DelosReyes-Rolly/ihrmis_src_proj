@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import ModalComponent from "../../../../../common/modal_component/modal_component";
 import TextAreaComponent from "../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SelectComponent from "../../../../../common/input_component/select_component/select_component";
 import UploadAttachmentComponent from "../../../../../common/input_component/upload_attachment_component/upload_attachment_component";
+import InputComponent from "../../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
 import {
 	API_HOST,
@@ -17,10 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setEmailRecepients } from "../../../../../../features/reducers/plantilla_item_slice";
 import {
 	ALERT_ENUM,
-	ALER_ENUM,
 	popupAlert,
 } from "../../../../../../helpers/alert_response";
-import InputComponent from "../../../../../common/input_component/input_component/input_component";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
@@ -34,40 +33,59 @@ const PlantillaVpEmailModal = ({
 	type,
 	endpoint,
 }) => {
-	const { email_recepients } = useSelector((state) => state.plantillaItem);
+	const { email_recepients, selected_plantilla } = useSelector(
+		(state) => state.plantillaItem
+	);
 	//TYPE LOGIC
 	const [mType, setmType] = useState([]);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-	const [selectedMsg, setSelectedMsg] = useState(null);
-
-	const selectedType = (value) => {
-		mType.forEach((element) => {
-			if (value === element.title) {
-				setSelectedMsg(element.message);
-				console.log(selectedMsg);
-			}
-		});
-	};
+	const { renderBusy } = usePopUpHelper();
+	const [selectedMsg, setSelectedMsg] = useState();
 
 	const getMessageType = async () => {
 		await axios
-			.get(API_HOST + "mail-template/URS")
+			.get(API_HOST + "mail-template")
 			.then((res) => {
 				let arrHolder = [];
 				const dataMType = res?.data?.data;
 				dataMType.forEach((element) => {
 					arrHolder.push({
-						id: element.eml_name,
+						id: element.eml_id,
 						title: element.eml_name,
-						message: element.eml_message,
+						message: restructEmailMessage(element.eml_message),
 						data_id: element.eml_id,
 					});
 				});
 				setmType(arrHolder);
-				console.log("gago:\n");
-				console.log(dataMType);
 			})
-			.catch((err) => {});
+			.catch((err) => console.log(err?.message));
+	};
+
+	const selectedType = (value = 1) => {
+		let varHolder = "";
+		mType.forEach((element) => {
+			if (value === element.id) {
+				varHolder = element.message;
+				setSelectedMsg(varHolder);
+			}
+		});
+		console.log(varHolder);
+		return varHolder;
+	};
+
+	const restructEmailMessage = (message) => {
+		console.log("selected_plantilla");
+		console.log(selected_plantilla);
+		// return message;
+		if (selected_plantilla !== null) {
+			return message
+				.replace("{position}", selected_plantilla.tblpositions.pos_title)
+				.replace(
+					"{salary grade}",
+					"SG-" + selected_plantilla.tblpositions.pos_salary_grade
+				)
+				.replace("{Item No}", "Item No. " + selected_plantilla.itm_no);
+		}
+		return message;
 	};
 
 	const dispatch = useDispatch();
@@ -78,7 +96,7 @@ const PlantillaVpEmailModal = ({
 		enableReinitialize: true,
 		initialValues: {
 			recepient: "",
-			message_type: "",
+			message_type: 1,
 			message: "",
 			sender: senderDefault,
 			image_upload: "",
@@ -102,6 +120,7 @@ const PlantillaVpEmailModal = ({
 			formData.append("message_type", value.message_type);
 			formData.append("message", value.message);
 			formData.append("sender", value.sender);
+
 			if (type === EMAIL_ENUM.next_rank) {
 				formData.append("deadline", value.deadline);
 			}
@@ -135,12 +154,16 @@ const PlantillaVpEmailModal = ({
 	});
 
 	useEffect(() => {
+		getMessageType();
+	}, []);
+
+	useEffect(() => {
 		emailFormik.setFieldValue("recepient", email_recepients);
 	}, [email_recepients]);
 
 	useEffect(() => {
-		getMessageType();
-	}, []);
+		if (mType.length > 0) selectedType();
+	}, [mType]);
 
 	return (
 		<React.Fragment>
@@ -173,6 +196,7 @@ const PlantillaVpEmailModal = ({
 				<div>
 					<label>Message:</label>
 					<SelectComponent
+						selectedValue={1}
 						name="message_type"
 						itemList={mType}
 						value={emailFormik.values.message_type}
@@ -193,10 +217,10 @@ const PlantillaVpEmailModal = ({
 				<div>
 					<div className="email-modal-plantilla">
 						<RichTextEditorComponent
+							value={selectedMsg}
 							setFieldValue={(val) => {
 								emailFormik.setFieldValue("message", val);
 							}}
-							value={selectedMsg}
 						/>
 					</div>
 					{emailFormik.touched.message && emailFormik.errors.message ? (

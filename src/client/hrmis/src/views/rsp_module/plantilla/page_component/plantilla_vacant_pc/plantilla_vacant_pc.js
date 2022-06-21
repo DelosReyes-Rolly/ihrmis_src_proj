@@ -20,7 +20,7 @@ import {
 } from "../../../../../router/outside_routes";
 import { setRefreh } from "../../../../../features/reducers/jvscrw_slice";
 import Swal from "sweetalert2";
-import DropdownMenu from "./plantilla_vp_menu/Dropdown_menu";
+import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
 
 const PlantillaItemsVacantPositionComponentView = () => {
 	const dispatch = useDispatch();
@@ -127,18 +127,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	const SelectMemoForPosting = async () => {
 		// console.log(selectedrowData);
 		if (preMemoConfirm()) {
-			// sweetAlertConfirm(
-			// 	"Memo on Posting of Vacancy",
-			// 	"Select DOST Agencies or CSC to generate report",
-			// 	"question",
-			// 	preMemoConfirm(),
-			// 	confirmedMemoAction(),
-			// 	cancelMemoCallback(),
-			// 	"DOST Agencies",
-			// 	"#3085d6",
-			// 	"CSC"
-			// );
-
 			let confirmButtonText = "DOST Agencies",
 				cancelButtonColor = "#d33",
 				cancelButtonText = "CSC";
@@ -175,7 +163,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					<BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
 				</div>
 				<div className="three-idiot">
-					<DropdownMenu
+					<DropdownVpMenu
 						itemList={plantillaItemsReportsMenuItems}
 						title={<AiFillPrinter size="22" />}
 						alignItems="end"

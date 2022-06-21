@@ -15,12 +15,12 @@ class MailController extends Controller
     public function getEmailTemplate($type = null)
     {
         if ($type != null) {
-            $mailQry = TblemailTemplate::where('eml_type', $type)->get();
-            return $mailQry;
+            $mailQry = TblemailTemplate::where('eml_type', $type)->first();
+            return new CommonResource($mailQry);
         }
 
         $mailQry = TblemailTemplate::get();
-        return new CommonResource($mailQry);
+        return CommonResource::collection($mailQry);
     }
 
     public function addEmailTemplate($request)
@@ -70,7 +70,7 @@ class MailController extends Controller
             $tempEmail = trim($value, " ");
             array_push($arrHolder, $tempEmail);
             $data = [
-                "from" => env("MAIL_FROM_RECUITER"),
+                "from" => env("MAIL_FROM_RECRUITER"),
                 "email_from" => env("MAIL_FROM_ADDRESS"),
                 "email_to" => $tempEmail,
                 "date" => Carbon::now(),

@@ -13,6 +13,8 @@ export const plantillaItemSlice = createSlice({
 		select_agency: false,
 		notify_office: false,
 		selected_agency: [],
+		item_id: null,
+		selected_plantilla: null,
 	},
 	reducers: {
 		setNextRank: (state) => {
@@ -32,8 +34,8 @@ export const plantillaItemSlice = createSlice({
 		},
 
 		setEmailRecepients: (state, action) => {
-			let emailArr = action.payload;
-			state.email_recepients = implodeArray(", ", emailArr);
+			const emailArr = action.payload;
+			state.email_recepients = emailArr?.join(", "); //implodeArray(", ", emailArr);
 			console.log(state.email_recepients);
 		},
 
@@ -49,6 +51,14 @@ export const plantillaItemSlice = createSlice({
 			const { payload } = action;
 			state.selected_agency = payload;
 		},
+
+		setItemID: (state) => {
+			state.item_id = state.item_id;
+		},
+
+		setSelectedPlantilla: (state) => {
+			state.selected_plantilla = state.selected_plantilla;
+		},
 	},
 });
 
@@ -61,6 +71,8 @@ export const {
 	setSelectAgency,
 	setNotifyOffice,
 	setSelectedAgency,
+	setItemID,
+	setSelectedPlantilla,
 } = plantillaItemSlice.actions;
 
 export default plantillaItemSlice.reducer;

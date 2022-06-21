@@ -17,7 +17,6 @@ class TblemailTemplate extends Model
         'eml_link',
         'eml_name',
         'eml_message',
-        'eml_time'
     ];
 
     public $timestamps = false;

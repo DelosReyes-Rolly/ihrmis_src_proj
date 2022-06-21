@@ -30,7 +30,7 @@ class TblplantillaItemsVacantPositionController extends Controller {
     }
 
     /**
-     * getVacantPositions
+     * getAllPlantillaItems
      * Todo get all positions fro Plantilla Items
      */
     public function getAllPlantillaItems() {
@@ -39,6 +39,15 @@ class TblplantillaItemsVacantPositionController extends Controller {
             $this->tblPantillaVacantPos->getAllPlantillaItems()
         ) ;
 
+    }
+
+    /**
+     * getAPlantillaItemsById
+     * Todo get all positions fro Plantilla Items
+     */
+    public function getPlantillaItemById($id) {
+        
+        return $this->tblPantillaVacantPos->getPlantillaItemById($id);
     }
 
     /**

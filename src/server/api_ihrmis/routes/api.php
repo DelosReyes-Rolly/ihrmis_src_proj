@@ -204,6 +204,7 @@ Route::post('add-to-next-rank', [TblplantillaItemsVacantPositionController::clas
 Route::post('remove-to-next-rank', [TblplantillaItemsVacantPositionController::class, 'deleteNextInRank']);
 
 Route::get('getAllPositions', [TblplantillaItemsVacantPositionController::class, "getAllPlantillaItems"]);
+Route::get('getPlantillaVpById/{id}', [TblplantillaItemsVacantPositionController::class, "getPlantillaItemById"]);
 Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController::class, "getVacantPositions"]);
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);

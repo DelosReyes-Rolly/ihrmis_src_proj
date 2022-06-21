@@ -16,11 +16,7 @@ import RichTextEditorComponent from "../../../../common/rich_text_editor_compone
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
 import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
-import {
-	ALERT_ENUM,
-	ALER_ENUM,
-	popupAlert,
-} from "../../../../../helpers/alert_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
@@ -37,16 +33,18 @@ const PlantillaEmailModal = ({
 	const { email_recepients } = useSelector((state) => state.plantillaItem);
 	//TYPE LOGIC
 	const [mType, setmType] = useState([]);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-	const [selectedMsg, setSelectedMsg] = useState(null);
+	const { renderBusy } = usePopUpHelper();
+	const [selectedMsg, setSelectedMsg] = useState();
 
 	const selectedType = (value) => {
+		let varHolder = "";
 		mType.forEach((element) => {
-			if (value === element.title) {
+			if (value === element.id) {
+				varHolder = element.message;
 				setSelectedMsg(element.message);
-				console.log(selectedMsg);
 			}
 		});
+		return varHolder;
 	};
 
 	const getMessageType = async () => {
@@ -57,16 +55,15 @@ const PlantillaEmailModal = ({
 				const dataMType = res?.data?.data;
 				dataMType.forEach((element) => {
 					arrHolder.push({
-						id: element.eml_name,
+						id: element.eml_id,
 						title: element.eml_name,
 						message: element.eml_message,
 						data_id: element.eml_id,
 					});
 				});
 				setmType(arrHolder);
-				console.log(arrHolder);
 			})
-			.catch((err) => {});
+			.catch((err) => console.log(err?.message));
 	};
 
 	const dispatch = useDispatch();
@@ -77,7 +74,7 @@ const PlantillaEmailModal = ({
 		enableReinitialize: true,
 		initialValues: {
 			recepient: "",
-			message_type: "",
+			message_type: 1,
 			message: "",
 			sender: senderDefault,
 			image_upload: "",
@@ -101,6 +98,7 @@ const PlantillaEmailModal = ({
 			formData.append("message_type", value.message_type);
 			formData.append("message", value.message);
 			formData.append("sender", value.sender);
+
 			if (type === EMAIL_ENUM.next_rank) {
 				formData.append("deadline", value.deadline);
 			}
@@ -141,6 +139,10 @@ const PlantillaEmailModal = ({
 		emailFormik.setFieldValue("recepient", email_recepients);
 	}, [email_recepients]);
 
+	useEffect(() => {
+		if (mType !== null) selectedType(1);
+	}, [mType]);
+
 	return (
 		<React.Fragment>
 			<ModalComponent
@@ -172,6 +174,7 @@ const PlantillaEmailModal = ({
 				<div>
 					<label>Message:</label>
 					<SelectComponent
+						selectedValue={1}
 						name="message_type"
 						itemList={mType}
 						value={emailFormik.values.message_type}
@@ -192,10 +195,10 @@ const PlantillaEmailModal = ({
 				<div>
 					<div className="email-modal-plantilla">
 						<RichTextEditorComponent
+							value={selectedMsg}
 							setFieldValue={(val) => {
 								emailFormik.setFieldValue("message", val);
 							}}
-							value={selectedMsg}
 						/>
 					</div>
 					{emailFormik.touched.message && emailFormik.errors.message ? (

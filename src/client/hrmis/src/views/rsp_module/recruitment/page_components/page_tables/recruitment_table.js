@@ -8,7 +8,6 @@ import {
 	useFilters,
 	useRowSelect,
 } from "react-table";
-import { useSelectValueCon } from "../../../../../helpers/use_hooks/select_value_cons.js";
 import {
 	recruitmentDisqualifiedMenuItem,
 	recruitmentMenuItem,
@@ -219,6 +218,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		setSelectedRowsData(selectedFlatRowsData);
 	}, [selectedFlatRows]);
+
 	return (
 		<React.Fragment>
 			<div>
@@ -352,16 +352,16 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 													>
 														{cell.render("Cell")}
 														<DropdownViewComponent
-															className={'dropdown-three-dots'}
+															className={"dropdown-three-dots"}
 															itemList={
 																type === 1
 																	? recruitmentMenuItem
 																	: recruitmentDisqualifiedMenuItem
 															}
-															title={<MdMoreHoriz size='20' />}
-															alignItems='end'
-															toolTipId='other-actions'
-															textHelper='Click to view other actions'
+															title={<MdMoreHoriz size="20" />}
+															alignItems="end"
+															toolTipId="other-actions"
+															textHelper="Click to view other actions"
 															setValue={setValue}
 														/>
 													</div>

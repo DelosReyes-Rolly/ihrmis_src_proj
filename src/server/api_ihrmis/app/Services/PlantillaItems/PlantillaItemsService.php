@@ -4,6 +4,7 @@ namespace App\Services\PlantillaItems;
 
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
+use App\Http\Resources\Plantilla\GetVacantPositionsResource;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Tblagencies;
@@ -32,7 +33,25 @@ class PlantillaItemsService
 		$item_query = TblplantillaItems::with('tbloffices','tbloffices.officeAgency', 'tblpositions','tblapplicants')->get();
 		
 		return $item_query;
+	}
 
+	/**
+	 * getPlantillaItemById
+	 * Todo get all plantilla positions
+	 * return array 
+	 */
+	public function getPlantillaItemById($id) {
+
+		$item_query = TblplantillaItems::
+			with(
+				'tbloffices',
+				'tbloffices.officeAgency', 
+				'tblpositions',
+			)
+			->where("itm_id", (int) $id)
+			->first();
+		
+		return new CommonResource($item_query);
 	}
 
 	/**

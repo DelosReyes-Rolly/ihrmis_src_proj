@@ -12,7 +12,7 @@ import {
 } from "../../../../../../features/reducers/plantilla_item_slice";
 import usePositionSetter from "../../../../../../helpers/use_hooks/position_setter";
 
-const DropdownMenu = ({
+const DropdownVpMenu = ({
 	title,
 	className,
 	itemList,
@@ -87,7 +87,7 @@ const DropdownMenu = ({
 	);
 };
 
-export default DropdownMenu;
+export default DropdownVpMenu;
 
 const DropList = ({
 	itemList = [],
