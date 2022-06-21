@@ -83,7 +83,8 @@ const PlantillaVpEmailModal = ({
 					"{salary grade}",
 					"SG-" + selected_plantilla.tblpositions.pos_salary_grade
 				)
-				.replace("{Item No}", "Item No. " + selected_plantilla.itm_no);
+				.replace("{Item No}", "Item No. " + selected_plantilla.itm_no)
+				.replace("{jvs-crw id}", selected_plantilla.itm_no);
 		}
 		return message;
 	};
