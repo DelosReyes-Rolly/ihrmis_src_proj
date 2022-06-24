@@ -6,14 +6,14 @@ import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper';
 import SelectComponent from '../../../../common/input_component/select_component/select_component';
 import ModalComponent from '../../../../common/modal_component/modal_component';
 import { setRefresh } from '../../../../../features/reducers/popup_response';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import TextAreaComponent from '../../../../common/input_component/textarea_input_component/textarea_input_component';
+import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
 const RecruitmentStatusModal = ({ isDisplay, onClose, rowData }) => {
 	const dispatch = useDispatch();
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+	const { renderBusy } = usePopUpHelper();
 	const [transactionSelectOptions, setTransactionSelectOptions] = useState([]);
-	const { refresh } = useSelector((state) => state.popupResponse);
 	const getTransactionSelectOptions = async () => {
 		await axios
 			.get(API_HOST + 'get-transaction-stage-select/app')
@@ -57,12 +57,18 @@ const RecruitmentStatusModal = ({ isDisplay, onClose, rowData }) => {
 					headers: { 'Content-Type': 'multipart/form-data' },
 				})
 				.then((res) => {
-					renderSucceed({ content: 'Status saved successfully' });
+					popupAlert({
+						message: 'Applicant Status was changed',
+						type: ALERT_ENUM.success,
+					});
 					dispatch(setRefresh());
 					onClose();
 				})
 				.catch((err) => {
-					renderFailed({ content: 'Status failed to save' });
+					popupAlert({
+						message: 'Status failed to save',
+						type: ALERT_ENUM.fail,
+					});
 				});
 			renderBusy(false);
 			resetForm();

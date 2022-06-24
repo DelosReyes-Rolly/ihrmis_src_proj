@@ -1,38 +1,28 @@
-import React, { useMemo, useEffect, useState } from 'react';
-import ButtonComponent from '../../../common/button_component/button_component.js.js';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
 import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
-import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
-import BreadcrumbConfig, {
-	crumbSecondLevel,
-} from '../../../../router/breadcrumb_config';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
 import { MdAdd } from 'react-icons/md';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import AddAgencyModal from '../AddAgencyModal.js';
 
-const AgencyLibraryTable = ({}) => {
+const AgencyLibraryTable = () => {
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-	const { getSecondLevel } = crumbSecondLevel();
 	const [plotAgencyData, setAgencyData] = useState([]);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+	const { renderBusy } = usePopUpHelper();
 	const { refresh } = useSelector((state) => state.popupResponse);
-	const { trueValue } = useSelectValueCon();
-	const [toggleState, setToggleState] = useState(1);
-	const toggleTab = (index) => {
-		setToggleState(index);
-	};
-	const offceDataApi = async () => {
+
+	const offceDataApi = useCallback(async () => {
 		renderBusy(true);
 		await axios
 			.get(API_HOST + 'agency')
 			.then((response) => {
 				let data = response.data.data ?? [];
 				let dataPlot = [];
-				data.map((data) => {
+				data.forEach((data) => {
 					let values = {
 						agn_id: data.agn_id,
 						agn_name: data.agn_name,
@@ -43,18 +33,18 @@ const AgencyLibraryTable = ({}) => {
 						agn_head_email: data.agn_head_email,
 						agn_address: data.agn_address,
 					};
-
 					dataPlot.push(values);
 				});
 				setAgencyData(dataPlot);
 			})
 			.catch((error) => {});
 		renderBusy(false);
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [refresh]);
 
 	useEffect(() => {
 		offceDataApi();
-	}, [refresh]);
+	}, [offceDataApi]);
 
 	let data = useMemo(() => plotAgencyData, [plotAgencyData]);
 
@@ -100,25 +90,17 @@ const AgencyLibraryTable = ({}) => {
 		hiddenColumns: ['agn_id'],
 	};
 
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-		state,
-		setGlobalFilter,
-		setFilter,
-	} = useTable(
-		{
-			initialState,
-			columns,
-			data,
-		},
-		useFilters,
-		useGlobalFilter,
-		useSortBy
-	);
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+		useTable(
+			{
+				initialState,
+				columns,
+				data,
+			},
+			useFilters,
+			useGlobalFilter,
+			useSortBy
+		);
 
 	const [dataState, setDataState] = useState();
 	const passModalData = (param) => {
@@ -126,7 +108,6 @@ const AgencyLibraryTable = ({}) => {
 		setToggleOfficeModal();
 	};
 
-	// const { globalFilter } = state;
 	return (
 		<div>
 			<div style={{ margin: 20 }}>
@@ -176,7 +157,7 @@ const AgencyLibraryTable = ({}) => {
 						{rows.map((row) => {
 							prepareRow(row);
 							let agencyData = {};
-							row.allCells.map((cell) => {
+							row.allCells.forEach((cell) => {
 								let test = { [cell.column.id]: cell.value };
 								agencyData = { ...agencyData, ...test };
 							});

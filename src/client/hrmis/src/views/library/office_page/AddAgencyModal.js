@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import {
-	apiModelOfficeType,
-	apiModelOfficeAreaType,
-	apiModelOffices,
-	apiModelgetPositions,
-	getAgencies,
-	apiModelAgencies,
 	apiModelAgencyType,
 } from './parts/input_items';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSelectValueCon } from '../../../helpers/use_hooks/select_value_cons';
+import { useDispatch } from 'react-redux';
 import { usePopUpHelper } from '../../../helpers/use_hooks/popup_helper';
 import { API_HOST } from '../../../helpers/global/global_config';
 import { setRefresh } from '../../../features/reducers/popup_response';
@@ -22,9 +15,7 @@ import InputComponent from '../../common/input_component/input_component/input_c
 
 const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 	const dispatch = useDispatch();
-	const { displayData } = useSelectValueCon();
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-	const { isRefresh } = useSelector((state) => state.popupResponse);
+	const { renderBusy, renderSucceed } = usePopUpHelper();
 	const agencyForm = useFormik({
 		enableReinitialize: true,
 
@@ -92,15 +83,6 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 				<div className='add-documents-modal'>
 					<div className='left-input item-modal-1'>
 						<label>Agency Name</label>
-						{/* <SelectComponent
-							name='ofc_ofc_id'
-							value={agencyForm.values.ofc_ofc_id}
-							onChange={(e) => {
-								agencyForm.handleChange(e);
-								// getPlantillas(e.target.value);
-							}}
-							itemList={state.office}
-						></SelectComponent> */}
 						<InputComponent
 							name='agn_name'
 							value={agencyForm.values.agn_name}

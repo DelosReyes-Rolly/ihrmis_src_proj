@@ -1,5 +1,3 @@
-import { testOutsideLink } from '../../../../router/outside_routes';
-
 export const recruitmentSelectItem = [
 	{
 		value: '0',
