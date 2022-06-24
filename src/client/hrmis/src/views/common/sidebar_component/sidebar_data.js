@@ -73,15 +73,20 @@ export const SidebarOption = [
       {
         id: 3,
         title: "Documentary Requirements",
-        link: "/library/documents",
+        link: "/library/documentary-requirements",
       },
       {
         id: 4,
+        title: "Evaluation Battery",
+        link: "/library/evaluation-battery",
+      },
+      {
+        id: 5,
         title: "Email Templates",
         link: "/rsp/plantilla/plantilla-items",
       },
       {
-        id: 5,
+        id: 6,
         title: "Positions",
         link: "/rsp/plantilla/plantilla-items",
       },
