@@ -18,7 +18,6 @@ import DropdownViewComponent from "../../../common/dropdown_menu_custom_componen
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import RecruitmentStatusModal from "./page_modals/recruitment_status_modal";
 import { API_HOST } from "../../../../helpers/global/global_config";
-import axios from "axios";
 import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 import RecruitmentDateSelector from "./page_modals/recruitment_date_selector";
 import { useNavigate } from "react-router-dom";

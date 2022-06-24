@@ -15,6 +15,7 @@ class GetVacantPositionsResource extends JsonResource
      */
     public function toArray($request)
     {
+        
         return [
        
             'itm_id' => $this->itm_id,
@@ -27,11 +28,9 @@ class GetVacantPositionsResource extends JsonResource
             'itm_category' => $this->itm_category,
             'itm_creation' => $this->itm_creation,
             'itm_state' => $this->itm_state,
-            //RELATIONSHIP
-            'position' => new CommonResource($this->tblpositions),
-            'office' => new CommonResource($this->tbloffices),
-            'tblapplicant_profile' => new CommonResource($this->tblapplicant_profile),
-            
+            'pos_title' => $this->tblpositions->pos_title,
+            'pos_category' => $this->tblpositions->pos_category,
+            'office' => new CommonResource($this->tbloffices)
         ];
     }
 

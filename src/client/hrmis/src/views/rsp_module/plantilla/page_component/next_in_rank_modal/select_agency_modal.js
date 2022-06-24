@@ -11,6 +11,7 @@ const SelectAgencyModal = ({ isDisplay, onClose, onClickSubmit }) => {
 	const [axiosCall] = useAxiosCallHelper();
 	const [agencies, setAgencies] = useState([]);
 	const dispatch = useDispatch();
+
 	const getDostAgencies = () => {
 		axiosCall("get", API_HOST + "getAllAgencies").then(
 			(response) => {
@@ -25,7 +26,7 @@ const SelectAgencyModal = ({ isDisplay, onClose, onClickSubmit }) => {
 
 	useLayoutEffect(() => {
 		getDostAgencies();
-		console.log(agencies);
+		//console.log(agencies);
 	}, []);
 
 	useEffect(() => {

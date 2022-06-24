@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRowSelect, useTable } from "react-table";
 import { setNextRank } from "../../../../../features/reducers/plantilla_item_slice";
@@ -7,17 +7,85 @@ import { setRefresh } from "../../../../../features/reducers/popup_response";
 import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import ModalComponent from "../../../../common/modal_component/modal_component";
+import { setSelectedEmployee } from "../../../../../features/reducers/plantilla_item_slice";
 
-const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
-	const dispath = useDispatch();
+const ContextMenuModal = ({ isDisplay, onClose }) => {
+	const dispatch = useDispatch();
+	const [selectedItems, setSelectedItems] = useState([]);
+	const { selected_employee } = useSelector((state) => state.plantillaItem);
+
+	const returnPreviousModal = () => {
+		onClose();
+		dispatch(setNextRank());
+	};
+
+	// const { next_rank_list } = useSelector((state) => state.plantillaItem);
+
+	const submitHandler = async () => {
+		if (selected_employee.length !== 0) {
+			console.log(selected_employee);
+			await axios
+				.post(API_HOST + "add-to-next-rank", { emp_list: selected_employee })
+				.then(() => {
+					popupAlert({ message: "Successfully added to Next-in-Rank List" });
+
+					dispatch(setRefresh());
+					onClose();
+					dispatch(setNextRank());
+					dispatch(setSelectedEmployee([]));
+				})
+				.catch((err) => {
+					popupAlert({ message: err.message, type: ALERT_ENUM.fail });
+				});
+			return;
+		}
+		popupAlert({
+			message: "Please Select Next-in-Rank Employee",
+			type: ALERT_ENUM.fail,
+		});
+	};
+
+	return (
+		<React.Fragment>
+			<ModalComponent
+				title="Agency Employees"
+				isDisplay={isDisplay}
+				onClose={onClose}
+				onClickSubmit={submitHandler}
+				onPressed={returnPreviousModal}
+				onCloseName="Back"
+				onSubmitName="Add to Next in Rank"
+			>
+				<div className="next-rank-modal-container">
+					<ListEmployeeTable />
+				</div>
+			</ModalComponent>
+		</React.Fragment>
+	);
+};
+
+export default ContextMenuModal;
+
+const ListEmployeeTable = () => {
+	const { refresh } = useSelector((state) => state.popupResponse);
+	const [fetchData, setFetchData] = useState([]);
+	const dispatch = useDispatch();
+
+	const data = useMemo(() => fetchData, [fetchData]);
+
+	const { selected_agency_rank, item_id } = useSelector(
+		(state) => state.plantillaItem
+	);
 
 	const getAgencyEmployees = async () => {
 		let arrHolder = [];
 		await axios
-			.get(API_HOST + "get-agency-employee/" + agencyID + "/" + 1)
+			.get(
+				API_HOST + "get-agency-employee/" + selected_agency_rank + "/" + item_id
+			)
 			.then((res) => {
 				const rawData = res.data.data;
-
+				console.log(rawData);
 				rawData.map((item) => {
 					arrHolder.push(item);
 				});
@@ -26,7 +94,9 @@ const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
 		setFetchData(arrHolder);
 	};
 
-	const { refresh } = useSelector((state) => state.popupResponse);
+	useEffect(() => {
+		getAgencyEmployees();
+	}, [refresh]);
 
 	const columns = useMemo(
 		() => [
@@ -66,71 +136,6 @@ const ContextMenuModal = ({ isDisplay, onClose, agencyID = 1 }) => {
 		[]
 	);
 
-	const [fetchData, setFetchData] = useState([]);
-
-	const data = useMemo(() => fetchData, [fetchData]);
-
-	const [selectedItems, setSelectedItems] = useState([]);
-
-	useEffect(() => {
-		getAgencyEmployees();
-	}, [refresh]);
-
-	const returnPreviousModal = () => {
-		onClose();
-		dispath(setNextRank());
-	};
-
-	// const { next_rank_list } = useSelector((state) => state.plantillaItem);
-
-	const submitHandler = async () => {
-		if (selectedItems.length !== 0) {
-			await axios
-				.post(API_HOST + "add-to-next-rank", { emp_list: selectedItems })
-				.then(() => {
-					popupAlert({ message: "Successfully added to Next-in-Rank List" });
-
-					dispath(setRefresh());
-					onClose();
-					dispath(setNextRank());
-				})
-				.catch((err) => {
-					popupAlert({ message: err.message, type: ALERT_ENUM.fail });
-				});
-			return;
-		}
-		popupAlert({
-			message: "Please Select Next-in-Rank Employee",
-			type: ALERT_ENUM.fail,
-		});
-	};
-
-	return (
-		<React.Fragment>
-			<ModalComponent
-				title="Agency Employees"
-				isDisplay={isDisplay}
-				onClose={onClose}
-				onClickSubmit={submitHandler}
-				onPressed={returnPreviousModal}
-				onCloseName="Back"
-				onSubmitName="Add to Next in Rank"
-			>
-				<div className="next-rank-modal-container">
-					<ListEmployeeTable
-						data={data}
-						columns={columns}
-						selectedFunc={setSelectedItems}
-					/>
-				</div>
-			</ModalComponent>
-		</React.Fragment>
-	);
-};
-
-export default ContextMenuModal;
-
-const ListEmployeeTable = ({ data = [], columns, selectedFunc }) => {
 	const initialState = {
 		hiddenColumns: [
 			"nir_email",
@@ -176,9 +181,12 @@ const ListEmployeeTable = ({ data = [], columns, selectedFunc }) => {
 	);
 
 	useEffect(() => {
+		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
+		console.log(selectedFlatRowsData);
 		if (selectedFlatRows) {
-			selectedFunc(selectedFlatRows.map((d) => d.original));
+			dispatch(setSelectedEmployee(selectedFlatRowsData));
 		}
+		console.log(selectedFlatRows);
 	}, [selectedFlatRows]);
 
 	// const dispatch = useDispatch();

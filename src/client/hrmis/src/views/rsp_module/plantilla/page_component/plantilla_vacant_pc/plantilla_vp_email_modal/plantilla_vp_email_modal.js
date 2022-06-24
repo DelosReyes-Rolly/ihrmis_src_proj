@@ -1,51 +1,48 @@
-import React, { useEffect, useState } from "react";
-import ModalComponent from "../../../../common/modal_component/modal_component";
-import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import ModalComponent from "../../../../../common/modal_component/modal_component";
+import TextAreaComponent from "../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import SelectComponent from "../../../../common/input_component/select_component/select_component";
-import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
-import InputComponent from "../../../../common/input_component/input_component/input_component";
+import SelectComponent from "../../../../../common/input_component/select_component/select_component";
+import UploadAttachmentComponent from "../../../../../common/input_component/upload_attachment_component/upload_attachment_component";
+import InputComponent from "../../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
 import {
 	API_HOST,
 	validationRequired,
-} from "../../../../../helpers/global/global_config";
+} from "../../../../../../helpers/global/global_config";
 import * as Yup from "yup";
 import axios from "axios";
-import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
-import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
+import RichTextEditorComponent from "../../../../../common/rich_text_editor_component/rich_text_editor_component";
+import { usePopUpHelper } from "../../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmailRecepients } from "../../../../../features/reducers/plantilla_item_slice";
-import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import {
+	setEmailRecepients,
+	setVcEmailTemplateData,
+} from "../../../../../../features/reducers/plantilla_item_slice";
+import {
+	ALERT_ENUM,
+	popupAlert,
+} from "../../../../../../helpers/alert_response";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
 	next_rank: "NextRank",
 };
 
-const PlantillaEmailModal = ({
+const PlantillaVpEmailModal = ({
 	isDisplay,
 	onClose,
 	plantilla,
 	type,
 	endpoint,
 }) => {
-	const { email_recepients } = useSelector((state) => state.plantillaItem);
+	const { email_recepients, emailtemplate_data } = useSelector(
+		(state) => state.plantillaItem
+	);
 	//TYPE LOGIC
 	const [mType, setmType] = useState([]);
 	const { renderBusy } = usePopUpHelper();
 	const [selectedMsg, setSelectedMsg] = useState();
-
-	const selectedType = (value) => {
-		let varHolder = "";
-		mType.forEach((element) => {
-			if (value === element.id) {
-				varHolder = element.message;
-				setSelectedMsg(element.message);
-			}
-		});
-		return varHolder;
-	};
 
 	const getMessageType = async () => {
 		await axios
@@ -64,6 +61,29 @@ const PlantillaEmailModal = ({
 				setmType(arrHolder);
 			})
 			.catch((err) => console.log(err?.message));
+	};
+
+	const selectedType = (value = 1) => {
+		let varHolder = "";
+		mType.forEach((element) => {
+			if (value === element.id) {
+				varHolder = restructEmailMessage(element.message);
+				setSelectedMsg(varHolder);
+			}
+		});
+		// console.log(varHolder);
+		return varHolder;
+	};
+
+	const restructEmailMessage = (message) => {
+		if (emailtemplate_data !== null) {
+			return message
+				.replace("{position}", emailtemplate_data?.position)
+				.replace("{salary grade}", "SG-" + emailtemplate_data?.salary_grade)
+				.replace("{Item No}", "Item No. " + emailtemplate_data?.itm_no)
+				.replace("{item id}", emailtemplate_data?.itm_id);
+		}
+		return message;
 	};
 
 	const dispatch = useDispatch();
@@ -114,6 +134,7 @@ const PlantillaEmailModal = ({
 				})
 				.then(() => {
 					dispatch(setEmailRecepients([]));
+					dispatch(setVcEmailTemplateData(null));
 					setSelectedMsg("");
 					resetForm();
 					popupAlert({
@@ -132,15 +153,15 @@ const PlantillaEmailModal = ({
 	});
 
 	useEffect(() => {
-		getMessageType();
-	}, []);
-
-	useEffect(() => {
 		emailFormik.setFieldValue("recepient", email_recepients);
 	}, [email_recepients]);
 
-	useEffect(() => {
-		if (mType !== null) selectedType(1);
+	useLayoutEffect(() => {
+		getMessageType();
+	}, [emailtemplate_data]);
+
+	useMemo(() => {
+		if (mType.length > 0) selectedType();
 	}, [mType]);
 
 	return (
@@ -152,6 +173,7 @@ const PlantillaEmailModal = ({
 				onSubmitType="submit"
 				onClose={() => {
 					dispatch(setEmailRecepients([]));
+					dispatch(setVcEmailTemplateData(null));
 					onClose();
 				}}
 				onSubmitName="Send"
@@ -265,7 +287,8 @@ const PlantillaEmailModal = ({
 	);
 };
 
-export default PlantillaEmailModal;
+export default PlantillaVpEmailModal;
 
 const senderDefault =
-	"Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City";
+	"Personnel Division, Administrative and Legal Service\n" +
+	"Department of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City";

@@ -15,12 +15,13 @@
 
         .tg .td-custom-padding1{border-color:#ffffff;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
         overflow:hidden;padding-top:0px 3px;word-break:normal;}
-
+        .tg .tg-custom{margin-left: -10px;}
 
         .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
         font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
         .tg .tg-km2t{border-color:#ffffff;font-weight:bold;text-align:left;text-justify:distribute: fit-content}
-        .tg .tg-zv4m{border-color:#ffffff;text-align:justify;vertical-align:top}
+        .tg .tg-zv4m{border-color:#ffffff;vertical-align:top}
+        .tg .tg-zv4m1{border-color:#ffffff;vertical-align:top}
         .tg .tg-8jgo{border-color:#ffffff;vertical-align:top;padding-left: 15%}
         .tg .tg-8jgo1{border-color:#ffffff;vertical-align:top;}
         .tg .tg-b8y7{border-color:#ffffff;font-size:20px;text-align:center;vertical-align:top}
@@ -33,7 +34,7 @@
         font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
         .tg1 .tg-zv4m{text-align:left;vertical-align:top;}
         .tg1 .tg-8jgo{text-align:center;vertical-align:top;width: 20px}
-        .tg1 .tg-8jgo1{border-bottom:none;text-align:left;vertical-align:bottom;padding:0px 5px;}
+        .tg1 .tg-8jgo1{border-bottom:none;text-align:left;vertical-align:top;padding:0px 5px;}
         .tg1 .tg-aw21{font-weight:bold;text-align:center;vertical-align:top}
         
     </style>
@@ -52,11 +53,11 @@
           
             <tr>
                 <td class="tg-8jgo">FOR</td>
-                <td class="tg-8jgo1">:</td>
+                <td class="tg-8jgo1 tg-custom">:</td>
                 {{ $i=1 }}
                 @foreach( $selected_agencies ?? '' as $data) 
                     @if($i === 1)
-                        <td class="tg-zv4m">
+                        <td class="tg-zv4m tg-custom">
                             <b>{{ $data->agn_head_name .', '}}</b><br>
                             @if($memo == "DOST")
                                 {{$data->agn_head_position . ", " . $data->agn_acronym}}
@@ -88,23 +89,24 @@
             {{-- From DATA --}}
             <tr>
                 <td class="tg-8jgo">FROM</td>
-                <td class="tg-8jgo1">:</td>
-                <td class="tg-zv4m">
-                    <b>{{$memo_from_name}}</b><br>
-                    Attorney V, Legal Division, and<br>
-                    Officer-in-Charge, Office of the Director<br>
-                    Administrative and Legal Service
+                <td class="tg-8jgo1 tg-custom">:</td>
+                <td class="tg-zv4m1 tg-custom">
+                    <b>{{$memo_from_name['memo_name']}}</b><br>
+                    {{-- {{ explode("and", $memo_from_name['memo_position'])[0] . "and" }} <br> 
+                    {{ explode("and", $memo_from_name['memo_position'])[1]}},  --}}
+                    {{ $memo_from_name['memo_position'] }}, 
+                    {{ $memo_from_name['memo_office'] }}
                 </td>
             </tr>
             <tr>
                 <td class="tg-8jgo">DATE</td>
-                <td class="tg-8jgo1">:</td>
-                <td class="tg-zv4m">{{ $date_memo }}</td>
+                <td class="tg-8jgo1 tg-custom">:</td>
+                <td class="tg-zv4m tg-custom">{{ $date_memo }}</td>
             </tr>
             <tr>
                 <td class="tg-8jgo">SUBJECT</td>
-                <td class="tg-8jgo1">:</td>
-                <td class="tg-km2t">POSTING OF ANNOUNCEMENT OF VACANCY</td>
+                <td class="tg-8jgo1 tg-custom">:</td>
+                <td class="tg-km2t tg-custom">POSTING OF ANNOUNCEMENT OF VACANCY</td>
             </tr>
             <tr>
                 <td class="tg-zv4m"></td>
@@ -143,16 +145,12 @@
             @foreach( $vacantpositions ?? '' as $data) 
            
             <tr>
-                <td class="tg-8jgo" rowspan="2">{{ $i . '.' }}</td>
-                <td class="tg-8jgo1">
-                    {{ $data->tblpositions->pos_title .'/ SG-'. $data->tblpositions->pos_salary_grade }}
-                </td>
-                <td class="tg-zv4m" rowspan="2">{{ $data->tbloffices->ofc_name }}</td>
-            </tr>
-            <tr>
-                <td style="border-top:none;text-align:left;vertical-align:top">
+                <td class="tg-8jgo" style="border-right-color: #ffffff;vertical-align: top">{{ $i . '.' }}</td>
+                <td class="tg-8jgo1" style="border-left-color: white">
+                    {{ $data->tblpositions->pos_title .'/ SG-'. $data->tblpositions->pos_salary_grade }}<br>
                     {{ $data->itm_no }}
                 </td>
+                <td class="tg-zv4m">{{ $data->tbloffices->ofc_name }}</td>
             </tr>
             {{ $i++; }}
             @endforeach

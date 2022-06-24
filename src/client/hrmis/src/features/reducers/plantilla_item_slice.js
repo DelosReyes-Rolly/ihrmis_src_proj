@@ -1,18 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { implodeArray } from "../../helpers/explode_implode";
 
 export const plantillaItemSlice = createSlice({
 	name: "user",
 	initialState: {
-		plantilla_item: [],
+		plantilla_items: [],
 		next_rank: false,
 		context_menu: false,
 		rank_email: false,
 		next_rank_list: [],
 		email_recepients: "",
 		select_agency: false,
+		selected_agency_rank: null,
 		notify_office: false,
 		selected_agency: [],
+		item_id: null,
+		emailtemplate_data: null,
+		selected_employee: [],
 	},
 	reducers: {
 		setNextRank: (state) => {
@@ -32,10 +35,9 @@ export const plantillaItemSlice = createSlice({
 		},
 
 		setEmailRecepients: (state, action) => {
-			console.log(action.payload);
-			let emailArr = action.payload;
-			state.email_recepients = implodeArray(", ", emailArr);
-			console.log(state.email_recepients);
+			const emailArr = action.payload;
+			state.email_recepients = emailArr?.join(", ");
+			// console.log(state.email_recepients);
 		},
 
 		setSelectAgency: (state) => {
@@ -49,6 +51,37 @@ export const plantillaItemSlice = createSlice({
 		setSelectedAgency: (state, action) => {
 			const { payload } = action;
 			state.selected_agency = payload;
+			// console.log(payload);
+		},
+
+		setItemID: (state, action) => {
+			const { payload } = action;
+			state.item_id = payload;
+			// console.log(state.item_id);
+		},
+
+		setVcEmailTemplateData: (state, action) => {
+			state.emailtemplate_data = action.payload;
+			// console.log(state.selected_plantilla);
+		},
+
+		setSelectedPlantillaItems: (state, action) => {
+			const { payload } = action;
+			state.plantilla_items = payload;
+			// console.log(state.plantilla_items);
+			console.log(state.plantilla_items);
+		},
+
+		setSelectedAgencyRank: (state, action) => {
+			const { payload } = action;
+			state.selected_agency_rank = payload;
+			// console.log(state.selected_agency_rank);
+		},
+
+		setSelectedEmployee: (state, action) => {
+			const { payload } = action;
+			state.selected_employee = payload;
+			// console.log(state.selected_agency_rank);
 		},
 	},
 });
@@ -62,6 +95,11 @@ export const {
 	setSelectAgency,
 	setNotifyOffice,
 	setSelectedAgency,
+	setItemID,
+	setVcEmailTemplateData,
+	setSelectedPlantillaItems,
+	setSelectedAgencyRank,
+	setSelectedEmployee,
 } = plantillaItemSlice.actions;
 
 export default plantillaItemSlice.reducer;

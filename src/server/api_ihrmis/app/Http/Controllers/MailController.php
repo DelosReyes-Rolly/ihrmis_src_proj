@@ -3,15 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
-use App\Http\Resources\Email\GetEmailTypeResource;
 use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\TblemailTemplate;
-use App\Models\TblemailType;
 use Carbon\Carbon;
-use Hamcrest\Type\IsString;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
@@ -19,10 +15,11 @@ class MailController extends Controller
     public function getEmailTemplate($type = null)
     {
         if ($type != null) {
-            $mailQry = TblemailTemplate::where('eml_type', $type)->get();
-            return CommonResource::collection($mailQry);
+            $mailQry = TblemailTemplate::where('eml_type', $type)->first();
+            return new CommonResource($mailQry);
         }
-        $mailQry = TblemailTemplate::all();
+
+        $mailQry = TblemailTemplate::get();
         return CommonResource::collection($mailQry);
     }
 
@@ -73,7 +70,7 @@ class MailController extends Controller
             $tempEmail = trim($value, " ");
             array_push($arrHolder, $tempEmail);
             $data = [
-                "from" => env("MAIL_FROM_RECUITER"),
+                "from" => env("MAIL_FROM_RECRUITER"),
                 "email_from" => env("MAIL_FROM_ADDRESS"),
                 "email_to" => $tempEmail,
                 "date" => Carbon::now(),
