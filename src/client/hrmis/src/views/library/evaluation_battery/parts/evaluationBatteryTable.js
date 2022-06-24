@@ -3,39 +3,46 @@ import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
 import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
 import { MdAdd } from 'react-icons/md';
+import { GroupClusterData, SGType } from '../static/input_items.js';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
-import AddAgencyModal from '../AddAgencyModal.js';
+import { setRefresh } from '../../../../features/reducers/popup_response';
+import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
+import EvaluationBatteryModal from './evaluationBatteryModal.js';
 
-const AgencyLibraryTable = () => {
+const EvaluationBatteryTable = () => {
+	const dispatch = useDispatch();
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-	const [plotAgencyData, setAgencyData] = useState([]);
 	const { renderBusy } = usePopUpHelper();
+	const [plotTable, setTable] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
-
-	const offceDataApi = useCallback(async () => {
-		renderBusy(true);
+	const { trueValue } = useSelectValueCon();
+	const tableData = useCallback(async () => {
 		await axios
-			.get(API_HOST + 'agency')
+			.get(API_HOST + 'evaluation-battery')
 			.then((response) => {
 				let data = response.data.data ?? [];
 				let dataPlot = [];
 				data.forEach((data) => {
 					let values = {
-						agn_id: data.agn_id,
-						agn_name: data.agn_name,
-						agn_acronym: data.agn_acronym,
-						agn_sector: data.agn_sector,
-						agn_head_name: data.agn_head_name,
-						agn_head_position: data.agn_head_position,
-						agn_head_email: data.agn_head_email,
-						agn_address: data.agn_address,
+						bat_id: data.bat_id,
+						bat_name: data.bat_name,
+						bat_points: data.bat_points,
+						bat_sg_type: data.bat_sg_type,
+						bat_sg_type_text: trueValue(data.bat_sg_type, SGType),
+						bat_grp_id: data.bat_grp_id,
+						bat_grp_text: data.category.grp_name,
+						category_group: trueValue(
+							data.category.grp_cluster,
+							GroupClusterData
+						),
 					};
 					dataPlot.push(values);
 				});
-				setAgencyData(dataPlot);
+				setTable(dataPlot);
 			})
 			.catch((error) => {});
 		renderBusy(false);
@@ -43,51 +50,46 @@ const AgencyLibraryTable = () => {
 	}, [refresh]);
 
 	useEffect(() => {
-		offceDataApi();
-	}, [offceDataApi]);
+		tableData();
+	}, [tableData]);
 
-	let data = useMemo(() => plotAgencyData, [plotAgencyData]);
-
+	let data = useMemo(() => plotTable, [plotTable]);
 	const columns = useMemo(
 		() => [
 			{
-				Header: 'Agency ID',
-				accessor: 'agn_id',
+				Header: ' ',
+				accessor: 'bat_id',
 			},
 			{
-				Header: 'Agency Name',
-				accessor: 'agn_name',
+				Header: 'Battery Group',
+				accessor: 'bat_grp_text',
 			},
 			{
-				Header: 'Agency Acronym',
-				accessor: 'agn_acronym',
+				Header: 'Battery Name',
+				accessor: 'bat_name',
 			},
 			{
-				Header: 'Agency Sector',
-				accessor: 'agn_sector',
+				Header: 'Group Cluster',
+				accessor: 'category_group',
 			},
 			{
-				Header: 'Agency Head',
-				accessor: 'agn_head_name',
+				Header: 'Group Level',
+				accessor: 'bat_sg_type',
 			},
 			{
-				Header: 'Agency Head Position',
-				accessor: 'agn_head_position',
+				Header: 'Salary Grade',
+				accessor: 'bat_sg_type_text',
 			},
 			{
-				Header: 'Agency Head Email',
-				accessor: 'agn_head_email',
-			},
-			{
-				Header: 'Agency Address',
-				accessor: 'agn_address',
+				Header: 'Group Cluster',
+				accessor: 'bat_grp_id',
 			},
 		],
 		[]
 	);
 
 	const initialState = {
-		hiddenColumns: ['agn_id'],
+		hiddenColumns: ['bat_id', 'bat_grp_id', 'bat_sg_type', 'bat_name'],
 	};
 
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -101,28 +103,56 @@ const AgencyLibraryTable = () => {
 			useGlobalFilter,
 			useSortBy
 		);
+	const removeCategory = async (record) => {
+		renderBusy(true);
+		await axios
+			.delete(API_HOST + `evaluation-battery/${record}`)
+			.then(() => {
+				popupAlert({
+					message: 'Battery was deleted',
+					type: ALERT_ENUM.success,
+				});
+			})
+			.catch((err) => {
+				popupAlert({
+					message: err.message,
+					type: ALERT_ENUM.fail,
+				});
+			});
+		renderBusy(false);
+		setToggleOfficeModal();
+		setDataState(null);
+		dispatch(setRefresh());
+	};
 
 	const [dataState, setDataState] = useState();
 	const passModalData = (param) => {
 		setDataState(param);
 		setToggleOfficeModal();
 	};
-
 	return (
 		<div>
 			<div style={{ margin: 20 }}>
 				<button className='btn-primary' onClick={() => setToggleOfficeModal()}>
 					<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
-					<span>Agency</span>
+					<span>Evaluation Battery</span>
 				</button>
 			</div>
-			<AddAgencyModal
+			<EvaluationBatteryModal
 				isDisplay={toggleOfficeModal}
 				onClose={() => {
 					setToggleOfficeModal();
 					setDataState(null);
 				}}
-				agencyData={dataState}
+				data={dataState}
+				remove={() => {
+					if (dataState !== null) {
+						removeCategory(dataState.grp_id);
+					} else {
+						setToggleOfficeModal();
+					}
+				}}
+				removeName={dataState !== null ? 'Delete' : 'Close'}
 			/>
 
 			<div className='default-table'>
@@ -156,10 +186,10 @@ const AgencyLibraryTable = () => {
 					<tbody {...getTableBodyProps()}>
 						{rows.map((row) => {
 							prepareRow(row);
-							let agencyData = {};
+							let officeData = {};
 							row.allCells.forEach((cell) => {
 								let test = { [cell.column.id]: cell.value };
-								agencyData = { ...agencyData, ...test };
+								officeData = { ...officeData, ...test };
 							});
 
 							return (
@@ -167,7 +197,7 @@ const AgencyLibraryTable = () => {
 									className='trHoverBody'
 									{...row.getRowProps()}
 									onClick={() => {
-										passModalData(agencyData);
+										passModalData(officeData);
 									}}
 								>
 									{row.cells.map((cell) => {
@@ -194,4 +224,4 @@ const AgencyLibraryTable = () => {
 	);
 };
 
-export default AgencyLibraryTable;
+export default EvaluationBatteryTable;

@@ -4,7 +4,6 @@ import axios from "axios";
 import { API_HOST } from "../../../../helpers/global/global_config.js";
 import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
-import { useSelector } from "react-redux";
 import { useSelectValueCon } from "../../../../helpers/use_hooks/select_value_cons.js";
 
 import {
@@ -21,7 +20,6 @@ import { axiosHeader } from "../../../../config/axios_config.js";
 const OfficeLibraryTable = () => {
   const [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
   const [plotOfficeData, setOfficeData] = useState([]);
-  // const { refresh } = useSelector((state) => state.popupResponse);
   const { trueValue } = useSelectValueCon();
 
   const getAgency = async () => {

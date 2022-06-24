@@ -3,38 +3,39 @@
 |
 */
 .slideRight-enter {
-  opacity: 0;
-  transform: translateX(-100px);
+	opacity: 0;
+	transform: translateX(-100px);
 }
 .slideRight-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
+	opacity: 1;
+	transform: translateX(0);
+	transition: opacity 300ms, transform 300ms;
 }
 .slideRight-exit {
-  opacity: 1;
+	opacity: 1;
 }
 .slideRight-exit-active {
-  opacity: 0;
-  transform: translateX(-500px);
-  transition: opacity 300ms, transform 300ms;
+	opacity: 0;
+	transform: translateX(-500px);
+	transition: opacity 300ms, transform 300ms;
 }
 
 .slideDown-enter {
-  opacity: 0;
-  transform: translateY(-100px);
-  transition: transform 300ms, opacity 100ms;
+	opacity: 0;
+	transform: translateY(-100px);
+	transition: transform 300ms, opacity 100ms;
 }
 .slideDown-enter-active {
-  opacity: 1;
-  transform: translateY(0px);
-  transition: transform 300ms, opacity 1300ms;
+	opacity: 1;
+	transform: translateY(0px);
+	transition: transform 300ms, opacity 1300ms;
 }
 .slideDown-exit {
-  opacity: 1;
+	opacity: 1;
 }
 .slideDown-exit-active {
-  opacity: 0;
-  transform: translateY(-50px);
-  transition: transform 300ms, opacity 100ms;
+	opacity: 0;
+	transform: translateY(-50px);
+	transition: transform 300ms, opacity 100ms;
 }
+

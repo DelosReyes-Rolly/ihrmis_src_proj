@@ -92,3 +92,31 @@ export const libraryCategoryGroupsBreadCrumbs = [
     link: "#",
   },
 ];
+export const libraryEvaluationBatteryBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "Evaluation Battery",
+    link: "#",
+  },
+];
+export const libraryDocumentRequirementsBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "Document Requirements",
+    link: "#",
+  },
+];

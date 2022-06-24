@@ -18,7 +18,6 @@ const getOffices = () => {
 
 export const getAgencies = async () => {
 	let agencies = [];
-
 	await axios
 		.get(API_HOST + 'agency')
 		.then((response) => {

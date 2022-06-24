@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\ApplicantProfileResource;
-use App\Http\Resources\Applicant\ApplicantRCData;
-use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantChildren;
 use App\Models\Applicants\TblapplicantsFamily;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Applicants\TblapplicantVerification;
-use App\Models\TblpositionCscStandards;
 use App\Services\Applicant\ApplicantProfileService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -48,7 +45,6 @@ class TblapplicantProfileController extends Controller
             'message' => "Added Successfully",
         ]);
         return 'edit';
-
     }
 
     public function createFamilyChildren($id, Request $request)
@@ -213,50 +209,6 @@ class TblapplicantProfileController extends Controller
         return new ApplicantProfileResource($applicantDataQry);
     }
 
-    public function getCompleteApplicantsProfile($type)
-    {
-        $qualified_applicants = $this->appProfileService->getQualifiedApplicants($type);
-        return QualifiedApplicantsResource::collection($qualified_applicants);
-    }
-
-    public function generatePOAReport($plantillaId)
-    {
-        $qualified_applicants = $this->appProfileService->getQualifiedApplicants_report($plantillaId);
-        $requirements = $this->appProfileService->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
-        // return $qualified_applicants;
-        return $this->appProfileService->generatePOAReport($qualified_applicants, $requirements);
-    }
-
-    public function generateRAIReport($month, $year)
-    {
-        return $this->appProfileService->generateRAIReport($month, $year);
-    }
-
-    public function generateCMReport($plantillaId)
-    {
-        $qualified_applicants = $this->appProfileService->getQualifiedApplicants_report($plantillaId);
-        $requirements = $this->appProfileService->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
-        return $this->appProfileService->generateCMReport($qualified_applicants, $requirements);
-    }
-
-    public function generateOOOReport($applicants)
-    {
-        return $this->appProfileService->generateOOOReport($applicants);
-    }
-    public function generateCADReport($applicants)
-    {
-        return $this->appProfileService->generateCADReport($applicants);
-    }
-    public function generateAFAReport($applicants)
-    {
-        return $this->appProfileService->generateAFAReport($applicants);
-    }
-
-    public function getApplicantAgency($office_id)
-    {
-        return $this->appProfileService->getApplicantAgency($office_id);
-    }
-    
     public function getFamilyChildren($id)
     {
         $getFamQry = TblapplicantsFamily::where("app_id", $id)->first();
