@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { GroupClusterData } from '../static/input_items';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper';
 import { API_HOST } from '../../../../helpers/global/global_config';
@@ -12,9 +12,15 @@ import InputComponent from '../../../common/input_component/input_component/inpu
 import SelectComponent from '../../../common/input_component/select_component/select_component';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
 
-const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
+const GroupClusterModal = ({
+	isDisplay,
+	onClose,
+	data,
+	remove,
+	removeName,
+}) => {
 	const dispatch = useDispatch();
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+	const { renderBusy } = usePopUpHelper();
 	const form = useFormik({
 		enableReinitialize: true,
 		initialValues: {
@@ -29,7 +35,7 @@ const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
 				.max(191, 'Invalid input'),
 			grp_level: Yup.number()
 				.typeError('Must be a number')
-				.max(3)
+				.max(999)
 				.required('This field is required'),
 			grp_cluster: Yup.string().required('This field is required'),
 		}),
@@ -63,7 +69,7 @@ const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
 			<ModalComponent
 				title='Category Groups'
 				onSubmitName='Save'
-				onCloseName={remove === undefined ? 'Close' : 'Delete'}
+				onCloseName={removeName}
 				onPressed={remove}
 				isDisplay={isDisplay}
 				onSubmit={form.handleSubmit}
@@ -71,7 +77,7 @@ const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
 				onClose={onClose}
 			>
 				<div className='add-office-modal'>
-					<div className='left-input item-modal-4'>
+					<div className='left-input item-modal-1'>
 						<label>Group Name</label>
 						<InputComponent
 							name='grp_name'
@@ -83,8 +89,8 @@ const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
 							<span className='invalid-response'>{form.errors.grp_name}</span>
 						) : null}
 					</div>
-					<div className='middle-input item-modal-4'>
-						<label>Group Stage</label>
+					<div className='middle-input item-modal-1'>
+						<label>Level</label>
 						<InputComponent
 							name='grp_level'
 							value={form.values.grp_level}
@@ -95,20 +101,18 @@ const GroupClusterModal = ({ isDisplay, onClose, data, remove }) => {
 							<span className='invalid-response'>{form.errors.grp_level}</span>
 						) : null}
 					</div>
-					<div className='right-input item-modal-4'>
-						<label>Group Cluster</label>
-						<SelectComponent
-							name='grp_cluster'
-							value={form.values.grp_cluster}
-							onChange={form.handleChange}
-							itemList={GroupClusterData}
-						/>
-						{form.touched.grp_cluster && form.errors.grp_cluster ? (
-							<span className='invalid-response'>
-								{form.errors.grp_cluster}
-							</span>
-						) : null}
-					</div>
+				</div>
+				<div className='middle-input item-modal-4'>
+					<label>Group Cluster</label>
+					<SelectComponent
+						name='grp_cluster'
+						value={form.values.grp_cluster}
+						onChange={form.handleChange}
+						itemList={GroupClusterData}
+					/>
+					{form.touched.grp_cluster && form.errors.grp_cluster ? (
+						<span className='invalid-response'>{form.errors.grp_cluster}</span>
+					) : null}
 				</div>
 			</ModalComponent>
 		</React.Fragment>

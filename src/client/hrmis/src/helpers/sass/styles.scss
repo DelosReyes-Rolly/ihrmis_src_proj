@@ -1,21 +1,21 @@
 //DEFAULTS
-@import "./defaults/default_colors";
+@import './defaults/default_colors';
 // @use "../../../../../helpers/sass/defaults/_default_colors.scss" as *;
-@import "./defaults/default_mixins";
-@import "./defaults/default_themes";
-@import "./defaults/default_plantilla";
-@import "./defaults/default_scrollbar";
-@import "./defaults/default_table";
-@import "./defaults/default_percent";
-@import "./defaults/animate.min";
-@import "./defaults/default_z_index";
-@import "./defaults/css_transition";
+@import './defaults/default_mixins';
+@import './defaults/default_themes';
+@import './defaults/default_plantilla';
+@import './defaults/default_scrollbar';
+@import './defaults/default_table';
+@import './defaults/default_percent';
+@import './defaults/animate.min';
+@import './defaults/default_z_index';
+@import './defaults/css_transition';
 
 * {
 	margin: 0px;
 	padding: 0px;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+		Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .app {
@@ -124,18 +124,18 @@ body {
 }
 
 //COMPONENTS
-@import "./../../views/common/import_component_style";
+@import './../../views/common/import_component_style';
 
 //PAGES
-@import "./../../views/library/office_page/officeLibrary";
-@import "./../../views/pds_form/pds_profile";
-@import "./../../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw";
-@import "./../../views/rsp_module/plantilla/plantilla_view";
-@import "./../../views/rsp_module/dashboard/dashboard_view";
-@import "./../../views/rsp_module/recruitment/recruitment_view";
-@import "./../../views/rsp_module/library/library";
-@import "./../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc";
-@import "./../../views/authentication/login_view";
+@import './../../views/library/office_page/officeLibrary';
+@import './../../views/pds_form/pds_profile';
+@import './../../views/rsp_module/plantilla/page_component/jvs_crw_pc/jvs_crw';
+@import './../../views/rsp_module/plantilla/plantilla_view';
+@import './../../views/rsp_module/dashboard/dashboard_view';
+@import './../../views/rsp_module/recruitment/recruitment_view';
+@import './../../views/rsp_module/library/library';
+@import './../../views/rsp_module/plantilla/page_component/plantilla_vacant_pc/plantilla_vacant_pc';
+@import './../../views/authentication/login_view';
 
 .btn-primary {
 	display: flex;
@@ -158,7 +158,9 @@ body {
 .btn-primary:active {
 	transform: translate(2px);
 }
-
+.pointer {
+	cursor: pointer;
+}
 // .selector-span-1 button{
 //     display: inline-flex;
 //     align-items: center;

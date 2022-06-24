@@ -1,15 +1,11 @@
-import React, { useMemo, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
 import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
-import BreadcrumbConfig, {
-	crumbSecondLevel,
-} from '../../../../router/breadcrumb_config';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
-import { Outlet } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
 import { GroupClusterData } from '../static/input_items.js';
 import GroupClusterModal from './category_groups_modal.js';
@@ -17,27 +13,26 @@ import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
 
-const CategoryGroupsTable = ({}) => {
+const CategoryGroupsTable = () => {
 	const dispatch = useDispatch();
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
+	const { renderBusy } = usePopUpHelper();
 	const [plotCategories, setCategories] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const { trueValue } = useSelectValueCon();
-	const categoryGroupsData = async () => {
+	const categoryGroupsData = useCallback(async () => {
 		await axios
 			.get(API_HOST + 'category-groups')
 			.then((response) => {
 				let data = response.data.data ?? [];
 				let dataPlot = [];
-				data.map((data) => {
+				data.forEach((data) => {
 					let values = {
 						grp_id: data.grp_id,
 						grp_name: data.grp_name,
 						grp_level: data.grp_level,
 						grp_cluster: data.grp_cluster,
 						grp_cluster_text: trueValue(data.grp_cluster, GroupClusterData),
-						// parent: trueValue(data.ofc_ofc_id, apiModelOffices),
 					};
 
 					dataPlot.push(values);
@@ -46,10 +41,11 @@ const CategoryGroupsTable = ({}) => {
 			})
 			.catch((error) => {});
 		renderBusy(false);
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [refresh]);
 	useEffect(() => {
 		categoryGroupsData();
-	}, [refresh]);
+	}, [categoryGroupsData]);
 
 	let data = useMemo(() => plotCategories, [plotCategories]);
 	const columns = useMemo(
@@ -63,15 +59,15 @@ const CategoryGroupsTable = ({}) => {
 				accessor: 'grp_name',
 			},
 			{
-				Header: 'Group Level',
+				Header: 'Level',
 				accessor: 'grp_level',
 			},
 			{
-				Header: 'Group Clister',
+				Header: 'Group Cluster',
 				accessor: 'grp_cluster',
 			},
 			{
-				Header: 'Group Clister',
+				Header: 'Group Cluster',
 				accessor: 'grp_cluster_text',
 			},
 		],
@@ -82,25 +78,17 @@ const CategoryGroupsTable = ({}) => {
 		hiddenColumns: ['grp_id', 'grp_cluster'],
 	};
 
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-		state,
-		setGlobalFilter,
-		setFilter,
-	} = useTable(
-		{
-			initialState,
-			columns,
-			data,
-		},
-		useFilters,
-		useGlobalFilter,
-		useSortBy
-	);
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+		useTable(
+			{
+				initialState,
+				columns,
+				data,
+			},
+			useFilters,
+			useGlobalFilter,
+			useSortBy
+		);
 	const removeCategory = async (record) => {
 		renderBusy(true);
 		await axios
@@ -144,11 +132,13 @@ const CategoryGroupsTable = ({}) => {
 				}}
 				data={dataState}
 				remove={() => {
-					if (dataState.grp_id !== '') {
+					if (dataState !== null) {
 						removeCategory(dataState.grp_id);
 					} else {
+						setToggleOfficeModal();
 					}
 				}}
+				removeName={dataState !== null ? 'Delete' : 'Close'}
 			/>
 
 			<div className='default-table'>
@@ -183,7 +173,7 @@ const CategoryGroupsTable = ({}) => {
 						{rows.map((row) => {
 							prepareRow(row);
 							let officeData = {};
-							row.allCells.map((cell) => {
+							row.allCells.forEach((cell) => {
 								let test = { [cell.column.id]: cell.value };
 								officeData = { ...officeData, ...test };
 							});

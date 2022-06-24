@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
 	SentEmailConfirmation,
 	SuccessEmailConfirmation,
@@ -32,16 +32,19 @@ import JvscrsForm from "../views/jvs_form/jvscrw_form";
 import EmployeePds from "../views/rsp_module/plantilla/page_component/employee_pds/emplpyee_pds";
 import LibraryOfficeView from "../views/library/office_page/parts/office_library_view";
 import CategoryGroupsBaseComponent from "../views/library/category_groups_page/parts/categoryGroupsBaseComponent";
+import DocumentRequirementsBase from '../views/library/documentary_requirements/parts/documentaryRequirementsBase';
+import RecruitmentComparativeMatrix from '../views/rsp_module/recruitment/page_components/recruitment_comparative_matrix';
+import EvaluationBatteryBaseComponent from '../views/library/evaluation_battery/parts/evaluationBatteryBaseComponent';
 
 const MainRouter = () => {
-
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
 	const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
 	const isFail = useSelector((state) => state.popupResponse.isFail);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (window.sessionStorage.getItem("token") == null) navigate("/");
+		if (window.sessionStorage.getItem('token') == null) navigate('/');
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -52,141 +55,148 @@ const MainRouter = () => {
 			{isFail && <FailResponseComponent />}
 
 			<Routes>
-				<Route exact path="/" element={<LoginView />} />
-				<Route exact path="/rsp" element={<MainPageLayout />}>
+				<Route exact path='/' element={<LoginView />} />
+				<Route exact path='/rsp' element={<MainPageLayout />}>
 					{/* RSP MODULE ROUTES */}
-					<Route index element={<Navigate to="/rsp/dashboard" />} />
-					<Route path="/rsp/dashboard" element={<DashboardView />} />
+					<Route index element={<Navigate to='/rsp/dashboard' />} />
+					<Route path='/rsp/dashboard' element={<DashboardView />} />
 
-					<Route path="/rsp/plantilla" element={<PlantillaView />}>
+					<Route path='/rsp/plantilla' element={<PlantillaView />}>
 						<Route
-							path="/rsp/plantilla/"
+							path='/rsp/plantilla/'
 							element={<EmployeePageComponentView />}
 						/>
 						<Route
-							path="/rsp/plantilla/employee"
+							path='/rsp/plantilla/employee'
 							element={<EmployeePageComponentView />}
 						/>
 
 						<Route
-							path="/rsp/plantilla/employee/:item"
+							path='/rsp/plantilla/employee/:item'
 							element={<EmployeePds />}
 						/>
 
 						<Route
 							exact
-							path="/rsp/plantilla/plantilla-items"
+							path='/rsp/plantilla/plantilla-items'
 							element={<PlantillaItemPageComponentView />}
 						/>
 						<Route
-							path="/rsp/plantilla/plantilla-items/jvs-crw/:item"
+							path='/rsp/plantilla/plantilla-items/jvs-crw/:item'
 							element={<JvsCrwPageComponentView />}
 						/>
 
 						<Route
-							path="/rsp/plantilla/plantilla-items/info/:item"
+							path='/rsp/plantilla/plantilla-items/info/:item'
 							element={<PlantillaItemInformation />}
 						/>
 					</Route>
 
 					<Route
 						exact
-						path="/rsp/plantilla/plantilla-items/vacantpositions"
+						path='/rsp/plantilla/plantilla-items/vacantpositions'
 						element={<PlantillaVacantPageComponent />}
 					/>
 
-					<Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
+					<Route path='/rsp/jvs' element={<JvsCrwPageComponentView />} />
 
 					<Route
 						exact
-						path="/rsp/plantilla/plantilla-items/vacantpositions"
+						path='/rsp/plantilla/plantilla-items/vacantpositions'
 						element={<PlantillaVacantPageComponent />}
 					/>
 
-					<Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
+					<Route path='/rsp/jvs' element={<JvsCrwPageComponentView />} />
 
-					<Route path="/rsp/recruitment" element={<RecruitmentView />}>
+					<Route path='/rsp/recruitment' element={<RecruitmentView />}>
 						<Route
-							path="/rsp/recruitment/"
+							path='/rsp/recruitment/'
 							element={<RecruitmentBaseComponent />}
 						/>
 						<Route
-							path="/rsp/recruitment/comparative-matrix/:item"
-							element={<RecruitmentBaseComponent />}
+							path='/rsp/recruitment/comparative-matrix/:item'
+							element={<RecruitmentComparativeMatrix />}
 						/>
 					</Route>
 
-					<Route path="/rsp/request" element={<RequestView />} />
+					<Route path='/rsp/request' element={<RequestView />} />
 
-					<Route path="/rsp/compensation" element={<CompensationView />} />
+					<Route path='/rsp/compensation' element={<CompensationView />} />
 
 					{/* OTHER MODULE ROUTES */}
 				</Route>
 
 				{/* PDS FORM APPLICANT ROUTES */}
-				<Route path="/applicant/:position" element={<FormPageOne />}></Route>
+				<Route path='/applicant/:position' element={<FormPageOne />}></Route>
 
-				<Route path="/pds-applicant">
-					<Route path="/pds-applicant">
+				<Route path='/pds-applicant'>
+					<Route path='/pds-applicant'>
 						<Route
 							exact
-							path="/pds-applicant/form-page-one/:item"
+							path='/pds-applicant/form-page-one/:item'
 							element={<FormPageOne />}
 						/>
-						<Route exact path="/pds-applicant/" element={<FormPageOne />} />
+						<Route exact path='/pds-applicant/' element={<FormPageOne />} />
 					</Route>
 
 					<Route
-						path="/pds-applicant/applicant/:plantilla"
+						path='/pds-applicant/applicant/:plantilla'
 						element={<FormPageOne />}
 					/>
 
 					<Route
-						path="/pds-applicant/form-page-two/:item"
+						path='/pds-applicant/form-page-two/:item'
 						element={<FormPageTwo />}
 					/>
 					<Route
-						path="/pds-applicant/form-page-three/:item"
+						path='/pds-applicant/form-page-three/:item'
 						element={<FormPageThree />}
 					/>
 					<Route
-						path="/pds-applicant/form-page-four/:item"
+						path='/pds-applicant/form-page-four/:item'
 						element={<FormPageFour />}
 					/>
 					<Route
-						path="/pds-applicant/form-page-five/:item"
+						path='/pds-applicant/form-page-five/:item'
 						element={<FormPageFive />}
 					/>
 					<Route
-						path="/pds-applicant/form-page-six/:item"
+						path='/pds-applicant/form-page-six/:item'
 						element={<FormPageSix />}
 					/>
 					<Route
-						path="/pds-applicant/email-confirmation/:email"
+						path='/pds-applicant/email-confirmation/:email'
 						element={<SentEmailConfirmation />}
 					/>
 					<Route
-						path="/pds-applicant/success-confirmation/:item"
+						path='/pds-applicant/success-confirmation/:item'
 						element={<SuccessEmailConfirmation />}
 					/>
 				</Route>
-				<Route path="/jvs-crw/:item" element={<JvscrsForm />} />
+				<Route path='/jvs-crw/:item' element={<JvscrsForm />} />
 				<Route
-					path="*"
+					path='*'
 					element={
 						<React.Fragment>
 							<FourOfourPage />
 						</React.Fragment>
 					}
 				/>
-				<Route path="/library" element={<MainPageLayout />}>
-					<Route index element={<Navigate to="/library/office/" />} />
-					<Route path="/library/office/" element={<LibraryOfficeView />} />
+				<Route path='/library' element={<MainPageLayout />}>
+					<Route index element={<Navigate to='/library/office/' />} />
+					<Route path='/library/office/' element={<LibraryOfficeView />} />
 					<Route
-						path="/library/category-groups/"
+						path='/library/category-groups/'
 						element={<CategoryGroupsBaseComponent />}
 					/>
-					<Route path="/library/documents/" element={<LibraryOfficeView />} />
+					<Route
+						path='/library/documentary-requirements/'
+						element={<DocumentRequirementsBase />}
+					/>
+					<Route
+						path='/library/evaluation-battery/'
+						element={<EvaluationBatteryBaseComponent />}
+					/>
 				</Route>
 			</Routes>
 		</React.Fragment>
