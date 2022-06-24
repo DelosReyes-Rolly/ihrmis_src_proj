@@ -22,4 +22,4 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 
 - Terrence Calzada
 - JC Dampil
-- Legee
+- Legee Valmoria
