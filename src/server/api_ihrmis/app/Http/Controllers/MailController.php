@@ -19,10 +19,10 @@ class MailController extends Controller
     public function getEmailTemplate($type = null)
     {
         if ($type != null) {
-            $mailQry = TblemailTemplate::where('eml_type', $type)->get();
-            return CommonResource::collection($mailQry);
+            $mailQry = TblemailTemplate::where('eml_type', $type)->first();
+            return new CommonResource($mailQry);
         }
-        $mailQry = TblemailTemplate::all();
+        $mailQry = TblemailTemplate::get();
         return CommonResource::collection($mailQry);
     }
 

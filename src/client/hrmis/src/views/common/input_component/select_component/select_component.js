@@ -15,7 +15,7 @@ const SelectComponent = (props) => {
         {props.defaultTitle}
       </option>
       {props.itemList.map((item) => {
-        if (item.id == null) {
+        if (item.id === null) {
           return (
             <option
               className="option-component"

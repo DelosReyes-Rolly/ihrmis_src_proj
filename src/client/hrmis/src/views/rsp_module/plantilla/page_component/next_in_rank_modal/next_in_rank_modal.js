@@ -22,11 +22,10 @@ import { printNextRankMemoReport } from "../../../../../router/outside_routes";
  */
 
 const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
-  const { refresh } = useSelector((state) => state.popupResponse);
   const [selectedItems, setSelectedItems] = useState([]);
   const [dataFetched, setDataFetched] = useState([]);
   const fetch_id = plantilla ? plantilla?.itm_id : 1;
-
+  const { refresh } = useSelector((state) => state.popupResponse);
   const getNextInRankVacant = async () => {
     await axios
       .get(API_HOST + "get-next-rank-employees/" + fetch_id)
@@ -113,12 +112,13 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
 
   useEffect(() => {
     getNextInRankVacant();
-  }, [refresh]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh, isDisplay]);
 
   const data = useMemo(() => dataFetched, [dataFetched]);
 
   const onPressedNotify = () => {
-    if (selectedItems.length != 0) {
+    if (selectedItems.length !== 0) {
       let arrHolder = [];
       selectedItems.forEach((element) => {
         arrHolder.push(element.nir_email);
@@ -222,6 +222,7 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
     if (selectedFlatRows) {
       selectedFunc(selectedFlatRows.map((d) => d.original));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFlatRows]);
 
   const dispatch = useDispatch();
@@ -246,6 +247,7 @@ const NextInRankTable = ({ data, columns, selectedFunc }) => {
                           onClick={() => {
                             dispatch(setNextRank());
                             dispatch(setContextMenu());
+                            dispatch(setRefresh());
                           }}
                         >
                           <IoAddCircleOutline size={20} />

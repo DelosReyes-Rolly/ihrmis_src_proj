@@ -78,7 +78,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     plantillaItemApi();
   }, [refresh]);
 
-  let data = useMemo(() => plotData, [plotData]);
+  const data = useMemo(() => plotData, [plotData]);
   // console.log(data);
   const columns = useMemo(() => tableHeaderColumnName, []);
 
@@ -162,7 +162,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
     }
   );
 
-  let countId = 0;
   const setSelectedRowsData = async (selectedFlatRowsData) => {
     let selectedItems = {};
     selectedItems["positions"] = [];
@@ -199,11 +198,12 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
       getAgency(selectedFlatRowsData[0].ofc_agn_id);
       console.log(selectedFlatRowsData);
     }
-
     // console.log(setFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFlatRows]);
 
   const [itemID, setItemID] = useState(null);
+  const [agencyID, setAgencyID] = useState(null);
 
   return (
     <React.Fragment>
@@ -218,7 +218,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
         setAllFilters={setAllFilters}
         // setFiltersTable={setFiltersTable}
       />
-      <SelectAction itemID={itemID} />
+      <SelectAction itemID={itemID} agencyID={agencyID} />
       {/* <SelectTableComponent list={plotData} /> */}
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
@@ -251,11 +251,11 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
+
               return (
                 <tr className="trHoverBody" {...row.getRowProps()}>
                   {row.cells.map((cell, index, arr) => {
                     if (index === arr.length - 1) {
-                      countId++;
                       return (
                         <td {...cell.getCellProps()}>
                           <div
@@ -264,11 +264,12 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
                               justifyContent: "space-between",
                             }}
                           >
-                            <div>
-                              {cell.render("Cell")} {itemID}
-                            </div>
+                            <div>{cell.render("Cell")}</div>
                             <div
-                              onClick={() => setItemID(cell.row.values.itm_id)}
+                              onClick={() => {
+                                setItemID(cell.row.values.itm_id);
+                                setAgencyID(cell.row.values.ofc_agn_id);
+                              }}
                             >
                               <DropdownMenu
                                 itemList={plantillaItemsVacantPosMenuItems}
@@ -309,7 +310,7 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
   );
 };
 
-const SelectAction = ({ itemID = null }) => {
+const SelectAction = ({ itemID = null, agencyID }) => {
   const dispatch = useDispatch();
   const { next_rank, context_menu, rank_email, notify_office } = useSelector(
     (state) => state.plantillaItem
@@ -323,6 +324,8 @@ const SelectAction = ({ itemID = null }) => {
       />
       <ContextMenuModal
         isDisplay={context_menu}
+        agencyID={agencyID}
+        itemID={itemID}
         onClose={() => dispatch(setContextMenu())}
       />
       <PlantillaEmailModal

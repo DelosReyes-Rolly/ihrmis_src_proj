@@ -422,21 +422,20 @@ class PlantillaItemsService
 					if(!in_array($items->employee->emp_id, $arrEmpIdHolder)){
 						$name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
 						array_push($arrHolder, [
-						'nir_name' => $name,
-						'nir_email' =>  $items->employee->emp_ofc_email,
-						'nir_office' => $offices->ofc_acronym,
-						'nir_pos_title' => $items->tblpositions->pos_title,
-						'nir_emp_id' => $items->employee->emp_id,
-						'nir_ofc_id' => $offices->ofc_id,
-						'nir_agn_id' => (int)$agency,
-						'nir_itm_id' => 1
+							'nir_name' => $name,
+							'nir_email' =>  $items->employee->emp_ofc_email,
+							'nir_office' => $offices->ofc_acronym,
+							'nir_pos_title' => $items->tblpositions->pos_title,
+							'nir_emp_id' => $items->employee->emp_id,
+							'nir_ofc_id' => $offices->ofc_id,
+							'nir_agn_id' => (int)$agency,
+							'nir_itm_id' => $plantilla
 						]);
 					}
 				}
 			}
 		}
-
-    	return $arrHolder;
+    	return CommonResource::collection($arrHolder);
   	}
 
 	public function addToNextInRank($request){

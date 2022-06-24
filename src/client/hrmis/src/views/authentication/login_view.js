@@ -1,20 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import masthead from "../../assets/images/masthead.png";
 import InputComponent from "../common/input_component/input_component/input_component";
 import ButtonComponent from "../common/button_component/button_component.js.js";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import {
-  API_HOST,
-  BASE_URL,
-  SANCTUM,
-} from "../../helpers/global/global_config";
+import { API_HOST, SANCTUM } from "../../helpers/global/global_config";
 import { useNavigate } from "react-router-dom";
 import { ALERT_ENUM, popupAlert } from "../../helpers/alert_response";
 import { useDispatch } from "react-redux";
 import { setBusy } from "../../features/reducers/popup_response";
-import { axiosHeader } from "../../config/axios_config";
 
 const USER_INFO = {
   user: "user",
@@ -24,7 +19,6 @@ const USER_INFO = {
 
 const LoginView = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const loginForm = useFormik({
@@ -46,7 +40,7 @@ const LoginView = () => {
         .then(async () => {
           dispatch(setBusy(true));
           await axios
-            .post(API_HOST + "login", values, axiosHeader)
+            .post(API_HOST + "login", values)
             .then((res) => {
               const data = res.data;
               window.sessionStorage.getItem(USER_INFO.user);

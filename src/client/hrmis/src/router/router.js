@@ -32,6 +32,7 @@ import JvscrsForm from "../views/jvs_form/jvscrw_form";
 import EmployeePds from "../views/rsp_module/plantilla/page_component/employee_pds/emplpyee_pds";
 import LibraryOfficeView from "../views/library/office_page/parts/office_library_view";
 import CategoryGroupsBaseComponent from "../views/library/category_groups_page/parts/categoryGroupsBaseComponent";
+import HistoryServiceLibrary from "../views/library/history_service.js/history_service";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -168,7 +169,9 @@ const MainRouter = () => {
             element={<SuccessEmailConfirmation />}
           />
         </Route>
+
         <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
+
         <Route
           path="*"
           element={
@@ -177,6 +180,7 @@ const MainRouter = () => {
             </React.Fragment>
           }
         />
+
         <Route path="/library" element={<MainPageLayout />}>
           <Route index element={<Navigate to="/library/office/" />} />
           <Route path="/library/office/" element={<LibraryOfficeView />} />
@@ -185,6 +189,10 @@ const MainRouter = () => {
             element={<CategoryGroupsBaseComponent />}
           />
           <Route path="/library/documents/" element={<LibraryOfficeView />} />
+          <Route
+            path="/library/service-history"
+            element={<HistoryServiceLibrary />}
+          />
         </Route>
       </Routes>
     </React.Fragment>

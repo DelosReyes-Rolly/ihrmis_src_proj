@@ -85,6 +85,11 @@ export const SidebarOption = [
         title: "Positions",
         link: "/rsp/plantilla/plantilla-items",
       },
+      {
+        id: 6,
+        title: "Service History",
+        link: "/library/service-history",
+      },
     ],
     link: "/library",
   },

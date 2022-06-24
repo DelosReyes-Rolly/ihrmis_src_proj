@@ -53,13 +53,14 @@ class TblplantillaItemsController extends Controller
             
         
         } catch (\Throwable $th) {
-            throw $th;
+            return response()->json([
+                'message' => "Failed, Try again later",
+            ], 400);
         }
             
         return response()->json([
-            'status' => 200,
             'message' => "Added Successfully",
-        ]);
+        ], 200);
     }
     
     public function showItemDetail($id){

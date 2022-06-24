@@ -41,8 +41,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);
     Route::get('getOffices', [TblofficesController::class, "getAllOffices"]);
     Route::get('logout', [AuthController::class, "logout"]);
+    
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -249,7 +251,7 @@ Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveS
 //=======================================================================================
 // EMPLOYEE CONTROLLER ENDPOINTS
 //=======================================================================================
-Route::get('get-all-employee',[EmployeeController::class,"getAllEmployee"]);
+
 Route::get('get-single-employee/{id}',[EmployeeController::class, "getSingleEmployee"]);
 
 Route::post('add-update-emp_ref/{ref_id?}',[EmployeeController::class, "addUpdateReference"]);
