@@ -205,15 +205,17 @@ Route::post('remove-to-next-rank', [TblplantillaItemsVacantPositionController::c
 
 Route::get('getAllPositions', [TblplantillaItemsVacantPositionController::class, "getAllPlantillaItems"]);
 Route::get('getPlantillaVpById/{id}', [TblplantillaItemsVacantPositionController::class, "getPlantillaItemById"]);
+Route::get('getVcEmailTemplateData/{id}', [TblplantillaItemsVacantPositionController::class, "getEmailTemplateData"]);
 Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController::class, "getVacantPositions"]);
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
-Route::get('generateMemoOnPVPForCsc/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
-Route::get('generateMemoOnPVPForDost/{options}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::get('generateMemoOnPVPForCsc/{data}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
+Route::get('generateMemoOnPVPForDost/{data}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
 Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::class, 'closeSelectedVacantPositions']);
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
+Route::get('getPlantillaItemDetails/{id}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------

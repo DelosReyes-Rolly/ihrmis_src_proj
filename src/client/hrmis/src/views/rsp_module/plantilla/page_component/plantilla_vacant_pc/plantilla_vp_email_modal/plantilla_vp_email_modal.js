@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import ModalComponent from "../../../../../common/modal_component/modal_component";
 import TextAreaComponent from "../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -15,7 +15,10 @@ import axios from "axios";
 import RichTextEditorComponent from "../../../../../common/rich_text_editor_component/rich_text_editor_component";
 import { usePopUpHelper } from "../../../../../../helpers/use_hooks/popup_helper";
 import { useDispatch, useSelector } from "react-redux";
-import { setEmailRecepients } from "../../../../../../features/reducers/plantilla_item_slice";
+import {
+	setEmailRecepients,
+	setVcEmailTemplateData,
+} from "../../../../../../features/reducers/plantilla_item_slice";
 import {
 	ALERT_ENUM,
 	popupAlert,
@@ -33,7 +36,7 @@ const PlantillaVpEmailModal = ({
 	type,
 	endpoint,
 }) => {
-	const { email_recepients, selected_plantilla } = useSelector(
+	const { email_recepients, emailtemplate_data } = useSelector(
 		(state) => state.plantillaItem
 	);
 	//TYPE LOGIC
@@ -51,7 +54,7 @@ const PlantillaVpEmailModal = ({
 					arrHolder.push({
 						id: element.eml_id,
 						title: element.eml_name,
-						message: restructEmailMessage(element.eml_message),
+						message: element.eml_message,
 						data_id: element.eml_id,
 					});
 				});
@@ -64,27 +67,21 @@ const PlantillaVpEmailModal = ({
 		let varHolder = "";
 		mType.forEach((element) => {
 			if (value === element.id) {
-				varHolder = element.message;
+				varHolder = restructEmailMessage(element.message);
 				setSelectedMsg(varHolder);
 			}
 		});
-		console.log(varHolder);
+		// console.log(varHolder);
 		return varHolder;
 	};
 
 	const restructEmailMessage = (message) => {
-		console.log("selected_plantilla");
-		console.log(selected_plantilla);
-		// return message;
-		if (selected_plantilla !== null) {
+		if (emailtemplate_data !== null) {
 			return message
-				.replace("{position}", selected_plantilla.tblpositions.pos_title)
-				.replace(
-					"{salary grade}",
-					"SG-" + selected_plantilla.tblpositions.pos_salary_grade
-				)
-				.replace("{Item No}", "Item No. " + selected_plantilla.itm_no)
-				.replace("{jvs-crw id}", selected_plantilla.itm_no);
+				.replace("{position}", emailtemplate_data?.position)
+				.replace("{salary grade}", "SG-" + emailtemplate_data?.salary_grade)
+				.replace("{Item No}", "Item No. " + emailtemplate_data?.itm_no)
+				.replace("{item id}", emailtemplate_data?.itm_id);
 		}
 		return message;
 	};
@@ -137,6 +134,7 @@ const PlantillaVpEmailModal = ({
 				})
 				.then(() => {
 					dispatch(setEmailRecepients([]));
+					dispatch(setVcEmailTemplateData(null));
 					setSelectedMsg("");
 					resetForm();
 					popupAlert({
@@ -155,14 +153,14 @@ const PlantillaVpEmailModal = ({
 	});
 
 	useEffect(() => {
-		getMessageType();
-	}, []);
-
-	useEffect(() => {
 		emailFormik.setFieldValue("recepient", email_recepients);
 	}, [email_recepients]);
 
-	useEffect(() => {
+	useLayoutEffect(() => {
+		getMessageType();
+	}, [emailtemplate_data]);
+
+	useMemo(() => {
 		if (mType.length > 0) selectedType();
 	}, [mType]);
 
@@ -175,6 +173,7 @@ const PlantillaVpEmailModal = ({
 				onSubmitType="submit"
 				onClose={() => {
 					dispatch(setEmailRecepients([]));
+					dispatch(setVcEmailTemplateData(null));
 					onClose();
 				}}
 				onSubmitName="Send"
@@ -291,4 +290,5 @@ const PlantillaVpEmailModal = ({
 export default PlantillaVpEmailModal;
 
 const senderDefault =
-	"Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City";
+	"Personnel Division, Administrative and Legal Service\n" +
+	"Department of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City";

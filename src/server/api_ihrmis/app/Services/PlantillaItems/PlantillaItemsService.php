@@ -3,6 +3,7 @@
 namespace App\Services\PlantillaItems;
 
 use App\Http\Resources\CommonResource;
+use App\Http\Resources\Plantilla\GetEmailTemplateDataResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Http\Resources\Plantilla\GetVacantPositionsResource;
 use App\Models\Applicants\Tblapplicants;
@@ -51,7 +52,7 @@ class PlantillaItemsService
 			->where("itm_id", (int) $id)
 			->first();
 		
-		return new CommonResource($item_query);
+		return $item_query;
 	}
 
 	/**
@@ -103,7 +104,6 @@ class PlantillaItemsService
 		date_default_timezone_set('Asia/Manila'); //define local time
 		//get vacant position
 		$data = $this->getVacantPositions(0);
-
 		$new_data = [];
 
 		foreach($data as $itm){
@@ -341,9 +341,9 @@ class PlantillaItemsService
 		return $report->output();
 	}
 
-  	public function getAgencyEmployees($agency, $plantilla){
+  	public function getAgencyEmployees($agency, $itm_id){
 		$itemQry = Tbloffices::where('ofc_agn_id', $agency)->with('plantillaItems.employee', 'plantillaItems.tblpositions')->get();
-		$nextRankQrt = TblnextInRank::where('nir_itm_id', $plantilla)->get();
+		$nextRankQrt = TblnextInRank::where('nir_itm_id', $itm_id)->get();
 		$arrEmpIdHolder =[];
 		foreach($nextRankQrt as $value){
 			array_push($arrEmpIdHolder, $value->nir_emp_id);
@@ -363,7 +363,7 @@ class PlantillaItemsService
 						'nir_emp_id' => $items->employee->emp_id,
 						'nir_ofc_id' => $offices->ofc_id,
 						'nir_agn_id' => (int)$agency,
-						'nir_itm_id' => 1
+						'nir_itm_id' => $itm_id
 						]);
 					}
 				}

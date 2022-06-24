@@ -30,38 +30,36 @@ import {
 	setRankEmail,
 	setEmailRecepients,
 	setItemID,
-	setSelectedPlantilla,
+	setVcEmailTemplateData,
+	setSelectedPlantillaItems,
+	setSelectedAgencyRank,
 } from "../../../../../features/reducers/plantilla_item_slice";
 import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email_modal";
 
 /**
  * PlantillaDataTableDisplay
  * @param type
- * @param selectedPlantillaItems
  * @returns
  */
-export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
+export const PlantillaDataTableDisplay = ({ type }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
-	const { item_id } = useSelector((state) => state.plantillaItem);
+	const [selected_item_id, setSelectedItemID] = useState([]);
+	const { item_id, plantilla_items } = useSelector(
+		(state) => state.plantillaItem
+	);
 	// const [filters, setFiltersTable] = useState([]);
 	const dispatch = useDispatch();
 
-	const getPlantillaData = async (item_id) => {
+	const getVcEmailTemplateData = async (item_id) => {
 		await axios
-			.get(API_HOST + "getPlantillaVpById/" + item_id)
+			.get(API_HOST + "getVcEmailTemplateData/" + item_id)
 			.then((res) => {
 				// const dataPlantilla = res;
-				dispatch(setSelectedPlantilla(res.data.data));
-				console.log(res);
+				dispatch(setVcEmailTemplateData(res.data.data));
+				// console.log(res.data.data);
 			})
 			.catch((err) => console.log(err?.message));
-	};
-
-	const onCLickRow = (rowData) => {
-		dispatch(setItemID(rowData?.itm_id));
-		dispatch(setEmailRecepients([rowData?.agn_head_email]));
-		getPlantillaData(rowData?.itm_id);
 	};
 
 	const plantillaItemApi = async () => {
@@ -70,21 +68,14 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 			.then((response) => {
 				//console.log(response.data);
 				let data = response?.data.data ?? [];
-
+				let dataPlot = [];
 				if (data.length > 0) {
-					let dataPlot = [];
-					data.forEach((element) => {
-						dataPlot.push({
-							itm_id: element.itm_id,
-							itm_no: element.itm_no,
-							pos_title: element.position.pos_title,
-							ofc_acronym: element?.office?.ofc_acronym,
-							ofc_agn_id: element?.office?.ofc_agn_id,
-							itm_status: statusDisplay[element.itm_status],
-							pos_category: element.position.pos_category,
-							itm_state: element.itm_state,
-							agn_head_email: element?.office?.office_agency?.agn_head_email,
-						});
+					data.map((item) => {
+						item.itm_status = statusDisplay[item.itm_status];
+						item.ofc_acronym = item?.office?.ofc_acronym;
+						item.ofc_agn_id = item?.office?.ofc_agn_id;
+						item.agn_head_email = item?.office?.office_agency?.agn_head_email;
+						dataPlot.push(item);
 					});
 
 					setPlotData(dataPlot);
@@ -95,13 +86,19 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 			});
 	};
 
+	const onCLickRow = (rowData) => {
+		dispatch(setItemID(rowData?.itm_id));
+		dispatch(setEmailRecepients([rowData?.agn_head_email]));
+		getVcEmailTemplateData(rowData?.itm_id);
+		dispatch(setSelectedAgencyRank(rowData?.ofc_agn_id));
+	};
+
 	useLayoutEffect(() => {
 		plantillaItemApi();
 	}, [refresh]);
 
 	let data = useMemo(() => plotData, [plotData]);
-	// console.log(data);
-	const columns = useMemo(() => tableHeaderColumnName, []);
+	let columns = useMemo(() => tableHeaderColumnName, [tableHeaderColumnName]);
 
 	const initialState = {
 		hiddenColumns: [
@@ -190,31 +187,27 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 	);
 
 	let countId = 0;
+
 	const setSelectedRowsData = async (selectedFlatRowsData) => {
-		let selectedItems = {};
-		selectedItems["positions"] = [];
+		let selectedItems = [];
 		let temp_selected = [];
 		selectedFlatRowsData?.forEach((element) => {
 			let sdata = {};
-
 			sdata["itm_id"] = element.itm_id;
-
 			temp_selected.push(sdata);
 		});
 		selectedItems["positions"] = temp_selected;
-		selectedPlantillaItems(selectedItems);
+		dispatch(setSelectedPlantillaItems(selectedItems));
 	};
 
 	useEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		if (selectedFlatRowsData.length > 0) {
 			setSelectedRowsData(selectedFlatRowsData);
-			console.log(selectedFlatRowsData);
+		} else {
+			dispatch(setSelectedPlantillaItems([]));
 		}
-
-		// console.log(setFilter);
 	}, [selectedFlatRows]);
-
 	return (
 		<React.Fragment>
 			<FilterPlantillaItems
@@ -265,7 +258,6 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 								<tr className="trHoverBody" {...row.getRowProps()}>
 									{row.cells.map((cell, index, arr) => {
 										if (index === arr.length - 1) {
-											countId++;
 											return (
 												<td {...cell.getCellProps()}>
 													<div
@@ -274,13 +266,10 @@ export const PlantillaDataTableDisplay = ({ type, selectedPlantillaItems }) => {
 															justifyContent: "space-between",
 														}}
 													>
-														<div>
-															{cell.render("Cell")} {item_id}
-														</div>
+														<div>{cell.render("Cell")}</div>
 														<div
 															onClick={() => {
 																onCLickRow(cell.row.values);
-																console.log(cell.row.values.itm_id);
 															}}
 														>
 															<DropdownVpMenu

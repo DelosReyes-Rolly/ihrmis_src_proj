@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
+use App\Http\Resources\Plantilla\GetEmailTemplateDataResource;
 use App\Http\Resources\Plantilla\GetVacantPositionsResource;
 use App\Models\Employees\TblnextInRank;
 use App\Services\PlantillaItems\PlantillaItemsService;
@@ -48,6 +49,15 @@ class TblplantillaItemsVacantPositionController extends Controller {
     public function getPlantillaItemById($id) {
         
         return $this->tblPantillaVacantPos->getPlantillaItemById($id);
+    }
+
+    /**
+     * getAPlantillaItemsById
+     * Todo get all positions fro Plantilla Items
+     */
+    public function getEmailTemplateData($id) {
+        
+        return new GetEmailTemplateDataResource($this->tblPantillaVacantPos->getPlantillaItemById($id));
     }
 
     /**
@@ -108,6 +118,17 @@ class TblplantillaItemsVacantPositionController extends Controller {
 	public function getAllDostAgencies() {
 
         return $this->tblPantillaVacantPos->getAllDostAgencies();
+
+	}
+
+    /**
+	 * getPlantillaItemDetails
+	 * Todo get all PlantillaItem details
+	 * @return array 
+	 */
+	public function getPlantillaItemDetails($id) {
+
+        return $this->tblPantillaVacantPos->getPositionWithCsc($id);
 
 	}
 

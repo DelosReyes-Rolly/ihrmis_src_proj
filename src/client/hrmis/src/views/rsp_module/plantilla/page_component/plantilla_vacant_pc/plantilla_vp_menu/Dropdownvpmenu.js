@@ -7,10 +7,10 @@ import {
 	setEmailRecepients,
 	setNextRank,
 	setNotifyOffice,
-	setRankEmail,
 	setSelectAgency,
 } from "../../../../../../features/reducers/plantilla_item_slice";
 import usePositionSetter from "../../../../../../helpers/use_hooks/position_setter";
+import useSweetAlertHelper from "../../../../../../helpers/use_hooks/sweetalert_helper";
 
 const DropdownVpMenu = ({
 	title,
@@ -18,7 +18,6 @@ const DropdownVpMenu = ({
 	itemList,
 	alignItems = "start",
 	tooltipData = { position: "top", effect: "solid" },
-	itemId,
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const [Xpos, Ypos, location, size] = usePositionSetter(dropable);
@@ -77,7 +76,6 @@ const DropdownVpMenu = ({
 					itemList={itemList}
 					display={dropable ? "block" : "none"}
 					onClick={selectedProperty}
-					itemId={itemId}
 					xpos={Xpos}
 					ypos={Ypos}
 					size={size}
@@ -89,16 +87,13 @@ const DropdownVpMenu = ({
 
 export default DropdownVpMenu;
 
-const DropList = ({
-	itemList = [],
-	display = "none",
-	itemId,
-	xpos,
-	ypos,
-	size,
-}) => {
+const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 	const navigate = useNavigate();
-	const { selected_agency } = useSelector((state) => state.plantillaItem);
+	const { toastSuccessFailMessage } = useSweetAlertHelper();
+	const { selected_agency, plantilla_items, item_id } = useSelector(
+		(state) => state.plantillaItem
+	);
+
 	const dispatch = useDispatch();
 
 	const linkNavigationHandler = (item) => {
@@ -109,7 +104,7 @@ const DropList = ({
 		 */
 
 		if (item.label.includes("JVS & CRW")) {
-			navigate(itemlink + "/" + itemId);
+			navigate(itemlink + "/" + item_id);
 			return;
 		}
 
@@ -123,6 +118,24 @@ const DropList = ({
 			dispatch(setEmailRecepients(selected_agency.agn_head_email));
 			return;
 		}
+
+		// if (item.label.includes("Notice")) {
+		// 	let positions = plantilla_items["positions"];
+		// 	if (typeof positions === "undefined") {
+		// 		// console.log("Gago!");
+		// 		let response = {
+		// 			data: {
+		// 				code: 500,
+		// 				message: "No selected row to print!",
+		// 			},
+		// 		};
+		// 		toastSuccessFailMessage(response.data);
+		// 	} else {
+		// 		// console.log(plantilla_items["positions"]);
+		// 		itemlink(plantilla_items);
+		// 		return;
+		// 	}
+		// }
 
 		if (item.label.includes("Next-in")) {
 			dispatch(setNextRank());

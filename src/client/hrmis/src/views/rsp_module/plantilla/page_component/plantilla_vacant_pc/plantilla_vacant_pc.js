@@ -24,16 +24,14 @@ import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
 
 const PlantillaItemsVacantPositionComponentView = () => {
 	const dispatch = useDispatch();
-	const [selectedrowData, setSelectedRowData] = useState([]);
 	const [axiosCall] = useAxiosCallHelper();
 	const [posting_vacancy, setPostingJobVancy] = useState(false);
-	const { selected_agency, select_agency } = useSelector(
+	const { selected_agency, select_agency, plantilla_items } = useSelector(
 		(state) => state.plantillaItem
 	);
 	const { toastSuccessFailMessage } = useSweetAlertHelper();
 
 	const closeSelectedVacantPostions = async () => {
-		// console.log(selectedrowData);
 		if (preConfirm()) {
 			let confirmButtonText = "OK",
 				cancelButtonColor = "#d33",
@@ -65,8 +63,8 @@ const PlantillaItemsVacantPositionComponentView = () => {
 
 	const preConfirm = () => {
 		if (
-			typeof selectedrowData?.positions === "undefined" ||
-			selectedrowData.positions.length === 0
+			typeof plantilla_items?.positions === "undefined" ||
+			plantilla_items.positions.length === 0
 		) {
 			let response = {
 				data: {
@@ -82,7 +80,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	};
 
 	const confirmedAction = () => {
-		axiosCall("post", API_HOST + "closeVacantPositions", selectedrowData).then(
+		axiosCall("post", API_HOST + "closeVacantPositions", plantilla_items).then(
 			(response) => {
 				console.log(response.data);
 				toastSuccessFailMessage(response.data);
@@ -125,7 +123,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	};
 
 	const SelectMemoForPosting = async () => {
-		// console.log(selectedrowData);
 		if (preMemoConfirm()) {
 			let confirmButtonText = "DOST Agencies",
 				cancelButtonColor = "#d33",
@@ -190,14 +187,10 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					/>
 				</div>
 				<div>
-					<PlantillaDataTableDisplay
-						type={1}
-						selectedPlantillaItems={setSelectedRowData}
-					/>
+					<PlantillaDataTableDisplay type={1} />
 				</div>
 			</div>
 			<SelectAgencyModal
-				selectedrowData={selectedrowData}
 				isDisplay={select_agency}
 				onClose={() => {
 					dispatch(setSelectAgency());
@@ -208,7 +201,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 				}}
 			/>
 			<PostingOnJobVacancyModal
-				selectedrowData={selectedrowData}
 				isDisplay={posting_vacancy}
 				onClose={() => setPostingJobVancy()}
 			/>
