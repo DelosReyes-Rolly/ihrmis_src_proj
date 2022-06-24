@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AiFillCaretUp } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
@@ -8,7 +8,7 @@ const DropdownViewComponent = ({
 	title = {},
 	className,
 	itemList,
-	alignItems = 'start',
+	alignItems = 'flex-start',
 	toolTipId,
 	textHelper,
 	position = 'top',
