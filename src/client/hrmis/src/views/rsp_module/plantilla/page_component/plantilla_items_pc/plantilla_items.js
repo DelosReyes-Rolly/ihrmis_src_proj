@@ -122,6 +122,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 
   useLayoutEffect(() => {
     plantillaItemApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   let data = useMemo(() => plotData, [plotData]);
@@ -130,7 +131,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
     () => [
       {
         Header: "Item No.",
-        accessor: "itm_no", // accessor is the "key" in the data
+        accessor: "itm_no",
       },
       {
         Header: "Position",

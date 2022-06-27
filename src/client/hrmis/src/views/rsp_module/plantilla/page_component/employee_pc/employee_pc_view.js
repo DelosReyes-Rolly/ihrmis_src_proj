@@ -15,6 +15,10 @@ import { EMPLOYEE_DROPDOWN } from "../../static/plantilla_vacant_positions_data"
 import { EMPLOYEE_STATUS } from "../../static/filter_items";
 import DropDownComponent from "../../../../common/dropdown_menu_custom_component/dropdown_component";
 
+import { useAxiosHeadHelper } from "../../../../../helpers/use_hooks/axios_head_helper";
+import DTRModal from "./dtr_modal";
+import RemarksStatusModal from "./remarks_status_modal";
+
 const EmployeePageComponentView = () => {
   return (
     <React.Fragment>
@@ -42,10 +46,12 @@ export default EmployeePageComponentView;
 const EmployeeDataTableDisplay = () => {
   const navigate = useNavigate();
   const { refresh } = useSelector((state) => state.popupResponse);
+  const AXIOS_HEADER = useAxiosHeadHelper();
   const [plotData, setPlotData] = useState([]);
+
   const employeesList = async () => {
     await axios
-      .get(API_HOST + "get-all-employee")
+      .get(API_HOST + "get-all-employee", AXIOS_HEADER)
       .then((res) => {
         const data = res.data.data ?? [];
 
@@ -79,16 +85,25 @@ const EmployeeDataTableDisplay = () => {
 
   useEffect(() => {
     employeesList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   /// DROP LIST VALUE
-  const [value, setValue] = useState(null);
-  const [employeeID, setEmployeeID] = useState(null);
+  const [value, setValue] = useState(0);
+  const [employeeID, setEmployeeID] = useState(0);
+  const [dtrModal, setDtrModal] = useState(false);
+  const [remarkModal, setRemarkModal] = useState(false);
+
+  const dropDownNavigationHandler = () => {
+    if (employeeID === 0) return null;
+    if (value === 1) return navigate("/rsp/plantilla/employee/" + employeeID);
+    if (value === 2) return setDtrModal(true);
+    if (value === 3) return setRemarkModal(true);
+  };
+
   useEffect(() => {
-    if (value !== null && employeeID !== null) {
-      navigate(dropdownLogic(value, employeeID));
-      setEmployeeID(null);
-    }
+    dropDownNavigationHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const data = useMemo(() => plotData, [plotData]);
@@ -128,7 +143,7 @@ const EmployeeDataTableDisplay = () => {
             }}
           >
             <div>{cell.row.values.emp_status}</div>
-            <div onClick={setEmployeeID(cell.row.values.emp_id)}>
+            <div onClick={() => setEmployeeID(cell.row.values.emp_id)}>
               <DropDownComponent
                 title={<MdMoreHoriz size="20" />}
                 itemList={EMPLOYEE_DROPDOWN}
@@ -180,6 +195,23 @@ const EmployeeDataTableDisplay = () => {
         search={globalFilter}
         setSearch={setGlobalFilter}
         statusFilter={setFilter}
+      />
+
+      <DTRModal
+        onClose={() => {
+          setValue(0);
+          setDtrModal(false);
+        }}
+        isDisplay={dtrModal}
+      />
+
+      <RemarksStatusModal
+        onClose={() => {
+          setValue(0);
+          setRemarkModal(false);
+        }}
+        isDisplay={remarkModal}
+        onPressedHidden={false}
       />
 
       <div className="default-table">
@@ -240,8 +272,7 @@ const EmployeeDataTableDisplay = () => {
 };
 
 const AddEmployee = ({ search, setSearch, statusFilter }) => {
-  const [toggleAddPlantillaItem, setTogglePlantillaItem] =
-    useToggleHelper(false);
+  const [, setTogglePlantillaItem] = useToggleHelper(false);
   return (
     <React.Fragment>
       <div className="selector-buttons">
@@ -289,18 +320,4 @@ const AddEmployee = ({ search, setSearch, statusFilter }) => {
       </div>
     </React.Fragment>
   );
-};
-
-const dropdownLogic = (item, id) => {
-  if (item === 1) {
-    return "/rsp/plantilla/employee/" + id;
-  }
-
-  if (item === 2) {
-    return "adsg";
-  }
-
-  if (item === 3) {
-    return "adsf";
-  }
 };

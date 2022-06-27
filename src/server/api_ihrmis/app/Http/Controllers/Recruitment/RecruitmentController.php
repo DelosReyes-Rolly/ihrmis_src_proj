@@ -16,8 +16,6 @@ class RecruitmentController extends Controller
     {
         $this->recruitmentSerivce = $serivce;
     }
-
-
     public function getCompleteApplicantsProfile($type)
     {
         $qualified_applicants = $this->recruitmentSerivce->getQualifiedApplicants($type);
@@ -26,7 +24,6 @@ class RecruitmentController extends Controller
         }
         return [];
     }
-
     public function getPositionCM($plantillaId)
     {
         $qualified_applicants = $this->recruitmentSerivce->getCMDetails($plantillaId);
@@ -37,7 +34,6 @@ class RecruitmentController extends Controller
         ];
         return new CommonResource($data);
     }
-
     public function getCMData($plantillaId)
     {
         $qualified_applicants = $this->recruitmentSerivce->getQualifiedApplicants_report($plantillaId);
@@ -52,7 +48,6 @@ class RecruitmentController extends Controller
         $qualified_applicants = $this->recruitmentSerivce->getRAData($plantillaId, $applicantId);
         return new CommonResource($qualified_applicants);
     }
-
     public function generatePOAReport($plantillaId)
     {
         $qualified_applicants = $this->recruitmentSerivce->getQualifiedApplicants_report($plantillaId);
@@ -60,19 +55,16 @@ class RecruitmentController extends Controller
         // return $qualified_applicants;
         return $this->recruitmentSerivce->generatePOAReport($qualified_applicants, $requirements);
     }
-
     public function generateRAIReport($month, $year)
     {
         return $this->recruitmentSerivce->generateRAIReport($month, $year);
     }
-
     public function generateCMReport($plantillaId)
     {
         $qualified_applicants = $this->recruitmentSerivce->getQualifiedApplicants_report($plantillaId);
         $requirements = $this->recruitmentSerivce->getPositionRequirement($qualified_applicants[0]->TblPositions->pos_id);
         return $this->recruitmentSerivce->generateCMReport($qualified_applicants, $requirements);
     }
-
     public function generateOOOReport($applicants)
     {
         return $this->recruitmentSerivce->generateOOOReport($applicants);
@@ -85,7 +77,6 @@ class RecruitmentController extends Controller
     {
         return $this->recruitmentSerivce->generateAFAReport($applicants);
     }
-
     public function getApplicantAgency($office_id)
     {
         return $this->recruitmentSerivce->getApplicantAgency($office_id);

@@ -235,22 +235,22 @@ export const formThreeInput = {
 export const categoryInputCategory = [
   {
     id: "CE",
-    title: "CE Level",
+    title: "Constitutional Official/Executive",
   },
   {
     id: "PS",
-    title: "PS Level",
+    title: "Professional Supervisory",
   },
   {
     id: "PN",
-    title: "PN Level",
+    title: "Professional Non-Supervisory",
   },
   {
     id: "SS",
-    title: "SS Level",
+    title: "Sub-Professional Supervisory",
   },
   {
     id: "SN",
-    title: "SN Level",
+    title: "Sub-Professional Non-Supervisory",
   },
 ];

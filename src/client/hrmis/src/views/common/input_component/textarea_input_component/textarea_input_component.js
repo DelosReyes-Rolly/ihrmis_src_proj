@@ -23,7 +23,7 @@ const TextAreaComponent = (props) => {
 
 TextAreaComponent.defaultProps = {
   maxLength: 255,
-  numRow: 1,
+  row: 2,
   placeHolder: "",
 };
 

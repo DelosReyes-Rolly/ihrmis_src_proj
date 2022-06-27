@@ -11,13 +11,16 @@ import { API_HOST } from "../../../helpers/global/global_config";
 import ModalComponent from "../../common/modal_component/modal_component";
 import SelectComponent from "../../common/input_component/select_component/select_component";
 import InputComponent from "../../common/input_component/input_component/input_component";
-import { axiosHeader } from "../../../config/axios_config";
+import { useAxiosHeadHelper } from "../../../helpers/use_hooks/axios_head_helper";
 
 const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
   const { renderBusy, renderSucceed } = usePopUpHelper();
   const [positions, setPositionState] = useState([]);
   const [office, setOfficeState] = useState([]);
   const [agency, setAgencyState] = useState([]);
+
+  const AXIOS_HEADER = useAxiosHeadHelper();
+
   const getPositions = async (ofc_id) => {
     let positions = [];
     await axios
@@ -30,9 +33,10 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
           positions.push(obj);
         });
       })
-      .catch((error) => {});
+      .catch((error) => console.log(error));
     setPositionState(positions);
   };
+
   const getOffice = async () => {
     let offices = [];
     await axios
@@ -48,6 +52,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
       .catch((error) => {});
     setOfficeState(offices);
   };
+
   const getAgency = async () => {
     let agencies = [];
     await axios
@@ -63,14 +68,15 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
       .catch((error) => {});
     setAgencyState(agencies);
   };
+
   useEffect(() => {
     getPositions(officeData?.ofc_id ?? "");
     getOffice();
     getAgency();
   }, [officeData?.ofc_id]);
+
   const officeForm = useFormik({
     enableReinitialize: true,
-
     initialValues: {
       ofc_id: officeData?.ofc_id ?? "",
       ofc_type: officeData?.ofc_type ?? "",
@@ -109,7 +115,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
       await axios
-        .post(API_HOST + "offices", value, axiosHeader)
+        .post(API_HOST + "offices", value, AXIOS_HEADER)
         .then(() => {
           renderSucceed({});
         })

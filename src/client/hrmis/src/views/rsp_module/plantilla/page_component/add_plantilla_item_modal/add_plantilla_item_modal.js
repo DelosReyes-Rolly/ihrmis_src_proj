@@ -17,7 +17,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 
 const AddPlantillaItemModal = ({
