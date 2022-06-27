@@ -33,6 +33,10 @@ import EmployeePds from "../views/rsp_module/plantilla/page_component/employee_p
 import LibraryOfficeView from "../views/library/office_page/parts/office_library_view";
 import CategoryGroupsBaseComponent from "../views/library/category_groups_page/parts/categoryGroupsBaseComponent";
 import HistoryServiceLibrary from "../views/library/history_service.js/history_service";
+import DocumentRequirementsBase from "../views/library/documentary_requirements/parts/documentaryRequirementsBase";
+import RecruitmentComparativeMatrix from "../views/rsp_module/recruitment/page_components/recruitment_comparative_matrix";
+import EvaluationBatteryBaseComponent from "../views/library/evaluation_battery/parts/evaluationBatteryBaseComponent";
+import PositionLibrary from "../views/library/postion_page/position_library";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -41,7 +45,9 @@ const MainRouter = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.sessionStorage.getItem("token") === null) navigate("/");
+    if (window.sessionStorage.getItem("token") == null) navigate("/");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -51,7 +57,16 @@ const MainRouter = () => {
       {isFail && <FailResponseComponent />}
 
       <Routes>
+        {/* ===========================================
+             AUTHENTICATION ROUTE IS DEFINED HERE
+            ===========================================
+        */}
         <Route exact path="/" element={<LoginView />} />
+
+        {/* ===========================================
+             RSP MODULE ROUTES ARE DEFINED HERE
+            ===========================================
+        */}
         <Route exact path="/rsp" element={<MainPageLayout />}>
           {/* RSP MODULE ROUTES */}
           <Route index element={<Navigate to="/rsp/dashboard" />} />
@@ -111,20 +126,19 @@ const MainRouter = () => {
             />
             <Route
               path="/rsp/recruitment/comparative-matrix/:item"
-              element={<RecruitmentBaseComponent />}
+              element={<RecruitmentComparativeMatrix />}
             />
           </Route>
 
           <Route path="/rsp/request" element={<RequestView />} />
 
           <Route path="/rsp/compensation" element={<CompensationView />} />
-
-          {/* OTHER MODULE ROUTES */}
         </Route>
-
-        {/* PDS FORM APPLICANT ROUTES */}
+        {/* ===========================================
+             PDS ROUTES ARE DEFINED HERE
+            ===========================================
+        */}
         <Route path="/applicant/:position" element={<FormPageOne />}></Route>
-
         <Route path="/pds-applicant">
           <Route path="/pds-applicant">
             <Route
@@ -169,9 +183,43 @@ const MainRouter = () => {
             element={<SuccessEmailConfirmation />}
           />
         </Route>
-
+        {/* ===========================================
+             JVS ROUTE IS DEFINED HERE
+            ===========================================
+        */}
         <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
-
+        {/* ===========================================
+             LIBRARY ROUTES ARE DEFINED HERE
+            ===========================================
+        */}
+        <Route path="/library" element={<MainPageLayout />}>
+          <Route index element={<Navigate to="/library/office/" />} />
+          <Route path="/library/office/" element={<LibraryOfficeView />} />
+          <Route
+            path="/library/category-groups/"
+            element={<CategoryGroupsBaseComponent />}
+          />
+          <Route
+            path="/library/documentary-requirements/"
+            element={<DocumentRequirementsBase />}
+          />
+          <Route
+            path="/library/evaluation-battery/"
+            element={<EvaluationBatteryBaseComponent />}
+          />
+          <Route
+            path="/library/position-csc-library"
+            element={<PositionLibrary />}
+          />
+          <Route
+            path="/library/service-history"
+            element={<HistoryServiceLibrary />}
+          />
+        </Route>
+        {/* ===========================================
+             404 PAGE: WHEN ROUTES AREN'T DEFINE
+            ===========================================
+        */}
         <Route
           path="*"
           element={
@@ -180,20 +228,6 @@ const MainRouter = () => {
             </React.Fragment>
           }
         />
-
-        <Route path="/library" element={<MainPageLayout />}>
-          <Route index element={<Navigate to="/library/office/" />} />
-          <Route path="/library/office/" element={<LibraryOfficeView />} />
-          <Route
-            path="/library/category-groups/"
-            element={<CategoryGroupsBaseComponent />}
-          />
-          <Route path="/library/documents/" element={<LibraryOfficeView />} />
-          <Route
-            path="/library/service-history"
-            element={<HistoryServiceLibrary />}
-          />
-        </Route>
       </Routes>
     </React.Fragment>
   );

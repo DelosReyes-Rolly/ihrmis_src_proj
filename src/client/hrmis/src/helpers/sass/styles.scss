@@ -158,7 +158,9 @@ body {
 .btn-primary:active {
   transform: translate(2px);
 }
-
+.pointer {
+  cursor: pointer;
+}
 // .selector-span-1 button{
 //     display: inline-flex;
 //     align-items: center;

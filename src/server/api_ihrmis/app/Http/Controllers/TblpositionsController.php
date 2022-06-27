@@ -61,8 +61,12 @@ class TblpositionsController extends Controller
         return Tblpositions::findOrFail($id);
     }
 
-    public function getPositionWithCsc( $id)
+    public function getPositionWithCsc($id = NULL)
     {
+        if($id == NULL){
+            $getQry = Tblpositions::with("tblpositionCscStandards")->get();
+            return GetPositionWithCscResource::collection($getQry);
+        }
         $getQry = Tblpositions::where("pos_id", $id)->with("tblpositionCscStandards")->first();
         return new GetPositionWithCscResource($getQry);
     }

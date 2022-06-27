@@ -15,6 +15,7 @@
   z-index: 100;
 
   .sidebar-menu-items {
+    user-select: none;
     margin: 20px 0px;
     .list-of-items {
       .items {

@@ -4,10 +4,6 @@ import React, { useEffect, useState } from "react";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import SelectComponent from "../../../../common/input_component/select_component/select_component";
-import {
-  categoryInputCategory,
-  educationInputItem,
-} from "../../../library/static/input_items";
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
@@ -17,6 +13,8 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
 import { eligibilityInputItems } from "../../static/input_items";
+import { categoryInputCategory } from "../../../../library/static/library_input_items";
+import { educationInputItem } from "../../../../pds_form/static/input_items";
 
 const PositionModal = ({ isDisplay, onClose, id = null }) => {
   const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
@@ -100,12 +98,13 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
           setArrayValues([]);
           dispatch(setRefresh());
           resetForm();
+          renderBusy(false);
           onClose();
         })
         .catch((err) => {
+          renderBusy(false);
           renderFailed({ content: err.message });
         });
-      renderBusy(false);
     },
   });
 
@@ -113,6 +112,7 @@ const PositionModal = ({ isDisplay, onClose, id = null }) => {
     if (id) {
       getEditOfficeCscStandard();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
@@ -236,7 +236,6 @@ const EligibilityInput = ({ formik }) => {
       <h4>ELIGIBILITY</h4>
       <br />
       <div className="">
-        {console.log(formik?.values?.eligibility)}
         <Creatable
           isClearable
           value={formik?.values?.eligibility}
@@ -275,8 +274,8 @@ const EducationInput = ({ formik, values, setValues }) => {
   const [level, setLevel] = useState(""); // Formik Level value
 
   const setOrAddValue = () => {
-    if (keyword != "") {
-      if (level != "") {
+    if (keyword !== "" || keyword === undefined) {
+      if (level !== "" || keyword === undefined) {
         // arrHolder = []
         // arrHolder.push({ keyword, level });
         // setValues(arrHolder);
@@ -293,6 +292,7 @@ const EducationInput = ({ formik, values, setValues }) => {
 
   useEffect(() => {
     formik.setFieldValue("education", values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values]);
 
   return (

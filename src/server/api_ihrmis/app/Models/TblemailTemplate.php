@@ -9,8 +9,8 @@ class TblemailTemplate extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'eml_id';
     protected $table = 'tblemail_templates';
+    protected $primaryKey = 'eml_id';
     
     protected $fillable=[
         'eml_type',

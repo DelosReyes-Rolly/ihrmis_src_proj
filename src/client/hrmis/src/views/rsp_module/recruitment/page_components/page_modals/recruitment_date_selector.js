@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ModalComponent from '../../../../common/modal_component/modal_component';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import InputComponent from '../../../../common/input_component/input_component/input_component';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import SelectComponent from '../../../../common/input_component/select_component/select_component';
 import { monthSelectItem } from '../../static/menu_items';

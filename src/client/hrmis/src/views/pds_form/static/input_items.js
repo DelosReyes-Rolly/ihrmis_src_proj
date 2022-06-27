@@ -42,6 +42,33 @@ export const educationInputItem = [
 	},
 ];
 
+export const educationInputItemText = [
+	{
+		id: '0',
+		title: 'N/A',
+	},
+	{
+		id: '1',
+		title: 'Elementary Graduate',
+	},
+	{
+		id: '2',
+		title: 'Secondary Graduate',
+	},
+	{
+		id: '3',
+		title: 'Vocational/Trade',
+	},
+	{
+		id: '4',
+		title: 'Bachelors in',
+	},
+	{
+		id: '5',
+		title: 'Graduate Studies in ',
+	},
+];
+
 export const formOneInput = {
 	blood_type: [
 		{

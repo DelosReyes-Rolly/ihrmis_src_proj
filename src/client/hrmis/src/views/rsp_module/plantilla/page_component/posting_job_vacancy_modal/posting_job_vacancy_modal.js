@@ -5,13 +5,10 @@ import ModalComponent from "../../../../common/modal_component/modal_component";
 import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
 
 const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
-  // TODO: Change this array name to actual data name, and use a props that will be use for initializing this array
   const [arrSample, setArrSample] = useState([
-    { id: 1, date: "2022-12-23", message: "Wrestle Maniac" },
-    { id: 2, date: "2022-12-05", message: "Pro Googler" },
+    { date: "2022-12-23", message: "World Hello" },
+    { date: "2022-12-05", message: "Hello WOrld" },
   ]);
-
-  const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(0);
 
@@ -21,66 +18,46 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
       return setPage(page - 1);
     }
     if (isNext === true) {
-      //TODO: Change the array length to actual array name length
       if (page === arrSample.length - 1) return setPage(arrSample.length - 1);
       return setPage(page + 1);
     }
   };
 
   const formDataHandler = (isMessage, index, value) => {
-    // TODO: Change this array to actual array name
     let newFormData = arrSample;
     if (isMessage === true) newFormData[index].message = value;
     if (isMessage === false) newFormData[index].date = value;
     setArrSample(newFormData);
   };
 
-  const removeFormData = (index) => {
-    // TODO: Change this array to actual array name
-    setLoading(true);
-    let newArray = arrSample;
-    newArray = newArray.filter((item) => item.id !== newArray[index].id);
-    console.log(newArray);
-    setArrSample(newArray);
-    setTimeout(() => {
-      if (newArray.length === 0) return onClose();
-      setLoading(false);
-    }, 200);
-  };
+  const removeFormData = (index) => {};
 
   return (
     <React.Fragment>
       <ModalComponent
+        style={{ zIndex: "101" }}
         title="Posting On Job Vacancy"
         isDisplay={isDisplay}
         onClose={onClose}
-        onPressed={() => removeFormData(page)}
         onCloseName="Remove"
         onSubmitName="Submit"
       >
         <div className="posting-job-vacancy-main">
-          {/* TODO: Change this array to actual array name */}
           {arrSample?.map((data, index) => {
-            if (index === page) {
-              return (
-                <React.Fragment key={data.id}>
-                  {loading === true ? (
-                    <LoaderFunction title="Removing..." />
-                  ) : (
-                    <EditableContentTemplate
-                      item={data}
-                      navigate={pageNavigator}
-                      setForm={formDataHandler}
-                      index={index}
-                      currentPage={page}
-                      // TODO: Change this array to actual array name
-                      count={arrSample.length}
-                    />
-                  )}
-                </React.Fragment>
-              );
-            }
-            return null;
+            return (
+              <React.Fragment key={index}>
+                {index === page ? (
+                  <EditableContentTemplate
+                    item={data}
+                    navigate={pageNavigator}
+                    setForm={formDataHandler}
+                    index={index}
+                    currentPage={page}
+                    count={arrSample.length}
+                  />
+                ) : null}
+              </React.Fragment>
+            );
           })}
         </div>
       </ModalComponent>
@@ -104,8 +81,8 @@ const EditableContentTemplate = ({
   useEffect(() => {
     setTimeout(() => {
       setState(true);
-    }, 300);
-  }, [item]);
+    }, 500);
+  }, []);
 
   const onChangeHandler = (value, isMessage) => {
     const arrHolder = itemData;
@@ -122,7 +99,20 @@ const EditableContentTemplate = ({
   };
 
   if (state === false) {
-    return <LoaderFunction />;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: 25,
+          alignItems: "center",
+        }}
+      >
+        <SyncLoader size={10} color="rgba(0, 78, 135, 1)" />{" "}
+        <p style={{ fontSize: "17px" }}>Please Wait</p>
+      </div>
+    );
   }
 
   return (
@@ -184,25 +174,6 @@ const EditableContentTemplate = ({
           value={itemData?.date}
           onChange={(e) => onChangeHandler(e.target.value, false)}
         />
-      </div>
-    </React.Fragment>
-  );
-};
-
-const LoaderFunction = ({ title = null }) => {
-  return (
-    <React.Fragment>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: 25,
-          alignItems: "center",
-        }}
-      >
-        <SyncLoader size={10} color="rgba(0, 78, 135, 1)" />{" "}
-        <p style={{ fontSize: "17px" }}> {title ?? "Please Wait"}</p>
       </div>
     </React.Fragment>
   );

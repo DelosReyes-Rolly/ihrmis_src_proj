@@ -167,12 +167,15 @@ class EmployeeController extends Controller
             $query = TblemployeeServiceHistory::findOrFail($id);
             $query->svc_remarks = $request->svc_remarks;
             $query->svc_status = $request->svc_status;
+            $query->svc_remarks = $request->svc_remarks;
+            $query->svc_status = $request->svc_status;
+            $query->svc_remarks = $request->svc_remarks;
+            $query->svc_status = $request->svc_status;
             $query->save();
             return response()->json([
                 "message" => "Successfully Updated!"
             ], 200);
         }
-
 
         $query = new TblemployeeServiceHistory();
         $query->svc_remarks = $request->svc_remarks;
@@ -185,6 +188,23 @@ class EmployeeController extends Controller
         return response()->json([
             "message" => "Successfully Updated!"
         ], 200);
+    }
+
+    public function getEmployeeHistoryService($id = NULL){
+        try {
+            if($id === NULL){
+                $qryHistoryService = TblemployeeServiceHistory::all();
+                return CommonResource::collection($qryHistoryService);
+            }
+            $qryHistoryService = TblemployeeServiceHistory::where("svc_emp_id", $id)->first();
+            return new CommonResource($qryHistoryService);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Failed to load the request, Try again later"
+            ], 400);
+        }
+        
     }
 
 }

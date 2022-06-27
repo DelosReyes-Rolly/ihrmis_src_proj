@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { useTable } from "react-table";
+import { useFilters, useGlobalFilter, useSortBy, useTable } from "react-table";
 import BreadcrumbComponent from "../../common/breadcrumb_component/Breadcrumb";
+import SearchComponent from "../../common/input_component/search_input/search_input";
+import PositionModal from "../../rsp_module/plantilla/page_component/plantilla_info_modals/position_modal";
 import { libraryCategoryGroupsBreadCrumbs } from "../../rsp_module/plantilla/static/breadcramp_data";
+import { MdAdd } from "react-icons/md";
 
 const HistoryServiceLibrary = () => {
   return (
@@ -32,8 +35,8 @@ const HistoryServiceLibrary = () => {
 export default HistoryServiceLibrary;
 
 const TableDisplay = () => {
-  const [dataforTable, setDataForTable] = useState([]);
-
+  const [dataforTable] = useState([]);
+  // setDataForTable
   const columns = React.useMemo(
     () => [
       {
@@ -68,21 +71,35 @@ const TableDisplay = () => {
     []
   );
 
-  const data = useMemo(() => dataforTable, []);
+  const data = useMemo(() => dataforTable, [dataforTable]);
 
   return <ActualTable columns={columns} data={data} />;
 };
 
 const ActualTable = ({ columns, data }) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    setGlobalFilter,
+    state,
+  } = useTable(
+    {
       columns,
       data,
-    });
-
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
+  );
+  const { globalFilter } = state;
   // Render the UI for your table
   return (
     <div className="default-table">
+      <SearchNavigation search={globalFilter} setSearch={setGlobalFilter} />
+
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -109,5 +126,48 @@ const ActualTable = ({ columns, data }) => {
         </tbody>
       </table>
     </div>
+  );
+};
+
+const SearchNavigation = ({ search, setSearch }) => {
+  const [showPosModal, setShowPosModal] = useState(false);
+
+  return (
+    <React.Fragment>
+      <PositionModal
+        onClose={() => setShowPosModal(false)}
+        isDisplay={showPosModal}
+      />
+
+      <div className="selector-buttons" style={{ margin: "0px -20px" }}>
+        <div>
+          <span className="selector-span-1">
+            <button
+              className="btn-primary"
+              onClick={() => setShowPosModal(true)}
+            >
+              <MdAdd style={{ padding: 0, marginRight: "5px" }} size="14" />
+              <span>Position</span>
+            </button>
+          </span>
+        </div>
+
+        <div
+          className="search-container"
+          style={{ marginTop: "10px", marginBottom: "10px" }}
+        >
+          <span className="margin-right-1 selector-search-label">
+            <label>Search</label>
+          </span>
+          <span>
+            <SearchComponent
+              placeholder="Search"
+              value={search || ""}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </span>
+        </div>
+      </div>
+    </React.Fragment>
   );
 };

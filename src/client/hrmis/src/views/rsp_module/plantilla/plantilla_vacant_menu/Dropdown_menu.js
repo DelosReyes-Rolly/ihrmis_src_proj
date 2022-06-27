@@ -7,7 +7,6 @@ import {
   setEmailRecepients,
   setNextRank,
   setNotifyOffice,
-  setRankEmail,
   setSelectAgency,
 } from "../../../../features/reducers/plantilla_item_slice";
 import usePositionSetter from "../../../../helpers/use_hooks/position_setter";

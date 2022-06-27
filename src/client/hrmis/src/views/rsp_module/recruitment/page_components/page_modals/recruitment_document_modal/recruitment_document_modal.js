@@ -4,22 +4,20 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { API_HOST } from '../../../../../../helpers/global/global_config';
 import { usePopUpHelper } from '../../../../../../helpers/use_hooks/popup_helper';
-import ButtonComponent from '../../../../../common/button_component/button_component.js.js';
 import InputComponent from '../../../../../common/input_component/input_component/input_component';
 import SelectComponent from '../../../../../common/input_component/select_component/select_component';
 import UploadAttachmentComponent from '../../../../../common/input_component/upload_attachment_component/upload_attachment_component';
 import ModalComponent from '../../../../../common/modal_component/modal_component';
 import DocumentListComponent from './document_list_component';
 import { setRefresh } from '../../../../../../features/reducers/popup_response';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 	const dispatch = useDispatch();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const [documentRequirements, setDocumentRequirements] = useState([]);
-	const { refresh } = useSelector((state) => state.popupResponse);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/2')
+			.get(API_HOST + 'get-documentary-requirements/3')
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;

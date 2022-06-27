@@ -1,30 +1,28 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { API_HOST } from "../../../../helpers/global/global_config.js";
 import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { useSelector } from "react-redux";
-
 import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper.js";
 import { MdAdd } from "react-icons/md";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper.js";
 import AddAgencyModal from "../AddAgencyModal.js";
 
-const AgencyLibraryTable = ({}) => {
+const AgencyLibraryTable = () => {
   let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-
   const [plotAgencyData, setAgencyData] = useState([]);
   const { renderBusy } = usePopUpHelper();
   const { refresh } = useSelector((state) => state.popupResponse);
 
-  const offceDataApi = async () => {
+  const offceDataApi = useCallback(async () => {
     renderBusy(true);
     await axios
       .get(API_HOST + "agency")
       .then((response) => {
         let data = response.data.data ?? [];
         let dataPlot = [];
-        data.map((data) => {
+        data.forEach((data) => {
           let values = {
             agn_id: data.agn_id,
             agn_name: data.agn_name,
@@ -35,18 +33,24 @@ const AgencyLibraryTable = ({}) => {
             agn_head_email: data.agn_head_email,
             agn_address: data.agn_address,
           };
-
           dataPlot.push(values);
         });
         setAgencyData(dataPlot);
       })
       .catch((error) => {});
     renderBusy(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh]);
 
   useEffect(() => {
     offceDataApi();
-  }, [refresh]);
+  }, [offceDataApi]);
+
+  const [dataState, setDataState] = useState();
+  const passModalData = (param) => {
+    setDataState(param);
+    setToggleOfficeModal();
+  };
 
   let data = useMemo(() => plotAgencyData, [plotAgencyData]);
 
@@ -98,9 +102,9 @@ const AgencyLibraryTable = ({}) => {
     headerGroups,
     rows,
     prepareRow,
-    state,
-    setGlobalFilter,
-    setFilter,
+    // state,
+    // setGlobalFilter,
+    // setFilter,
   } = useTable(
     {
       initialState,
@@ -112,13 +116,6 @@ const AgencyLibraryTable = ({}) => {
     useSortBy
   );
 
-  const [dataState, setDataState] = useState();
-  const passModalData = (param) => {
-    setDataState(param);
-    setToggleOfficeModal();
-  };
-
-  // const { globalFilter } = state;
   return (
     <div>
       <div style={{ margin: 20 }}>

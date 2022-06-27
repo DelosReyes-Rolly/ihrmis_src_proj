@@ -111,10 +111,12 @@
   }
   .main-header {
     color: map-get($primaryColor, regular);
+    user-select: none;
   }
 
   .secondary-headers {
     color: map-get($primaryColor, 800);
+    user-select: none;
   }
 
   .secondary-headers-20 {
@@ -124,6 +126,7 @@
   }
 
   th {
+    cursor: default;
     border: 1px solid map-get($blackColor, 200);
     padding: 10px;
   }
@@ -142,6 +145,7 @@
   }
 
   .trHoverBody:hover {
+    cursor: default;
     transition: 200ms;
     background-color: map-get($blackColor, 100);
   }

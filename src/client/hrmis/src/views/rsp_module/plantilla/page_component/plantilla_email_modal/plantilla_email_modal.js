@@ -108,6 +108,15 @@ const PlantillaEmailModal = ({
         }
       }
 
+      if (type === EMAIL_ENUM.next_rank) {
+        formData.append("deadline", value.deadline);
+      }
+      if (imageValue != null) {
+        for (let index = 0; index < imageValue.length; index++) {
+          formData.append("image_upload[]", imageValue[index]);
+        }
+      }
+
       await axios
         .post(endpoint ?? API_HOST + "notify-vacant-office", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -134,10 +143,6 @@ const PlantillaEmailModal = ({
   useEffect(() => {
     getMessageType();
   }, []);
-
-  useEffect(() => {
-    emailFormik.setFieldValue("recepient", email_recepients);
-  }, [email_recepients]);
 
   useEffect(() => {
     if (mType !== null) selectedType(1);
@@ -195,68 +200,15 @@ const PlantillaEmailModal = ({
         <div>
           <div className="email-modal-plantilla">
             <RichTextEditorComponent
+              value={selectedMsg}
               setFieldValue={(val) => {
                 emailFormik.setFieldValue("message", val);
               }}
-              value={selectedMsg}
             />
           </div>
           {emailFormik.touched.message && emailFormik.errors.message ? (
             <p className="error-validation-styles">
               {emailFormik.errors.message}
-            </p>
-          ) : null}
-        </div>
-
-        <br />
-        <div>
-          <label>Sender:</label>
-          <TextAreaComponent
-            style={{ whiteSpace: "pre-line" }}
-            name="sender"
-            value={emailFormik.values.sender}
-            onChange={emailFormik.handleChange}
-          />
-          {emailFormik.touched.sender && emailFormik.errors.sender ? (
-            <p className="error-validation-styles">
-              {emailFormik.errors.sender}
-            </p>
-          ) : null}
-        </div>
-        <br />
-        {type === EMAIL_ENUM.next_rank ? (
-          <div>
-            <label>Deadline:</label>
-            <InputComponent
-              type="date"
-              name="deadline"
-              onChange={emailFormik.handleChange}
-            />
-            {emailFormik.touched.deadline && emailFormik.errors.deadline ? (
-              <p className="error-validation-styles">
-                {emailFormik.errors.deadline}
-              </p>
-            ) : null}
-            <br />
-          </div>
-        ) : null}
-
-        <div>
-          <label>Attachment:</label>
-          <UploadAttachmentComponent
-            name="image_upload"
-            formik={emailFormik}
-            accept="image/png, image/jpeg"
-            isMulti={true}
-            onChange={(e) => {
-              const files = Array.prototype.slice.call(e.target.files);
-              setImageValue(e.target.files);
-            }}
-          />
-          {emailFormik.touched.image_upload &&
-          emailFormik.errors.image_upload ? (
-            <p className="error-validation-styles">
-              {emailFormik.errors.image_upload}
             </p>
           ) : null}
         </div>

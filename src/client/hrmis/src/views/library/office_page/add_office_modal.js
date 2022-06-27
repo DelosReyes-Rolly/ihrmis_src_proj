@@ -42,7 +42,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
     await axios
       .get(API_HOST + "office")
       .then((response) => {
-        response.data.data.map((data) => {
+        response.data.data.foreach((data) => {
           let obj = {};
           obj["id"] = data.ofc_id;
           obj["title"] = data.ofc_acronym;
@@ -58,7 +58,7 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
     await axios
       .get(API_HOST + "agency")
       .then((response) => {
-        response.data.data.map((data) => {
+        response.data.data.foreach((data) => {
           let obj = {};
           obj["id"] = data.agn_id;
           obj["title"] = data.agn_name;
@@ -105,12 +105,6 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
       ofc_area_type: Yup.string()
         .required("This field is required")
         .max(1, "Invalid input"),
-      // ofc_head_itm_id: Yup.number()
-      //   .typeError("Must be a number")
-      //   .required("This field is required"),
-      // ofc_oic_itm_id: Yup.number()
-      //   .typeError("Must be a number")
-      //   .required("This field is required"),
       ofc_ofc_id: Yup.number()
         .typeError("Must be a number")
         .required("This field is required"),
@@ -148,15 +142,6 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
         <div className="add-documents-modal">
           <div className="left-input item-modal-1">
             <label>Office Agency</label>
-            {/* <SelectComponent
-							name='ofc_ofc_id'
-							value={officeForm.values.ofc_ofc_id}
-							onChange={(e) => {
-								officeForm.handleChange(e);
-								// getPlantillas(e.target.value);
-							}}
-							itemList={state.office}
-						></SelectComponent> */}
             <SelectComponent
               name="ofc_agn_id"
               value={officeForm.values.ofc_agn_id}
@@ -182,7 +167,6 @@ const AddOfficeModal = ({ isDisplay, onClose, officeData }) => {
               value={officeForm.values.ofc_ofc_id}
               onChange={(e) => {
                 officeForm.handleChange(e);
-                // getPlantillas(e.target.value);
               }}
               itemList={office}
             />
