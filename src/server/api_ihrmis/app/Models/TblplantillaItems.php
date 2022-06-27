@@ -14,7 +14,7 @@ class TblplantillaItems extends Model
 
     protected $primaryKey = 'itm_id';
     protected $table = 'tblplantilla_items';
-    
+
     protected $fillable = [
         'itm_regular',
         'itm_no',
@@ -50,16 +50,13 @@ class TblplantillaItems extends Model
         return $this->hasMany(TblplantillaDutiesRspnsblts::class, 'dty_itm_id', 'itm_id');
     }
 
-    public function Tblapplivants()
+    public function tblapplicants()
     {
-        return $this->belongsTo(Tblapplicants::class, 'app_itm_id', 'itm_id');
+        return $this->hasMany(Tblapplicants::class, 'app_itm_id', 'itm_id');
     }
 
-    public function tblapplicants(){
-        return $this->hasMany(Tblapplicants::class, 'app_itm_id' ,'itm_id');
-    }
-
-    public function tblapplicant_profile(){
+    public function tblapplicant_profile()
+    {
         return $this->hasManyThrough(
             TblapplicantsProfile::class,
             Tblapplicants::class,
@@ -68,14 +65,15 @@ class TblplantillaItems extends Model
             'itm_id', // Local key on the plnatillaitems table...
             'app_id' // Local key on the applicants table...
         );
-
     }
 
-    public function employee(){
+    public function employee()
+    {
         return $this->hasOne(Tblemployees::class, 'emp_itm_id', 'itm_id');
     }
 
-    public function tbloffices(){
+    public function tbloffices()
+    {
         return $this->hasOne(Tbloffices::class, 'ofc_id', 'itm_ofc_id');
     }
 }

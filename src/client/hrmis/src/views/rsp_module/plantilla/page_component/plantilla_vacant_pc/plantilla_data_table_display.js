@@ -44,11 +44,6 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
 export const PlantillaDataTableDisplay = ({ type }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
-	const [selected_item_id, setSelectedItemID] = useState([]);
-	const { item_id, plantilla_items } = useSelector(
-		(state) => state.plantillaItem
-	);
-	// const [filters, setFiltersTable] = useState([]);
 	const dispatch = useDispatch();
 
 	const getVcEmailTemplateData = async (item_id) => {
@@ -330,7 +325,7 @@ const SelectAction = () => {
 				isDisplay={context_menu}
 				onClose={() => dispatch(setContextMenu())}
 			/>
-			<PlantillaEmailModal
+			<PlantillaVpEmailModal
 				isDisplay={rank_email}
 				onClose={() => dispatch(setRankEmail())}
 				type={EMAIL_ENUM.next_rank}
