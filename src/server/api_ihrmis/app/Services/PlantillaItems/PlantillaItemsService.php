@@ -369,8 +369,7 @@ class PlantillaItemsService
 				}
 			}
 		}
-
-    	return $arrHolder;
+    	return CommonResource::collection($arrHolder);
   	}
 
 	public function addToNextInRank($request){

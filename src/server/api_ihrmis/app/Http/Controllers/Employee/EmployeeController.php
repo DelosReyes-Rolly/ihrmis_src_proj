@@ -16,6 +16,7 @@ use App\Models\Employees\TblemployeeEducations;
 use App\Models\Employees\TblemployeeExperiences;
 use App\Models\Employees\TblemployeeReferences;
 use App\Models\Employees\Tblemployees;
+use App\Models\Employees\TblemployeeServiceHistory;
 use App\Models\Employees\TblemployeeTrainings;
 use App\Models\Employees\TblemployeeVoluntaryWorks;
 use App\Services\Employee\EmployeeService;
@@ -33,10 +34,6 @@ class EmployeeController extends Controller
         }, "serviceHistory"])->get();
       
         return GetEmployeeResource::collection($empQry);
-      
-
-
-       
     }
 
     public function getSingleEmployee($id){
@@ -161,4 +158,53 @@ class EmployeeController extends Controller
             return response()->json(['message' => "Unable to process the request please try again later.", "error" => $th], 400);
         }
     }
+
+    /**
+     * EMPLOYEE STATUS
+     */
+    public function addUpdateEmployeeHistoryService(Request $request, $id = NULL){
+        if($id !== NULL){
+            $query = TblemployeeServiceHistory::findOrFail($id);
+            $query->svc_remarks = $request->svc_remarks;
+            $query->svc_status = $request->svc_status;
+            $query->svc_remarks = $request->svc_remarks;
+            $query->svc_status = $request->svc_status;
+            $query->svc_remarks = $request->svc_remarks;
+            $query->svc_status = $request->svc_status;
+            $query->save();
+            return response()->json([
+                "message" => "Successfully Updated!"
+            ], 200);
+        }
+
+        $query = new TblemployeeServiceHistory();
+        $query->svc_remarks = $request->svc_remarks;
+        $query->svc_status = $request->svc_status;
+        $query->svc_remarks = $request->svc_remarks;
+        $query->svc_status = $request->svc_status;
+        $query->svc_remarks = $request->svc_remarks;
+        $query->svc_status = $request->svc_status;
+        $query->save();
+        return response()->json([
+            "message" => "Successfully Updated!"
+        ], 200);
+    }
+
+    public function getEmployeeHistoryService($id = NULL){
+        try {
+            if($id === NULL){
+                $qryHistoryService = TblemployeeServiceHistory::all();
+                return CommonResource::collection($qryHistoryService);
+            }
+            $qryHistoryService = TblemployeeServiceHistory::where("svc_emp_id", $id)->first();
+            return new CommonResource($qryHistoryService);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Failed to load the request, Try again later"
+            ], 400);
+        }
+        
+    }
+
 }

@@ -140,7 +140,7 @@ Route::get('get-cm-data/{plantilla_id}', [RecruitmentController::class, "getCMDa
 Route::get('get-ra-data/{plantilla_id}/{applicant_id}', [RecruitmentController::class, "getRAData"]);
 
 
-Route::get('get-info-position/{id}', [TblpositionsController::class, "getPositionWithCsc"]);
+Route::get('get-info-position/{id?}', [TblpositionsController::class, "getPositionWithCsc"]);
 
 //=======================================================================================
 // PLANTILLA ITEM END POINTS
@@ -285,3 +285,10 @@ Route::delete('remove-emp_cse/{cse_id}', [EmployeeController::class, "removeEmpl
 Route::post('add-update-emp_edu/{edu_id?}', [EmployeeController::class, "addUpdateEducation"]);
 Route::get('get-emp_edu/{emp_id}', [EmployeeController::class, "getEmployeeEducation"]);
 Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmployeeEducation"]);
+
+
+//=======================================================================================
+// LIBRARY CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployeeHistoryService"]);
+

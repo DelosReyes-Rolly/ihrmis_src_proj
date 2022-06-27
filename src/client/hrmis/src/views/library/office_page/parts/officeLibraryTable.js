@@ -1,11 +1,9 @@
 import React, { useMemo, useEffect, useState } from "react";
-
 import axios from "axios";
 import { API_HOST } from "../../../../helpers/global/global_config.js";
 import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { useSelectValueCon } from "../../../../helpers/use_hooks/select_value_cons.js";
-
 import {
   apiGetPositions,
   apiModelOffices,
@@ -15,17 +13,18 @@ import {
 import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper.js";
 import AddOfficeModal from "../add_office_modal.js";
 import { MdAdd } from "react-icons/md";
-import { axiosHeader } from "../../../../config/axios_config.js";
+import { useAxiosHeadHelper } from "../../../../helpers/use_hooks/axios_head_helper.js";
 
 const OfficeLibraryTable = () => {
   const [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
   const [plotOfficeData, setOfficeData] = useState([]);
   const { trueValue } = useSelectValueCon();
+  const AXIOS_HEADER = useAxiosHeadHelper();
 
   const getAgency = async () => {
     let agencies = [];
     await axios
-      .get(API_HOST + "agency", axiosHeader)
+      .get(API_HOST + "agency", AXIOS_HEADER)
       .then((response) => {
         response.data.data.map((data) => {
           let obj = {};
@@ -46,7 +45,7 @@ const OfficeLibraryTable = () => {
 
   const offceDataApi = async (agencies) => {
     await axios
-      .get(API_HOST + "getOffices", axiosHeader)
+      .get(API_HOST + "getOffices", AXIOS_HEADER)
       .then((response) => {
         let data = response.data ?? [];
         let dataPlot = [];

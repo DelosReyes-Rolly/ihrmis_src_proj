@@ -15,22 +15,22 @@ import navbarLogo from "../../../assets/images/ilogo.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_HOST } from "../../../helpers/global/global_config";
-import { axiosHeader } from "../../../config/axios_config";
 import { setBusy } from "../../../features/reducers/popup_response";
 import { ALERT_ENUM, popupAlert } from "../../../helpers/alert_response";
+import { useAxiosHeadHelper } from "../../../helpers/use_hooks/axios_head_helper";
 
-const USER_INFO = {
-  user: "user",
-  token: "token",
-  token_type: "token_type",
-};
+// const USER_INFO = {
+//   user: "user",
+//   token: "token",
+//   token_type: "token_type",
+// };
 
 const NavbarComponent = () => {
   let [dropState, updateDropState] = useToggleHelper(false);
   let dispatch = useDispatch();
   const [timeDataState, setTimeDataState] = useState();
   const navigate = useNavigate();
-
+  const AXIOS_HEADER = useAxiosHeadHelper();
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeDataState(
@@ -57,11 +57,9 @@ const NavbarComponent = () => {
   const logoutAccount = async () => {
     dispatch(setBusy(true));
     await axios
-      .get(API_HOST + "logout", axiosHeader)
+      .get(API_HOST + "logout", AXIOS_HEADER)
       .then(() => {
-        window.sessionStorage.removeItem(USER_INFO.user);
-        window.sessionStorage.removeItem(USER_INFO.token);
-        window.sessionStorage.removeItem(USER_INFO.token_type);
+        window.sessionStorage.clear();
         dispatch(setBusy(false));
         navigate("/", { replace: true });
       })

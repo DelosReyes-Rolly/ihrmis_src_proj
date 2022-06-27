@@ -87,8 +87,13 @@ export const SidebarOption = [
       },
       {
         id: 6,
-        title: "Positions",
-        link: "/rsp/plantilla/plantilla-items",
+        title: "Civil Service Position",
+        link: "/library/position-csc-library",
+      },
+      {
+        id: 7,
+        title: "Service History",
+        link: "/library/service-history",
       },
     ],
     link: "/library",
