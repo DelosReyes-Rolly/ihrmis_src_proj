@@ -2,6 +2,7 @@
 
 namespace App\Models\Applicants;
 
+use App\Models\Applicants\TblapplicantsAssessments;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
@@ -57,7 +58,7 @@ class Tblapplicants extends Model
 
     public function tbltransactionStages()
     {
-        return $this->hasManyThrough(TblTransactionStages::class, tblapplicantsStatus::class,'sts_app_id','stg_id','app_id','sts_app_stg_id');
+        return $this->hasManyThrough(TblTransactionStages::class, tblapplicantsStatus::class, 'sts_app_id', 'stg_id', 'app_id', 'sts_app_stg_id');
     }
 
     public function TblapplicantsProfile()
@@ -90,9 +91,13 @@ class Tblapplicants extends Model
         return $this->hasOne(Tblemployees::class, 'emp_id', 'app_emp_id');
     }
 
-    public function applicant(){
-        return $this->hasOne(TblapplicantsProfile::class, 'app_id' ,'app_id');
+    public function applicant()
+    {
+        return $this->hasOne(TblapplicantsProfile::class, 'app_id', 'app_id');
     }
-    
 
+    public function TblAssessments()
+    {
+        return $this->hasOne(TblapplicantsAssessments::class, 'ass_app_id', 'app_id');
+    }
 }

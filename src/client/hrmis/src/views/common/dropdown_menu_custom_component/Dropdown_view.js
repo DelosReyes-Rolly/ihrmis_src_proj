@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AiFillCaretUp } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import ReactTooltip from "react-tooltip";
-import usePositionSetter from "../../../helpers/use_hooks/position_setter";
+import React, { useRef, useState } from 'react';
+import { AiFillCaretUp } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
+import usePositionSetter from '../../../helpers/use_hooks/position_setter';
 
 const DropdownViewComponent = ({
-  title = {},
-  className,
-  itemList,
-  alignItems = "start",
-  toolTipId,
-  textHelper,
-  position = "top",
-  effect = "solid",
-  setValue,
+	title = {},
+	className,
+	itemList,
+	alignItems = 'flex-start',
+	toolTipId,
+	textHelper,
+	position = 'top',
+	effect = 'solid',
+	setValue,
 }) => {
   const [dropable, setDropable] = useState(false);
   const [x, y, location, elementSize] = usePositionSetter(dropable);

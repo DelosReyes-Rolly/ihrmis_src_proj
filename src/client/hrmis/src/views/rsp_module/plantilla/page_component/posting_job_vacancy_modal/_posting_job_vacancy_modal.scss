@@ -15,8 +15,15 @@
 
   .posting-job-vacancy-anchor:hover {
     text-decoration: underline;
-    color: #74caf3;
     @include zoomInEffect();
+  }
+
+  .on-last-page {
+    color: gray;
+  }
+
+  .on-last-page {
+    color: gray;
   }
 
   .posting-job-vacancy-deadline {

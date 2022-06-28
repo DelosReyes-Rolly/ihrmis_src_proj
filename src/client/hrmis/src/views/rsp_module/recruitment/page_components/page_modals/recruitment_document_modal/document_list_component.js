@@ -17,7 +17,7 @@ const DocumentListComponent = ({ applicantId }) => {
 	const [otherDocs, setOtherDocs] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/2')
+			.get(API_HOST + 'get-documentary-requirements/3')
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
@@ -38,7 +38,7 @@ const DocumentListComponent = ({ applicantId }) => {
 
 	const getUploadedDocuments = async () => {
 		await axios
-			.get(API_HOST + 'get-uploaded-documents/2/' + applicantId)
+			.get(API_HOST + 'get-uploaded-documents/3/' + applicantId)
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
@@ -52,12 +52,11 @@ const DocumentListComponent = ({ applicantId }) => {
 							if (index !== -1) {
 								requirements[index].att_id = value.att_id;
 								setDocumentRequirements(requirements);
-								console.log(requirements);
 							}
 							let temp = {
 								id: element.doc_id,
 								title:
-									element.doc_id === 7 ? value.att_app_name : element.doc_name,
+									element.doc_id === 4 ? value.att_app_name : element.doc_name,
 								att_id: value.att_id,
 								file: value.att_app_file,
 							};

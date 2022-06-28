@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { SidebarOption } from "./sidebar_data";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,7 @@ import { useDetectScreenHelper } from "../../../helpers/use_hooks/detect_screen_
 const SidebarComponent = ({ itemsList = SidebarOption }) => {
   const navigate = useNavigate();
   const [selected, setSelected] = useSessionStorage("selected-sidebar-item", 1);
-  const [_, setSubSelected] = useSessionStorage("selected-sidebar-subitem", 1);
+  const [, setSubSelected] = useSessionStorage("selected-sidebar-subitem", 1);
   const isNavbarEnable = useSelector((state) => state.mobileView.sidebar);
   const dispatch = useDispatch();
   const { isMobile } = useDetectScreenHelper();

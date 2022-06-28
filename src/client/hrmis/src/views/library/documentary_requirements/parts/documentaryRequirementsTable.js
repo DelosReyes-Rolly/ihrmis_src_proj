@@ -1,113 +1,91 @@
-import React, { useMemo, useEffect, useState, useLayoutEffect } from 'react';
+import React, { useMemo, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { API_HOST } from '../../../../helpers/global/global_config.js';
 import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
 import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
-import BreadcrumbConfig, {
-	crumbSecondLevel,
-} from '../../../../router/breadcrumb_config';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
-import { Outlet } from 'react-router-dom';
 import { MdAdd } from 'react-icons/md';
-import { GroupClusterData } from '../static/input_items.js';
-import GroupClusterModal from './documentaryRequirementsModal.js';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
+import DocumentaryRequirementsModal from './documentaryRequirementsModal.js';
 
-const CategoryGroupsTable = ({}) => {
+const DocumentaryRequirementsTable = () => {
 	const dispatch = useDispatch();
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
-	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
-	const [plotCategories, setCategories] = useState([]);
+	const { renderBusy } = usePopUpHelper();
+	const [plotDocument, setDocuments] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
-	const { trueValue } = useSelectValueCon();
-	const categoryGroupsData = async () => {
+	const documentRequirmentsData = useCallback(async () => {
 		await axios
-			.get(API_HOST + 'category-groups')
+			.get(API_HOST + 'documentary-requirements')
 			.then((response) => {
 				let data = response.data.data ?? [];
 				let dataPlot = [];
-				data.map((data) => {
+				data.forEach((data) => {
 					let values = {
-						grp_id: data.grp_id,
-						grp_name: data.grp_name,
-						grp_level: data.grp_level,
-						grp_cluster: data.grp_cluster,
-						grp_cluster_text: trueValue(data.grp_cluster, GroupClusterData),
-						// parent: trueValue(data.ofc_ofc_id, apiModelOffices),
+						doc_id: data.doc_id,
+						doc_name: data.doc_name,
+						doc_group: data.doc_group,
+						doc_group_text: data.category.grp_name,
 					};
-
 					dataPlot.push(values);
 				});
-				setCategories(dataPlot);
+				setDocuments(dataPlot);
 			})
 			.catch((error) => {});
-		renderBusy(false);
-	};
-	useEffect(() => {
-		categoryGroupsData();
 	}, [refresh]);
 
-	let data = useMemo(() => plotCategories, [plotCategories]);
+	useEffect(() => {
+		documentRequirmentsData();
+	}, [documentRequirmentsData]);
+
+	let data = useMemo(() => plotDocument, [plotDocument]);
 	const columns = useMemo(
 		() => [
 			{
-				Header: 'Group ID',
-				accessor: 'grp_id',
+				Header: 'Document ID',
+				accessor: 'doc_id',
 			},
 			{
-				Header: 'Group Name',
-				accessor: 'grp_name',
+				Header: 'Document Name',
+				accessor: 'doc_name',
 			},
 			{
-				Header: 'Group Level',
-				accessor: 'grp_level',
+				Header: 'Document Group',
+				accessor: 'doc_group',
 			},
 			{
-				Header: 'Group Clister',
-				accessor: 'grp_cluster',
-			},
-			{
-				Header: 'Group Clister',
-				accessor: 'grp_cluster_text',
+				Header: 'Document Group Text',
+				accessor: 'doc_group_text',
 			},
 		],
 		[]
 	);
 
 	const initialState = {
-		hiddenColumns: ['grp_id', 'grp_cluster'],
+		hiddenColumns: ['doc_id', 'doc_group'],
 	};
 
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-		state,
-		setGlobalFilter,
-		setFilter,
-	} = useTable(
-		{
-			initialState,
-			columns,
-			data,
-		},
-		useFilters,
-		useGlobalFilter,
-		useSortBy
-	);
+	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+		useTable(
+			{
+				initialState,
+				columns,
+				data,
+			},
+			useFilters,
+			useGlobalFilter,
+			useSortBy
+		);
 	const removeCategory = async (record) => {
 		renderBusy(true);
 		await axios
-			.delete(API_HOST + `category-groups/${record}`)
+			.delete(API_HOST + `documentary-requirements/${record}`)
 			.then(() => {
 				popupAlert({
-					message: 'Category was deleted',
+					message: 'Document Requirement was deleted',
 					type: ALERT_ENUM.success,
 				});
 			})
@@ -133,10 +111,10 @@ const CategoryGroupsTable = ({}) => {
 			<div style={{ margin: 20 }}>
 				<button className='btn-primary' onClick={() => setToggleOfficeModal()}>
 					<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
-					<span>Category Group</span>
+					<span>Documentary Requirement</span>
 				</button>
 			</div>
-			<GroupClusterModal
+			<DocumentaryRequirementsModal
 				isDisplay={toggleOfficeModal}
 				onClose={() => {
 					setToggleOfficeModal();
@@ -144,13 +122,14 @@ const CategoryGroupsTable = ({}) => {
 				}}
 				data={dataState}
 				remove={() => {
-					if (dataState.grp_id !== '') {
-						removeCategory(dataState.grp_id);
+					if (dataState !== null) {
+						removeCategory(dataState.doc_id);
 					} else {
+						setToggleOfficeModal();
 					}
 				}}
+				removeName={dataState !== null ? 'Delete' : 'Close'}
 			/>
-
 			<div className='default-table'>
 				<table className='table-design' {...getTableProps()}>
 					<thead>
@@ -178,12 +157,11 @@ const CategoryGroupsTable = ({}) => {
 							</tr>
 						))}
 					</thead>
-
 					<tbody {...getTableBodyProps()}>
 						{rows.map((row) => {
 							prepareRow(row);
 							let officeData = {};
-							row.allCells.map((cell) => {
+							row.allCells.forEach((cell) => {
 								let test = { [cell.column.id]: cell.value };
 								officeData = { ...officeData, ...test };
 							});
@@ -220,4 +198,4 @@ const CategoryGroupsTable = ({}) => {
 	);
 };
 
-export default CategoryGroupsTable;
+export default DocumentaryRequirementsTable;

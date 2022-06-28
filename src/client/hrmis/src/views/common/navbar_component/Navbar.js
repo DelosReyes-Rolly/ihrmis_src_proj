@@ -13,13 +13,24 @@ import BadgeComponents from "../badge_component/Badge";
 import NotificationComponent from "../notification/notification_component";
 import navbarLogo from "../../../assets/images/ilogo.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_HOST } from "../../../helpers/global/global_config";
+import { setBusy } from "../../../features/reducers/popup_response";
+import { ALERT_ENUM, popupAlert } from "../../../helpers/alert_response";
+import { useAxiosHeadHelper } from "../../../helpers/use_hooks/axios_head_helper";
+
+// const USER_INFO = {
+//   user: "user",
+//   token: "token",
+//   token_type: "token_type",
+// };
 
 const NavbarComponent = () => {
   let [dropState, updateDropState] = useToggleHelper(false);
   let dispatch = useDispatch();
   const [timeDataState, setTimeDataState] = useState();
   const navigate = useNavigate();
-
+  const AXIOS_HEADER = useAxiosHeadHelper();
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeDataState(
@@ -42,6 +53,24 @@ const NavbarComponent = () => {
       clearInterval(timer);
     };
   }, []);
+
+  const logoutAccount = async () => {
+    dispatch(setBusy(true));
+    await axios
+      .get(API_HOST + "logout", AXIOS_HEADER)
+      .then(() => {
+        window.sessionStorage.clear();
+        dispatch(setBusy(false));
+        navigate("/", { replace: true });
+      })
+      .catch((err) =>
+        popupAlert({
+          message: err.response.data.message ?? err.message,
+          type: ALERT_ENUM.fail,
+        })
+      );
+    dispatch(setBusy(false));
+  };
 
   return (
     <React.Fragment>
@@ -115,7 +144,7 @@ const NavbarComponent = () => {
                 <li className="margin-bottom-1">
                   <span>Change Password</span>
                 </li>
-                <li className="margin-bottom-1" onClick={() => navigate("/")}>
+                <li className="margin-bottom-1" onClick={() => logoutAccount()}>
                   <span>LOGOUT</span>
                 </li>
               </ul>

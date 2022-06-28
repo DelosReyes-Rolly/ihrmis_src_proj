@@ -61,9 +61,11 @@ class GetPositionWithCscResource extends JsonResource
         }
 
         return [
+            "pos_id" => $this->pos_id,
             "pos_title" => $this->pos_title,
             "pos_short_name" => $this->pos_short_name,
             "pos_salary_grade" => $this->pos_salary_grade,
+            "pos_category" => $this->pos_category,
             "education" => $arrContainer["ed"] ?? "",
             "experience" => $arrContainer["ex"] ?? "",
             "training" => $arrContainer["tr"]  ?? "",

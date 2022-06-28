@@ -48,14 +48,18 @@ const ModalComponent = (props) => {
                 </div>
               )}
               {props.addExtraButton}
-              <div className="">
-                <ButtonComponent
-                  className={props.onSubStyle}
-                  type={props.onSubmitType}
-                  buttonName={props.onSubmitName}
-                  onClick={props.onClickSubmit ?? null}
-                />
-              </div>
+              {props.onSubmitHidden ? (
+                ""
+              ) : (
+                <div className="">
+                  <ButtonComponent
+                    className={props.onSubStyle}
+                    type={props.onSubmitType}
+                    buttonName={props.onSubmitName}
+                    onClick={props.onClickSubmit ?? null}
+                  />
+                </div>
+              )}
             </div>
           </form>
         </div>
