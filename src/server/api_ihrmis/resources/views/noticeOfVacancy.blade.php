@@ -23,8 +23,9 @@
 		</style>
 	</head>
 	<body>
-		@foreach( $selected_agencies ?? '' as $data) 
-			<div class="tg-wrap">
+	
+		@foreach( $vacantpositions ?? '' as $value) 
+			<div class="tg-wrap" style="page-break-after: always">
 				<table class="tg" style="table-layout: fixed; width:578px">
 					<colgroup>
 						<col style="width: 28px">
@@ -46,7 +47,11 @@
 							<td class="tg-0lax" colspan="10"><br></td>
 						</tr>
 						<tr>
-							<td class="tg-73oq" colspan="10">The Department of Science and Technology – Central Office (DOST-CO) is in need of<br>qualified applicants to fill up the position of One (1) <span style="font-weight:bold">Administrative Officer III (Supply</span><br><span style="font-weight:bold">Officer II) (SG-14) Item No. OSEC-DOSTB-ADOF3-4-2017</span> under the <span style="font-weight:bold">Administrative and Legal Service - Procurement Management Division</span>. Applicants must meet the following requirements of the position:</td>
+							<td class="tg-73oq" colspan="10" style="text-align: justify">
+								The Department of Science and Technology – {{$value->tbloffices->officeAgency->agn_name}} ({{ $value->tbloffices->officeAgency->agn_acronym }}) is in need of 
+								qualified applicants to fill up the position of One (1) 
+								<span style="font-weight:bold">{{ $value->tblpositions->pos_title }} (SG-{{ $value->tblpositions->pos_salary_grade}}) 
+								Item No. {{  $value->itm_no }}</span> under the <span style="font-weight:bold">{{ $value->tbloffices->ofc_name }}</span>. Applicants must meet the following requirements of the position:</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="10"><br></td>
@@ -56,62 +61,37 @@
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="3">Education</td>
-							<td class="tg-73oq" colspan="7">: Bachelor's degree relevant to the job</td>
+							<td class="tg-73oq" colspan="1" style="width: fit-content">:</td>
+							<td colspan="6">{{ $value->education }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="3">Experience</td>
-							<td class="tg-73oq" colspan="7">: One (1) year of relevant experience</td>
+							<td class="tg-73oq" colspan="7">: {{ $value->experience }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="3">Training</td>
-							<td class="tg-73oq" colspan="7">: Four (4) hours of relevant training</td>
+							<td class="tg-73oq" colspan="7">: {{ $value->training }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="3">Eligibility</td>
-							<td class="tg-73oq" colspan="7">: Career Service Professional / Second Level Eligibility</td>
+							<td class="tg-73oq" colspan="7">: {{ $value->eligibility }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="3">Job Description </td>
-							<td class="tg-73oq" colspan="7"></td>
+							<td class="tg-73oq" colspan="7">:</td>
 						</tr>
-						<tr>
-							<td class="tg-73oq" style="width: fit-content"></td>
-							<td class="tg-73oq tg-custom" >1.</td>
-							<td colspan="8">Provides administrative support to the DOST-CO Bids and Awards Committee<br>(BAC);</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">2.</td>
-							<td class="tg-73oq" colspan="8">Organizes and makes all necessary arrangements for DOST-CO BAC meetings and conferences;</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">3.</td>
-							<td class="tg-73oq" colspan="8">Assists in preparing minutes of meetings and resolutions of the DOST-CO BAC;</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">4.</td>
-							<td class="tg-73oq" colspan="8">Assists in monitoring procurement activities and milestones for proper reporting to relevant agencies when required;</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">5.</td>
-							<td class="tg-73oq" colspan="8">Consolidates Project Procurement Management Plans (PPMPs) from various units of the procuring entity into one (1) Annual Procurement Plan (APP) and makes them available for review;</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">6.</td>
-							<td class="tg-73oq" colspan="8">Assists in channeling communications for the DOST-CO BAC with End-Users,<br>project management office/s, other units of line agencies, other government<br>agencies, providers of goods, infrastructure projects and consulting services,<br>observers and the general public; and</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-							<td class="tg-73oq tg-custom">7.</td>
-							<td class="tg-73oq" colspan="8">Performs other tasks as may be assigned from time to time.</td>
-						</tr>
-						<tr>
-							<td class="tg-73oq"></td>
-						</tr>
+						{{$num_responsibility = count($value->tbldtyresponsibility); }}
+						@foreach( $value->tbldtyresponsibility ?? '' as $key => $value)
+							<tr>
+								<td class="tg-73oq" style="width: fit-content"></td>
+								<td class="tg-73oq tg-custom" >{{ $value->dty_itm_order }}.</td>
+								<td colspan="8">
+									{{$value->dty_itm_desc}}
+									{{ $key < ($num_responsibility-1) ? ";" : "." }} 
+									{{ $key == ($num_responsibility-2) ? " and" : "" }}
+								</td>
+							</tr>
+						@endforeach
 						<tr>
 							<td class="tg-73oq" colspan="10">Remarks:</td>
 						</tr>
@@ -123,7 +103,9 @@
 							<td class="tg-73oq"><br></td>
 						</tr>
 						<tr>
-							<td class="tg-73oq" colspan="10" style="text-align: justify"s>Interested and qualified applicants may submit their requirements personally, through the mail, or online <span style="font-weight:bold;text-decoration:underline">on or before 12 March 2021</span>. For online applications, it is expected that original copies will be presented to the Personnel Division for verification within 10 calendar days. <span style="text-decoration:underline">Only those applications with complete requirements as enumerated below shall be entertained</span>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+							<td class="tg-73oq" colspan="10" style="text-align: justify">
+								Interested and qualified applicants may submit their requirements personally, through the mail, or online 
+								<span style="font-weight:bold;text-decoration:underline">on or before {{ $value->deadline_formatted }}</span>. For online applications, it is expected that original copies will be presented to the Personnel Division for verification within 10 calendar days. <span style="text-decoration:underline">Only those applications with complete requirements as enumerated below shall be entertained</span>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" style="padding-top: 10px" colspan="10"></td>

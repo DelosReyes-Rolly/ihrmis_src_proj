@@ -4,6 +4,7 @@ namespace App\Services\PlantillaItems;
 
 use App\Http\Resources\CommonResource;
 use App\Http\Resources\Plantilla\GetEmailTemplateDataResource;
+use App\Http\Resources\Plantilla\GetPlantillaItemResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
 use App\Http\Resources\Plantilla\GetVacantPositionsResource;
 use App\Models\Applicants\Tblapplicants;
@@ -14,15 +15,25 @@ use App\Models\Employees\TblnextInRank;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
+use App\Services\CommonHelpers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Mpdf\Mpdf as MPDF;
 
 // use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 class PlantillaItemsService
 {
+	protected $cHelper;
+
+	public function __construct()
+	{
+		$this->cHelper = new CommonHelpers();
+	}
+
+
 
 	/**
 	 * insertEmployeeProfile
@@ -31,6 +42,8 @@ class PlantillaItemsService
 	 */
 	private function insertEmployeeProfile($data, $plantilladata)
 	{
+
+
 
 		$newemployee = new Tblemployees();
 		$newemployee->emp_no = "";
@@ -76,14 +89,12 @@ class PlantillaItemsService
 			$vacantpos = TblplantillaItems::find($value['itm_id']);
 			$vacant_state = $vacantpos->itm_state;
 			$message = "Successfully closed the selected positions";
-			if ($vacantpos->itm_state == 0) {
+			if ($vacantpos->itm_state == 1) {
 				DB::beginTransaction();
-
-
 				if (Tblapplicants::where('app_itm_id', $value['itm_id'])->exists()) {
 
 					//set to filled state
-					$vacantpos->itm_state = 1;
+					$vacantpos->itm_state = 0;
 					$vacantpos->save();
 
 					$tbl_applicant_query =  Tblapplicants::where('app_itm_id', $value['itm_id'])->first();
@@ -151,7 +162,7 @@ class PlantillaItemsService
 		$status = 200;
 		$message = "Successfully Added";
 
-		$this->response($result, $status, $message);
+		$this->cHelper->response($result, $status, $message);
 	}
 
 	########################################## GET METHODS #######################################################
@@ -228,43 +239,6 @@ class PlantillaItemsService
 	}
 
 	/**
-	 * generateNoticeofVacancyReports
-	 * Todo this function will generate Notice of Vacancy report in PDF form
-	 * @return void
-	 */
-	public function generateNoticeofVacancyReports()
-	{
-		date_default_timezone_set('Asia/Manila'); //define local time
-		//get vacant position
-		$data = $this->getVacantPositions(0);
-		$new_data = [];
-
-		foreach ($data as $itm) {
-			$positionswithcscstandards = $this->getPositionWithCsc($itm->tblpositions->pos_id);
-			$itm->positionswithcscstandards = $positionswithcscstandards;
-		}
-
-		$new_data['vacantpositions'] = $data;
-		$new_data['letter_head'] = Config::get('memorandum.letter_head');
-		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
-
-		$pdf = new MPDF();
-		$date = date('m/d/Y');
-
-		$pdf->writeHTML(view('noticeOnVacantPosition', $new_data, [], [
-			'title'				=> 	'Notice of Vacancy',
-			'margin_left'     	=> 10,
-			'margin_right'      => 10,
-			'margin_top'        => 10,
-			'margin_bottom'     => 10,
-			'orientation'       => 'P',
-			'format' => 'A4'
-		]));
-
-		return $pdf->output('Notice of Vacancy_' . $date . '.pdf', "I");
-	}
-
-	/**
 	 * generateMemoOnPostingVpReport
 	 * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
 	 * @return void
@@ -304,8 +278,10 @@ class PlantillaItemsService
 	/**
 	 * getPlantillaItemDetails
 	 */
-	public function getPlantillaItemDetails($item_state)
+	public function getPlantillaItemDetails($item_state = 1)
 	{
+
+
 		$item_query = TblplantillaItems::with(
 			'tbloffices',
 			'tbloffices.officeAgency',
@@ -314,6 +290,17 @@ class PlantillaItemsService
 			'tblpositions.tblpositionCscStandards',
 			'tbldtyresponsibility'
 		)->where('itm_state', $item_state)->get();
+
+		foreach ($item_query as $value) {
+			$csc_standard = $this->cHelper->cscStandardFormatter($value->tblpositions->tblpositionCscStandards);
+			$value->education = $csc_standard["ed"] ?? "";
+			$value->experience = $csc_standard["ex"] ?? "";
+			$value->training = $csc_standard["tr"]  ?? "";
+			$value->eligibility = $csc_standard["cs"] ?? "";
+			unset($value->tblpositions->tblpositionCscStandards);
+			$date = date_create($value->deadline);
+			$value->deadline_formatted = date_format($date, "d F Y");
+		}
 		return $item_query;
 	}
 
@@ -394,7 +381,6 @@ class PlantillaItemsService
 				}
 			}
 		}
-
 
 		$arrHolder = [];
 		foreach ($queryHolder as $value) {
@@ -493,7 +479,7 @@ class PlantillaItemsService
 
 		$pdf = new MPDF();
 		$pdf->writeHTML(view('memoonpostingofvacancydostcsc', $new_data, [], [
-			'title'				=> 	'Notice of Vacancy',
+			'title'				=> 	'MEMORANDUM',
 			'margin_left'     	=> 10,
 			'margin_right'      => 10,
 			'margin_top'        => 10,
@@ -506,12 +492,34 @@ class PlantillaItemsService
 			. ($memo == 'DOST' ? 'DOST Agencies_' : 'CSC_') . $date . '.pdf', "I");
 	}
 
-	public function response($result, $status = 500, $message = "Unsuccessfully")
+	/**
+	 * generateNoticeofVacancyReports
+	 * Todo this function will generate Notice of Vacancy report in PDF form
+	 * @return void
+	 */
+	public function generateNoticeofVacancyReports()
 	{
+		date_default_timezone_set('Asia/Manila'); //define local time
+		//get vacant position
 
-		return response()->json([
-			"message" => $message,
-			"result" => $result
-		], $status);
+		$new_data = [];
+		$new_data['vacantpositions'] = $this->getPlantillaItemDetails();
+		$new_data['letter_head'] = Config::get('memorandum.letter_head');
+		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
+
+		$pdf = new MPDF();
+		$date = date('m/d/Y');
+
+		$pdf->writeHTML(view('noticeOfVacancy', $new_data, [], [
+			'title'				=> 	'Notice of Vacancy',
+			'margin_left'     	=> 10,
+			'margin_right'      => 10,
+			'margin_top'        => 10,
+			'margin_bottom'     => 10,
+			'orientation'       => 'P',
+			'format' => 'A4'
+		]));
+
+		return $pdf->output('Notice of Vacancy_' . $date . '.pdf', "I");
 	}
 }

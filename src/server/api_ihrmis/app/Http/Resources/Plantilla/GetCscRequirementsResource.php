@@ -5,9 +5,8 @@ namespace App\Http\Resources\Plantilla;
 use App\Services\CommonHelpers;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GetPositionWithCscResource extends JsonResource
+class GetCscRequirementsResource extends JsonResource
 {
-
     /**
      * Transform the resource into an array.
      *
@@ -21,12 +20,7 @@ class GetPositionWithCscResource extends JsonResource
 
         $csc_standard = $helper->cscStandardFormatter($this->tblpositionCscStandards);
 
-        return [
-            "pos_id" => $this->pos_id,
-            "pos_title" => $this->pos_title,
-            "pos_short_name" => $this->pos_short_name,
-            "pos_salary_grade" => $this->pos_salary_grade,
-            "pos_category" => $this->pos_category,
+        return  [
             "education" => $csc_standard["ed"] ?? "",
             "experience" => $csc_standard["ex"] ?? "",
             "training" => $csc_standard["tr"]  ?? "",

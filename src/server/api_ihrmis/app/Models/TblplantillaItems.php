@@ -34,7 +34,6 @@ class TblplantillaItems extends Model
 
     public $timestamps = false;
 
-
     public function tblpositions()
     {
         return $this->hasOne(Tblpositions::class, 'pos_id', 'itm_pos_id');

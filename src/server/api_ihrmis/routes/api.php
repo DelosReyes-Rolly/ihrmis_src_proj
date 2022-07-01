@@ -219,7 +219,7 @@ Route::post('closeVacantPositions', [TblplantillaItemsVacantPositionController::
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
-Route::get('getPlantillaItemDetails/{item_state}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
+Route::get('getPlantillaItemDetails/{item_state?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
 Route::get('getPiPositionWithCsc/{id}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemPositionWithCsc']);
 
 //=======================================================================================

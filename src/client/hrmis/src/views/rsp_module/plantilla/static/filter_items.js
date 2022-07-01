@@ -44,11 +44,11 @@ export const plantillaItemSelectFilter = [
 		title: "All",
 	},
 	{
-		value: "1",
+		value: "0",
 		title: "Filled",
 	},
 	{
-		value: "0",
+		value: "1",
 		title: "Vacant",
 	},
 	{

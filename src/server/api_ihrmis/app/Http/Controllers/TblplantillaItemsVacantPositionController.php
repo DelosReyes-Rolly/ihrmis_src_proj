@@ -29,8 +29,7 @@ class TblplantillaItemsVacantPositionController extends Controller
      */
     public function getVacantPositions($type)
     {
-
-        return GetVacantPositionsResource::collection($this->tblPantillaVacantPos->getVacantPositions($type));
+        return $this->tblPantillaVacantPos->getVacantPositions($type);
     }
 
     /**
@@ -133,12 +132,14 @@ class TblplantillaItemsVacantPositionController extends Controller
      * Todo get all PlantillaItem details
      * @return array getPositionWithCsc
      */
-    public function getPlantillaItemDetails($item_state)
+    public function getPlantillaItemDetails($item_state = 1)
     {
 
         return GetPlantillaItemResource::collection(
             $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
         );
+
+        // return $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state);
     }
 
     /**
