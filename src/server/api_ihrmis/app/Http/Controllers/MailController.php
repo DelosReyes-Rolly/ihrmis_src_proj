@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
+use App\Mail\CommonMail;
 use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\TblemailTemplate;
@@ -15,17 +16,16 @@ class MailController extends Controller
     public function getEmailTemplate($type = null)
     {
         if ($type != null) {
-            $mailQry = TblemailTemplate::where('eml_type', $type)->first();
-            return new CommonResource($mailQry);
+            $mailQry = TblemailTemplate::where('eml_type', $type)->get();
+            return CommonResource::collection($mailQry);
         }
-
         $mailQry = TblemailTemplate::get();
         return CommonResource::collection($mailQry);
     }
 
     public function addEmailTemplate($request)
     {
-        $mailQry = new TblemailTemplate();
+        $mailQry = TblemailTemplate::firstOrNew(['eml_id' => $request->eml_id]);
         $mailQry->eml_type = $request->eml_type;
         $mailQry->eml_name = $request->eml_name;
         $mailQry->eml_message = $request->eml_message;
@@ -128,5 +128,33 @@ class MailController extends Controller
         } else {
             return $request;
         }
+        $arrFiles = [];
+
+        if (!empty($request->file(['image_upload']))) {
+            foreach ($request->file(['image_upload']) as $value) {
+                array_push($arrFiles, $value);
+            }
+        }
+
+        $rawRecepient = explode(",", $request->recepient);
+        $arrHolder = [];
+
+        foreach ($rawRecepient as $value) {
+            $tempEmail = trim($value, " ");
+            array_push($arrHolder, $tempEmail);
+            $data = [
+                "from" => env("MAIL_FROM_RECUITER"),
+                "email_from" => env("MAIL_FROM_ADDRESS"),
+                "email_to" => $tempEmail,
+                "date" => Carbon::now(),
+                "message_type" => $request->eml_name,
+                "message" => $request->eml_message,
+                "sender" => nl2br($request->sender),
+                "file" => $arrFiles
+            ];
+            Mail::to($tempEmail)->send(new CommonMail($data));
+        }
+
+        return response()->json(["message" => "Mail Sent to" . implode(", ", $arrHolder)]);
     }
 }
