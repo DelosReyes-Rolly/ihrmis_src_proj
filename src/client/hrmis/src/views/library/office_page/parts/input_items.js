@@ -1,5 +1,6 @@
-import axios from 'axios';
-import { API_HOST } from '../../../../helpers/global/global_config';
+import axios from "axios";
+import { API_HOST } from "../../../../helpers/global/global_config";
+
 const getOffices = () => {
 	let offices = [];
 	axios

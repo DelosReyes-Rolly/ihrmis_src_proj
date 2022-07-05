@@ -2,9 +2,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import {
-	apiModelAgencyType,
-} from './parts/input_items';
+import { apiModelAgencyType } from './parts/input_items';
 import { useDispatch } from 'react-redux';
 import { usePopUpHelper } from '../../../helpers/use_hooks/popup_helper';
 import { API_HOST } from '../../../helpers/global/global_config';
@@ -18,7 +16,6 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 	const { renderBusy, renderSucceed } = usePopUpHelper();
 	const agencyForm = useFormik({
 		enableReinitialize: true,
-
 		initialValues: {
 			agn_id: agencyData?.agn_id ?? '',
 			agn_name: agencyData?.agn_name ?? '',
@@ -82,7 +79,7 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 			>
 				<div className='add-documents-modal'>
 					<div className='left-input item-modal-1'>
-						<label>Agency Name</label>
+						<label>Name</label>
 						<InputComponent
 							name='agn_name'
 							value={agencyForm.values.agn_name}
@@ -93,7 +90,7 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 				</div>
 				<div className='add-office-modal'>
 					<div className='left-input item-modal-6'>
-						<label>Agency Acronym</label>
+						<label>Short Name / Acronym</label>
 						<InputComponent
 							name='agn_acronym'
 							value={agencyForm.values.agn_acronym}
@@ -102,7 +99,7 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 						/>
 					</div>
 					<div className='left-input item-modal-6'>
-						<label>Agency Sector</label>
+						<label>Sector</label>
 						<SelectComponent
 							name='agn_sector'
 							value={agencyForm.values.agn_sector}
@@ -114,8 +111,19 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 					</div>
 				</div>
 				<div className='add-office-modal'>
-					<div className='left-input item-modal-6'>
-						<label>Agency Head</label>
+					<div className='left-input item-modal-5'>
+						<label>Agency Address</label>
+						<InputComponent
+							name='agn_address'
+							value={agencyForm.values.agn_address}
+							onChange={agencyForm.handleChange}
+							maxLength='30'
+						/>
+					</div>
+				</div>
+				<div className='add-office-modal'>
+					<div className='left-input item-modal-5'>
+						<label>Name of Head of Agency</label>
 						<InputComponent
 							name='agn_head_name'
 							value={agencyForm.values.agn_head_name}
@@ -123,8 +131,10 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 							maxLength='191'
 						/>
 					</div>
-					<div className='right-input item-modal-6'>
-						<label>Agency Head Position</label>
+				</div>
+				<div className='add-office-modal'>
+					<div className='left-input item-modal-5'>
+						<label>Position of Head of Agency</label>
 						<InputComponent
 							name='agn_head_position'
 							value={agencyForm.values.agn_head_position}
@@ -134,22 +144,13 @@ const AddAgencyModal = ({ isDisplay, onClose, agencyData }) => {
 					</div>
 				</div>
 				<div className='add-office-modal'>
-					<div className='left-input item-modal-6'>
-						<label>Agency Head Email</label>
+					<div className='left-input item-modal-5'>
+						<label>Email Address of Head of Agency</label>
 						<InputComponent
 							name='agn_head_email'
 							value={agencyForm.values.agn_head_email}
 							onChange={agencyForm.handleChange}
 							maxLength='191'
-						/>
-					</div>
-					<div className='right-input item-modal-6'>
-						<label>Agency Address</label>
-						<InputComponent
-							name='agn_address'
-							value={agencyForm.values.agn_address}
-							onChange={agencyForm.handleChange}
-							maxLength='30'
 						/>
 					</div>
 				</div>
