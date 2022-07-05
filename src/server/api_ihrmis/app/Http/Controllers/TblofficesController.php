@@ -30,9 +30,8 @@ class TblofficesController extends Controller
                 'ofc_acronym' => $request->ofc_acronym,
                 'ofc_area_code' => $request->ofc_area_code ?? "000",
                 'ofc_area_type' => $request->ofc_area_type ?? "R",
+                'ofc_email_addr' => $request->ofc_email_addr,
                 'ofc_head_itm_id' => $request->ofc_head_itm_id ?? NULL,
-                'ofc_oic_itm_id' => $request->ofc_oic_itm_id ?? NULL,
-                'ofc_ofc_id' => $request->ofc_ofc_id,
                 'ofc_agn_id' => $request->ofc_agn_id,
             ]
         );
@@ -71,14 +70,10 @@ class TblofficesController extends Controller
 
     public function getAllOffices()
     {
-        $item_qry = DB::select('SELECT a.*,office.parent,heads.*,oics.* FROM tbloffices as a 
-        LEFT JOIN (SELECT offices.ofc_name as parent,offices.ofc_id  from tbloffices as offices) as office on a.ofc_ofc_id = office.ofc_id
+        $item_qry = DB::select('SELECT a.*,heads.* FROM tbloffices as a 
         LEFT JOIN (SELECT pos.pos_title as head,pli.itm_id as plantilla, pli.itm_ofc_id as head_ofc from tblplantilla_items as pli
                   LEFT JOIN tblpositions as pos on pli.itm_pos_id = pos.pos_id) as heads
-                  on a.ofc_head_itm_id = heads.plantilla
-        LEFT JOIN (SELECT pos.pos_title as oic,pli.itm_id as plantilla_oic, pli.itm_ofc_id as oic_ofc from tblplantilla_items as pli
-                  LEFT JOIN tblpositions as pos on pli.itm_pos_id = pos.pos_id) as oics
-                  on a.ofc_oic_itm_id = oics.plantilla_oic;');
+                  on a.ofc_head_itm_id = heads.plantilla;');
         return response()->json($item_qry);
     }
 
