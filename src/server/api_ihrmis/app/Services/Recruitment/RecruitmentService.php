@@ -3,10 +3,13 @@
 namespace App\Services\Recruitment;
 
 use App\Models\Applicants\Tblapplicants;
+use App\Models\Applicants\TblapplicantsAssessments;
+use App\Models\TblCmptncyAssessment;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Mpdf\Tag\P;
 use NumberFormatter;
@@ -195,7 +198,10 @@ class RecruitmentService
             'tblapplicantExperience',
             'tblapplicantTrainings',
             'TblapplicantsProfile',
-            'TblAssessments'
+            'TblcmptncyRatings',
+            'TblAssessments',
+            'TblCmptcyScore',
+            'TblCmptcy',
         )->where('app_itm_id', $plantilla_id)->where('app_id', $applicant_id)->get();
         return $applicant_query;
     }
@@ -496,5 +502,136 @@ class RecruitmentService
             $report->writeHTML(view('reports/recruitment/afaReportPDF', $data));
         }
         return $report->output();
+    }
+
+    public function saveAssessment($request)
+    {
+        $type = [];
+        $type['ED'] = 'ass_education';
+        $type['EX'] = 'ass_experience';
+        $type['TR'] = 'ass_training';
+
+        try {
+            $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
+            if ($request->type == 'ED') {
+                $query->ass_education = $request->Score;
+            }
+            if ($request->type == 'EX') {
+                $query->ass_experience = $request->Score;
+            }
+            if ($request->type == 'TR') {
+                $query->ass_training = $request->Score;
+            }
+            $query->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Failed, Try again later",
+            ], 400);
+        }
+
+        return response()->json([
+            'message' => "Added Successfully",
+        ], 200);
+    }
+    public function saveCompetencyAssessment($request)
+    {
+        $fail = false;
+        if ($request->ASval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->ASid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'AS';
+                $query->com_ass_score = $request->AS;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->ASid])->delete();
+        }
+        if ($request->CSval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->CSid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'CS';
+                $query->com_ass_score = $request->CS;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->CSid])->delete();
+        }
+        if ($request->CWval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->CWid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'CW';
+                $query->com_ass_score = $request->CW;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->CWid])->delete();
+        }
+        if ($request->OEval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->OEid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'OE';
+                $query->com_ass_score = $request->OE;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->OEid])->delete();
+        }
+        if ($request->WEval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->WEid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'WE';
+                $query->com_ass_score = $request->WE;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->WEid])->delete();
+        }
+        if ($request->OTval) {
+            try {
+                $query = TblCmptncyAssessment::firstOrNew(["com_ass_id" => $request->OTid]);
+                $query->com_app_id = $request->app_id;
+                $query->com_type = 'OT';
+                $query->com_ass_score = $request->OT;
+                $query->save();
+            } catch (\Throwable $th) {
+                $fail = true;
+            }
+        } else {
+            $query = TblCmptncyAssessment::where(["com_ass_id" => $request->OTid])->delete();
+        }
+        try {
+            $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
+            $query->ass_remarks = $request->remarks;
+
+            $query->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Failed, Try again later",
+            ], 400);
+        }
+
+        if ($fail) {
+            return response()->json([
+                'message' => "Failed, Try again later",
+            ], 400);
+        }
+        return response()->json([
+            'message' => "Saved Successfully",
+        ], 200);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
 use App\Services\Recruitment\RecruitmentService;
+use Illuminate\Http\Request;
 
 class RecruitmentController extends Controller
 {
@@ -19,7 +20,7 @@ class RecruitmentController extends Controller
     public function getCompleteApplicantsProfile($type)
     {
         $qualified_applicants = $this->recruitmentSerivce->getQualifiedApplicants($type);
-        if(isset($qualified_applicants[0])){
+        if (isset($qualified_applicants[0])) {
             return QualifiedApplicantsResource::collection($qualified_applicants[0]);
         }
         return [];
@@ -80,5 +81,14 @@ class RecruitmentController extends Controller
     public function getApplicantAgency($office_id)
     {
         return $this->recruitmentSerivce->getApplicantAgency($office_id);
+    }
+
+    public function saveAssessment(Request $request)
+    {
+        return $this->recruitmentSerivce->saveAssessment($request);
+    }
+
+    public function saveCompetencyAssessment(Request $request){
+        return $this->recruitmentSerivce->saveCompetencyAssessment($request);
     }
 }
