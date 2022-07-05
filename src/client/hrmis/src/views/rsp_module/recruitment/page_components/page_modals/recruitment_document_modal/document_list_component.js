@@ -8,9 +8,11 @@ import {
 	API_HOST,
 	SANCTUM,
 } from '../../../../../../helpers/global/global_config';
+import { useIsMounted } from '../../../../../../helpers/use_hooks/isMounted';
 import IconComponent from '../../../../../common/icon_component/icon';
 
 const DocumentListComponent = ({ applicantId }) => {
+	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setDocumentRequirements] = useState([]);
 	const [uploads, setUploadedRequirements] = useState([]);
@@ -31,6 +33,7 @@ const DocumentListComponent = ({ applicantId }) => {
 					};
 					options.push(temp);
 				});
+				if (!mounted.current) return;
 				setDocumentRequirements(options);
 			})
 			.catch((error) => {});
@@ -64,6 +67,7 @@ const DocumentListComponent = ({ applicantId }) => {
 						});
 					}
 				});
+				if (!mounted.current) return;
 				if (options.length > 0) {
 					setUploadedRequirements(options);
 				} else {

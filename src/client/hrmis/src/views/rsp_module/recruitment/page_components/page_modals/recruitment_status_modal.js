@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper';
 import SelectComponent from '../../../../common/input_component/select_component/select_component';
 import ModalComponent from '../../../../common/modal_component/modal_component';
@@ -10,11 +10,14 @@ import { useDispatch } from 'react-redux';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import TextAreaComponent from '../../../../common/input_component/textarea_input_component/textarea_input_component';
 import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
+import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
 const RecruitmentStatusModal = ({ isDisplay, onClose, rowData }) => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	const { renderBusy } = usePopUpHelper();
 	const [transactionSelectOptions, setTransactionSelectOptions] = useState([]);
 	const getTransactionSelectOptions = async () => {
+		if (!mounted.current) return;
 		await axios
 			.get(API_HOST + 'get-transaction-stage-select/app')
 			.then((response) => {
@@ -27,6 +30,7 @@ const RecruitmentStatusModal = ({ isDisplay, onClose, rowData }) => {
 					};
 					options.push(temp);
 				});
+				if (!mounted.current) return;
 				setTransactionSelectOptions(options);
 			})
 			.catch((error) => {});
