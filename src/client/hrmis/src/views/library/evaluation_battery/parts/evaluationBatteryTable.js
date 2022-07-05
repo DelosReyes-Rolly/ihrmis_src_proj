@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
 import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
 import { MdAdd } from 'react-icons/md';
-import { GroupClusterData, SGType } from '../static/input_items.js';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
 import EvaluationBatteryModal from './evaluationBatteryModal.js';
+import { GroupClusterData, SGType } from '../../static/library_input_items.js';
+import { useIsMounted } from '../../../../helpers/use_hooks/isMounted.js';
 
 const EvaluationBatteryTable = () => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
 	const { renderBusy } = usePopUpHelper();
@@ -24,24 +26,32 @@ const EvaluationBatteryTable = () => {
 		await axios
 			.get(API_HOST + 'evaluation-battery')
 			.then((response) => {
-				let data = response.data.data ?? [];
+				let data = response.data.data[0] ?? [];
 				let dataPlot = [];
 				data.forEach((data) => {
+					let sg = data.bat_sg_text.split(',');
+					let checker = [];
+					let text = '';
+					sg.forEach((str) => {
+						if (checker.includes(str)) {
+						} else {
+							text += trueValue(str, SGType) + ', ';
+							checker.push(str);
+						}
+					});
 					let values = {
 						bat_id: data.bat_id,
 						bat_name: data.bat_name,
 						bat_points: data.bat_points,
 						bat_sg_type: data.bat_sg_type,
-						bat_sg_type_text: trueValue(data.bat_sg_type, SGType),
+						bat_sg_type_text: text,
 						bat_grp_id: data.bat_grp_id,
-						bat_grp_text: data.category.grp_name,
-						category_group: trueValue(
-							data.category.grp_cluster,
-							GroupClusterData
-						),
+						bat_grp_text: data.grp_name,
+						category_group: trueValue(data.grp_cluster, GroupClusterData),
 					};
 					dataPlot.push(values);
 				});
+				if (!mounted.current) return;
 				setTable(dataPlot);
 			})
 			.catch((error) => {});
@@ -146,8 +156,9 @@ const EvaluationBatteryTable = () => {
 				}}
 				data={dataState}
 				remove={() => {
+					console.log(dataState);
 					if (dataState !== null) {
-						removeCategory(dataState.grp_id);
+						removeCategory(dataState.bat_grp_id);
 					} else {
 						setToggleOfficeModal();
 					}

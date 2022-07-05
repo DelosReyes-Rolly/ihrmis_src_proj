@@ -4,76 +4,116 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { FiPaperclip } from 'react-icons/fi';
 import { IoInformationCircle, IoRefreshCircle } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
 	setBusy,
 	setRefresh,
 } from '../../../../../features/reducers/popup_response';
 import { API_HOST } from '../../../../../helpers/global/global_config';
-import ButtonComponent from '../../../../common/button_component/button_component.js';
+import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
+import { useToggleHelper } from '../../../../../helpers/use_hooks/toggle_helper';
+import ButtonComponent from '../../../../common/button_component/button_component.js.js';
 import IconComponent from '../../../../common/icon_component/icon';
 import InputComponent from '../../../../common/input_component/input_component/input_component';
 import ToggleSwitchComponent from '../../../../common/toggle_switch_component/toggle_switch';
 import {
+	competencyScore,
+	competencyToMessage,
 	educationToMessage,
 	eligibilityToMessage,
 	experienceToMessage,
 	trainingToMessage,
 } from '../../static/functions';
+import AssessmentsModal from '../page_modals/assessments_modal';
+import CompetencyAssessmentModal from '../page_modals/competency_assessment_modal';
 
 const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
+	const mounted = useIsMounted();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [applicant, setApplicant] = useState([]);
 	const urlpath = window.location.pathname;
 	const route = urlpath.split('/');
 	const plantilla_id = route[5];
+	const app_route = route[6];
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const getCMData = useCallback(async () => {
 		dispatch(setBusy(true));
 		await axios
 			.get(API_HOST + 'get-ra-data/' + plantilla_id + '/' + applicant_id)
 			.then((response) => {
-				let data = response.data.data ?? [];
-				console.log(data);
-				let eligibilites = eligibilityToMessage(
-					data[0].tblapplicant_eligibility
-				);
-				let education = educationToMessage(data[0]?.tblapplicant_education);
-				let training = trainingToMessage(data[0]?.tblapplicant_trainings);
-				let experience = experienceToMessage(data[0]?.tblapplicant_experience);
+				let data = response.data?.data[0] ?? [];
+				let eligibilites = eligibilityToMessage(data.tblapplicant_eligibility);
+				let education = educationToMessage(data?.tblapplicant_education);
+				let training = trainingToMessage(data?.tblapplicant_trainings);
+				let experience = experienceToMessage(data?.tblapplicant_experience);
+				let competency = competencyToMessage(data?.tblcmptncy_ratings);
+				let cmptncyTotal = competencyScore(data?.tbl_cmptcy_score);
+				let raSubTotal =
+					cmptncyTotal +
+					data?.tbl_assessments.ass_education +
+					data?.tbl_assessments.ass_experience +
+					data?.tbl_assessments.ass_training;
 				let values = {
-					app_id: data[0]?.tblapplicants_profile?.app_id,
+					app_id: data?.tblapplicants_profile?.app_id,
 					applicant_name:
-						data[0]?.tblapplicants_profile?.app_nm_last +
+						data?.tblapplicants_profile?.app_nm_last +
 						' ' +
-						data[0]?.tblapplicants_profile?.app_nm_first +
+						data?.tblapplicants_profile?.app_nm_first +
 						' ' +
-						data[0]?.tblapplicants_profile?.app_nm_mid +
+						data?.tblapplicants_profile?.app_nm_mid +
 						' (' +
-						data[0]?.tblapplicants_profile?.app_sex +
+						data?.tblapplicants_profile?.app_sex +
 						')',
 					elig: eligibilites,
 					edu: education,
-					edu_score: data[0]?.tbl_assessments.ass_education,
+					edu_score: data?.tbl_assessments.ass_education,
 					exp: experience,
-					exp_score: data[0]?.tbl_assessments.ass_experience,
+					exp_score: data?.tbl_assessments.ass_experience,
 					trn: training,
-					trn_score: data[0]?.tbl_assessments.ass_training,
-					cmptncy: 0,
-					subtotal: 0,
+					trn_score: data?.tbl_assessments.ass_training,
+					cmptncy: competency,
+					cmptncyScore: cmptncyTotal,
+					cmptncyScores: data?.tbl_cmptcy_score,
+					cmptncySpecific: data?.tbl_cmptcy,
+					cmptncyRemarks: data?.tbl_assessments.ass_remarks,
+					jvs: data?.tblcmptncy_ratings,
+					subtotal: raSubTotal,
 					attrbts: 0,
 					accom: 0,
 					perfor: 0,
 					subtotal2: 0,
 					total: 0,
 				};
+				if (!mounted.current) return;
 				setApplicant(values);
-				dispatch(setBusy(false));
 			});
+		dispatch(setBusy(false));
 	}, [applicant_id, plantilla_id, dispatch]);
 
 	useEffect(() => {
 		getCMData();
 	}, [getCMData, refresh]);
+
+	// ============== Educ, Training, EXP Modal ==================
+	const [assessmentType, setAssessmentType] = useState('');
+	const [modalToggle, setModalToggle] = useToggleHelper(false);
+	const [competencyModal, setCompetencyModalToggle] = useToggleHelper(false);
+	const [score, setScore] = useState(0);
+	const setAssessmentModalDetails = (type, score) => {
+		setAssessmentType(type);
+		// array.forEach((element) => {});
+		setModalToggle();
+		setScore(score);
+	};
+
+	// ================ Competency Assessment Modal ==================
+	const setCompetencyAssessmentModalDetails = (type, score) => {
+		setAssessmentType(type);
+		// array.forEach((element) => {});
+		setCompetencyModalToggle();
+		setScore(score);
+	};
 
 	return (
 		<>
@@ -87,7 +127,12 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 									className=''
 									icon={<BsArrowLeft size='25' />}
 									toolTipId='ra_back_tooltip'
-									onClick={() => setPageType('')}
+									onClick={() => {
+										if (app_route !== undefined) {
+											navigate('/rsp/recruitment');
+										}
+										setPageType('');
+									}}
 									textHelper={'Go Back'}
 								/>
 							</th>
@@ -109,7 +154,7 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 					<tbody>
 						<tr>
 							<th className=''>Name of Applicant</th>
-							<td>{applicant?.applicant_name}</td>
+							<td style={{ width: '35%' }}>{applicant?.applicant_name}</td>
 							<td className='w5'>
 								<IconComponent
 									id='ra_pds'
@@ -130,16 +175,20 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 							<td>{applicant?.edu}</td>
 							<td className='center'>
 								<ButtonComponent
-									// onClick={() => setTogModal(true)}
+									onClick={() => {
+										setAssessmentModalDetails(0, applicant?.edu_score);
+									}}
 									buttonName='Score'
 								/>
 								<b>{applicant?.edu_score}</b>
 							</td>
 							<th className=''>Relevant Trainings (10%)</th>
-							<td>{applicant?.trn}</td>
+							<td style={{ width: '35%' }}>{applicant?.trn}</td>
 							<td className='center'>
 								<ButtonComponent
-									// onClick={() => setTogModal(true)}
+									onClick={() => {
+										setAssessmentModalDetails(1, applicant?.trn_score);
+									}}
 									buttonName='Score'
 								/>
 								<b>{applicant?.trn_score}</b>
@@ -150,28 +199,56 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 							<td>{applicant?.exp}</td>
 							<td className='center'>
 								<ButtonComponent
-									// onClick={() => setTogModal(true)}
+									onClick={() => {
+										setAssessmentModalDetails(2, applicant?.exp_score);
+									}}
 									buttonName='Score'
 								/>
 								<b>{applicant?.exp_score}</b>
 							</td>
 							<th className=''>Job Competency (30%)</th>
-							<td></td>
-							<td>
+							<td>{applicant?.cmptncy}</td>
+							<td className='center'>
 								<ButtonComponent
-									// onClick={() => setTogModal(true)}
+									onClick={() => {
+										setCompetencyAssessmentModalDetails(
+											3,
+											applicant?.cmptncyScore
+										);
+									}}
 									buttonName='Score'
 								/>
+								<b>{applicant?.cmptncyScore}</b>
 							</td>
 						</tr>
 						<tr>
 							<th className=' assessments-header'>Sub-total</th>
-							<th className='' colSpan={5}></th>
+							<th className='' colSpan={5}>
+								{applicant?.subtotal}
+							</th>
 						</tr>
 					</tbody>
 				</table>
 				<RecruitmentHRMPSB />
 				<RecruitmentOtherAssessment />
+				<AssessmentsModal
+					isDisplay={modalToggle}
+					type={assessmentType}
+					onClose={setModalToggle}
+					score={score}
+					jvsRating={applicant?.jvs}
+					appID={applicant_id}
+				/>
+				<CompetencyAssessmentModal
+					isDisplay={competencyModal}
+					type={assessmentType}
+					onClose={setCompetencyModalToggle}
+					score={applicant.cmptncyScores}
+					jvsRating={applicant?.jvs}
+					specific={applicant?.cmptncySpecific}
+					remarks={applicant?.cmptncyRemarks}
+					appID={applicant_id}
+				/>
 			</div>
 		</>
 	);
@@ -207,7 +284,7 @@ const RecruitmentHRMPSB = ({}) => {
 								</ol>
 							</div>
 						</th>
-						<td rowSpan={2}></td>
+						<td rowSpan={2} style={{ width: '35%' }}></td>
 						<td rowSpan={2} className='w5'>
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
@@ -215,7 +292,7 @@ const RecruitmentHRMPSB = ({}) => {
 							/>
 						</td>
 						<th className=''>Commendable Accomplishments (5%)</th>
-						<td></td>
+						<td style={{ width: '35%' }}></td>
 						<td className='w5'>
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}

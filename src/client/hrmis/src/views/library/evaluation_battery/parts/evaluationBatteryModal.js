@@ -12,9 +12,10 @@ import SelectComponent from '../../../common/input_component/select_component/se
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import { MdMenu } from 'react-icons/md';
-import { SGType } from '../static/input_items';
+import { SGType } from '../../static/library_input_items.js';
 import TextAreaComponent from '../../../common/input_component/textarea_input_component/textarea_input_component';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { useIsMounted } from '../../../../helpers/use_hooks/isMounted';
 
 const EvaluationBatteryModal = ({
 	isDisplay,
@@ -24,9 +25,12 @@ const EvaluationBatteryModal = ({
 	removeName,
 }) => {
 	const dispatch = useDispatch();
+	const mounted = useIsMounted();
 	const { renderBusy } = usePopUpHelper();
 	const [category, setCategories] = useState([]);
 	const [battery, setBattery] = useState([]);
+	const [sg, setSG] = useState(0);
+	const [grpID, setGrpID] = useState(0);
 	const getCategoryGroups = async () => {
 		let groups = [];
 		await axios
@@ -41,6 +45,7 @@ const EvaluationBatteryModal = ({
 				});
 			})
 			.catch((error) => {});
+		if (!mounted.current) return;
 		setCategories(groups);
 	};
 	useEffect(() => {
@@ -54,8 +59,6 @@ const EvaluationBatteryModal = ({
 			bat_id: data?.bat_id ?? '',
 			bat_name: data?.bat_name ?? '',
 			bat_points: data?.bat_points ?? '',
-			bat_sg_type: data?.bat_sg_type ?? '',
-			bat_grp_id: data?.bat_grp_id ?? '',
 		},
 		validationSchema: Yup.object({
 			battery: Yup.array(),
@@ -67,17 +70,11 @@ const EvaluationBatteryModal = ({
 				is: (battery) => battery.length === 0,
 				then: Yup.number().required('This field is required'),
 			}),
-			bat_sg_type: Yup.number()
-				.typeError('Must be a number')
-				.max(999)
-				.required('This field is required'),
-			bat_grp_id: Yup.number()
-				.typeError('Must be a number')
-				.max(999)
-				.required('This field is required'),
 		}),
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
+			value.bat_grp_id = grpID;
+			value.bat_sg_type = sg;
 			await axios
 				.post(API_HOST + 'evaluation-battery', value)
 				.then(() => {
@@ -116,12 +113,15 @@ const EvaluationBatteryModal = ({
 			})
 			.catch((error) => {});
 		setBattery(batteryData);
-		form.setFieldValue('bat_grp_id', grp_id);
-		form.setFieldValue('bat_sg_type', sg);
 	};
 	useEffect(() => {
+		form.setFieldValue('bat_grp_id', data?.bat_grp_id);
+		form.setFieldValue('bat_sg_type', data?.bat_sg_type);
+		setGrpID(data?.bat_grp_id);
+		setSG(data?.bat_sg_type);
 		getSelectedBattery(data?.bat_grp_id, data?.bat_sg_type);
-	}, []);
+	}, [isDisplay]);
+
 	const handleAddChange = (type, value) => {
 		setAddDataToArray({ ...addDataToArray, [type]: value });
 	};
@@ -198,8 +198,9 @@ const EvaluationBatteryModal = ({
 							name='bat_grp_id'
 							value={form.values.bat_grp_id}
 							onChange={(e) => {
-								
-								getSelectedBattery(e.target.value, form.values.bat_sg_type);
+								getSelectedBattery(e.target.value, sg);
+								form.setFieldValue('bat_grp_id', e.target.value);
+								setGrpID(e.target.value);
 							}}
 							itemList={category}
 						/>
@@ -213,7 +214,8 @@ const EvaluationBatteryModal = ({
 							name='bat_sg_type'
 							value={form.values.bat_sg_type}
 							onChange={(e) => {
-								getSelectedBattery(form.values.bat_grp_id, e.target.value);
+								getSelectedBattery(grpID, e.target.value);
+								setSG(e.target.value);
 								form.setFieldValue('bat_sg_type', e.target.value);
 							}}
 							itemList={SGType}

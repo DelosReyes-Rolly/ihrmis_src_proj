@@ -12,7 +12,13 @@ import {
 	recruitmentDisqualifiedMenuItem,
 	recruitmentMenuItem,
 } from '../../static/menu_items';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import DropdownViewComponent from '../../../../common/dropdown_menu_custom_component/Dropdown_view.js';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +30,9 @@ import {
 	ALERT_ENUM,
 	popupAlert,
 } from '../../../../../helpers/alert_response.js';
+import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
 const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
+	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [positionsFilter, setPositionsFilter] = useState([]);
 	const [plotApplicantData, setApplicantData] = useState([]);
@@ -50,6 +58,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 					positions.push(values2);
 				}
 			});
+			if (!mounted.current) return;
+
 			setPositionsFilter(positions);
 		});
 	};
@@ -89,6 +99,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 						dataPlot.push(values);
 					}
 				}
+				if (!mounted.current) return;
 				setApplicantData(dataPlot);
 			})
 			.catch((error) => {});
@@ -210,6 +221,14 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 		setSelectedApplicants(temp_selected);
 	}, [selectedFlatRows, setSelectedApplicants]);
 	useEffect(() => {
+		if (value === 1) {
+			navigate(
+				'/rsp/recruitment/comparative-matrix/' +
+					modalData.position +
+					'/' +
+					modalData.app_id
+			);
+		}
 		if (value === 4) {
 			navigate('/rsp/dashboard');
 		}
@@ -250,6 +269,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 								defaultValue={'DEFAULT'}
 								onChange={(e) => {
 									setFilter('position', e.target.value);
+									console.log(e.target.value);
 									setPositions(e.target.value);
 									setPosition(e.target.value);
 								}}
@@ -347,16 +367,16 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 													>
 														{cell.render('Cell')}
 														<DropdownViewComponent
-															className={"dropdown-three-dots"}
+															className={'dropdown-three-dots'}
 															itemList={
 																type === 1
 																	? recruitmentMenuItem
 																	: recruitmentDisqualifiedMenuItem
 															}
-															title={<MdMoreHoriz size="20" />}
-															alignItems="end"
-															toolTipId="other-actions"
-															textHelper="Click to view other actions"
+															title={<MdMoreHoriz size='20' />}
+															alignItems='end'
+															toolTipId='other-actions'
+															textHelper='Click to view other actions'
 															setValue={setValue}
 														/>
 													</div>

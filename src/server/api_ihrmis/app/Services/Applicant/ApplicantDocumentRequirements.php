@@ -20,7 +20,7 @@ class ApplicantDocumentRequirements
         $requiredDoc = TblapplicantDocumentRequirementsModel::where('doc_id', $docType)->first();
         if ($requiredDoc !== null) {
             $docName = $requiredDoc->doc_name;
-            if ($requiredDoc->doc_id == 7) {
+            if ($requiredDoc->doc_id == 4) {
                 $docName = $request->doc_name;
             }
         }
