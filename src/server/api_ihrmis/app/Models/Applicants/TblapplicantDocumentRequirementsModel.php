@@ -2,6 +2,7 @@
 
 namespace App\Models\Applicants;
 
+use App\Models\Library\CategoryGroupModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,5 +22,10 @@ class TblapplicantDocumentRequirementsModel extends Model
     public function tbldocumentaryAttachments()
     {
         return $this->belongsToMany(TblapplicantAttachmentsModel::class, 'tbldocumentary_requirements','doc_id','doc_id','','att_app_doc_id');
+    }
+
+    public function tblCategory()
+    {
+        return $this->hasOne(CategoryGroupModel::class, 'grp_id', 'doc_group');
     }
 }

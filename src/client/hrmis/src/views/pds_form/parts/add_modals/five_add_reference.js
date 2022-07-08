@@ -52,7 +52,7 @@ const FourAddReferenceModal = ({
         reference?.ref_id === undefined ? "" : `/${reference?.ref_id}`;
       const link =
         endpoint === undefined
-          ? "new-reference" + plantilla
+          ? "new-reference/" + item
           : endpoint + plantilla;
       dispatch(setBusy(true));
       await axios

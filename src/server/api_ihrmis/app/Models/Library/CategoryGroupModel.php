@@ -2,6 +2,7 @@
 
 namespace App\Models\Library;
 
+use App\Models\Applicants\TblapplicantDocumentRequirementsModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,11 @@ class CategoryGroupModel extends Model
         'grp_level',
         'grp_cluster',
     ];
-    
+
     public $timestamps = false;
+
+    public function ApplicantRequirements()
+    {
+        return $this->hasMany(TblapplicantDocumentRequirementsModel::class, 'doc_group', 'grp_id');
+    }
 }

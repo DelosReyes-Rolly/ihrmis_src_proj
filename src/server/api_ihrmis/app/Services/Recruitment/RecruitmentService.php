@@ -74,6 +74,8 @@ class RecruitmentService
 
         $civil_service_type = [];
         $education = [];
+        $experience = [];
+        $training = [];
 
         /**
          * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.

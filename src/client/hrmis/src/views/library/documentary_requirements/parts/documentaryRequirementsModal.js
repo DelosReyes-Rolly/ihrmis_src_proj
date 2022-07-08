@@ -103,7 +103,7 @@ const DocumentaryRequirementsModal = ({
 							name='doc_name'
 							value={form.values.doc_name}
 							onChange={form.handleChange}
-							maxLength='30'
+							maxLength='191'
 						/>
 						{form.touched.doc_name && form.errors.doc_name ? (
 							<span className='invalid-response'>{form.errors.doc_name}</span>

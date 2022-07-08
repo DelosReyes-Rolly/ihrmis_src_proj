@@ -37,6 +37,7 @@ import DocumentRequirementsBase from '../views/library/documentary_requirements/
 import EvaluationBatteryBaseComponent from '../views/library/evaluation_battery/parts/evaluationBatteryBaseComponent';
 import PositionLibrary from '../views/library/postion_page/position_library';
 import RecruitmentComparativeMatrix from '../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix';
+import FormSix from '../views/pds_form/parts/forms/form_six';
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -44,11 +45,11 @@ const MainRouter = () => {
 	const isFail = useSelector((state) => state.popupResponse.isFail);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (window.sessionStorage.getItem('token') == null) navigate('/');
+	// useEffect(() => {
+	// 	if (window.sessionStorage.getItem('token') == null) navigate('/');
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, []);
 
 	return (
 		<React.Fragment>
@@ -176,7 +177,8 @@ const MainRouter = () => {
 					/>
 					<Route
 						path='/pds-applicant/form-page-six/:item'
-						element={<FormPageSix />}
+						element={<FormSix />}
+						// element={<FormPageSix />}
 					/>
 					<Route
 						path='/pds-applicant/email-confirmation/:email'

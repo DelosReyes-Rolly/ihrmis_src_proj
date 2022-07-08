@@ -109,6 +109,9 @@ Route::post('new-profile/{id}', [TblapplicantProfileController::class, "addGover
 Route::post('new-profile-image/{id}', [TblapplicantProfileController::class, "addimage"]);
 //REQUIREMENTS
 Route::post('new-requirement/{id}', [TblapplicantRequirementsController::class, "addDocuments"]);
+Route::get('get-document-requirements/{app_id}', [TblapplicantRequirementsController::class, "getDocuments"]);
+Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequirementsController::class, "deleteDocuments"]);
+
 
 //=======================================================================================
 // JVSCRW END POINTS
@@ -242,7 +245,7 @@ Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotific
  * Documentary Requirement Endpoints
  */
 
-Route::get('get-documentary-requirements/{grp_id}', [TblapplicantDocumentRequirements::class, "getRequirentsByGroup"]);
+Route::get('get-documentary-requirements/{grp_id}/{grpLevel}', [TblapplicantDocumentRequirements::class, "getRequirentsByGroup"]);
 Route::get('get-uploaded-documents/{grp_id}/{app_id}', [TblapplicantDocumentRequirements::class, "getUploadedRequirementsbyApplicant"]);
 Route::get('delete-uploaded-documents/{att_id}', [TblapplicantDocumentRequirements::class, "deleteApplicantDocument"]);
 Route::post('add-applicant-document', [TblapplicantDocumentRequirements::class, "saveApplicantDocument"]);

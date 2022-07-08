@@ -142,6 +142,7 @@ export default DocumentListComponent;
 const TableList = ({ data, counter }) => {
 	const dispatch = useDispatch();
 	const deleteDocument = async (att_id) => {
+		console.log(att_id);
 		await axios
 			.get(API_HOST + 'delete-uploaded-documents/' + att_id)
 			.then((response) => {
