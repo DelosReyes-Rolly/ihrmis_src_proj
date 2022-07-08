@@ -15,30 +15,6 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setDocumentRequirements] = useState([]);
-	const [uploads, setUploadedRequirements] = useState([]);
-	const getDocumentRequirements = async () => {
-		await axios
-			.get(API_HOST + 'get-documentary-requirements/1/RP')
-			.then((response) => {
-				let options = [];
-				let data = response.data.data;
-
-				data.forEach((element) => {
-					let temp = {
-						id: element.doc_id,
-						title: element.doc_name,
-						filled: false,
-						att_id: '',
-						file: '',
-					};
-					options.push(temp);
-				});
-				if (!mounted.current) return;
-				setDocumentRequirements(options);
-				getUploadedDocuments(options);
-			})
-			.catch((error) => {});
-	};
 
 	const getUploadedDocuments = async () => {
 		let options = [];
@@ -70,7 +46,7 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 		if (options.length > 0) {
 			setDocumentRequirements(options);
 		} else {
-			setUploadedRequirements([
+			setDocumentRequirements([
 				{
 					none: 'none',
 				},
@@ -78,36 +54,9 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 		}
 	};
 
-	const filterUploadedfromRequirements = () => {
-		let uploadedDocs = uploads;
-		let tempDocs = [];
-		let requirementsClone = requirements;
-		uploadedDocs.forEach((element) => {
-			let index = requirementsClone.findIndex((object) => {
-				return object.id === element.id;
-			});
-			if (index !== -1) {
-				requirementsClone[index].filled = true;
-				let splitter = element.file.split(',');
-				requirementsClone[index].file = splitter;
-			} else {
-				requirementsClone.forEach((value) => {
-					value.filled = false;
-				});
-			}
-		});
-		setDocumentRequirements(requirementsClone);
-	};
 	useEffect(() => {
-		getDocumentRequirements();
+		getUploadedDocuments();
 	}, [applicantId, refresh, isDisplay]);
-	// useEffect(() => {
-	// 	let requirementClone = requirements;
-	// 	requirementClone.forEach((value) => {
-	// 		value.filled = false;
-	// 	});
-	// 	setDocumentRequirements(requirementClone);
-	// }, [uploads, refresh, isDisplay]);
 	return (
 		<React.Fragment>
 			<table className='documents_table'>
