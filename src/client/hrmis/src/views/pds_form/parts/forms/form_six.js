@@ -22,7 +22,8 @@ const FormSix = () => {
 			.get(API_HOST + 'get-documentary-requirements/1/RP')
 			.then((response) => {
 				let options = [];
-				let data = response.data?.data[0]?.applicant_requirements;
+
+				let data = response.data?.data;
 				data.forEach((element) => {
 					let temp = {
 						doc_id: element.doc_id,

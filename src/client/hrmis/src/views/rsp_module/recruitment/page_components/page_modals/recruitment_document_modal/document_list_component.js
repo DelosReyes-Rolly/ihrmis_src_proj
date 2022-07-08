@@ -22,6 +22,7 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
+
 				data.forEach((element) => {
 					let temp = {
 						id: element.doc_id,
@@ -34,49 +35,47 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 				});
 				if (!mounted.current) return;
 				setDocumentRequirements(options);
+				getUploadedDocuments(options);
 			})
 			.catch((error) => {});
 	};
 
 	const getUploadedDocuments = async () => {
+		let options = [];
+
 		await axios
 			.get(API_HOST + 'get-uploaded-documents/1/RP/' + applicantId)
 			.then((response) => {
-				let options = [];
 				let data = response.data.data;
 				data.forEach((element) => {
-					if (element.tbl_applicant_requirements[0] != null) {
+					let temp = {
+						id: element.doc_id,
+						title: element.doc_name,
+						filled: false,
+						att_id: '',
+						file: [],
+					};
+					if (element.tbl_applicant_requirements.length !== 0) {
 						element.tbl_applicant_requirements.forEach((value) => {
-							let index = requirements.findIndex((object) => {
-								return object.id === value.req_app_doc_id;
-							});
-							if (index) {
-								requirements[index].att_id = value.id;
-								setDocumentRequirements(requirements);
-							}
-							let temp = {
-								id: element.doc_id,
-								title:
-									element.doc_id === 4 ? value.req_app_file : element.doc_name,
-								att_id: value.id,
-								file: value.req_app_file,
-							};
-							options.push(temp);
+							let splitter = value.req_app_file.split(',');
+							temp.file = splitter;
 						});
+						temp.filled = true;
 					}
+					options.push(temp);
 				});
-				if (!mounted.current) return;
-				if (options.length > 0) {
-					setUploadedRequirements(options);
-				} else {
-					setUploadedRequirements([
-						{
-							none: 'none',
-						},
-					]);
-				}
 			})
 			.catch((error) => {});
+		if (!mounted.current) return;
+		if (options.length > 0) {
+			setDocumentRequirements(options);
+		} else {
+			setUploadedRequirements([
+				{
+					none: 'none',
+				},
+			]);
+		}
 	};
 
 	const filterUploadedfromRequirements = () => {
@@ -101,16 +100,14 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 	};
 	useEffect(() => {
 		getDocumentRequirements();
-		getUploadedDocuments(applicantId);
 	}, [applicantId, refresh, isDisplay]);
-	useEffect(() => {
-		let requirementClone = requirements;
-		requirementClone.forEach((value) => {
-			value.filled = false;
-		});
-		setDocumentRequirements(requirementClone);
-		filterUploadedfromRequirements();
-	}, [uploads, refresh, isDisplay]);
+	// useEffect(() => {
+	// 	let requirementClone = requirements;
+	// 	requirementClone.forEach((value) => {
+	// 		value.filled = false;
+	// 	});
+	// 	setDocumentRequirements(requirementClone);
+	// }, [uploads, refresh, isDisplay]);
 	return (
 		<React.Fragment>
 			<table className='documents_table'>
@@ -136,15 +133,15 @@ const TableList = ({ data, counter }) => {
 	};
 	return (
 		<React.Fragment>
-			{data.map((element) => {
-				counter++;
+			{data.map((element, key) => {
 				return (
-					<tr key={counter}>
-						{element.file !== '' &&
+					<tr key={key}>
+						{element.file.length !== 0 &&
 							element?.file.map((data, index) => {
 								let number = index + 1;
 								return (
 									<td
+										key={index}
 										id={'document_text'}
 										data-tip
 										data-for={'rc-dc-txt' + counter}
@@ -169,7 +166,7 @@ const TableList = ({ data, counter }) => {
 									</td>
 								);
 							})}
-						{element.file === '' && (
+						{element.file.length === 0 && (
 							<td
 								id={'document_text'}
 								data-tip
