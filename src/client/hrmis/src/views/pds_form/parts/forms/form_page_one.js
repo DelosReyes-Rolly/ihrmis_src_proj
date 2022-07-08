@@ -224,7 +224,7 @@ const FormPageOne = () => {
 						values,
 						position !== undefined
 							? "new-applicant" + position
-							: "modify-applicant" + item
+							: "modify-applicant/" + item
 					)
 					.then(() => {
 						renderSucceed({ content: "Form submitted" });
