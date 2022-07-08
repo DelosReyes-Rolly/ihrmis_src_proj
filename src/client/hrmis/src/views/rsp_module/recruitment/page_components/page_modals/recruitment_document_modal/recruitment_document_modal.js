@@ -19,10 +19,10 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 	const [documentRequirements, setDocumentRequirements] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/2/RP')
+			.get(API_HOST + 'get-documentary-requirements/1/RP')
 			.then((response) => {
 				let options = [];
-				let data = response.data.data[0]?.applicant_requirements;
+				let data = response.data.data;
 				data.forEach((element) => {
 					let temp = {
 						id: element.doc_id,
@@ -132,7 +132,10 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 						) : null}
 					</div>
 				</div>
-				<DocumentListComponent applicantId={rowData.app_id} />
+				<DocumentListComponent
+					applicantId={rowData.app_id}
+					isDisplay={isDisplay}
+				/>
 			</ModalComponent>
 		</React.Fragment>
 	);
