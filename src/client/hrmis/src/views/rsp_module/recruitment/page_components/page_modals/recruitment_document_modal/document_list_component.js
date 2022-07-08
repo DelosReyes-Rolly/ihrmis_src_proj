@@ -11,15 +11,14 @@ import {
 import { useIsMounted } from '../../../../../../helpers/use_hooks/isMounted';
 import IconComponent from '../../../../../common/icon_component/icon';
 
-const DocumentListComponent = ({ applicantId }) => {
+const DocumentListComponent = ({ applicantId, isDisplay }) => {
 	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setDocumentRequirements] = useState([]);
 	const [uploads, setUploadedRequirements] = useState([]);
-	const [otherDocs, setOtherDocs] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/3')
+			.get(API_HOST + 'get-documentary-requirements/1/RP')
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
@@ -41,27 +40,26 @@ const DocumentListComponent = ({ applicantId }) => {
 
 	const getUploadedDocuments = async () => {
 		await axios
-			.get(API_HOST + 'get-uploaded-documents/3/' + applicantId)
+			.get(API_HOST + 'get-uploaded-documents/1/RP/' + applicantId)
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
-				console.log(data);
 				data.forEach((element) => {
-					if (element.tbldocumentary_attachments[0] != null) {
-						element.tbldocumentary_attachments.forEach((value) => {
+					if (element.tbl_applicant_requirements[0] != null) {
+						element.tbl_applicant_requirements.forEach((value) => {
 							let index = requirements.findIndex((object) => {
-								return object.id === value.att_app_doc_id;
+								return object.id === value.req_app_doc_id;
 							});
-							if (index !== -1) {
-								requirements[index].att_id = value.att_id;
+							if (index) {
+								requirements[index].att_id = value.id;
 								setDocumentRequirements(requirements);
 							}
 							let temp = {
 								id: element.doc_id,
 								title:
-									element.doc_id === 4 ? value.att_app_name : element.doc_name,
-								att_id: value.att_id,
-								file: value.att_app_file,
+									element.doc_id === 4 ? value.req_app_file : element.doc_name,
+								att_id: value.id,
+								file: value.req_app_file,
 							};
 							options.push(temp);
 						});
@@ -84,53 +82,40 @@ const DocumentListComponent = ({ applicantId }) => {
 	const filterUploadedfromRequirements = () => {
 		let uploadedDocs = uploads;
 		let tempDocs = [];
-
+		let requirementsClone = requirements;
 		uploadedDocs.forEach((element) => {
-			let temp = requirements.some((check) => check.title === element.title);
-			if (!temp && element.id != null) {
-				tempDocs.push({
-					id: element.id,
-					title: element.title,
-					att_id: element.att_id,
-					filled: true,
-					file: element.file,
-				});
-				setOtherDocs(tempDocs);
-			} else {
-				setOtherDocs([]);
-			}
-			let index = requirements.findIndex((object) => {
+			let index = requirementsClone.findIndex((object) => {
 				return object.id === element.id;
 			});
 			if (index !== -1) {
-				requirements[index].filled = true;
-				requirements[index].file = element.file;
+				requirementsClone[index].filled = true;
+				let splitter = element.file.split(',');
+				requirementsClone[index].file = splitter;
 			} else {
-				requirements.forEach((value) => {
+				requirementsClone.forEach((value) => {
 					value.filled = false;
 				});
 			}
 		});
+		setDocumentRequirements(requirementsClone);
 	};
 	useEffect(() => {
 		getDocumentRequirements();
-		if (applicantId !== undefined) {
-			getUploadedDocuments(applicantId);
-		}
-	}, [applicantId, refresh]);
+		getUploadedDocuments(applicantId);
+	}, [applicantId, refresh, isDisplay]);
 	useEffect(() => {
-		requirements.forEach((value) => {
+		let requirementClone = requirements;
+		requirementClone.forEach((value) => {
 			value.filled = false;
 		});
-		setDocumentRequirements(requirements);
+		setDocumentRequirements(requirementClone);
 		filterUploadedfromRequirements();
-	}, [uploads, refresh]);
+	}, [uploads, refresh, isDisplay]);
 	return (
 		<React.Fragment>
 			<table className='documents_table'>
 				<tbody>
 					<TableList data={requirements ?? []} counter={0} />
-					<TableList data={otherDocs ?? []} counter={100} />
 				</tbody>
 			</table>
 		</React.Fragment>
@@ -142,7 +127,6 @@ export default DocumentListComponent;
 const TableList = ({ data, counter }) => {
 	const dispatch = useDispatch();
 	const deleteDocument = async (att_id) => {
-		console.log(att_id);
 		await axios
 			.get(API_HOST + 'delete-uploaded-documents/' + att_id)
 			.then((response) => {
@@ -154,32 +138,64 @@ const TableList = ({ data, counter }) => {
 		<React.Fragment>
 			{data.map((element) => {
 				counter++;
-				if (element.title === 'Other Documents') return null;
 				return (
 					<tr key={counter}>
-						<td
-							id={'document_text'}
-							data-tip
-							data-for={'rc-dc-txt' + counter}
-							onClick={() => {
-								window.open(
-									SANCTUM +
-										'storage/applicant/applicant-requirements/' +
-										element.file,
-									'_blank'
+						{element.file !== '' &&
+							element?.file.map((data, index) => {
+								let number = index + 1;
+								return (
+									<td
+										id={'document_text'}
+										data-tip
+										data-for={'rc-dc-txt' + counter}
+										onClick={() => {
+											window.open(
+												SANCTUM + 'storage/applicant/applicant-docs/' + data,
+												'_blank'
+											);
+										}}
+										className={
+											element.filled === false ? 'col-1 unfilled' : 'col-1'
+										}
+									>
+										<ReactTooltip
+											id={'rc-dc-txt' + counter}
+											place='top'
+											effect='solid'
+										>
+											Open {element.title} in another Window
+										</ReactTooltip>
+										{element.title + ' - ' + number}
+									</td>
 								);
-							}}
-							className={element.filled === false ? 'col-1 unfilled' : 'col-1'}
-						>
-							<ReactTooltip
-								id={'rc-dc-txt' + counter}
-								place='top'
-								effect='solid'
+							})}
+						{element.file === '' && (
+							<td
+								id={'document_text'}
+								data-tip
+								data-for={'rc-dc-txt' + counter}
+								onClick={() => {
+									window.open(
+										SANCTUM +
+											'storage/applicant/applicant-docs/' +
+											element?.file,
+										'_blank'
+									);
+								}}
+								className={
+									element.filled === false ? 'col-1 unfilled' : 'col-1'
+								}
 							>
-								Open {element.title} in another Window
-							</ReactTooltip>
-							{element.title}
-						</td>
+								<ReactTooltip
+									id={'rc-dc-txt' + counter}
+									place='top'
+									effect='solid'
+								>
+									Open {element.title} in another Window
+								</ReactTooltip>
+								{element.title}
+							</td>
+						)}
 						<td className='col-2'>
 							<IconComponent
 								id={'delete ' + counter}
