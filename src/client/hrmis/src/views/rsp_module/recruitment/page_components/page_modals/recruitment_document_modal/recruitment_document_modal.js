@@ -19,10 +19,10 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 	const [documentRequirements, setDocumentRequirements] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/3')
+			.get(API_HOST + 'get-documentary-requirements/2/RP')
 			.then((response) => {
 				let options = [];
-				let data = response.data.data;
+				let data = response.data.data[0]?.applicant_requirements;
 				data.forEach((element) => {
 					let temp = {
 						id: element.doc_id,

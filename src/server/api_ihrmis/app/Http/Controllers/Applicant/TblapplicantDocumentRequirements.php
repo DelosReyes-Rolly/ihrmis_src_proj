@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantAttachmentsModel;
 use App\Models\Applicants\TblapplicantDocumentRequirementsModel;
+use App\Models\Library\CategoryGroupModel;
 use App\Services\Applicant\ApplicantDocumentRequirements;
 use Illuminate\Http\Request;
 
@@ -19,9 +20,12 @@ class TblapplicantDocumentRequirements extends Controller
         $this->appDocumentService = $appService;
     }
 
-    public function getRequirentsByGroup($grp_id)
+    public function getRequirentsByGroup($grpLevel, $grpCluster)
     {
-        $requirements = TblapplicantDocumentRequirementsModel::where('doc_group', $grp_id)->get();
+        $requirements = CategoryGroupModel::with('ApplicantRequirements')->where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->get();
+        // $requirements = TblapplicantDocumentRequirementsModel::with(['tblCategory' => function ($query) use ($grpLevel, $grpCluster) {
+        //     $query->where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->get();
+        // }])->get();
         return CommonResource::collection($requirements);
     }
 
