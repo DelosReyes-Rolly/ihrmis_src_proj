@@ -23,6 +23,26 @@ class TblplantillaItemsVacantPositionController extends Controller
         $this->tblPantillaVacantPos = new PlantillaItemsService();
     }
 
+    public function closeSelectedVacantPositions(Request $request)
+    {
+
+        return $this->tblPantillaVacantPos->closeVacantPositions($request);
+    }
+
+    public function addToNextInRank(Request $request)
+    {
+        return $this->tblPantillaVacantPos->addToNextInRank($request);
+    }
+
+    public function deleteNextInRank(Request $request)
+    {
+
+        foreach ($request->item_list as $value) {
+            TblnextInRank::where('nir_id', $value['nir_id'])->delete();
+        }
+        return response()->json(['message' => 'Successfully deleted'], 200);
+    }
+
     /**
      * getVacantPositions
      * Todo get all vacant positions fro Plantilla Items
@@ -100,12 +120,6 @@ class TblplantillaItemsVacantPositionController extends Controller
     {
 
         return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport($selected_agency);
-    }
-
-    public function closeSelectedVacantPositions(Request $request)
-    {
-
-        return $this->tblPantillaVacantPos->closeVacantPositions($request);
     }
 
     /**
@@ -187,19 +201,5 @@ class TblplantillaItemsVacantPositionController extends Controller
     {
         $empQry = TblnextInRank::where('nir_itm_id', $item)->get();
         return CommonResource::collection($empQry);
-    }
-
-    public function addToNextInRank(Request $request)
-    {
-        return $this->tblPantillaVacantPos->addToNextInRank($request);
-    }
-
-    public function deleteNextInRank(Request $request)
-    {
-
-        foreach ($request->item_list as $value) {
-            TblnextInRank::where('nir_id', $value['nir_id'])->delete();
-        }
-        return response()->json(['message' => 'Successfully deleted'], 200);
     }
 }

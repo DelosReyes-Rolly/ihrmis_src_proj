@@ -52,7 +52,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					confirmedAction();
-					dispatch(setRefreh());
 				} else if (result.dismiss === Swal.DismissReason.cancel) {
 					cancelCallback();
 					dispatch(setRefreh());
@@ -63,8 +62,8 @@ const PlantillaItemsVacantPositionComponentView = () => {
 
 	const preConfirm = () => {
 		if (
-			typeof plantilla_items?.positions === "undefined" ||
-			plantilla_items.positions.length === 0
+			typeof plantilla_items["positions"] === "undefined" ||
+			plantilla_items["positions"].length === 0
 		) {
 			let response = {
 				data: {
@@ -80,13 +79,45 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	};
 
 	const confirmedAction = () => {
-		axiosCall("post", API_HOST + "closeVacantPositions", plantilla_items).then(
+		console.log(plantilla_items);
+		axiosCall(
+			"post",
+			API_HOST + "closeVacantPositions",
+			plantilla_items["positions"]
+		).then(
 			(response) => {
-				console.log(response.data);
-				toastSuccessFailMessage(response.data);
+				let resdata = response.data;
+
 				let data = response.data;
 				if (data.code === 200) {
-					dispatch(setRefresh());
+					const result = resdata.result;
+					let str_html = "";
+					for (const key in result) {
+						const element = result[key];
+						str_html +=
+							"Plantilla Item No.: " +
+							+'<span style="font-weight: 600">' +
+							element.itm_no +
+							"</span>" +
+							'<br><span style="font-style: italic; color: ' +
+							(element.code === 200 ? "green" : "red") +
+							'">' +
+							element.message +
+							"</span> <br>";
+					}
+
+					Swal.fire({
+						title: "<span>Closing Vacant Positions</span>",
+						html: '<div style="text-align:left">' + str_html + "</div>",
+						icon: "info",
+						showCloseButton: true,
+						showCancelButton: false,
+						showConfirmButton: false,
+					});
+
+					dispatch(setRefreh());
+				} else {
+					toastSuccessFailMessage(resdata);
 				}
 			},
 			(error) => {
@@ -96,7 +127,13 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	};
 
 	const cancelCallback = () => {
-		//do nothing
+		let response = {
+			data: {
+				code: 500,
+				message: "No selected position/s!",
+			},
+		};
+		toastSuccessFailMessage(response.data);
 	};
 
 	const confirmedMemoAction = () => {

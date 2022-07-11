@@ -54,7 +54,7 @@ const useSweetAlertHelper = () => {
 			position: position,
 			showConfirmButton: false,
 			showCloseButton: true,
-			timer: 2000,
+			timer: 3000,
 			timerProgressBar: true,
 			didOpen: (toast) => {
 				toast.addEventListener("mouseenter", Swal.stopTimer);

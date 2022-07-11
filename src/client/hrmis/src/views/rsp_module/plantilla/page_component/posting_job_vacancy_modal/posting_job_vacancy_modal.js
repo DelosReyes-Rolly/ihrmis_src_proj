@@ -7,6 +7,8 @@ import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_hel
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useSelector } from "react-redux";
+import { noticeOfVacancyTemplate } from "./notice_vacancy_template";
+import TinyMceEditorComponent from "../../../../common/tinymce/tinymce_component";
 
 const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 	// const [arrSample, setArrSample] = useState([
@@ -19,7 +21,7 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 	const getPlantillaItemDetails = async () => {
 		axiosCall("get", API_HOST + "getPlantillaItemDetails/").then(
 			(response) => {
-				console.log(response.data.data);
+				//	console.log(response.data.data);
 				setPlantillaItems(response.data.data);
 			},
 			(error) => {
@@ -28,7 +30,7 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 		);
 	};
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		getPlantillaItemDetails();
 	}, [isDisplay]);
 
@@ -48,8 +50,8 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 
 	const formDataHandler = (isMessage, index, value) => {
 		let newFormData = plantilla_items;
-		if (isMessage === true) newFormData[index].message = value;
-		if (isMessage === false) newFormData[index].date = value;
+		if (isMessage === true) newFormData[index].content = value;
+		if (isMessage === false) newFormData[index].deadline = value;
 		setPlantillaItems(newFormData);
 	};
 
@@ -71,7 +73,7 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 							<React.Fragment key={index}>
 								{index === page ? (
 									<EditableContentTemplate
-										item={data}
+										item={noticeOfVacancyTemplate(data)}
 										navigate={pageNavigator}
 										setForm={formDataHandler}
 										index={index}
@@ -110,14 +112,14 @@ const EditableContentTemplate = ({
 	const onChangeHandler = (value, isMessage) => {
 		const arrHolder = itemData;
 		if (isMessage === false) {
-			arrHolder.date = value;
+			arrHolder.deadline = value;
 			setItemData(arrHolder);
-			setForm(false, index, arrHolder.date);
+			setForm(false, index, arrHolder.deadline ?? "");
 		}
 		if (isMessage === true) {
-			arrHolder.message = value;
+			arrHolder.content = value;
 			setItemData(arrHolder);
-			setForm(true, index, arrHolder.message);
+			setForm(true, index, arrHolder.content ?? "");
 		}
 	};
 
@@ -140,31 +142,31 @@ const EditableContentTemplate = ({
 
 	return (
 		<React.Fragment>
-			<RichTextEditorComponent
+			<TinyMceEditorComponent
 				setFieldValue={(val) => {
 					onChangeHandler(val, true);
 				}}
-				value={itemData?.message}
+				value={itemData?.content}
 				// value={}
-				toolbar={{
-					options: [
-						"inline",
-						"fontFamily",
-						"fontSize",
-						"list",
-						"textAlign",
-						"link",
-						"history",
-					],
-					inline: { inDropdown: true },
-					list: {
-						inDropdown: false,
-						options: ["unordered", "ordered", "indent", "outdent"],
-					},
-					textAlign: { inDropdown: true },
-					link: { inDropdown: true },
-					history: { inDropdown: false },
-				}}
+				// toolbar={{
+				// 	options: [
+				// 		"inline",
+				// 		"fontFamily",
+				// 		"fontSize",
+				// 		"list",
+				// 		"textAlign",
+				// 		"link",
+				// 		"history",
+				// 	],
+				// 	inline: { inDropdown: true },
+				// 	list: {
+				// 		inDropdown: false,
+				// 		options: ["unordered", "ordered", "indent", "outdent"],
+				// 	},
+				// 	textAlign: { inDropdown: true },
+				// 	link: { inDropdown: true },
+				// 	history: { inDropdown: false },
+				// }}
 			/>
 
 			<div className="posting-job-vacancy">

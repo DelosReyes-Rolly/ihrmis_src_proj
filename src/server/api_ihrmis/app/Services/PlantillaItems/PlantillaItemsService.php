@@ -2,11 +2,7 @@
 
 namespace App\Services\PlantillaItems;
 
-use App\Http\Resources\CommonResource;
-use App\Http\Resources\Plantilla\GetEmailTemplateDataResource;
-use App\Http\Resources\Plantilla\GetPlantillaItemResource;
 use App\Http\Resources\Plantilla\GetPositionWithCscResource;
-use App\Http\Resources\Plantilla\GetVacantPositionsResource;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
 use App\Models\Tblagencies;
@@ -20,8 +16,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 use Mpdf\Mpdf as MPDF;
+use Exception;
+use Illuminate\Database\QueryException;
 
 // use Meneses\LaravelMpdf\Facades\LaravelMpdf;
 class PlantillaItemsService
@@ -33,47 +30,6 @@ class PlantillaItemsService
 		$this->cHelper = new CommonHelpers();
 	}
 
-
-
-	/**
-	 * insertEmployeeProfile
-	 * Todo insert employee profile
-	 * @return object
-	 */
-	private function insertEmployeeProfile($data, $plantilladata)
-	{
-
-
-
-		$newemployee = new Tblemployees();
-		$newemployee->emp_no = "";
-		$newemployee->emp_nm_last = $data->app_nm_last;
-		$newemployee->emp_nm_first = $data->app_nm_first;
-		$newemployee->emp_nm_mid = $data->app_nm_mid;
-		$newemployee->emp_nm_extn = $data->app_nm_extn;
-		$newemployee->emp_title = $data->app_sex == 'M' ? 'Mr.' : ($data->app_civil_status == 'MR' ? 'Mrs.' : 'Ms.');
-		$newemployee->emp_nm_extn = $data->app_nm_extn;
-		$newemployee->emp_itm_id = $plantilladata['itm_id'];
-		$newemployee->emp_ofc_email = "";
-		$result = $newemployee->save();
-
-		return $newemployee;
-	}
-
-	/**
-	 * updateEmployeeProfile
-	 * Todo update employee profile
-	 * @return void
-	 */
-	private function updateEmployeeProfile($data, $plantilladata)
-	{
-
-		$employee = Tblemployees::find($data->app_id);
-		$employee->emp_itm_id = $plantilladata['itm_id'];
-
-		return $employee->save();
-	}
-
 	/**
 	 * closeVacantPositions
 	 * Todo Close selected vacant position/s
@@ -82,56 +38,69 @@ class PlantillaItemsService
 	public function closeVacantPositions(Request $request)
 	{
 
-		$is_save = null;
-		$applicantDataQry = null;
-		foreach ($request->all()['positions'] as $value) {
-
-			$vacantpos = TblplantillaItems::find($value['itm_id']);
-			$vacant_state = $vacantpos->itm_state;
-			$message = "Successfully closed the selected positions";
-			if ($vacantpos->itm_state == 1) {
+		$is_save = [];
+		$applicantDataQry = [];
+		$result = [];
+		$code = 200;
+		$message = "Successful";
+		$temp_issave = false;
+		try {
+			foreach ($request->all() as $value) {
 				DB::beginTransaction();
-				if (Tblapplicants::where('app_itm_id', $value['itm_id'])->exists()) {
+				$vacantpos = TblplantillaItems::find($value['itm_id']);
+				$vacant_state = $vacantpos->itm_state;
+				$temp_result = [];
+				$temp_result['itm_no'] = $vacantpos->itm_no;
+				if ($vacant_state == 1) {
+					if (Tblapplicants::where('app_itm_id', $value['itm_id'])->exists()) {
 
-					//set to filled state
-					$vacantpos->itm_state = 0;
-					$vacantpos->save();
+						$tbl_applicant_query =  Tblapplicants::where('app_itm_id', $value['itm_id'])->first();
 
-					$tbl_applicant_query =  Tblapplicants::where('app_itm_id', $value['itm_id'])->first();
-					//return $tbl_applicant_query;
-					$applicantDataQry = TblapplicantsProfile::find($tbl_applicant_query->app_id);
-					//return new ApplicantProfileResource($applicantDataQry);
-					//return $applicantDataQry;
-					if ($applicantDataQry) {
-						if (Tblemployees::where('emp_id', $tbl_applicant_query->app_emp_id)->exists()) {
-							$is_save = $this->updateEmployeeProfile($tbl_applicant_query, $value);
-							DB::commit();
+						$temp_result['applicant_profile'] = TblapplicantsProfile::find($tbl_applicant_query->app_id);
+
+						if ($applicantDataQry) {
+							if (Tblemployees::where('emp_id', $tbl_applicant_query->app_emp_id)->exists()) {
+								$temp_issave = $this->updateEmployeeProfile($tbl_applicant_query, $value);
+								DB::commit();
+							} else {
+								$temp_issave = $this->insertEmployeeProfile($applicantDataQry, $value);
+								DB::commit();
+							}
+							//set to filled state
+							$vacantpos->itm_state = 0;
+							$vacantpos->save();
+
+							$temp_result['message'] = $temp_issave ? "Successfully closed the selected positions" : "Error upon query execution";
+							$temp_result['code'] = $temp_issave ? 200 : 500;
 						} else {
-							$is_save = $this->insertEmployeeProfile($applicantDataQry, $value);
-							DB::commit();
+
+							$temp_result['message'] = "No Applicant Profile yet.";
+							$temp_result['code'] = 500;
+							DB::rollBack();
 						}
 					} else {
-						$message = "No Applicant Profile yet.";
-						DB::rollBack();
+						$temp_result['message'] = "No applicant has applied yet to this Plantilla Item";
+						$temp_result['code'] = 500;
 					}
 				} else {
-					$message = "No applicant has applied yet to this Plantilla Item";
+					$temp_result['message'] = "Selected position is filled already";
+					$temp_result['code'] = $temp_issave;
 				}
-			} else {
-				$message = "Selected position is filled already";
+				array_push($result, $temp_result);
 			}
+		} catch (Exception $e) {
+			$code = 500;
+			$message = "Error: " . $e->getMessage();
+		} catch (QueryException $e) {
+			$code = 500;
+			$message =  "Query Error: " . $e->getMessage();
 		}
-
-
-		// return $is_save;
-		// test if it returns the request data
-		// return $request->all()['positions'];
 
 		return response()->json([
 
-			"code" => $is_save ? 200 : 500,
+			"code" => $code,
 			"message" => $message,
-			"applicant_profile" => $applicantDataQry //$applicant_query
+			"result" => $result,
 		]);
 	}
 
@@ -163,6 +132,43 @@ class PlantillaItemsService
 		$message = "Successfully Added";
 
 		$this->cHelper->response($result, $status, $message);
+	}
+
+	/**
+	 * insertEmployeeProfile
+	 * Todo insert employee profile
+	 * @return object
+	 */
+	private function insertEmployeeProfile($data, $plantilladata)
+	{
+
+		$newemployee = new Tblemployees();
+		$newemployee->emp_no = "";
+		$newemployee->emp_nm_last = $data->app_nm_last;
+		$newemployee->emp_nm_first = $data->app_nm_first;
+		$newemployee->emp_nm_mid = $data->app_nm_mid;
+		$newemployee->emp_nm_extn = $data->app_nm_extn;
+		$newemployee->emp_title = $data->app_sex == 'M' ? 'Mr.' : ($data->app_civil_status == 'MR' ? 'Mrs.' : 'Ms.');
+		$newemployee->emp_nm_extn = $data->app_nm_extn;
+		$newemployee->emp_itm_id = $plantilladata['itm_id'];
+		$newemployee->emp_ofc_email = "";
+		$result = $newemployee->save();
+
+		return $newemployee;
+	}
+
+	/**
+	 * updateEmployeeProfile
+	 * Todo update employee profile
+	 * @return void
+	 */
+	private function updateEmployeeProfile($data, $plantilladata)
+	{
+
+		$employee = Tblemployees::find($data->app_id);
+		$employee->emp_itm_id = $plantilladata['itm_id'];
+
+		return $employee->save();
 	}
 
 	########################################## GET METHODS #######################################################
@@ -280,8 +286,6 @@ class PlantillaItemsService
 	 */
 	public function getPlantillaItemDetails($item_state = 1)
 	{
-
-
 		$item_query = TblplantillaItems::with(
 			'tbloffices',
 			'tbloffices.officeAgency',
@@ -290,6 +294,9 @@ class PlantillaItemsService
 			'tblpositions.tblpositionCscStandards',
 			'tbldtyresponsibility'
 		)->where('itm_state', $item_state)->get();
+
+		date_default_timezone_set('Asia/Manila');
+		$now = date('d/m/Y');
 
 		foreach ($item_query as $value) {
 			$csc_standard = $this->cHelper->cscStandardFormatter($value->tblpositions->tblpositionCscStandards);
@@ -300,7 +307,12 @@ class PlantillaItemsService
 			unset($value->tblpositions->tblpositionCscStandards);
 			$date = date_create($value->deadline);
 			$value->deadline_formatted = date_format($date, "d F Y");
+			$value->letter_head = Config::get('memorandum.letter_head');
+			$value->memo_from_name = Config::get('memorandum.memo_from_info');
+			$value->date_submitted = $now;
+			$value->formatted_date_submitted = Carbon::now()->format('d F Y');
 		}
+
 		return $item_query;
 	}
 
@@ -448,7 +460,7 @@ class PlantillaItemsService
 		date_default_timezone_set('Asia/Manila'); //define local time
 
 
-		$data = $this->getVacantPositions(0);
+		$data = $this->getVacantPositions(1);
 
 		$new_data = [];
 
@@ -506,10 +518,9 @@ class PlantillaItemsService
 		$new_data['vacantpositions'] = $this->getPlantillaItemDetails();
 		$new_data['letter_head'] = Config::get('memorandum.letter_head');
 		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
-
-		$pdf = new MPDF();
 		$date = date('m/d/Y');
 
+		$pdf = new MPDF();
 		$pdf->writeHTML(view('noticeOfVacancy', $new_data, [], [
 			'title'				=> 	'Notice of Vacancy',
 			'margin_left'     	=> 10,

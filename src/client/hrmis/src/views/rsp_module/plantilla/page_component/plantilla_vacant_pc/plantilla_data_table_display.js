@@ -188,11 +188,12 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 			sdata["itm_id"] = element.itm_id;
 			temp_selected.push(sdata);
 		});
+
 		selectedItems["positions"] = temp_selected;
 		dispatch(setSelectedPlantillaItems(selectedItems));
 	};
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		if (selectedFlatRowsData.length > 0) {
 			setSelectedRowsData(selectedFlatRowsData);
