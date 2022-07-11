@@ -490,7 +490,7 @@ class PlantillaItemsService
 		// return $new_data;
 
 		$pdf = new MPDF();
-		$pdf->writeHTML(view('memoonpostingofvacancydostcsc', $new_data, [], [
+		$pdf->writeHTML(view('memoOnPostingJobVacancy', $new_data, [], [
 			'title'				=> 	'MEMORANDUM',
 			'margin_left'     	=> 10,
 			'margin_right'      => 10,
@@ -516,8 +516,6 @@ class PlantillaItemsService
 
 		$new_data = [];
 		$new_data['vacantpositions'] = $this->getPlantillaItemDetails();
-		$new_data['letter_head'] = Config::get('memorandum.letter_head');
-		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
 		$date = date('m/d/Y');
 
 		$pdf = new MPDF();
@@ -532,5 +530,7 @@ class PlantillaItemsService
 		]));
 
 		return $pdf->output('Notice of Vacancy_' . $date . '.pdf', "I");
+
+		// return $new_data;
 	}
 }
