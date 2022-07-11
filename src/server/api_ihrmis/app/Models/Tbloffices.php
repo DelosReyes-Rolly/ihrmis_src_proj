@@ -19,9 +19,8 @@ class Tbloffices extends Model
         'ofc_agn_id',
         'ofc_area_code',
         'ofc_area_type',
+        'ofc_email_addr',
         'ofc_head_itm_id',
-        'ofc_oic_itm_id',
-        'ofc_ofc_id',
     ];
 
     public $timestamps = false;

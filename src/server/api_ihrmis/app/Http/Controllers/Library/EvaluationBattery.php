@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
+use App\Http\Resources\Library\EvaluationBattery as LibraryEvaluationBattery;
 use App\Models\Library\EvaluationBatteryModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EvaluationBattery extends Controller
 {
@@ -16,9 +18,8 @@ class EvaluationBattery extends Controller
      */
     public function index()
     {
-        return CommonResource::collection(
-            EvaluationBatteryModel::with('Category')->get(),
-        );
+        $battery = EvaluationBatteryModel::with('Category')->get();
+        return new LibraryEvaluationBattery($battery);
     }
 
     /**
@@ -29,22 +30,16 @@ class EvaluationBattery extends Controller
      */
     public function store(Request $request)
     {
-
         if (!empty($request->battery)) {
-            EvaluationBatteryModel::where("bat_grp_id", $request->bat_grp_id)->where("bat_sg_type",$request->bat_sg_type)->delete();
+            EvaluationBatteryModel::where("bat_grp_id", $request->bat_grp_id)->where("bat_sg_type", $request->bat_sg_type)->delete();
             foreach ($request->battery as $battery) {
-                EvaluationBatteryModel::updateOrCreate(
-                    [
-                        'bat_id' => $request->bat_id,
-                    ],
-                    [
-                        'bat_itm_order' => $battery['bat_itm_order'],
-                        'bat_name' => $battery['bat_name'],
-                        'bat_points' => $battery['bat_points'],
-                        'bat_grp_id' => $request->bat_grp_id,
-                        'bat_sg_type' => $request->bat_sg_type,
-                    ]
-                );
+                $query = EvaluationBatteryModel::firstOrNew(["bat_id" => $request->bat_id]);
+                $query->bat_itm_order = $battery['bat_itm_order'];
+                $query->bat_name = $battery['bat_name'];
+                $query->bat_points = $battery['bat_points'];
+                $query->bat_grp_id = $request->bat_grp_id;
+                $query->bat_sg_type = $request->bat_sg_type;
+                $query->save();
             }
             return response()->json([
                 "message" => "Success"

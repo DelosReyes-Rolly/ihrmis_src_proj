@@ -16,7 +16,6 @@ use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Jvs\TbljvsController;
-use App\Http\Controllers\Library\CategoryGroup;
 use App\Http\Controllers\Library\DocumentRequirements;
 use App\Http\Controllers\Library\EvaluationBattery;
 use App\Http\Controllers\MailController;
@@ -59,6 +58,7 @@ Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]
 Route::get('get-new-applicant/{id?}', [TblapplicantProfileController::class, "getApplicant"]);
 Route::get('get-new-family/{id}', [TblapplicantProfileController::class, "getFamilyChildren"]);
 Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
+
 //Reports
 Route::get('generate-POA/{plantillaId}', [RecruitmentController::class, "generatePOAReport"]);
 Route::get('generate-RAI/{month}/{year}', [RecruitmentController::class, "generateRAIReport"]);
@@ -109,6 +109,9 @@ Route::post('new-profile/{id}', [TblapplicantProfileController::class, "addGover
 Route::post('new-profile-image/{id}', [TblapplicantProfileController::class, "addimage"]);
 //REQUIREMENTS
 Route::post('new-requirement/{id}', [TblapplicantRequirementsController::class, "addDocuments"]);
+Route::get('get-document-requirements/{app_id}', [TblapplicantRequirementsController::class, "getDocuments"]);
+Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequirementsController::class, "deleteDocuments"]);
+
 
 //=======================================================================================
 // JVSCRW END POINTS
@@ -168,7 +171,7 @@ Route::post('add-dty-items/{id}', [TblplantillaDtyAndRspnsbltyController::class,
 // OTHER RESOURCES
 //=======================================================================================
 Route::resource('plantilla-items', TblplantillaItemsController::class);
-Route::resource('offices', TblofficesController::class);
+Route::resource('offices', \TblofficesController::class);
 Route::post('save-agency', [TblofficesController::class, "saveAgency"]);
 Route::resource('positions', TblpositionsController::class);
 Route::resource('positions-csc-std', TblpositionsController::class);
@@ -176,9 +179,9 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 //=======================================================================================
 //  Library Resources
 //=======================================================================================
-Route::resource('category-groups', CategoryGroup::class);
-Route::resource('documentary-requirements', DocumentRequirements::class);
-Route::resource('evaluation-battery', EvaluationBattery::class);
+Route::resource('category-groups', Library\CategoryGroup::class);
+Route::resource('documentary-requirements', Library\DocumentRequirements::class);
+Route::resource('evaluation-battery', Library\EvaluationBattery::class);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 //=======================================================================================
 // AUTH END POINTS
@@ -187,7 +190,8 @@ Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
 
 
-
+Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
+Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
 
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS
@@ -242,8 +246,8 @@ Route::post('mark-read/{id}', [NotificationController::class, "markAsReadNotific
  * Documentary Requirement Endpoints
  */
 
-Route::get('get-documentary-requirements/{grp_id}', [TblapplicantDocumentRequirements::class, "getRequirentsByGroup"]);
-Route::get('get-uploaded-documents/{grp_id}/{app_id}', [TblapplicantDocumentRequirements::class, "getUploadedRequirementsbyApplicant"]);
+Route::get('get-documentary-requirements/{grp_id}/{grpLevel}', [TblapplicantDocumentRequirements::class, "getRequirentsByGroup"]);
+Route::get('get-uploaded-documents/{grpLevel}/{grpCluster}/{app_id}', [TblapplicantDocumentRequirements::class, "getUploadedRequirementsbyApplicant"]);
 Route::get('delete-uploaded-documents/{att_id}', [TblapplicantDocumentRequirements::class, "deleteApplicantDocument"]);
 Route::post('add-applicant-document', [TblapplicantDocumentRequirements::class, "saveApplicantDocument"]);
 /**

@@ -11,13 +11,15 @@ import ModalComponent from '../../../../../common/modal_component/modal_componen
 import DocumentListComponent from './document_list_component';
 import { setRefresh } from '../../../../../../features/reducers/popup_response';
 import { useDispatch } from 'react-redux';
+import { useIsMounted } from '../../../../../../helpers/use_hooks/isMounted';
 const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const [documentRequirements, setDocumentRequirements] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/3')
+			.get(API_HOST + 'get-documentary-requirements/1/RP')
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
@@ -30,6 +32,7 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 					};
 					options.push(temp);
 				});
+				if (!mounted.current) return;
 				setDocumentRequirements(options);
 			})
 			.catch((error) => {});
@@ -55,7 +58,7 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 			formData.append('doc_type', value.doc_type);
 			formData.append('doc_name', value.doc_name);
 			formData.append('applicant_id', rowData.app_id);
-			
+
 			if (documentValue.length > 0) {
 				for (let index = 0; index < documentValue.length; index++) {
 					formData.append('documents[]', documentValue[index]);
@@ -129,7 +132,10 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 						) : null}
 					</div>
 				</div>
-				<DocumentListComponent applicantId={rowData.app_id} />
+				<DocumentListComponent
+					applicantId={rowData.app_id}
+					isDisplay={isDisplay}
+				/>
 			</ModalComponent>
 		</React.Fragment>
 	);

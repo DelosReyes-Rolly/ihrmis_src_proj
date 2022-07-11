@@ -10,8 +10,10 @@ import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
 import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
 import DocumentaryRequirementsModal from './documentaryRequirementsModal.js';
+import { useIsMounted } from '../../../../helpers/use_hooks/isMounted.js';
 
 const DocumentaryRequirementsTable = () => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	let [toggleOfficeModal, setToggleOfficeModal] = useToggleHelper(false);
 	const { renderBusy } = usePopUpHelper();
@@ -32,6 +34,7 @@ const DocumentaryRequirementsTable = () => {
 					};
 					dataPlot.push(values);
 				});
+				if (!mounted.current) return;
 				setDocuments(dataPlot);
 			})
 			.catch((error) => {});
@@ -174,9 +177,11 @@ const DocumentaryRequirementsTable = () => {
 										passModalData(officeData);
 									}}
 								>
-									{row.cells.map((cell) => {
+									{row.cells.map((cell, key) => {
 										return (
-											<td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+											<td key={key} {...cell.getCellProps()}>
+												{cell.render('Cell')}
+											</td>
 										);
 									})}
 								</tr>

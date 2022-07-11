@@ -14,6 +14,7 @@ import Creatable from 'react-select/creatable';
 import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
 import { BsXCircle, BsPlusCircle } from 'react-icons/bs';
 import IconComponent from '../../../../common/icon_component/icon';
+import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
 
 const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const [mType, setmType] = useState([]);
@@ -34,12 +35,14 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	}, [data, type]);
 
 	const getMessageType = useCallback(async () => {
+		let arrHolder = [];
+		let arrHolder2 = [];
 		await axios
 			.get(API_HOST + 'mail-template/' + type)
 			.then((res) => {
-				let arrHolder = [];
-				let arrHolder2 = [];
 				const dataMType = res?.data?.data;
+				console.log(dataMType);
+
 				dataMType.forEach((element) => {
 					arrHolder.push({
 						id: element.eml_id,
@@ -52,10 +55,10 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 						label: element.eml_name,
 					});
 				});
-				setOptions(arrHolder2);
-				setmType(arrHolder);
 			})
 			.catch((err) => {});
+		setOptions(arrHolder2);
+		setmType(arrHolder);
 	}, [type]);
 
 	useEffect(() => {
@@ -208,6 +211,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 
 	return (
 		<React.Fragment>
+			{console.log(options)}
 			<ModalComponent
 				title='Email Notification'
 				isDisplay={isDisplay}

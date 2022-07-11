@@ -10,8 +10,16 @@ import ModalComponent from '../../../common/modal_component/modal_component';
 import InputComponent from '../../../common/input_component/input_component/input_component';
 import SelectComponent from '../../../common/input_component/select_component/select_component';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
+import { useIsMounted } from '../../../../helpers/use_hooks/isMounted';
 
-const DocumentaryRequirementsModal = ({ isDisplay, onClose, data, remove, removeName }) => {
+const DocumentaryRequirementsModal = ({
+	isDisplay,
+	onClose,
+	data,
+	remove,
+	removeName,
+}) => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	const { renderBusy } = usePopUpHelper();
 	const [categoryGroup, setCategoryGroup] = useState([]);
@@ -20,7 +28,6 @@ const DocumentaryRequirementsModal = ({ isDisplay, onClose, data, remove, remove
 		await axios
 			.get(API_HOST + 'category-groups')
 			.then((response) => {
-				
 				let categories = response.data.data;
 				categories.forEach((data) => {
 					let obj = {};
@@ -30,6 +37,7 @@ const DocumentaryRequirementsModal = ({ isDisplay, onClose, data, remove, remove
 				});
 			})
 			.catch((error) => {});
+		if (!mounted.current) return;
 		setCategoryGroup(groups);
 	};
 	useEffect(() => {
@@ -95,7 +103,7 @@ const DocumentaryRequirementsModal = ({ isDisplay, onClose, data, remove, remove
 							name='doc_name'
 							value={form.values.doc_name}
 							onChange={form.handleChange}
-							maxLength='30'
+							maxLength='191'
 						/>
 						{form.touched.doc_name && form.errors.doc_name ? (
 							<span className='invalid-response'>{form.errors.doc_name}</span>
