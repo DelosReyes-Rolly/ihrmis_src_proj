@@ -15,11 +15,7 @@
 			.tg .tg-mcqj{border-color:white;font-weight:bold;text-align:left;vertical-align:top}
 			.tg .tg-mqa1{border-color:white;text-align:center;vertical-align:top}
 			.tg .tg-custom{padding-left: 20px;width: fit-content}
-			/* @media screen and (max-width: 767px) {
-				.tg {width: auto !important;}
-				.tg col {width: auto !important;}
-				.tg-wrap {overflow-x: auto;-webkit-overflow-scrolling: touch;margin: auto 0px;}
-			} */
+
 		</style>
 	</head>
 	<body>
@@ -50,7 +46,7 @@
 							<td class="tg-73oq" colspan="10" style="text-align: justify">
 								The Department of Science and Technology – {{$value->tbloffices->officeAgency->agn_name}} ({{ $value->tbloffices->officeAgency->agn_acronym }}) is in need of 
 								qualified applicants to fill up the position of One (1) 
-								<span style="font-weight:bold">{{ $value->tblpositions->pos_title }} (SG-{{$value->tblpositions->pos_salary_grade}}) 
+								<span style="font-weight:bold">{{ $value->tblpositions->pos_title }} (SG-{{ $value->tblpositions->pos_salary_grade}}) 
 								Item No. {{  $value->itm_no }}</span> under the <span style="font-weight:bold">{{ $value->tbloffices->ofc_name }}</span>. Applicants must meet the following requirements of the position:</td>
 						</tr>
 						<tr>
@@ -166,19 +162,19 @@
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
-							<td class="tg-mcqj" colspan="9">{{ $letter_head['letter_office'] }}</td>
+							<td class="tg-mcqj" colspan="9">{{ $value->letter_head['letter_office'] }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
-							<td class="tg-73oq" colspan="9">{{ $letter_head['letter_company'] }}</td>
+							<td class="tg-73oq" colspan="9">{{ $value->letter_head['letter_company'] }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
-							<td class="tg-73oq" colspan="9">{{ $letter_	head['letter_address'] }}</td>
+							<td class="tg-73oq" colspan="9">{{ $value->letter_head['letter_address'] }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
-							<td class="tg-73oq" colspan="9">{{ $letter_head['letter_email'] }}</td>
+							<td class="tg-73oq" colspan="9">{{ $value->letter_head['letter_email'] }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq"><br></td>
@@ -197,10 +193,10 @@
 							<td class="tg-73oq"></td>
 							<td class="tg-73oq"></td>
 							<td colspan="4" class="tg-mqa1"> 
-								<b>{{$memo_from_name['memo_name'] }}</b><br>
+								<b>{{$value->memo_from_name['memo_name'] }}</b><br>
 								{{  
-									$memo_from_name['memo_position']. ', ' .
-									$memo_from_name['memo_position']
+									$value->memo_from_name['memo_position'] . ', ' .
+									$value->memo_from_name['memo_position']
 								}}
 							</td>
 						</tr>

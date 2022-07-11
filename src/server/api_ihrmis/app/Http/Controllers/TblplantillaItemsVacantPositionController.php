@@ -149,11 +149,11 @@ class TblplantillaItemsVacantPositionController extends Controller
     public function getPlantillaItemDetails($item_state = 1)
     {
 
-        return GetPlantillaItemResource::collection(
-            $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
-        );
+        // return GetPlantillaItemResource::collection(
+        //     $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
+        // );
 
-        // return $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state);
+        return $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state);
     }
 
     /**
