@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantAttachmentsModel;
 use App\Models\Applicants\TblapplicantDocumentRequirementsModel;
+use App\Models\Library\CategoryGroupModel;
 use App\Services\Applicant\ApplicantDocumentRequirements;
 use Illuminate\Http\Request;
 
@@ -19,17 +20,26 @@ class TblapplicantDocumentRequirements extends Controller
         $this->appDocumentService = $appService;
     }
 
-    public function getRequirentsByGroup($grp_id)
+    public function getRequirentsByGroup($grpLevel, $grpCluster)
     {
-        $requirements = TblapplicantDocumentRequirementsModel::where('doc_group', $grp_id)->get();
+        $cat = CategoryGroupModel::where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->first();
+
+        $requirements = TblapplicantDocumentRequirementsModel::with([
+            'TblApplicantRequirements'
+        ])->where('doc_group', $cat->grp_id)->get();
+        // $requirements = TblapplicantDocumentRequirementsModel::with(['tblCategory' => function ($query) use ($grpLevel, $grpCluster) {
+        //     $query->where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->get();
+        // }])->get();
         return CommonResource::collection($requirements);
     }
 
-    public function getUploadedRequirementsbyApplicant($grp_id, $app_id)
+    public function getUploadedRequirementsbyApplicant($grpLevel, $grpCluster, $app_id)
     {
-        $requirements = TblapplicantDocumentRequirementsModel::with(['tbldocumentaryAttachments' => function ($query) use ($app_id) {
-            $query->where('att_app_id', $app_id)->get();
-        }])->where('doc_group', $grp_id)->get();
+        $cat = CategoryGroupModel::where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->first();
+
+        $requirements = TblapplicantDocumentRequirementsModel::with(['TblApplicantRequirements' => function ($query) use ($app_id) {
+            $query->where('req_app_id', $app_id)->get();
+        }])->where('doc_group', $cat->grp_id)->get();
         return CommonResource::collection($requirements);
     }
 

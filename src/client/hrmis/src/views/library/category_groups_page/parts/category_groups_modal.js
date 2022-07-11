@@ -3,7 +3,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { GroupClusterData } from '../static/input_items';
 import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper';
 import { API_HOST } from '../../../../helpers/global/global_config';
 import { setRefresh } from '../../../../features/reducers/popup_response';
@@ -11,6 +10,7 @@ import ModalComponent from '../../../common/modal_component/modal_component';
 import InputComponent from '../../../common/input_component/input_component/input_component';
 import SelectComponent from '../../../common/input_component/select_component/select_component';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
+import { GroupClusterData } from '../../static/library_input_items';
 
 const GroupClusterModal = ({
 	isDisplay,

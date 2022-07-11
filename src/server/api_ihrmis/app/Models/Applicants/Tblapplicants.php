@@ -7,6 +7,10 @@ use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
 use App\Models\Employee\Tblemployees;
+use App\Models\TblCmptncyAssessment;
+use App\Models\Tbljvs;
+use App\Models\TbljvsCompetencies;
+use App\Models\TbljvsCompetencyRatings;
 use App\Models\TblTransactionStages;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -66,6 +70,15 @@ class Tblapplicants extends Model
         return $this->hasOne(TblapplicantsProfile::class, 'app_id', 'app_id');
     }
 
+    public function TbljvsItem()
+    {
+        return $this->hasOne(Tbljvs::class, 'jvs_itm_id', 'app_itm_id');
+    }
+    public function TblcmptncyRatings()
+    {
+        return $this->hasManyThrough(TbljvsCompetencyRatings::class, Tbljvs::class, 'jvs_itm_id', 'rtg_id', 'app_itm_id', 'jvs_id');
+    }
+
     public function TblplantillaItems()
     {
         return $this->hasOne(TblplantillaItems::class, 'itm_id', 'app_itm_id');
@@ -99,5 +112,15 @@ class Tblapplicants extends Model
     public function TblAssessments()
     {
         return $this->hasOne(TblapplicantsAssessments::class, 'ass_app_id', 'app_id');
+    }
+
+    public function TblCmptcyScore()
+    {
+        return $this->hasMany(TblCmptncyAssessment::class, 'com_app_id', 'app_id');
+    }
+
+    public function TblCmptcy()
+    {
+        return $this->hasManyThrough(TbljvsCompetencies::class, Tbljvs::class, 'jvs_itm_id', 'com_jvs_id', 'app_itm_id', 'jvs_id');
     }
 }

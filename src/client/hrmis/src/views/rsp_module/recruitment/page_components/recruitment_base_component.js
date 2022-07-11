@@ -35,7 +35,8 @@ const RecruitmentBaseComponent = () => {
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
 	useEffect(() => {
 		if (reportValue === 'POA' || reportValue === 'CM') {
-			if (position.length !== 0 || position !== 0) {
+			console.log(position);
+			if (position || position.length !== 0) {
 				window.open(
 					API_HOST + 'generate-' + reportValue + '/' + position,
 					'_blank'
@@ -71,9 +72,6 @@ const RecruitmentBaseComponent = () => {
 		}
 	}, [reportValue]);
 
-	useEffect(() => {
-		console.log(position);
-	}, [position]);
 	return (
 		<React.Fragment>
 			<div className='documents-view'>

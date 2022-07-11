@@ -10,6 +10,7 @@ import {
 	setRefresh,
 } from '../../../../../features/reducers/popup_response';
 import { API_HOST } from '../../../../../helpers/global/global_config';
+import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
 import IconComponent from '../../../../common/icon_component/icon';
 import {
 	recruitmentCMHeaders,
@@ -17,6 +18,7 @@ import {
 } from '../../static/table_items';
 
 const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
+	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const urlpath = window.location.pathname;
@@ -67,6 +69,7 @@ const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
 					};
 					dataPlot.push(values);
 				});
+				if (!mounted.current) return;
 				setApplicants(dataPlot);
 				dispatch(setBusy(false));
 			});
