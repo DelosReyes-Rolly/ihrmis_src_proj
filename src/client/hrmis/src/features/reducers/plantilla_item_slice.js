@@ -69,7 +69,6 @@ export const plantillaItemSlice = createSlice({
 			const { payload } = action;
 			state.plantilla_items = payload;
 			// console.log(state.plantilla_items);
-			console.log(state.plantilla_items);
 		},
 
 		setSelectedAgencyRank: (state, action) => {

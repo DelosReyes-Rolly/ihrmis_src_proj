@@ -1,39 +1,93 @@
 .posting-job-vacancy-main {
-  .posting-job-vacancy {
-    display: flex;
-    justify-content: flex-end;
-    font-weight: bold;
-    color: #4276a4;
-    font-size: 1.2em;
-    padding-top: 10px;
-  }
+	.posting-job-vacancy {
+		display: flex;
+		justify-content: flex-end;
+		font-weight: bold;
+		color: #4276a4;
+		font-size: 1.2em;
+		padding-top: 10px;
+	}
 
-  .posting-job-vacancy-anchor {
-    text-decoration: none;
-    color: #74caf3;
-  }
+	.posting-job-vacancy-anchor {
+		text-decoration: none;
+		color: #74caf3;
+	}
 
-  .posting-job-vacancy-anchor:hover {
-    text-decoration: underline;
-    @include zoomInEffect();
-  }
+	.posting-job-vacancy-anchor:hover {
+		text-decoration: underline;
+		@include zoomInEffect();
+	}
 
-  .on-last-page {
-    color: gray;
-  }
+	.on-last-page {
+		color: gray;
+	}
 
-  .on-last-page {
-    color: gray;
-  }
+	.on-last-page {
+		color: gray;
+	}
 
-  .posting-job-vacancy-deadline {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 30%;
-  }
+	.posting-job-vacancy-deadline {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		width: 30%;
+	}
 
-  .margin-left {
-    margin-left: 10px;
-  }
+	.margin-left {
+		margin-left: 10px;
+	}
+
+	// content style
+
+	.tg {
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin: 0px auto;
+	}
+	.tg td {
+		border-color: white;
+		border-style: solid;
+		border-width: 1px;
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		overflow: hidden;
+		padding: 1px 1px;
+		word-break: normal;
+	}
+	.tg th {
+		border-color: white;
+		border-style: solid;
+		border-width: 1px;
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+		font-weight: normal;
+		overflow: hidden;
+		padding: 1px 1px;
+		word-break: normal;
+	}
+	.tg .tg-wp8o {
+		border-color: white;
+		text-align: center;
+		vertical-align: top;
+	}
+	.tg .tg-73oq {
+		border-color: white;
+		text-align: left;
+		vertical-align: top;
+	}
+	.tg .tg-mcqj {
+		border-color: white;
+		font-weight: bold;
+		text-align: left;
+		vertical-align: top;
+	}
+	.tg .tg-mqa1 {
+		border-color: white;
+		text-align: center;
+		vertical-align: top;
+	}
+	.tg .tg-custom {
+		padding-left: 20px;
+		width: fit-content;
+	}
 }
