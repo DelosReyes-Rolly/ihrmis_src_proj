@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { statusDisplay } from "../../static/display_option";
+import { itemState, statusDisplay } from "../../static/display_option";
 import {
   useTable,
   useSortBy,
@@ -44,10 +44,6 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
 export const PlantillaDataTableDisplay = ({ type }) => {
   const refresh = useSelector((state) => state.popupResponse.refresh);
   const [plotData, setPlotData] = useState([]);
-  const [selected_item_id, setSelectedItemID] = useState([]);
-  const { item_id, plantilla_items } = useSelector(
-    (state) => state.plantillaItem
-  );
   // const [filters, setFiltersTable] = useState([]);
   const dispatch = useDispatch();
 
@@ -71,7 +67,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         let dataPlot = [];
         if (data.length > 0) {
           data.map((item) => {
-            item.itm_status = statusDisplay[item.itm_status];
+            item.itm_status = itemState[item?.itm_state];
             item.ofc_acronym = item?.office?.ofc_acronym;
             item.ofc_agn_id = item?.office?.ofc_agn_id;
             item.agn_head_email = item?.office?.office_agency?.agn_head_email;
@@ -111,7 +107,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
     filters: [
       {
         id: "itm_state",
-        value: 0,
+        value: 1,
       },
     ],
   };
@@ -162,10 +158,6 @@ export const PlantillaDataTableDisplay = ({ type }) => {
       ]);
     }
   );
-  // useEffect(() => {
-  // 	setSelectedRowData(selectedFlatRows);
-  // 	console.log(selectedrowData.map((d) => d.original));
-  // }, [selectedFlatRows]);
 
   const { globalFilter } = state;
 
@@ -206,6 +198,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
       dispatch(setSelectedPlantillaItems([]));
     }
   }, [selectedFlatRows]);
+
   return (
     <React.Fragment>
       <FilterPlantillaItems

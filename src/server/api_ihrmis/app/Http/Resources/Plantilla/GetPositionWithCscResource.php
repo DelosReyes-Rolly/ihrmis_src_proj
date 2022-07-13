@@ -32,15 +32,28 @@ class GetPositionWithCscResource extends JsonResource
         ];
 
         $arrContainer = [];
-        $EducType = ['Bachelor\'s', 'Master\'s', 'PhD'];
+
+        $EducType = ['Elementary', 'Secondary', 'Vocational/Trade', 'College', 'Graduate Studies'];
         foreach ($this->tblpositionCscStandards as $value) {
             if($value["std_type"] == "ED"){
                 $degree = explode("|",$value['std_keyword']);
                 $printArr = [];
                 foreach($degree as $educValue){
                     $holder = explode(":",$educValue);
-                    array_push($printArr, $EducType[$holder[0] - 1] . " Degree in " . $holder[1] . " is relevant to the job");
+                    if($EducType[$holder[0] - 1] == $EducType[0] || $EducType[$holder[0] - 1] == $EducType[1]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[2]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " in " . $holder[1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[3]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " Degree in " . $holder[1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[4]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " in " . $holder[1] . " is relevant to the job");
+                    }
                 }
+
                 if(!empty($value["std_specifics"])){
                     $arrContainer["ed"] = implode(", ", $printArr) . " and or " . $value["std_specifics"];
                 } else {

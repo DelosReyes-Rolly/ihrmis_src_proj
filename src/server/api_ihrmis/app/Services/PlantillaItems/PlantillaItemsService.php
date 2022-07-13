@@ -344,27 +344,34 @@ class PlantillaItemsService
   	public function getAgencyEmployees($agency, $itm_id){
 		$itemQry = Tbloffices::where('ofc_agn_id', $agency)->with('plantillaItems.employee', 'plantillaItems.tblpositions')->get();
 		$nextRankQrt = TblnextInRank::where('nir_itm_id', $itm_id)->get();
+
+		$itemSgValue = TblplantillaItems::where('itm_id', $itm_id)->with('tblpositions')->first();
+		
 		$arrEmpIdHolder =[];
 		foreach($nextRankQrt as $value){
 			array_push($arrEmpIdHolder, $value->nir_emp_id);
     	}
 
 		$arrHolder = [];
+
 		foreach ($itemQry as $offices) {
 			foreach($offices->plantillaItems as $items){
 				if($items->employee != null){
 					if(!in_array($items->employee->emp_id, $arrEmpIdHolder)){
 						$name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
-						array_push($arrHolder, [
-						'nir_name' => $name,
-						'nir_email' =>  $items->employee->emp_ofc_email,
-						'nir_office' => $offices->ofc_acronym,
-						'nir_pos_title' => $items->tblpositions->pos_title,
-						'nir_emp_id' => $items->employee->emp_id,
-						'nir_ofc_id' => $offices->ofc_id,
-						'nir_agn_id' => (int)$agency,
-						'nir_itm_id' => $itm_id
-						]);
+						
+						if($items->tblpositions->pos_salary_grade < $itemSgValue->tblpositions->pos_salary_grade){
+							array_push($arrHolder, [
+								'nir_name' => $name,
+								'nir_email' =>  $items->employee->emp_ofc_email,
+								'nir_office' => $offices->ofc_acronym,
+								'nir_pos_title' => $items->tblpositions->pos_title,
+								'nir_emp_id' => $items->employee->emp_id,
+								'nir_ofc_id' => $offices->ofc_id,
+								'nir_agn_id' => (int)$agency,
+								'nir_itm_id' => $itm_id
+							]);
+						}
 					}
 				}
 			}

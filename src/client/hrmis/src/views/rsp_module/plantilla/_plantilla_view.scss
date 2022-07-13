@@ -229,14 +229,12 @@
   background-color: rgb(3, 97, 3);
 }
 
-.delete-button-color {
-  color: white !important;
-  background-color: $errorColor !important;
-  border: 1px solid $errorColor !important;
+.memo-blue-color {
+  background-color: map-get($primaryColor, regular) !important;
 }
 
-.delete-button-color:hover {
-  background-color: rgb(185, 22, 22) !important;
+.memo-blue-color:hover {
+  background-color: #063158 !important;
 }
 
 .position-modal-container-3 {

@@ -66,27 +66,28 @@ hr.solid {
 }
 
 .selector-span-1 select {
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  padding: 5px 10px;
   font-weight: 600;
-  font-size: 13px;
-  color: #4276a4;
+  border-radius: 4px;
+  color: map-get($primaryColor, regular);
+  border: 2px solid map-get($primaryColor, regular);
+  overflow: hidden;
+  background-color: white;
+}
+
+.selector-span-1 select:focus {
+  padding: 5px 10px;
+  font-weight: 600;
+  border-radius: 4px;
+  color: map-get($primaryColor, regular);
+  border: 2px solid map-get($primaryColor, regular);
+  overflow: hidden;
   background-color: whitesmoke;
-  border: 2px solid #4276a4;
-  border-radius: 5px;
-  padding: 4px;
-  outline: #4276a4;
 }
 
 .selector-span-1 select:hover {
   transition: 0.3s;
-  background-color: rgba(235, 235, 235, 0.582);
-}
-
-.selector-span-1 select .options {
   background-color: whitesmoke;
-  color: rgba(70, 70, 70, 0.9);
 }
 
 .selector-search-label {
