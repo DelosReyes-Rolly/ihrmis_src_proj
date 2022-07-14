@@ -6,49 +6,50 @@ import htmlToDraft from "html-to-draftjs";
 import draftToHtml from "draftjs-to-html";
 
 const RichTextEditorComponent = ({
-  value = "",
-  setFieldValue,
-  toolbar = {},
+	value = "",
+	setFieldValue,
+	toolbar = {},
 }) => {
-  const prepareDraft = (content) => {
-    const draft = htmlToDraft(content);
-    const contentstate = ContentState.createFromBlockArray(draft.contentBlocks);
-    const editorstate = EditorState.createWithContent(contentstate);
-    return editorstate;
-  };
+	const prepareDraft = (content) => {
+		const draft = htmlToDraft(content);
+		const contentstate = ContentState.createFromBlockArray(draft.contentBlocks);
+		const editorstate = EditorState.createWithContent(contentstate);
+		return editorstate;
+	};
 
-  const [editorState, setEditorState] = useState(
-    value ? prepareDraft(value) : EditorState.createEmpty()
-  );
+	const [editorState, setEditorState] = useState(
+		value ? prepareDraft(value) : EditorState.createEmpty()
+	);
 
-  const onEditorHandleChange = (state) => {
-    const forFormik = draftToHtml(convertToRaw(state.getCurrentContent()));
-    if (forFormik.length > 8) {
-      setFieldValue(forFormik);
-    } else {
-      setFieldValue("");
-    }
-    setEditorState(state);
-  };
+	const onEditorHandleChange = (state) => {
+		const forFormik = draftToHtml(convertToRaw(state.getCurrentContent()));
+		//<p> </p>
+		if (forFormik.length > 8) {
+			setFieldValue(forFormik);
+		} else {
+			setFieldValue("");
+		}
+		setEditorState(state);
+	};
 
-  useEffect(() => {
-    if (value) {
-      setEditorState(prepareDraft(value));
-    }
-  }, [value]);
+	useEffect(() => {
+		if (value) {
+			setEditorState(prepareDraft(value));
+		}
+	}, [value]);
 
-  return (
-    <React.Fragment>
-      <Editor
-        editorState={editorState}
-        toolbarClassName="toolbarClassName"
-        wrapperClassName="wrapperClassName"
-        editorClassName="editor-class"
-        toolbar={toolbar}
-        onEditorStateChange={onEditorHandleChange}
-      />
-    </React.Fragment>
-  );
+	return (
+		<React.Fragment>
+			<Editor
+				editorState={editorState}
+				toolbarClassName="toolbarClassName"
+				wrapperClassName="wrapperClassName"
+				editorClassName="editor-class"
+				toolbar={toolbar}
+				onEditorStateChange={onEditorHandleChange}
+			/>
+		</React.Fragment>
+	);
 };
 
 export default RichTextEditorComponent;

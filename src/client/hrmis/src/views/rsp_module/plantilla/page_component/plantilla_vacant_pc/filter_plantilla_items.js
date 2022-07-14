@@ -36,7 +36,7 @@ export const FilterPlantillaItems = ({
 	const [counter, setcounter] = useState(0);
 	const handleChange = useAsyncDebounce((e) => {
 		let tvalue = e.target.value;
-		// console.log("selected: " + selected.value);
+		console.log("selected: " + selected.value);
 		if (counter === 0 && selected.value !== "FB") {
 			setDisabledOption(true);
 			setcounter(+1);

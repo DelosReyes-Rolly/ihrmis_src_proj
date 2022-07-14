@@ -32,69 +32,110 @@ const PlantillaItemsVacantPositionComponentView = () => {
 
   const { toastSuccessFailMessage } = useSweetAlertHelper();
 
-  const closeSelectedVacantPostions = async () => {
-    if (preConfirm()) {
-      let confirmButtonText = "OK",
-        cancelButtonColor = "#d33",
-        cancelButtonText = "Cancel";
-      Swal.fire({
-        title: "<span>Confirmation Dialog</span>",
-        html: "<span><i>Click OK to confirm to close selected vacant position/s</i></span>",
-        icon: "question",
-        showCloseButton: true,
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: confirmButtonText,
-        cancelButtonColor: cancelButtonColor,
-        cancelButtonText: cancelButtonText,
-        preConfirm: () => {
-          preConfirm();
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          confirmedAction();
-          dispatch(setRefreh());
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          cancelCallback();
-          dispatch(setRefreh());
-        }
-      });
-    }
-  };
+	const closeSelectedVacantPostions = async () => {
+		if (preConfirm()) {
+			let confirmButtonText = "OK",
+				cancelButtonColor = "#d33",
+				cancelButtonText = "Cancel";
+			Swal.fire({
+				title: "<span>Confirmation Dialog</span>",
+				html: "<span><i>Click OK to confirm to close selected vacant position/s</i></span>",
+				icon: "question",
+				showCloseButton: true,
+				showCancelButton: true,
+				confirmButtonColor: "#3085d6",
+				confirmButtonText: confirmButtonText,
+				cancelButtonColor: cancelButtonColor,
+				cancelButtonText: cancelButtonText,
+				preConfirm: () => {
+					preConfirm();
+				},
+			}).then((result) => {
+				if (result.isConfirmed) {
+					confirmedAction();
+				} else if (result.dismiss === Swal.DismissReason.cancel) {
+					cancelCallback();
+					dispatch(setRefreh());
+				}
+			});
+		}
+	};
 
-  const preConfirm = () => {
-    if (
-      typeof plantilla_items?.positions === "undefined" ||
-      plantilla_items.positions.length === 0
-    ) {
-      let response = {
-        data: {
-          code: 500,
-          message: "No selected position/s!",
-        },
-      };
-      toastSuccessFailMessage(response.data);
-      return false;
-    } else {
-      return true;
-    }
-  };
+	const preConfirm = () => {
+		if (
+			typeof plantilla_items["positions"] === "undefined" ||
+			plantilla_items["positions"].length === 0
+		) {
+			let response = {
+				data: {
+					code: 500,
+					message: "No selected position/s!",
+				},
+			};
+			toastSuccessFailMessage(response.data);
+			return false;
+		} else {
+			return true;
+		}
+	};
 
-  const confirmedAction = () => {
-    axiosCall("post", API_HOST + "closeVacantPositions", plantilla_items).then(
-      (response) => {
-        console.log(response.data);
-        toastSuccessFailMessage(response.data);
-        let data = response.data;
-        if (data.code === 200) {
-          dispatch(setRefresh());
-        }
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  };
+	const confirmedAction = () => {
+		console.log(plantilla_items);
+		axiosCall(
+			"post",
+			API_HOST + "closeVacantPositions",
+			plantilla_items["positions"]
+		).then(
+			(response) => {
+				let resdata = response.data;
+
+				let data = response.data;
+				if (data.code === 200) {
+					const result = resdata.result;
+					let str_html = "";
+					for (const key in result) {
+						const element = result[key];
+						str_html +=
+							"Plantilla Item No.: " +
+							+'<span style="font-weight: 600">' +
+							element.itm_no +
+							"</span>" +
+							'<br><span style="font-style: italic; color: ' +
+							(element.code === 200 ? "green" : "red") +
+							'">' +
+							element.message +
+							"</span> <br>";
+					}
+
+					Swal.fire({
+						title: "<span>Closing Vacant Positions</span>",
+						html: '<div style="text-align:left">' + str_html + "</div>",
+						icon: "info",
+						showCloseButton: true,
+						showCancelButton: false,
+						showConfirmButton: false,
+					});
+
+					dispatch(setRefreh());
+				} else {
+					toastSuccessFailMessage(resdata);
+				}
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+	};
+
+	const cancelCallback = () => {
+		let response = {
+			data: {
+				code: 500,
+				message: "No selected position/s!",
+			},
+		};
+		toastSuccessFailMessage(response.data);
+	};
 
   const cancelCallback = () => {
     //do nothing

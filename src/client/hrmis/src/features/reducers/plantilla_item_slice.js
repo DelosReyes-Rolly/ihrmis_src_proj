@@ -65,11 +65,11 @@ export const plantillaItemSlice = createSlice({
       // console.log(state.selected_plantilla);
     },
 
-    setSelectedPlantillaItems: (state, action) => {
-      const { payload } = action;
-      state.plantilla_items = payload;
-      // console.log(state.plantilla_items);
-    },
+		setSelectedPlantillaItems: (state, action) => {
+			const { payload } = action;
+			state.plantilla_items = payload;
+			// console.log(state.plantilla_items);
+		},
 
     setSelectedAgencyRank: (state, action) => {
       const { payload } = action;
