@@ -16,6 +16,7 @@ import {
   apiEmploymentStatModalInputItem,
   apiLevelPositionModalInputItem,
   apiModeCreationModalInputItem,
+  SourceOfFundsItem,
 } from "../../static/input_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
 import AddPlantillaItemDutiesAndRespoModal from "../plantilla_info_modals/add_duties_respo_modal";
@@ -34,7 +35,7 @@ const PlantillaItemInformation = () => {
   const [toggleAddDtyItem, setToggleAddDtyItem] = useToggleHelper(false);
 
   const itemInformation = async () => {
-    const id = plantilla?.position?.pos_id;
+    // const id = plantilla?.position?.pos_id;
     await axios
       .get(API_HOST + "plantilla-duties-responsibility/" + item)
       .then((res) => {
@@ -202,7 +203,9 @@ const PositionTableView = ({ data, pos_id }) => {
                   data?.office?.ofc_area_type ?? ""}
               </td>
               <th className="main-header">Source of Found</th>
-              <td></td>
+              <td>
+                {SourceOfFundsItem[parseInt(data?.itm_source)]?.title ?? ""}
+              </td>
             </tr>
             <tr>
               <th className="main-header" rowSpan="2">

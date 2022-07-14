@@ -15,21 +15,22 @@ import SelectAgencyModal from "../next_in_rank_modal/select_agency_modal";
 import PostingOnJobVacancyModal from "../posting_job_vacancy_modal/posting_job_vacancy_modal";
 import { setSelectAgency } from "../../../../../features/reducers/plantilla_item_slice";
 import {
-	printMemoOnPostingOfVpForCsc,
-	printMemoOnPostingOfVpForDost,
+  printMemoOnPostingOfVpForCsc,
+  printMemoOnPostingOfVpForDost,
 } from "../../../../../router/outside_routes";
 import { setRefreh } from "../../../../../features/reducers/jvscrw_slice";
 import Swal from "sweetalert2";
 import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
 
 const PlantillaItemsVacantPositionComponentView = () => {
-	const dispatch = useDispatch();
-	const [axiosCall] = useAxiosCallHelper();
-	const [posting_vacancy, setPostingJobVancy] = useState(false);
-	const { selected_agency, select_agency, plantilla_items } = useSelector(
-		(state) => state.plantillaItem
-	);
-	const { toastSuccessFailMessage } = useSweetAlertHelper();
+  const dispatch = useDispatch();
+  const [axiosCall] = useAxiosCallHelper();
+  const [posting_vacancy, setPostingJobVancy] = useState(false);
+  const { selected_agency, select_agency, plantilla_items } = useSelector(
+    (state) => state.plantillaItem
+  );
+
+  const { toastSuccessFailMessage } = useSweetAlertHelper();
 
 	const closeSelectedVacantPostions = async () => {
 		if (preConfirm()) {
@@ -136,113 +137,117 @@ const PlantillaItemsVacantPositionComponentView = () => {
 		toastSuccessFailMessage(response.data);
 	};
 
-	const confirmedMemoAction = () => {
-		printMemoOnPostingOfVpForDost(selected_agency);
-	};
+  const cancelCallback = () => {
+    //do nothing
+  };
 
-	const cancelMemoCallback = () => {
-		printMemoOnPostingOfVpForCsc(selected_agency);
-	};
+  const confirmedMemoAction = () => {
+    printMemoOnPostingOfVpForDost(selected_agency);
+  };
 
-	const preMemoConfirm = () => {
-		if (selected_agency.length === 0) {
-			let response = {
-				data: {
-					code: 500,
-					message: "No selected agency!",
-				},
-			};
-			toastSuccessFailMessage(response.data, "top");
-			return false;
-		} else {
-			return true;
-		}
-	};
+  const cancelMemoCallback = () => {
+    printMemoOnPostingOfVpForCsc(selected_agency);
+  };
 
-	const SelectMemoForPosting = async () => {
-		if (preMemoConfirm()) {
-			let confirmButtonText = "DOST Agencies",
-				cancelButtonColor = "#d33",
-				cancelButtonText = "CSC";
-			Swal.fire({
-				title: "<span>Memo on Posting of Vacancy</span>",
-				html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
-				icon: "question",
-				showCloseButton: true,
-				showCancelButton: true,
-				confirmButtonColor: "#3085d6",
-				confirmButtonText: confirmButtonText,
-				cancelButtonColor: cancelButtonColor,
-				cancelButtonText: cancelButtonText,
-				preConfirm: () => {
-					preMemoConfirm();
-				},
-			}).then((result) => {
-				if (result.isConfirmed) {
-					confirmedMemoAction();
-					dispatch(setRefreh());
-				} else if (result.dismiss === Swal.DismissReason.cancel) {
-					cancelMemoCallback();
-					dispatch(setRefreh());
-				}
-			});
-		}
-	};
+  const preMemoConfirm = () => {
+    if (selected_agency.length === 0) {
+      let response = {
+        data: {
+          code: 500,
+          message: "No selected agency!",
+        },
+      };
+      toastSuccessFailMessage(response.data, "top");
+      return false;
+    } else {
+      return true;
+    }
+  };
 
-	return (
-		<React.Fragment>
-			<div className="plantilla-view">
-				<div className="container-plantilla">
-					{/* <BreadcrumbComponent list={bc.getBreadcrumbData('vacant')} className="" /> */}
-					<BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
-				</div>
-				<div className="three-idiot">
-					<DropdownVpMenu
-						itemList={plantillaItemsReportsMenuItems}
-						title={<AiFillPrinter size="22" />}
-						alignItems="end"
-						className="button-icon unstyled-button"
-						tooltipData={{ toolTipId: "pl-vp-printer", textHelper: "Print" }}
-					/>
-					<IconComponent
-						id="view_edit_vacantposition"
-						className="padding-left-1"
-						icon={<BsGlobe />}
-						toolTipId="pl-vp-view"
-						textHelper="View/Edit Job Vacancy"
-						onClick={() => {
-							setPostingJobVancy(true);
-						}}
-					/>
-					<IconComponent
-						id="close_vacant_position"
-						className="padding-left-1"
-						icon={<BsFillCheckCircleFill />}
-						toolTipId="pl-vp-check"
-						textHelper="Close Vacant Position"
-						onClick={() => closeSelectedVacantPostions()}
-					/>
-				</div>
-				<div>
-					<PlantillaDataTableDisplay type={1} />
-				</div>
-			</div>
-			<SelectAgencyModal
-				isDisplay={select_agency}
-				onClose={() => {
-					dispatch(setSelectAgency());
-				}}
-				onClickSubmit={() => {
-					SelectMemoForPosting();
-					dispatch(setSelectAgency());
-				}}
-			/>
-			<PostingOnJobVacancyModal
-				isDisplay={posting_vacancy}
-				onClose={() => setPostingJobVancy()}
-			/>
-		</React.Fragment>
-	);
+  const SelectMemoForPosting = async () => {
+    if (preMemoConfirm()) {
+      let confirmButtonText = "DOST Agencies",
+        cancelButtonColor = "#d33",
+        cancelButtonText = "CSC";
+      Swal.fire({
+        title: "<span>Memo on Posting of Vacancy</span>",
+        html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
+        icon: "question",
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: confirmButtonText,
+        cancelButtonColor: cancelButtonColor,
+        cancelButtonText: cancelButtonText,
+        preConfirm: () => {
+          preMemoConfirm();
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          confirmedMemoAction();
+          dispatch(setRefreh());
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          cancelMemoCallback();
+          dispatch(setRefreh());
+        }
+      });
+    }
+  };
+
+  return (
+    <React.Fragment>
+      <div className="plantilla-view">
+        <div className="container-plantilla">
+          {/* <BreadcrumbComponent list={bc.getBreadcrumbData('vacant')} className="" /> */}
+          <BreadcrumbComponent list={plantillaVacantBreadCramp} className="" />
+        </div>
+        <div className="three-idiot">
+          <DropdownVpMenu
+            itemList={plantillaItemsReportsMenuItems}
+            title={<AiFillPrinter size="28" color="#004E87" />}
+            alignItems="end"
+            className="button-icon unstyled-button"
+            tooltipData={{ toolTipId: "pl-vp-printer", textHelper: "Print" }}
+          />
+          <IconComponent
+            id="view_edit_vacantposition"
+            className="padding-left-1"
+            icon={<BsGlobe size="25" />}
+            toolTipId="pl-vp-view"
+            textHelper="View/Edit Job Vacancy"
+            onClick={() => {
+              setPostingJobVancy(true);
+            }}
+          />
+          <IconComponent
+            id="close_vacant_position"
+            className="padding-left-1"
+            icon={<BsFillCheckCircleFill size="25" />}
+            toolTipId="pl-vp-check"
+            textHelper="Close Vacant Position"
+            onClick={() => closeSelectedVacantPostions()}
+          />
+        </div>
+        <div>
+          <PlantillaDataTableDisplay type={1} />
+        </div>
+      </div>
+      <SelectAgencyModal
+        isDisplay={select_agency}
+        onClose={() => {
+          dispatch(setSelectAgency());
+        }}
+        onClickSubmit={() => {
+          SelectMemoForPosting();
+          dispatch(setSelectAgency());
+        }}
+      />
+      <PostingOnJobVacancyModal
+        isDisplay={posting_vacancy}
+        onClose={() => setPostingJobVancy()}
+      />
+    </React.Fragment>
+  );
 };
 
 export default PlantillaItemsVacantPositionComponentView;

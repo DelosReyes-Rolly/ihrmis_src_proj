@@ -55,24 +55,25 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
     });
   };
 
-  const onRemoveEmp = async () => {
-    if (selectedItems.length !== 0) {
-      await axios
-        .post(API_HOST + "remove-to-next-rank", { item_list: selectedItems })
-        .then(() => {
-          dispatch(setRefresh());
-          popupAlert({ message: "Removed Successfully" });
-        })
-        .catch((err) => {
-          popupAlert({ message: err.message, type: ALERT_ENUM.fail });
-        });
-      return null;
-    }
-    popupAlert({
-      message: "Please Select Next-in-Rank Employee to delete",
-      type: ALERT_ENUM.fail,
-    });
-  };
+  // REMOVE THE API!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // const onRemoveEmp = async () => {
+  //   if (selectedItems.length !== 0) {
+  //     await axios
+  //       .post(API_HOST + "remove-to-next-rank", { item_list: selectedItems })
+  //       .then(() => {
+  //         dispatch(setRefresh());
+  //         popupAlert({ message: "Removed Successfully" });
+  //       })
+  //       .catch((err) => {
+  //         popupAlert({ message: err.message, type: ALERT_ENUM.fail });
+  //       });
+  //     return null;
+  //   }
+  //   popupAlert({
+  //     message: "Please Select Next-in-Rank Employee to delete",
+  //     type: ALERT_ENUM.fail,
+  //   });
+  // };
 
   const columns = useMemo(
     () => [
@@ -143,21 +144,14 @@ const NextInRankModal = ({ isDisplay, onClose, plantilla }) => {
       <ModalComponent
         title="Next-in-Rank Employee"
         onSubmitName="Notify"
-        onCloseName="Delete"
+        onCloseName="Memo"
         isDisplay={isDisplay}
         onClose={onClose}
-        onPressed={onRemoveEmp}
+        onPressed={() => generateMemo()}
         onSubmitType="button"
         onSubStyle="notify-button-color"
-        onPressStyle="delete-button-color"
+        onPressStyle="memo-blue-color"
         onClickSubmit={() => onPressedNotify()}
-        addExtraButton={
-          <ButtonComponent
-            type="button"
-            buttonName="Memo"
-            onClick={() => generateMemo()}
-          />
-        }
       >
         <div className="next-rank-modal-container">
           <NextInRankTable

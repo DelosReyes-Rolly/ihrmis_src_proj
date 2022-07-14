@@ -1,23 +1,26 @@
-import React, { Component } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const BreadcrumbComponent = ({ list, change }) => {
+const BreadcrumbComponent = ({ list }) => {
+  const navigate = useNavigate();
   return (
     <React.Fragment>
       <ul className="breadcrumb">
-        {list.map((listName, i, row) => {
-          if (row.length === i + 1 && change !== undefined) {
-            return <li key={listName.name}>{change}</li>;
-          } else {
-            if (listName.link === "#") {
-              return <li key={listName.name}>{listName.name}</li>;
-            } else {
-              return (
-                <li key={listName.name}>
-                  <a href={listName.link}>{listName.name}</a>
-                </li>
-              );
-            }
+        {list?.map((listName) => {
+          if (listName.link === "#") {
+            return <li key={listName.name}>{listName.name}</li>;
           }
+          return (
+            <li
+              key={listName.name}
+              className="active-list-item"
+              onClick={() => {
+                navigate(listName.link);
+              }}
+            >
+              {listName.name}
+            </li>
+          );
         })}
       </ul>
     </React.Fragment>

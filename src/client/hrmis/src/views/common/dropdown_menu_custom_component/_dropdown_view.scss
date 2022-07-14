@@ -52,6 +52,7 @@
   background-color: white;
   width: 200px;
   padding: 2px 0px;
+  z-index: $sidebarIndex;
   .arrow-style {
     position: absolute;
     top: -10px;

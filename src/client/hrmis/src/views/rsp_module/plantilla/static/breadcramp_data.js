@@ -1,7 +1,7 @@
 export const plantillaItemsBreadCramp = [
   {
     name: "Home",
-    link: "./",
+    link: "/rsp",
   },
   {
     name: "Plantilla",
@@ -16,7 +16,7 @@ export const plantillaItemsBreadCramp = [
 export const plantillaVacantBreadCramp = [
   {
     name: "Home",
-    link: "./",
+    link: "/rsp",
   },
   {
     name: "Plantilla",
@@ -24,13 +24,14 @@ export const plantillaVacantBreadCramp = [
   },
   {
     name: "Plantilla Items",
-    link: "#",
+    link: "/rsp/plantilla/plantilla-items",
   },
   {
     name: "Vacant Positions",
     link: "#",
   },
 ];
+
 export const employeeItemsBreadCramp = [
   {
     name: "Home",

@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { statusDisplay } from "../../static/display_option";
+import { itemState, statusDisplay } from "../../static/display_option";
 import {
 	useTable,
 	useSortBy,
@@ -43,6 +43,7 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
  * @returns
  */
 export const PlantillaDataTableDisplay = ({ type }) => {
+
 	const refresh = useSelector((state) => state.popupResponse.refresh);
 	const [plotData, setPlotData] = useState([]);
 	const dispatch = useDispatch();
@@ -201,6 +202,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 			dispatch(setSelectedPlantillaItems([]));
 		}
 	}, [selectedFlatRows]);
+  
 	return (
 		<React.Fragment>
 			<FilterPlantillaItems
