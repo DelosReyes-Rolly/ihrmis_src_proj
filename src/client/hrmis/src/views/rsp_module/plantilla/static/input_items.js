@@ -38,6 +38,21 @@ export const rjcInputItem = [
   },
 ];
 
+export const SourceOfFundsItem = [
+  {
+    id: 0,
+    title: "General Appropriations Act",
+  },
+  {
+    id: 1,
+    title: "General Appropriations Act - Mithi",
+  },
+  {
+    id: 2,
+    title: "Grants In Aid Program",
+  },
+];
+
 //ADD PLANTILLA ITEM MODALS
 export const apiEmploymentStatModalInputItem = [
   {
@@ -148,7 +163,6 @@ export const civil_status = [
     title: "Others",
   },
 ];
-
 
 export const apiModelOfficeInputItem = [
   {

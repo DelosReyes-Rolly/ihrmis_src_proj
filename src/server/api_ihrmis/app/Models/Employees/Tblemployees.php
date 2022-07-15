@@ -2,6 +2,7 @@
 
 namespace App\Models\Employees;
 
+use Database\Factories\TblagenciesFactory;
 use App\Models\Employees\TblemployeeProfile;
 use App\Models\TblplantillaItems;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

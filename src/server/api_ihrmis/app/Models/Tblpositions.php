@@ -15,7 +15,7 @@ class Tblpositions extends Model
         'pos_title',
         'pos_short_name',
         'pos_salary_grade',
-        'pos_category', 
+        'pos_category',
     ];
 
     public $timestamps = false;
@@ -25,8 +25,8 @@ class Tblpositions extends Model
         return $this->hasMany(TblpositionCscStandards::class, 'std_pos_id', 'pos_id');
     }
 
-    public function tblplantillaItems(){
+    public function tblplantillaItems()
+    {
         return $this->belongsToMany(TblplantillaItems::class);
     }
-
 }

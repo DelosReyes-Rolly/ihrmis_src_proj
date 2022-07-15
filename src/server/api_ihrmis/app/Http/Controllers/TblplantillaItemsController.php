@@ -31,11 +31,8 @@ class TblplantillaItemsController extends Controller
         return new CommonResource($item_query);
     }
 
-    public function addPlantillaItem(Request $request, $id)
-    {
-
+    public function addPlantillaItem(Request $request, $id){   
         try {
-
             $plantillaQry = TblplantillaItems::firstOrNew(["itm_id" => $id]);
             $plantillaQry->itm_regular = $request->itm_regular;
             $plantillaQry->itm_no = $request->itm_no;
@@ -50,7 +47,7 @@ class TblplantillaItemsController extends Controller
             $plantillaQry->itm_source = $request->itm_source ?? 0;
             $plantillaQry->itm_supv1_itm_id = $request->itm_supv1_itm_id ?? 0;
             $plantillaQry->itm_supv2_itm_id = $request->itm_supv2_itm_id ?? 0;
-            $plantillaQry->itm_state = $request->itm_state ?? 0;
+            $plantillaQry->itm_state = $request->itm_state ?? 1;
             $plantillaQry->save();
         } catch (\Throwable $th) {
             return response()->json([
@@ -86,8 +83,8 @@ class TblplantillaItemsController extends Controller
 
     public function getPlantillaItemByOffice($id)
     {
-        $item_query = TblplantillaItems::where("itm_ofc_id", $id)->get();
-        return CommonResource::collection($item_query);
+       $item_query = TblplantillaItems::where("itm_ofc_id", $id)->with('tblpositions')->get();
+       return CommonResource::collection($item_query);
     }
 
     public function getNextInRank($id)
@@ -96,9 +93,8 @@ class TblplantillaItemsController extends Controller
         return new CommonResource($item_qry);
     }
 
-    public function getAllVacantPlantillaItems()
-    {
-        $item_qry = TblplantillaItems::where("itm_state", 0)->get();
+    public function getAllVacantPlantillaItems(){
+        $item_qry = TblplantillaItems::where("itm_state", 1)->get();
         return response()->json([
             "total_vacant" => count($item_qry)
         ]);

@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources\Plantilla;
 
+use App\Services\CommonHelpers;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GetPositionWithCscResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -14,33 +16,30 @@ class GetPositionWithCscResource extends JsonResource
      */
     public function toArray($request)
     {
-        $IligibilityHolder = [
-            "No Eligibility", 
-            "Professional", 
-            "Sub-professional", 
-            "Board / Bar",
-            "Barangay Health Worker",
-            "Barangay Official",
-            "Barangay Nutrition Scholar",
-            "Electronic Data Processing Specialist (EDPS)",
-            "Honor Graduate",
-            "Foreign School Honor Graduate",
-            "Scientific and Technological Specialist",
-            "Veteran Preference Rating",
-            "Sanggunian Member",
-            "Skill Eligibility",
-        ];
 
         $arrContainer = [];
-        $EducType = ['Bachelor\'s', 'Master\'s', 'PhD'];
+
+        $EducType = ['Elementary', 'Secondary', 'Vocational/Trade', 'College', 'Graduate Studies'];
         foreach ($this->tblpositionCscStandards as $value) {
             if($value["std_type"] == "ED"){
                 $degree = explode("|",$value['std_keyword']);
                 $printArr = [];
                 foreach($degree as $educValue){
                     $holder = explode(":",$educValue);
-                    array_push($printArr, $EducType[$holder[0] - 1] . " Degree in " . $holder[1] . " is relevant to the job");
+                    if($EducType[$holder[0] - 1] == $EducType[0] || $EducType[$holder[0] - 1] == $EducType[1]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[2]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " in " . $holder[1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[3]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " Degree in " . $holder[1] . " is relevant to the job");
+                    }
+                    if($EducType[$holder[0] - 1] == $EducType[4]){
+                        array_push($printArr, $EducType[$holder[0] - 1] . " in " . $holder[1] . " is relevant to the job");
+                    }
                 }
+
                 if(!empty($value["std_specifics"])){
                     $arrContainer["ed"] = implode(", ", $printArr) . " and or " . $value["std_specifics"];
                 } else {
@@ -59,6 +58,10 @@ class GetPositionWithCscResource extends JsonResource
                 $arrContainer["cs"] = implode(" / ", $eligibililityValue);
             }
         }
+        // $helper = new CommonHelpers();
+
+        // $csc_standard = $helper->cscStandardFormatter($this->tblpositionCscStandards);
+
 
         return [
             "pos_id" => $this->pos_id,
@@ -66,10 +69,10 @@ class GetPositionWithCscResource extends JsonResource
             "pos_short_name" => $this->pos_short_name,
             "pos_salary_grade" => $this->pos_salary_grade,
             "pos_category" => $this->pos_category,
-            "education" => $arrContainer["ed"] ?? "",
-            "experience" => $arrContainer["ex"] ?? "",
-            "training" => $arrContainer["tr"]  ?? "",
-            "eligibility" => $arrContainer["cs"] ?? ""
+            "education" => $csc_standard["ed"] ?? "",
+            "experience" => $csc_standard["ex"] ?? "",
+            "training" => $csc_standard["tr"]  ?? "",
+            "eligibility" => $csc_standard["cs"] ?? ""
         ];
     }
 }

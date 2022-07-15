@@ -4,7 +4,7 @@ import SearchComponent from "../../../../common/input_component/search_input/sea
 import { plantillaItemSelectFilter } from "../../static/filter_items";
 import AddPlantillaItemModal from "../add_plantilla_item_modal/add_plantilla_item_modal";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { statusDisplay } from "../../static/display_option";
+import { itemState, statusDisplay } from "../../static/display_option";
 import { BsArrowDown, BsArrowUp } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
 import { IoIosPaperPlane } from "react-icons/io";
@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import ButtonComponent from "../../../../common/button_component/button_component.js";
 import { useNavigate } from "react-router-dom";
 import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
-import PositionModal from "../plantilla_info_modals/position_modal";
+import ReactTooltip from "react-tooltip";
 
 const PlantillaItemPageComponentView = () => {
   const [toggleState, setToggleState] = useState(1);
@@ -33,7 +33,7 @@ const PlantillaItemPageComponentView = () => {
       .then((res) => {
         setNumber(res.data.total_vacant);
       })
-      .catch((err) => {});
+      .catch((err) => console.log(err.message));
   };
 
   useEffect(() => {
@@ -42,6 +42,13 @@ const PlantillaItemPageComponentView = () => {
 
   return (
     <React.Fragment>
+      <ReactTooltip id="regular-tab-btn" effect="solid">
+        {"View all regular plantilla items"}
+      </ReactTooltip>
+      <ReactTooltip id="non-regular-tab-btn" effect="solid">
+        {"View all non-regular plantilla items"}
+      </ReactTooltip>
+
       <div className="plantilla-view">
         <div className="container-plantilla">
           <BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
@@ -49,6 +56,9 @@ const PlantillaItemPageComponentView = () => {
         <div className="container-vacant-position">
           <div className="button-vacant">
             <ButtonComponent
+              toolTipId="button-vacant"
+              tips="View all vacant plantillas"
+              tipPosition="left"
               buttonLogoStart={<IoIosPaperPlane />}
               buttonName="Vacant"
               buttonLogoEnd={<SquareNotification number={number} />}
@@ -58,6 +68,8 @@ const PlantillaItemPageComponentView = () => {
           <div className="regular-tab-component">
             <div className="reg-tab-container">
               <button
+                data-tip
+                data-for="regular-tab-btn"
                 onClick={() => toggleTab(1)}
                 className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
               >
@@ -65,6 +77,8 @@ const PlantillaItemPageComponentView = () => {
               </button>
 
               <button
+                data-tip
+                data-for="non-regular-tab-btn"
                 onClick={() => toggleTab(2)}
                 className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
               >
@@ -99,15 +113,15 @@ export const PlantillaDataTableDisplay = ({ type }) => {
     await axios
       .get(API_HOST + "plantilla-items/" + type)
       .then((response) => {
-        let data = response.data.data ?? [];
-
+        const data = response.data.data ?? [];
         let dataPlot = [];
+        console.log(data);
         data.forEach((element) => {
           dataPlot.push({
             itm_no: element.itm_no,
             pos_short_name: element?.position.pos_short_name,
             ofc_acronym: element?.office.ofc_acronym,
-            itm_status: statusDisplay[element.itm_status],
+            itm_status: itemState[element?.itm_state],
             pos_category: element.position.pos_category,
             itm_plantilla: element,
           });
@@ -190,6 +204,9 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         setSearch={setGlobalFilter}
         statusFilter={setFilter}
       />
+      {/* <ReactTooltip id="table-row-btn" effect="solid">
+        {"Click to view plantilla info"}
+      </ReactTooltip> */}
 
       <div className="default-table">
         <table className="table-design" {...getTableProps()}>
@@ -225,7 +242,6 @@ export const PlantillaDataTableDisplay = ({ type }) => {
               return (
                 <tr
                   onClick={() => {
-                    console.log(row.values.itm_plantilla.itm_id);
                     navigate(
                       "/rsp/plantilla/plantilla-items/info/" +
                         row.values.itm_plantilla.itm_id
@@ -261,39 +277,29 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
   let [toggleAddPlantillaItem, setTogglePlantillaItem] = useToggleHelper(false);
 
-  const [showPosModal, setShowPosModal] = useState(false);
-
   return (
     <React.Fragment>
+      <ReactTooltip id="plantilla-add-btn" effect="solid">
+        {"Create/Add new plantilla item"}
+      </ReactTooltip>
+
       <AddPlantillaItemModal
         isDisplay={toggleAddPlantillaItem}
         onClose={() => setTogglePlantillaItem()}
         type={type}
-      />
-      <PositionModal
-        onClose={() => setShowPosModal(false)}
-        isDisplay={showPosModal}
       />
 
       <div className="selector-buttons">
         <div className="selector-container">
           <span className="selector-span-1">
             <button
+              data-tip
+              data-for="plantilla-add-btn"
               className="btn-primary"
               onClick={() => setTogglePlantillaItem()}
             >
               <MdAdd style={{ padding: 0, margin: 0 }} size="14" />
               <span>Plantilla Item</span>
-            </button>
-          </span>
-
-          <span className="margin-left-1 selector-span-1">
-            <button
-              className="btn-primary"
-              onClick={() => setShowPosModal(true)}
-            >
-              <MdAdd style={{ padding: 0, margin: 0 }} size="14" />
-              <span>Position</span>
             </button>
           </span>
 
