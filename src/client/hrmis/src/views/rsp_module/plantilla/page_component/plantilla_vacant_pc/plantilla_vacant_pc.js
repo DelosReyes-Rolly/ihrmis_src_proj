@@ -127,6 +127,16 @@ const PlantillaItemsVacantPositionComponentView = () => {
 		);
 	};
 
+	const cancelCallback = () => {
+		let response = {
+			data: {
+				code: 500,
+				message: "No selected position/s!",
+			},
+		};
+		toastSuccessFailMessage(response.data);
+	};
+
 	return (
 		<React.Fragment>
 			<div className="plantilla-view">
