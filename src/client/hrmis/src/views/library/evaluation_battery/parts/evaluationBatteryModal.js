@@ -336,7 +336,7 @@ const EvaluationBatteryModal = ({
 																	<AiOutlineMinusCircle
 																		onClick={() => {
 																			// dispatch(removeDutyResponsibility(id));
-																			handleRemove(bat_points);
+																			handleRemove(bat_itm_order);
 																		}}
 																		style={{ color: 'red', paddingLeft: '5px' }}
 																		className='button-add-remove'

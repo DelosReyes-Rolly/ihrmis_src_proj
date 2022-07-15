@@ -38,6 +38,7 @@ import EvaluationBatteryBaseComponent from '../views/library/evaluation_battery/
 import PositionLibrary from '../views/library/postion_page/position_library';
 import RecruitmentComparativeMatrix from '../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix';
 import FormSix from '../views/pds_form/parts/forms/form_six';
+import OnboardingMain from '../views/rsp_module/recruitment/onboarding/onboarding_main';
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -134,6 +135,8 @@ const MainRouter = () => {
 							element={<RecruitmentComparativeMatrix />}
 						/>
 					</Route>
+
+					<Route path='/rsp/onboarding/' element={<OnboardingMain />}></Route>
 
 					<Route path='/rsp/request' element={<RequestView />} />
 

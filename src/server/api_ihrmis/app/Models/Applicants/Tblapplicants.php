@@ -26,8 +26,11 @@ class Tblapplicants extends Model
         'app_itm_id',
         'app_emp_id',
         'app_sts_time',
+        'app_appointed',
         'app_appntmnt',
-        'app_assmptn'
+        'app_assmptn',
+        'app_period_from',
+        'app_period_to'
     ];
 
     public $timestamps = false;

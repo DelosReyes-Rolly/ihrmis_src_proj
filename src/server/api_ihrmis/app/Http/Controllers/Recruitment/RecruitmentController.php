@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Recruitment;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
+use App\Models\Applicants\TblapplicantsAssessments;
 use App\Services\Recruitment\RecruitmentService;
 use Illuminate\Http\Request;
 
@@ -56,9 +57,14 @@ class RecruitmentController extends Controller
         // return $qualified_applicants;
         return $this->recruitmentSerivce->generatePOAReport($qualified_applicants, $requirements);
     }
+    public function getRAIDATA($month, $year)
+    {
+        return $this->recruitmentSerivce->getRAIData($month, $year);
+    }
     public function generateRAIReport($month, $year)
     {
-        return $this->recruitmentSerivce->generateRAIReport($month, $year);
+        $data = $this->recruitmentSerivce->getRAIData($month, $year);
+        return $this->recruitmentSerivce->generateRAIReport($month, $year, $data);
     }
     public function generateCMReport($plantillaId)
     {
@@ -88,7 +94,31 @@ class RecruitmentController extends Controller
         return $this->recruitmentSerivce->saveAssessment($request);
     }
 
-    public function saveCompetencyAssessment(Request $request){
+    public function saveCompetencyAssessment(Request $request)
+    {
         return $this->recruitmentSerivce->saveCompetencyAssessment($request);
+    }
+
+    public function getBattery($level, $sg, $appID)
+    {
+        return CommonResource::collection(
+            $this->recruitmentSerivce->getBattery($level, $sg, $appID)
+        );
+    }
+
+    public function saveEmploymentExam(Request $request)
+    {
+        return $this->recruitmentSerivce->saveEmploymentExam($request);
+    }
+
+    public function getAssessment($id)
+    {
+        $query = TblapplicantsAssessments::where('ass_app_id', $id)->first();
+        return new CommonResource($query);
+    }
+
+    public function saveAppointment(Request $request)
+    {
+        return $this->recruitmentSerivce->saveAppointment($request);
     }
 }

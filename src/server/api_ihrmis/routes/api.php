@@ -57,16 +57,7 @@ Route::post('new-afc/{id}', [TblapplicantProfileController::class, "createFamily
 Route::get('verify-email', [TblapplicantProfileController::class, "verifyEmail"]);
 Route::get('get-new-applicant/{id?}', [TblapplicantProfileController::class, "getApplicant"]);
 Route::get('get-new-family/{id}', [TblapplicantProfileController::class, "getFamilyChildren"]);
-Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
 
-//Reports
-Route::get('generate-POA/{plantillaId}', [RecruitmentController::class, "generatePOAReport"]);
-Route::get('generate-RAI/{month}/{year}', [RecruitmentController::class, "generateRAIReport"]);
-Route::get('generate-CM/{plantillaId}', [RecruitmentController::class, "generateCMReport"]);
-Route::get('generate-OOO/{applicant}', [RecruitmentController::class, "generateOOOReport"]);
-Route::get('generate-CAD/{applicant}', [RecruitmentController::class, "generateCADReport"]);
-Route::get('generate-AFA/{applicant}', [RecruitmentController::class, "generateAFAReport"]);
-Route::get('getApplicantAgency/{offceId}', [RecruitmentController::class, "getApplicantAgency"]);
 //crud-child
 Route::get('new-children/{id}', [TblapplicantChildrenController::class, "getChildrenRecord"]);
 Route::post('new-children/{id}', [TblapplicantChildrenController::class, "addChildrenRecord"]);
@@ -138,9 +129,6 @@ Route::delete('remove-signed-image/{id}/{type}', [TbljvsController::class, "remo
 
 Route::post('create-position', [TblpositionsController::class, "addPosition"]);
 Route::get('get-position/{id}', [TblpositionsController::class, "getPosition"]);
-Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
-Route::get('get-cm-data/{plantilla_id}', [RecruitmentController::class, "getCMData"]);
-Route::get('get-ra-data/{plantilla_id}/{applicant_id}', [RecruitmentController::class, "getRAData"]);
 
 
 Route::get('get-info-position/{id?}', [TblpositionsController::class, "getPositionWithCsc"]);
@@ -160,6 +148,7 @@ Route::get('get-open-positions', [TblplantillaItemsController::class, "getOpenPl
 Route::post('plantilla-items/{id}', [TblplantillaItemsController::class, "addPlantillaItem"]);
 
 Route::delete("remove-plantilla/{id}", [TblplantillaItemsController::class, "removePlantilla"]);
+Route::post("update-evaluation", [TblplantillaItemsController::class, "updateEvaluationState"]);
 
 //=======================================================================================
 // PLANTILLA DTY RESPONSIBILITY
@@ -183,6 +172,7 @@ Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
+Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
 // AUTH END POINTS
 //=======================================================================================
@@ -192,6 +182,28 @@ Route::post('register', [AuthController::class, "register"]);
 
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
+Route::post('employement-exam', [RecruitmentController::class, 'saveEmploymentExam']);
+
+Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
+Route::get('get-cm-data/{plantilla_id}', [RecruitmentController::class, "getCMData"]);
+Route::get('get-ra-data/{plantilla_id}/{applicant_id}', [RecruitmentController::class, "getRAData"]);
+
+Route::get('get-battery-exam/{level}/{sg}/{appID}', [RecruitmentController::class, "getBattery"]);
+
+Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
+Route::get('get-assessment/{appID}', [RecruitmentController::class, "getAssessment"]);
+Route::post('save-appointment', [RecruitmentController::class, "saveAppointment"]);
+
+Route::get('getRAIDATA/{month}/{year}', [RecruitmentController::class, "getRAIDATA"]);
+
+//Reports
+Route::get('generate-POA/{plantillaId}', [RecruitmentController::class, "generatePOAReport"]);
+Route::get('generate-RAI/{month}/{year}', [RecruitmentController::class, "generateRAIReport"]);
+Route::get('generate-CM/{plantillaId}', [RecruitmentController::class, "generateCMReport"]);
+Route::get('generate-OOO/{applicant}', [RecruitmentController::class, "generateOOOReport"]);
+Route::get('generate-CAD/{applicant}', [RecruitmentController::class, "generateCADReport"]);
+Route::get('generate-AFA/{applicant}', [RecruitmentController::class, "generateAFAReport"]);
+Route::get('getApplicantAgency/{offceId}', [RecruitmentController::class, "getApplicantAgency"]);
 
 //=======================================================================================
 // MAIL CONTROLLER ENDPOINTS

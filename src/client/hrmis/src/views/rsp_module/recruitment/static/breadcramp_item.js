@@ -31,3 +31,18 @@ export const ComparartiveBreadCrumbs =[
         link: '#'
     },
 ];
+
+export const OnboardingBreadCrumbs =[
+    {
+        name: 'Home',
+        link: './'
+    },
+    {
+        name: 'Recruitment',
+        link: '/ihrmis/rsp/recruitment'
+    },
+    {
+        name: 'Onboarding',
+        link: '/ihrmis/rsp/onboarding'
+    },
+];

@@ -5,13 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import { setRefresh } from '../../../../../../features/reducers/popup_response';
 import {
+	ALERT_ENUM,
+	popupAlert,
+} from '../../../../../../helpers/alert_response';
+import {
 	API_HOST,
 	SANCTUM,
 } from '../../../../../../helpers/global/global_config';
 import { useIsMounted } from '../../../../../../helpers/use_hooks/isMounted';
 import IconComponent from '../../../../../common/icon_component/icon';
 
-const DocumentListComponent = ({ applicantId, isDisplay }) => {
+const DocumentListComponent = ({ applicantId, isDisplay, level, cluster }) => {
 	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setDocumentRequirements] = useState([]);
@@ -20,7 +24,15 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 		let options = [];
 
 		await axios
-			.get(API_HOST + 'get-uploaded-documents/1/RP/' + applicantId)
+			.get(
+				API_HOST +
+					'get-uploaded-documents/' +
+					level +
+					'/' +
+					cluster +
+					'/' +
+					applicantId
+			)
 			.then((response) => {
 				let data = response.data.data;
 				data.forEach((element) => {
@@ -35,6 +47,12 @@ const DocumentListComponent = ({ applicantId, isDisplay }) => {
 						element.tbl_applicant_requirements.forEach((value) => {
 							let splitter = value.req_app_file.split(',');
 							temp.file = splitter;
+							temp.att_id = value.id;
+							if (
+								element.doc_name === 'Other' &&
+								value.req_app_doc_name != null
+							)
+								temp.title = value.req_app_doc_name;
 						});
 						temp.filled = true;
 					}
@@ -76,6 +94,10 @@ const TableList = ({ data, counter }) => {
 		await axios
 			.get(API_HOST + 'delete-uploaded-documents/' + att_id)
 			.then((response) => {
+				popupAlert({
+					message: 'Documents were Deleted',
+					type: ALERT_ENUM.success,
+				});
 				dispatch(setRefresh());
 			})
 			.catch((error) => {});
@@ -85,15 +107,15 @@ const TableList = ({ data, counter }) => {
 			{data.map((element, key) => {
 				return (
 					<tr key={key}>
-						{element.file.length !== 0 &&
-							element?.file.map((data, index) => {
+						{element?.file?.length !== 0 &&
+							element?.file?.map((data, index) => {
 								let number = index + 1;
 								return (
 									<td
 										key={index}
 										id={'document_text'}
 										data-tip
-										data-for={'rc-dc-txt' + counter}
+										data-for={'rc-dc-txt' + key}
 										onClick={() => {
 											window.open(
 												SANCTUM + 'storage/applicant/applicant-docs/' + data,
@@ -101,11 +123,11 @@ const TableList = ({ data, counter }) => {
 											);
 										}}
 										className={
-											element.filled === false ? 'col-1 unfilled' : 'col-1'
+											element.filled === false ? 'unfilled' : 'td-file-list'
 										}
 									>
 										<ReactTooltip
-											id={'rc-dc-txt' + counter}
+											id={'rc-dc-txt' + key}
 											place='top'
 											effect='solid'
 										>
@@ -115,36 +137,24 @@ const TableList = ({ data, counter }) => {
 									</td>
 								);
 							})}
-						{element.file.length === 0 && (
+						{element?.file?.length === 0 && (
 							<td
 								id={'document_text'}
 								data-tip
-								data-for={'rc-dc-txt' + counter}
-								onClick={() => {
-									window.open(
-										SANCTUM +
-											'storage/applicant/applicant-docs/' +
-											element?.file,
-										'_blank'
-									);
-								}}
-								className={
-									element.filled === false ? 'col-1 unfilled' : 'col-1'
-								}
+								data-for={'rc-dc-txt' + key}
+								className={element.filled === false ? 'unfilled' : ''}
 							>
-								<ReactTooltip
-									id={'rc-dc-txt' + counter}
-									place='top'
-									effect='solid'
-								>
-									Open {element.title} in another Window
-								</ReactTooltip>
 								{element.title}
 							</td>
 						)}
-						<td className='col-2'>
+						<td
+							className='col-2 w5 upload-input-design'
+							onClick={() => {
+								deleteDocument(element.att_id);
+							}}
+						>
 							<IconComponent
-								id={'delete ' + counter}
+								id={'delete ' + key}
 								className={
 									element.filled === false
 										? 'padding-left-1 point gone'
@@ -152,11 +162,8 @@ const TableList = ({ data, counter }) => {
 								}
 								icon={<BsTrashFill />}
 								position='top'
-								toolTipId={'rc-vp-mail-' + counter}
+								toolTipId={'rc-vp-mail-' + key}
 								textHelper={'Delete this file?'}
-								onClick={() => {
-									deleteDocument(element.att_id);
-								}}
 							/>
 						</td>
 					</tr>

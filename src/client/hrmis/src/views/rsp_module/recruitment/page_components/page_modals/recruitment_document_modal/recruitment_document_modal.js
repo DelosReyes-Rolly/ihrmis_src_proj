@@ -12,14 +12,25 @@ import DocumentListComponent from './document_list_component';
 import { setRefresh } from '../../../../../../features/reducers/popup_response';
 import { useDispatch } from 'react-redux';
 import { useIsMounted } from '../../../../../../helpers/use_hooks/isMounted';
-const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
+import {
+	ALERT_ENUM,
+	popupAlert,
+} from '../../../../../../helpers/alert_response';
+const RecruitmentDocumentModal = ({
+	isDisplay,
+	onClose,
+	title,
+	appID,
+	level,
+	cluster,
+}) => {
 	const mounted = useIsMounted();
 	const dispatch = useDispatch();
 	const { renderBusy, renderFailed, renderSucceed } = usePopUpHelper();
 	const [documentRequirements, setDocumentRequirements] = useState([]);
 	const getDocumentRequirements = async () => {
 		await axios
-			.get(API_HOST + 'get-documentary-requirements/1/RP')
+			.get(API_HOST + 'get-documentary-requirements/' + level + '/' + cluster)
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
@@ -55,25 +66,31 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
 			const formData = new FormData();
-			formData.append('doc_type', value.doc_type);
+			formData.append('doc_id', value.doc_type);
 			formData.append('doc_name', value.doc_name);
-			formData.append('applicant_id', rowData.app_id);
+			formData.append('applicant_id', appID);
 
 			if (documentValue.length > 0) {
 				for (let index = 0; index < documentValue.length; index++) {
-					formData.append('documents[]', documentValue[index]);
+					formData.append('files[]', documentValue[index]);
 				}
 			}
 			await axios
-				.post(API_HOST + 'add-applicant-document', formData, {
+				.post(API_HOST + 'new-requirement/' + appID, formData, {
 					headers: { 'Content-Type': 'multipart/form-data' },
 				})
 				.then((res) => {
-					renderSucceed({ content: 'Document saved successfully' });
+					popupAlert({
+						message: 'Document saved successfully',
+						type: ALERT_ENUM.success,
+					});
 					dispatch(setRefresh());
 				})
 				.catch((err) => {
-					renderFailed({ content: 'Document failed to save' });
+					popupAlert({
+						message: 'Document failed to save',
+						type: ALERT_ENUM.fail,
+					});
 				});
 			renderBusy(false);
 		},
@@ -81,11 +98,11 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 	const [documentValue, setDocumentValue] = useState();
 	useEffect(() => {
 		getDocumentRequirements();
-	}, []);
+	}, [isDisplay]);
 	return (
 		<React.Fragment>
 			<ModalComponent
-				title='Documents'
+				title={title ?? 'Documents'}
 				isDisplay={isDisplay}
 				onClose={onClose}
 				onSubmit={documentForm.handleSubmit}
@@ -119,7 +136,7 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 							name='documents'
 							formik={documentForm}
 							accept='*'
-							isMulti={false}
+							isMulti={true}
 							onChange={(e) => {
 								setDocumentValue(e.target.files);
 							}}
@@ -133,8 +150,10 @@ const RecruitmentDocumentModal = ({ isDisplay, onClose, rowData }) => {
 					</div>
 				</div>
 				<DocumentListComponent
-					applicantId={rowData.app_id}
+					applicantId={appID}
 					isDisplay={isDisplay}
+					level={level}
+					cluster={cluster}
 				/>
 			</ModalComponent>
 		</React.Fragment>
