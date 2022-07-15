@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import useServiceHooks from "../../../../helpers/use_hooks/service_hooks";
+import React, { useRef, useState } from "react";
 
 const UploadAttachmentComponent = ({
 	formik,
@@ -12,7 +11,6 @@ const UploadAttachmentComponent = ({
 }) => {
 	const [files, setFiles] = useState([]);
 	const fileRef = useRef();
-	const [removeElementByClass] = useServiceHooks();
 
 	const removeFile = () => {
 		fileRef.current.value = null;
@@ -28,34 +26,12 @@ const UploadAttachmentComponent = ({
 		setFiles([...arrFiles]);
 	};
 
-	// useEffect(() => {
-	// 	if (files.length > 0) {
-	// 		removeElementByClass("container-file");
-	// 	}
-	// }, [files]);
-
-	const displayFilename = () => {
-		// if (files.length > 0) {
-		files?.map((value, id) => {
-			console.log("gago: id : " + value);
-			return <FileNameViewer text={value} />;
-		});
-		// } else {
-		// 	return <FileNameViewer text="Enter title or name..." />;
-		// }
-	};
-
 	return (
 		<React.Fragment>
 			<div className="upload-input-design">
 				<div className="div-file-container">
-					<div
-						className="file-holder"
-						onClick={() => {
-							fileRef.current.click();
-						}}
-					>
-						{displayFilename()}
+					<div className="file-holder" onClick={() => fileRef.current.click()}>
+						<DisplayFilename files={files} />
 					</div>
 					{files.length === 0 ? null : (
 						<div className="clear-div" onClick={() => removeFile()}>
@@ -89,12 +65,29 @@ const UploadAttachmentComponent = ({
 
 export default UploadAttachmentComponent;
 
-const FileNameViewer = ({ text, key }) => {
+const FileNameViewer = ({ text }) => {
 	return (
 		<React.Fragment>
-			<div className="container-file" key={key}>
+			<div className="container-file">
 				<p>{text}</p>
 			</div>
+		</React.Fragment>
+	);
+};
+
+const DisplayFilename = ({ files }) => {
+	if (files.length === 0) return <p>Enter title or name...</p>;
+
+	return (
+		<React.Fragment>
+			{Array.from(files).map((value, id) => {
+				console.log(id + ":" + value);
+				return (
+					<div key={id}>
+						<FileNameViewer text={value} />
+					</div>
+				);
+			})}
 		</React.Fragment>
 	);
 };

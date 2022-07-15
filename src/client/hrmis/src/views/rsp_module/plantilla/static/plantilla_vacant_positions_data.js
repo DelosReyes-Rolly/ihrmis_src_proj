@@ -1,6 +1,6 @@
 import {
 	printVacantPositions,
-	printNoticeOFVacany,
+	printNoticeOfVacancy,
 } from "../../../../router/outside_routes";
 
 /**
@@ -74,7 +74,7 @@ export const plantillaItemsVacantPosMenuItems = [
 export const plantillaItemsReportsMenuItems = [
 	{
 		id: 1,
-		label: "Memo on Posting of Vacancy",
+		label: "Memo on Posting of Posting of Announcement of Vacancy",
 		link: "#",
 	},
 	{
@@ -85,7 +85,7 @@ export const plantillaItemsReportsMenuItems = [
 	{
 		id: 3,
 		label: "Notice of Vacancy",
-		link: printNoticeOFVacany,
+		link: printNoticeOfVacancy,
 	},
 ];
 
