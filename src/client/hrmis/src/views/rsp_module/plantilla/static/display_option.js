@@ -1,5 +1,14 @@
 import countryList from "iso-3166-country-list";
 
+export const itemState = [
+  "Filled",
+  "Vacant",
+  "Process/Close",
+  "Open",
+  "Pending",
+  "Remove",
+];
+
 export const statusDisplay = [
   "Permanent",
   "Provisional",

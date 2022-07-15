@@ -1,5 +1,6 @@
 /* Style the list */
 ul.breadcrumb {
+  user-select: none;
   padding: 10px 20px;
   list-style: none;
 }
@@ -28,4 +29,12 @@ ul.breadcrumb li span {
 ul.breadcrumb li span:hover {
   color: #01447e;
   text-decoration: underline;
+}
+
+.active-list-item {
+  color: $navbar-color;
+}
+
+.active-list-item:hover {
+  color: map-get($primaryColor, regular);
 }

@@ -10,6 +10,7 @@ import {
   apiEmploymentStatModalInputItem,
   apiLevelPositionModalInputItem,
   apiModeCreationModalInputItem,
+  SourceOfFundsItem,
 } from "../../static/input_items";
 import axios from "axios";
 import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
@@ -49,6 +50,7 @@ const AddPlantillaItemModal = ({
       itm_creation: plantillaData?.itm_creation ?? "",
       itm_supv1_itm_id: plantillaData?.itm_supv1_itm_id ?? "",
       itm_supv2_itm_id: plantillaData?.itm_supv2_itm_id ?? "",
+      itm_source: plantillaData?.itm_source ?? "",
       itm_regular: type ?? plantillaData?.itm_regular,
     },
     validationSchema: Yup.object({
@@ -91,6 +93,9 @@ const AddPlantillaItemModal = ({
       // .required("This field is required"),
       itm_supv2_itm_id: Yup.number().typeError("Must be a number"),
       // .required("This field is required"),
+      itm_source: Yup.number()
+        .typeError("Must be a number")
+        .required("This field is required"),
     }),
     onSubmit: async (value, { resetForm }) => {
       renderBusy(true);
@@ -134,12 +139,17 @@ const AddPlantillaItemModal = ({
       .then((response) => {
         let arrHolder = [];
         const data = response.data.data;
+        console.log(response.data.data);
         data?.forEach((element) => {
-          arrHolder.push({ id: element.itm_id, title: element.itm_no });
+          if (plantillaData?.itm_no === element.itm_no) return;
+          arrHolder.push({
+            id: element.itm_id,
+            title: element.itm_no + ", " + element?.tblpositions?.pos_title,
+          });
         });
         setPlantillaByOfc(arrHolder);
       })
-      .catch((error) => {});
+      .catch((error) => console.log(error.message));
   };
 
   const onRemovePressed = async () => {
@@ -380,7 +390,13 @@ const AddPlantillaItemModal = ({
           </span>
           <span className="right-input item-modal-1">
             <label>Source of Fund</label>
-            <SelectComponent />
+            <SelectComponent
+              defaultTitle="Source of Fund"
+              name="itm_source"
+              value={plantillaForm.values.itm_source}
+              onChange={plantillaForm.handleChange}
+              itemList={SourceOfFundsItem}
+            />
           </span>
         </div>
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\TblagenciesFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

@@ -29,6 +29,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	const { selected_agency, select_agency, plantilla_items } = useSelector(
 		(state) => state.plantillaItem
 	);
+
 	const { toastSuccessFailMessage } = useSweetAlertHelper();
 
 	const closeSelectedVacantPostions = async () => {
@@ -124,16 +125,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 				console.log(error);
 			}
 		);
-	};
-
-	const cancelCallback = () => {
-		let response = {
-			data: {
-				code: 500,
-				message: "No selected position/s!",
-			},
-		};
-		toastSuccessFailMessage(response.data);
 	};
 
 	return (

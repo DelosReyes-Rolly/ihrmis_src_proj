@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { statusDisplay } from "../../static/display_option";
+import { itemState, statusDisplay } from "../../static/display_option";
 import {
 	useTable,
 	useSortBy,
