@@ -1,10 +1,14 @@
 .plantilla-icon {
-  color: #4276a4;
-  font-size: 1.2em;
-  z-index: $sidebarIndex;
+	color: #4276a4;
+	font-size: 1.2em;
+	z-index: $sidebarIndex;
 }
 
 .plantilla-icon:hover {
-  cursor: pointer;
-  @include zoomInEffect();
+	cursor: pointer;
+	@include zoomInEffect();
+}
+
+.swal2-icon:hover {
+	@include zoomInEffect();
 }

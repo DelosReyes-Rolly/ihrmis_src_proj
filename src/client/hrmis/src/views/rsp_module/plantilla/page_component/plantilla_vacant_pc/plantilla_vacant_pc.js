@@ -136,59 +136,6 @@ const PlantillaItemsVacantPositionComponentView = () => {
 		toastSuccessFailMessage(response.data);
 	};
 
-	const confirmedMemoAction = () => {
-		printMemoOnPostingOfVpForDost(selected_agency);
-	};
-
-	const cancelMemoCallback = () => {
-		printMemoOnPostingOfVpForCsc(selected_agency);
-	};
-
-	const preMemoConfirm = () => {
-		if (selected_agency.length === 0) {
-			let response = {
-				data: {
-					code: 500,
-					message: "No selected agency!",
-				},
-			};
-			toastSuccessFailMessage(response.data, "top");
-			return false;
-		} else {
-			return true;
-		}
-	};
-
-	const SelectMemoForPosting = async () => {
-		if (preMemoConfirm()) {
-			let confirmButtonText = "DOST Agencies",
-				cancelButtonColor = "#d33",
-				cancelButtonText = "CSC";
-			Swal.fire({
-				title: "<span>Memo on Posting of Vacancy</span>",
-				html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
-				icon: "question",
-				showCloseButton: true,
-				showCancelButton: true,
-				confirmButtonColor: "#3085d6",
-				confirmButtonText: confirmButtonText,
-				cancelButtonColor: cancelButtonColor,
-				cancelButtonText: cancelButtonText,
-				preConfirm: () => {
-					preMemoConfirm();
-				},
-			}).then((result) => {
-				if (result.isConfirmed) {
-					confirmedMemoAction();
-					dispatch(setRefreh());
-				} else if (result.dismiss === Swal.DismissReason.cancel) {
-					cancelMemoCallback();
-					dispatch(setRefreh());
-				}
-			});
-		}
-	};
-
 	return (
 		<React.Fragment>
 			<div className="plantilla-view">
@@ -233,8 +180,17 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					dispatch(setSelectAgency());
 				}}
 				onClickSubmit={() => {
-					SelectMemoForPosting();
-					dispatch(setSelectAgency());
+					if (selected_agency.length === 0) {
+						let response = {
+							data: {
+								code: 500,
+								message: "No selected agency!",
+							},
+						};
+						toastSuccessFailMessage(response.data, "top");
+					} else {
+						printMemoOnPostingOfVpForDost(selected_agency);
+					}
 				}}
 			/>
 			<PostingOnJobVacancyModal

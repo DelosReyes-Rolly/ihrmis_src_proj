@@ -1,47 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import tinymce from "tinymce/tinymce";
-
-// Content styles, including inline UI like fake cursors
-/* eslint import/no-webpack-loader-syntax: off */
-import contentCss from "@tinymce/tinymce-react/tinymce/js/tinymce/skins/content/default/content.min.css";
-import contentUiCss from "@tinymce/tinymce-react/tinymce/js/tinymce/skins/ui/oxide/content.min.css";
-// TinyMCE so the global var exists
-// eslint-disable-next-line no-unused-vars
+import useServiceHooks from "../../../helpers/use_hooks/service_hooks";
 
 const TinyMceEditorComponent = ({
-	initialValue = "",
+	initialValue = "<p>This is the initial content of the editor.</p>",
 	setFieldValue,
-	toolbar = {},
 }) => {
-	const textToHtml = (text) => {
-		const elem = document.createElement("div");
-		return text
-			.split(/\n\n+/)
-			.map((paragraph) => {
-				return (
-					"<p>" +
-					paragraph
-						.split(/\n+/)
-						.map((line) => {
-							elem.textContent = line;
-							return elem.innerHTML;
-						})
-						.join("<br/>") +
-					"</p>"
-				);
-			})
-			.join("");
-	};
-
 	const [value, setValue] = useState(initialValue ?? "");
+	const [removeElementByClass] = useServiceHooks();
 
 	useEffect(() => setValue(initialValue ?? ""), [initialValue]);
+
+	useEffect(() => {
+		removeElementByClass("tox-statusbar__branding");
+	}, [value]);
 
 	return (
 		<React.Fragment>
 			<Editor
-				// tinymceScriptSrc="../src/assets/js/tinymce/js/tinymce/tinymce.min.js"
+				tinymceScriptSrc={process.env.PUBLIC_URL + "/tinymce/tinymce.min.js"}
 				initialValue={initialValue}
 				value={value}
 				onEditorChange={(newValue, editor) => {
@@ -49,9 +26,34 @@ const TinyMceEditorComponent = ({
 					setFieldValue(newValue);
 				}}
 				init={{
-					skin: false,
-					content_css: false,
-					content_style: [contentCss, contentUiCss].join("\n"),
+					height: 500,
+					menubar: false,
+					plugins: [
+						"advlist",
+						"autolink",
+						"lists",
+						"link",
+						"image",
+						"charmap",
+						"anchor",
+						"searchreplace",
+						"visualblocks",
+						"code",
+						"fullscreen",
+						"insertdatetime",
+						"media",
+						"table",
+						"preview",
+						"help",
+						"wordcount",
+					],
+					toolbar:
+						"undo redo | blocks | " +
+						"bold italic forecolor | alignleft aligncenter " +
+						"alignright alignjustify | bullist numlist outdent indent | " +
+						"removeformat | help",
+					content_style:
+						"body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
 				}}
 			/>
 		</React.Fragment>
