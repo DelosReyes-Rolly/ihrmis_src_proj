@@ -3,6 +3,7 @@ import { AiFillCaretUp } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
+import Swal from "sweetalert2";
 import {
 	setEmailRecepients,
 	setNextRank,
@@ -11,6 +12,7 @@ import {
 } from "../../../../../../features/reducers/plantilla_item_slice";
 import usePositionSetter from "../../../../../../helpers/use_hooks/position_setter";
 import useSweetAlertHelper from "../../../../../../helpers/use_hooks/sweetalert_helper";
+import { printMemoOnPostingOfVpForCsc } from "../../../../../../router/outside_routes";
 
 const DropdownVpMenu = ({
 	title,
@@ -90,72 +92,100 @@ export default DropdownVpMenu;
 const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 	const navigate = useNavigate();
 	const { toastSuccessFailMessage } = useSweetAlertHelper();
+
 	const { selected_agency, plantilla_items, item_id } = useSelector(
 		(state) => state.plantillaItem
 	);
 
 	const dispatch = useDispatch();
+	const confirmedMemoAction = () => {
+		dispatch(setSelectAgency());
+	};
+
+	const cancelMemoCallback = () => {
+		printMemoOnPostingOfVpForCsc();
+	};
 
 	const linkNavigationHandler = (item) => {
 		const itemlink = item.link;
+		const itemlabel = item.label;
 
-		/**
-		 * For specific cases of routes or navigate through redux dispatches
-		 */
-
-		if (item.label.includes("JVS & CRW")) {
-			navigate(itemlink + "/" + item_id);
-			return;
+		switch (itemlabel) {
+			case "JVS & CRW": {
+				navigate(itemlink + "/" + item_id);
+				return;
+			}
+			case "Memo on Posting of Posting of Announcement of Vacancy": {
+				SelectMemoForPosting();
+				return;
+			}
+			case "Notify Office": {
+				dispatch(setNotifyOffice());
+				dispatch(setEmailRecepients(selected_agency.agn_head_email));
+				return;
+			}
+			case "Notice of Vacancy": {
+				return noticeOfVacancyAction(itemlink);
+			}
+			case "Next-in-rank": {
+				dispatch(setNextRank());
+				return;
+			}
+			default: {
+				/**
+				 * General cases of routing
+				 */
+				if (typeof itemlink === "string" && itemlink !== "#") {
+					navigate(itemlink);
+					return;
+				} else if (typeof itemlink === "function") {
+					itemlink();
+					return;
+				}
+				return;
+			}
 		}
+	};
 
-		if (item.label.includes("Memo on Posting")) {
-			dispatch(setSelectAgency());
-			return;
+	const SelectMemoForPosting = async () => {
+		let confirmButtonText = "DOST Agencies",
+			cancelButtonColor = "#d33",
+			cancelButtonText = "CSC";
+		Swal.fire({
+			title: "<span>Memo on Posting of Vacancy</span>",
+			html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
+			icon: "question",
+			showCloseButton: true,
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			confirmButtonText: confirmButtonText,
+			cancelButtonColor: cancelButtonColor,
+			cancelButtonText: cancelButtonText,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				confirmedMemoAction();
+			} else if (result.dismiss === Swal.DismissReason.cancel) {
+				cancelMemoCallback();
+			}
+		});
+	};
+
+	const noticeOfVacancyAction = (itemlink) => {
+		let positions = plantilla_items["positions"];
+
+		if (typeof positions === "undefined") {
+			// console.log("Gago!");
+			let response = {
+				data: {
+					code: 500,
+					message: "No selected row to print!",
+				},
+			};
+			toastSuccessFailMessage(response.data);
+		} else {
+			console.log(plantilla_items);
+			itemlink(plantilla_items["positions"]);
 		}
-
-		if (item.label.includes("Notify")) {
-			dispatch(setNotifyOffice());
-			dispatch(setEmailRecepients(selected_agency.agn_head_email));
-			return;
-		}
-
-		// if (item.label.includes("Notice")) {
-		// 	let positions = plantilla_items["positions"];
-		// 	if (typeof positions === "undefined") {
-		// 		// console.log("Gago!");
-		// 		let response = {
-		// 			data: {
-		// 				code: 500,
-		// 				message: "No selected row to print!",
-		// 			},
-		// 		};
-		// 		toastSuccessFailMessage(response.data);
-		// 	} else {
-		// 		// console.log(plantilla_items["positions"]);
-		// 		itemlink(plantilla_items);
-		// 		return;
-		// 	}
-		// }
-
-		if (item.label.includes("Next-in")) {
-			dispatch(setNextRank());
-			return;
-		}
-
-		/**
-		 * General cases of routing
-		 */
-
-		if (typeof itemlink === "string" && itemlink !== "#") {
-			navigate(itemlink);
-			return;
-		}
-
-		if (typeof itemlink === "function") {
-			itemlink();
-			return;
-		}
-
 		return;
 	};
 

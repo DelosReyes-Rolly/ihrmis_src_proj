@@ -11,18 +11,18 @@ export const printMemoOnPostingOfVpForDost = (data) => {
 
 export const printMemoOnPostingOfVpForCsc = (data) => {
 	// let string_json_data = Object.assign({}, data);
-	window.open(
-		API_HOST + "generateMemoOnPVPForCsc/" + JSON.stringify(data),
-		"_tab"
-	);
+	window.open(API_HOST + "generateMemoOnPVPForCsc", "_tab");
 };
 
 export const printVacantPositions = () => {
 	window.open(API_HOST + "generate-VpReport", "_tab");
 };
 
-export const printNoticeOFVacany = () => {
-	window.open(API_HOST + "generate-NoticeVpReport", "_tab");
+export const printNoticeOfVacancy = (data) => {
+	window.open(
+		API_HOST + "generate-NoticeVpReport/" + JSON.stringify(data),
+		"_tab"
+	);
 };
 
 export const testOutsideLink = () => {

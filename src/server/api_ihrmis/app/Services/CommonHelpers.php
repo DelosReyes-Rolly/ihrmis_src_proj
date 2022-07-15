@@ -13,12 +13,10 @@ class CommonHelpers
         ], $status);
     }
 
-
-
     public function cscStandardFormatter($data)
     {
 
-        $IligibilityHolder = $this->typeCscEligibility();
+        $IligibilityHolder = $this->typeCscEligibility;
 
         $arrContainer = [];
         $EducType = ['Bachelor\'s', 'Master\'s', 'PhD'];
@@ -52,23 +50,20 @@ class CommonHelpers
         return $arrContainer;
     }
 
-    private function typeCscEligibility()
-    {
-        return [
-            "No Eligibility",
-            "Professional",
-            "Sub-professional",
-            "Board / Bar",
-            "Barangay Health Worker",
-            "Barangay Official",
-            "Barangay Nutrition Scholar",
-            "Electronic Data Processing Specialist (EDPS)",
-            "Honor Graduate",
-            "Foreign School Honor Graduate",
-            "Scientific and Technological Specialist",
-            "Veteran Preference Rating",
-            "Sanggunian Member",
-            "Skill Eligibility",
-        ];
-    }
+    private $typeCscEligibility = [
+        "No Eligibility",
+        "Professional",
+        "Sub-professional",
+        "Board / Bar",
+        "Barangay Health Worker",
+        "Barangay Official",
+        "Barangay Nutrition Scholar",
+        "Electronic Data Processing Specialist (EDPS)",
+        "Honor Graduate",
+        "Foreign School Honor Graduate",
+        "Scientific and Technological Specialist",
+        "Veteran Preference Rating",
+        "Sanggunian Member",
+        "Skill Eligibility",
+    ];
 }

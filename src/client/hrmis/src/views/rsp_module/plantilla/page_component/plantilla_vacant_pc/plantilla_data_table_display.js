@@ -18,12 +18,9 @@ import {
 } from "../../static/plantilla_vacant_positions_data";
 import { MdMoreHoriz } from "react-icons/md";
 import NextInRankModal from "../next_in_rank_modal/next_in_rank_modal";
-import PlantillaEmailModal, {
-	EMAIL_ENUM,
-} from "../plantilla_email_modal/plantilla_email_modal";
+import { EMAIL_ENUM } from "../plantilla_email_modal/plantilla_email_modal";
 import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
 import ContextMenuModal from "../next_in_rank_modal/context_menu_modal";
-import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import {
 	setContextMenu,
 	setNextRank,
@@ -43,8 +40,8 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
  * @returns
  */
 export const PlantillaDataTableDisplay = ({ type }) => {
-
 	const refresh = useSelector((state) => state.popupResponse.refresh);
+	const { plantilla_items } = useSelector((state) => state.plantillaItem);
 	const [plotData, setPlotData] = useState([]);
 	const dispatch = useDispatch();
 
@@ -194,15 +191,14 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 		dispatch(setSelectedPlantillaItems(selectedItems));
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
 		if (selectedFlatRowsData.length > 0) {
 			setSelectedRowsData(selectedFlatRowsData);
 		} else {
 			dispatch(setSelectedPlantillaItems([]));
 		}
-	}, [selectedFlatRows]);
-  
+	}, [plantilla_items]);
 	return (
 		<React.Fragment>
 			<FilterPlantillaItems
