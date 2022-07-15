@@ -44,9 +44,7 @@
         <thead>
             <tr>
                 <th class="tg-b8y7"><span style="font-weight:bold">MEMORANDUM</span></th>
-                <th class="tg-zv4m"></th>
-                <th class="tg-zv4m"></th>
-                <th class="tg-zv4m"></th>
+                <th class="tg-zv4m" colspan="3"></th>
             </tr>
         </thead>
         <tbody>
@@ -54,37 +52,34 @@
             <tr>
                 <td class="tg-8jgo">FOR</td>
                 <td class="tg-8jgo1 tg-custom">:</td>
-                {{ $i=1 }}
-                @foreach( $selected_agencies ?? '' as $data) 
-                    @if($i === 1)
-                        <td class="tg-zv4m tg-custom">
-                            <b>{{ $data->agn_head_name .', '}}</b><br>
-                            @if($memo == "DOST")
+                @if($memo == "DOST")
+                    {{ $i=1 }}
+                    @foreach( $selected_agencies ?? '' as $data) 
+                        @if($i === 1)
+                            <td class="tg-zv4m tg-custom">
+                                <b>{{ $data->agn_head_name .', '}}</b><br>
                                 {{$data->agn_head_position . ", " . $data->agn_acronym}}
-                            @else
-                                {{$data->agn_head_position }} <br>
-                                {{ $data->office['ofc_name'] .", " .  $data->agn_acronym}}
-                            @endif
-                        </td>
-                    @endif
-                    @if($i > 1)
-                        <tr>
-                            <td class="tg-zv4m"></td>
-                            <td class="tg-zv4m"></td>
-                            <td class="td-custom-padding1">
-                                <b>{{ $data->agn_head_name . ', ' }}</b><br>
-                                @if($memo == "DOST")
-                                    {{$data->agn_head_position . ", " . $data->agn_acronym}}
-                                @else
-                                    {{$data->agn_head_position }} <br>
-                                    {{ $data->office['ofc_name'] .", " .  $data->agn_acronym}}
-                                @endif
                             </td>
-                        </tr>
-                    @endif
-
-                    {{ $i++; }}
-                @endforeach
+                        @endif
+                        @if($i > 1)
+                            <tr>
+                                <td class="tg-zv4m"></td>
+                                <td class="tg-zv4m"></td>
+                                <td class="td-custom-padding1">
+                                    <b>{{ $data->agn_head_name . ', ' }}</b><br>
+                                    {{$data->agn_head_position . ", " . $data->agn_acronym}}
+                                </td>
+                            </tr>
+                        @endif
+                        {{ $i++; }}
+                    @endforeach
+                @else
+                    <td class="tg-zv4m tg-custom">
+                        <b>{{ $memo_to_csc['memo_name'] . ', ' }}</b><br>
+                        {{ $memo_to_csc['memo_position'] . ', ' }}<br>
+                        {{ $memo_to_csc['memo_office'] }}
+                    </td>
+                @endif
             </tr>
             {{-- From DATA --}}
             <tr>
