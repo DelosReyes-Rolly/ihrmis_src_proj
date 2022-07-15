@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { setRefresh } from "../../../../../features/reducers/popup_response";
 import { useNavigate } from "react-router-dom";
 import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { MdAddCircle, MdAddCircleOutline } from "react-icons/md";
 
 const AddPlantillaItemModal = ({
   type,
@@ -188,7 +189,7 @@ const AddPlantillaItemModal = ({
   return (
     <React.Fragment>
       <ModalComponent
-        title="Plantilla Items"
+        title="Plantilla Item"
         onSubmitName="Save"
         onCloseName={closeName}
         isDisplay={isDisplay}
@@ -213,7 +214,7 @@ const AddPlantillaItemModal = ({
             ) : null}
           </span>
           <span className="right-input item-modal-2">
-            <label>Employment Status</label>
+            <label>Nature of Employment</label>
             <SelectComponent
               defaultTitle="Status"
               name="itm_status"
@@ -373,7 +374,18 @@ const AddPlantillaItemModal = ({
 
         <div className="add-plantilla-item-modal">
           <span className="left-input item-modal-2">
-            <label>Mode of Creation</label>
+            <label className="source-fund-label">
+              <div>Mode of Creation</div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "end",
+                  opacity: "0",
+                }}
+              >
+                <MdAddCircleOutline size={18} />
+              </div>
+            </label>
             <SelectComponent
               defaultTitle="Creation"
               name="itm_creation"
@@ -389,7 +401,12 @@ const AddPlantillaItemModal = ({
             ) : null}
           </span>
           <span className="right-input item-modal-1">
-            <label>Source of Fund</label>
+            <label className="source-fund-label">
+              <div>Source of Fund</div>
+              <div className="icon-button-clickable">
+                <MdAddCircleOutline size={18} />
+              </div>
+            </label>
             <SelectComponent
               defaultTitle="Source of Fund"
               name="itm_source"

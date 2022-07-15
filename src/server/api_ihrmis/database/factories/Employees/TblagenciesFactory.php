@@ -22,7 +22,7 @@ class TblagenciesFactory extends Factory
         return [
             'agn_name' => $this->faker->company(),
             'agn_acronym' => strtoupper(Str::random(4)),
-            'agn_sector' => $this->sector[rand(0,12)],
+            'agn_sector' => $this->sector[rand(0,11)],
             'agn_head_name' => $this->faker->name(),
             'agn_head_position' => "Under Secretary",
             'agn_head_email' => $this->faker->unique()->email(),

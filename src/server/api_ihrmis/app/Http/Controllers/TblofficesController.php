@@ -33,6 +33,7 @@ class TblofficesController extends Controller
                 'ofc_email_addr' => $request->ofc_email_addr,
                 'ofc_head_itm_id' => $request->ofc_head_itm_id ?? NULL,
                 'ofc_agn_id' => $request->ofc_agn_id,
+                'ofc_ofc_id' => $request->ofc_ofc_id
             ]
         );
     }

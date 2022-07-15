@@ -24,7 +24,7 @@ class CreateTblemployeesTable extends Migration
             $table->string('emp_ofc_email', 100)->comment('Official email address issued by the department.');
             $table->unsignedInteger('emp_itm_id')->comment('Plantilla item ID. Identifies plantilla item being referenced to determine his/her current position.');
             $table->date('emp_appntmnt_start')->comment('Starting date of appointment.');
-            $table->date('emp_appntmnt_end')->comment('Ending date of appointment if not permanent in nature.');
+            $table->date('emp_appntmnt_end')->nullable()->comment('Ending date of appointment if not permanent in nature.');
         });
     }
 

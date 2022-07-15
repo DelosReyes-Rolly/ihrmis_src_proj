@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Jvscrw;
 
+use App\Models\Tbloffices;
+use App\Models\TblplantillaItems;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class JvsOfficeResource extends JsonResource
@@ -14,9 +16,12 @@ class JvsOfficeResource extends JsonResource
      */
     public function toArray($request)
     {
+        $plantilla = TblplantillaItems::where('itm_id', $this->ofc_head_itm_id)->with('tblpositions')->first();
+        $headOffice = Tbloffices::where('ofc_id', $this->ofc_ofc_id)->first();
         return [
             'ofc_name' => $this->ofc_name,
-            'office_head'=> $this->ofc_head_itm_id,
+            'ofc_head'=> $plantilla->tblpositions->pos_title ?? null,
+            'ofc_head_ofc' => $headOffice->ofc_name ?? null,
         ];
     }
 }

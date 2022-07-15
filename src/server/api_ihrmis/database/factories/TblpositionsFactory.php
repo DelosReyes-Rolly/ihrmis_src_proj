@@ -19,6 +19,7 @@ class TblpositionsFactory extends Factory
     public function definition()
     {
         $pos = $this->faker->unique()->randomElement($this->position);
+        
         return [
             'pos_title' => $pos['title'],
             'pos_short_name' => $pos['short'],

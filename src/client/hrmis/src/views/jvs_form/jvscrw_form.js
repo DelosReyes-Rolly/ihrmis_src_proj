@@ -1,4 +1,5 @@
 import React from "react";
+import JvsCrwFormPage from "../rsp_module/plantilla/page_component/jvs_crw_pc/parts/forms/jvs_crw_form";
 import JvsFormOne from "../rsp_module/plantilla/page_component/jvs_crw_pc/parts/forms/jvs_form_one";
 
 const JvscrsForm = () => {
@@ -13,7 +14,8 @@ const JvscrsForm = () => {
           borderRadius: "5px",
         }}
       >
-        <JvsFormOne />
+        {/* <JvsFormOne /> */}
+        <JvsCrwFormPage />
       </div>
     </React.Fragment>
   );
