@@ -11,6 +11,10 @@ import { setRefresh } from '../../../../features/reducers/popup_response';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
 import DocumentaryRequirementsModal from './documentaryRequirementsModal.js';
 import { useIsMounted } from '../../../../helpers/use_hooks/isMounted.js';
+import SearchComponent from '../../../common/input_component/search_input/search_input.js';
+import { GroupClusterData } from '../../static/library_input_items.js';
+import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
+import DocumentRequirementsModalTest from './documentRequirements.js';
 
 const DocumentaryRequirementsTable = () => {
 	const mounted = useIsMounted();
@@ -19,21 +23,24 @@ const DocumentaryRequirementsTable = () => {
 	const { renderBusy } = usePopUpHelper();
 	const [plotDocument, setDocuments] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
+	const { trueValue } = useSelectValueCon();
 	const documentRequirmentsData = useCallback(async () => {
 		await axios
 			.get(API_HOST + 'documentary-requirements')
 			.then((response) => {
-				let data = response.data.data ?? [];
+				let data = response.data ?? [];
 				let dataPlot = [];
+
 				data.forEach((data) => {
 					let values = {
-						doc_id: data.doc_id,
 						doc_name: data.doc_name,
-						doc_group: data.doc_group,
-						doc_group_text: data.category.grp_name,
+						doc_group: data.grp_id,
+						doc_group_text: data.grp_name,
+						doc_group_cluster: trueValue(data.grp_cluster, GroupClusterData),
 					};
 					dataPlot.push(values);
 				});
+
 				if (!mounted.current) return;
 				setDocuments(dataPlot);
 			})
@@ -48,11 +55,7 @@ const DocumentaryRequirementsTable = () => {
 	const columns = useMemo(
 		() => [
 			{
-				Header: 'Document ID',
-				accessor: 'doc_id',
-			},
-			{
-				Header: 'Document Name',
+				Header: 'Document Names',
 				accessor: 'doc_name',
 			},
 			{
@@ -63,25 +66,35 @@ const DocumentaryRequirementsTable = () => {
 				Header: 'Document Group Text',
 				accessor: 'doc_group_text',
 			},
+			{
+				Header: 'Document Cluster',
+				accessor: 'doc_group_cluster',
+			},
 		],
 		[]
 	);
 
 	const initialState = {
-		hiddenColumns: ['doc_id', 'doc_group'],
+		hiddenColumns: ['doc_group'],
 	};
 
-	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-		useTable(
-			{
-				initialState,
-				columns,
-				data,
-			},
-			useFilters,
-			useGlobalFilter,
-			useSortBy
-		);
+	const {
+		getTableProps,
+		getTableBodyProps,
+		setGlobalFilter,
+		headerGroups,
+		rows,
+		prepareRow,
+	} = useTable(
+		{
+			initialState,
+			columns,
+			data,
+		},
+		useFilters,
+		useGlobalFilter,
+		useSortBy
+	);
 	const removeCategory = async (record) => {
 		renderBusy(true);
 		await axios
@@ -110,14 +123,41 @@ const DocumentaryRequirementsTable = () => {
 		setToggleOfficeModal();
 	};
 	return (
-		<div>
-			<div style={{ margin: 20 }}>
-				<button className='btn-primary' onClick={() => setToggleOfficeModal()}>
-					<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
-					<span>Documentary Requirement</span>
-				</button>
+		<>
+			<div className='selector-buttons'>
+				<div className='selector-container'>
+					{/* <span className='selector-span-1'> */}
+					{/* <ButtonComponent/> */}
+					<button
+						className='filter_buttons button-components'
+						onClick={() => setToggleOfficeModal()}
+						style={{
+							cursor: 'pointer',
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+							textAlign: 'center',
+						}}
+					>
+						<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
+						<span>Documentary Requirement</span>
+					</button>
+				</div>
+				<div className='search-container'>
+					<span className='margin-right-1 selector-search-label'>
+						<label>Search</label>
+					</span>
+					<span>
+						<SearchComponent
+							placeholder='Search'
+							onChange={(e) => {
+								setGlobalFilter(e.target.value ?? '');
+							}}
+						/>
+					</span>
+				</div>
 			</div>
-			<DocumentaryRequirementsModal
+			<DocumentRequirementsModalTest
 				isDisplay={toggleOfficeModal}
 				onClose={() => {
 					setToggleOfficeModal();
@@ -126,14 +166,17 @@ const DocumentaryRequirementsTable = () => {
 				data={dataState}
 				remove={() => {
 					if (dataState !== null) {
-						removeCategory(dataState.doc_id);
+						removeCategory(dataState.doc_group);
 					} else {
 						setToggleOfficeModal();
 					}
 				}}
 				removeName={dataState !== null ? 'Delete' : 'Close'}
 			/>
-			<div className='default-table'>
+			<div
+				className='default-table'
+				style={{ maxHeight: '68vh', overflowY: 'auto' }}
+			>
 				<table className='table-design' {...getTableProps()}>
 					<thead>
 						{headerGroups.map((headerGroup) => (
@@ -189,17 +232,18 @@ const DocumentaryRequirementsTable = () => {
 						})}
 					</tbody>
 				</table>
-				<p
-					style={{
-						fontSize: 'small',
-						color: 'rgba(70, 70, 70, 0.6)',
-						marginTop: '10px',
-					}}
-				>
-					Total of {rows.length} entries
-				</p>
 			</div>
-		</div>
+			<p
+				style={{
+					fontSize: 'small',
+					color: 'rgba(70, 70, 70, 0.6)',
+					width: '100%',
+					margin: '0px 20px',
+				}}
+			>
+				Total of {rows.length} entries
+			</p>
+		</>
 	);
 };
 

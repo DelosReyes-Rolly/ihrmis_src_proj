@@ -6,6 +6,7 @@ import { API_HOST } from '../../../../helpers/global/global_config';
 import RecruitmentComparativeTable from './page_tables.js/recruitment_compartative_matrix_table';
 import RecruitmentRatingAssessment from './page_tables.js/recruitment_rating_assestment_table';
 import { useIsMounted } from '../../../../helpers/use_hooks/isMounted';
+import { useSelector } from 'react-redux';
 
 const RecruitmentComparativeMatrix = () => {
 	const mounted = useIsMounted();
@@ -16,6 +17,7 @@ const RecruitmentComparativeMatrix = () => {
 	const [plantilla, setPlantilla] = useState();
 	const [applicantId, setApplicantId] = useState();
 	const [page, setPageType] = useState('');
+	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setRequirements] = useState();
 	const getCMData = useCallback(async () => {
 		await axios
@@ -25,11 +27,12 @@ const RecruitmentComparativeMatrix = () => {
 				setPlantilla(response.data.data.plantilla);
 				setRequirements(response.data.data.requirements);
 			});
-	}, [plantilla_id]);
+	}, [plantilla_id, refresh]);
 	useEffect(() => {
 		if (applicant !== undefined) {
 			setApplicantId(applicant);
 			setPageType('ra');
+			console.log(plantilla?.itm_regular);
 		}
 		getCMData();
 	}, [getCMData]);
@@ -83,12 +86,15 @@ const RecruitmentComparativeMatrix = () => {
 						<RecruitmentComparativeTable
 							setPageType={setPageType}
 							setApplicantId={setApplicantId}
+							itm_state={plantilla?.itm_state}
+							deadline={plantilla?.deadline}
 						/>
 					)}
 					{page === 'ra' && (
 						<RecruitmentRatingAssessment
 							setPageType={setPageType}
 							applicant_id={applicantId}
+							plantilla={plantilla}
 						/>
 					)}
 				</div>

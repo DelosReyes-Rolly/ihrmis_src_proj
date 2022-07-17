@@ -4,12 +4,15 @@ namespace App\Services\Recruitment;
 
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsAssessments;
+use App\Models\ExamScoreModel;
+use App\Models\Library\EvaluationBatteryModel;
 use App\Models\TblCmptncyAssessment;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\TblpositionCscStandards;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Mpdf\Mpdf;
 use Mpdf\Tag\P;
 use NumberFormatter;
@@ -323,13 +326,25 @@ class RecruitmentService
         $report->SetFooter('<p class="center">{PAGENO}</p>');
         return $report->output();
     }
+
+    public function getRAIData($month, $year)
+    {
+        $applicant_query = Tblapplicants::with(['TblplantillaItems', 'TblPositions', 'TblapplicantsProfile'])
+            ->where(DB::raw('YEAR(app_appntmnt)'), $year)
+            ->where(DB::raw('MONTH(app_appntmnt)'), $month)->get();
+        if (!isset($applicant_query[0]->app_appntmnt)) {
+            $applicant_query = Tblapplicants::with(['TblplantillaItems', 'TblPositions', 'TblapplicantsProfile'])
+                ->where(DB::raw('YEAR(app_assmptn)'), $year)->where(DB::raw('MONTH(app_assmptn)'), $month)->get();
+        }
+        return $applicant_query;
+    }
     /**
      * Will Generate Profile of Pre-Qualified Applicants based on
      *
      * @param [type] $request
      * @return void
      */
-    public function generateRAIReport($month, $year)
+    public function generateRAIReport($month, $year, $data)
     {
 
         $report = new Mpdf([
@@ -357,8 +372,10 @@ class RecruitmentService
         $monthConverter[10] = 'October';
         $monthConverter[11] = 'November';
         $monthConverter[12] = 'December';
+
         $data = [
             'date' => $monthConverter[$month] . ' ' . $year,
+            'details' => $data,
         ];
 
         // return $applicants[0]->TblOffices->ofc_name;
@@ -632,6 +649,71 @@ class RecruitmentService
                 'message' => "Failed, Try again later",
             ], 400);
         }
+        return response()->json([
+            'message' => "Saved Successfully",
+        ], 200);
+    }
+
+    public function getBattery($level, $sg, $appID)
+    {
+        return EvaluationBatteryModel::whereHas('Category', function ($query) use ($level) {
+            return $query->where('tblcategory_groups.grp_level', $level);
+        })->with(['Battery' => function ($query2) use ($appID) {
+            return $query2->where('tblapplicant_exam_score.exam_app_id', $appID);
+        }])->where('bat_sg_type', $sg)->orderBy('bat_itm_order')->get();
+    }
+
+    public function saveEmploymentExam($request)
+    {
+
+        $appID = $request->app_id;
+        $remarks = $request->remarks;
+        $date = $request->date;
+
+        foreach ($_POST as $key => $value) {
+            $values[] = $value;
+            if ($key != 'app_id' && $key != 'date' && $key != 'remarks') {
+                $query = ExamScoreModel::where("exam_app_id", $appID)->where("exam_battery_id", $key)->first();
+                if (!isset($query)) {
+                    $query = new ExamScoreModel();
+                }
+                $query->exam_app_id = $appID;
+                $query->exam_battery_id = $key;
+                $query->exam_score = $value;
+                $query->save();
+            }
+        }
+        try {
+            $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
+            $query->ass_exam_remarks = $request->remarks;
+            $query->ass_exam_date = $request->date;
+
+            $query->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "Failed, Try again later",
+            ], 400);
+        }
+        return response()->json([
+            'message' => "Saved Successfully",
+        ], 200);
+        // $checker = ExamScoreModel::where("exam_app_id", $_POST->app_id)->where("exam_battery_id", $request->bat_sg_type)->get();
+        return $_POST;
+        // return $query = ExamScoreModel::where("exam_app_id", $appID)->get();
+    }
+
+    public function saveAppointment(Request $request)
+    {
+        $query = Tblapplicants::where(["app_id" => $request->appID])->first();
+        if ($request->effectivity != null) {
+            $query->app_appntmnt = $request->effectivity;
+        } else {
+            $query->app_period_from = $request->effectivityFrom;
+            $query->app_period_to = $request->effectivityTo;
+        }
+        $query->app_assmptn = $request->assumption;
+        $query->app_appointed = ($request->appointed) ? 1 : 0;
+        $query->save();
         return response()->json([
             'message' => "Saved Successfully",
         ], 200);

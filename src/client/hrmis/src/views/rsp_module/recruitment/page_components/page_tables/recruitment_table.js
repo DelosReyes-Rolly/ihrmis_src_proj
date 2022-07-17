@@ -418,7 +418,9 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 				onClose={() => {
 					setValue(0);
 				}}
-				rowData={modalData}
+				appID={modalData?.appID}
+				level={1}
+				cluster='RP'
 			/>
 			<RecruitmentStatusModal
 				isDisplay={value === 3 ? true : false}

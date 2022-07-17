@@ -46,6 +46,9 @@ class TblapplicantRequirementsController extends Controller
 
         $saveReqQry = new TblapplicantRequirements();
         $saveReqQry->req_app_id = $id;
+        if ($request->doc_name != null) {
+            $saveReqQry->req_app_doc_name = $request->doc_name;
+        }
         $saveReqQry->req_app_doc_id = $request->doc_id;
         $saveReqQry->req_app_file = $stringFileName;
         $saveReqQry->save();
