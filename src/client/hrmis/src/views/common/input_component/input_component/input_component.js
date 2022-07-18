@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 const InputComponent = (props) => {
 	return (
 		<input
-			style={props.style ?? { marginTop: "3px" }}
+			style={props.style ?? { marginTop: '3px' }}
 			onChange={props.onChange}
 			value={props.value}
 			name={props.name}
@@ -16,16 +16,17 @@ const InputComponent = (props) => {
 			size={props.size}
 			placeholder={props.placeholder}
 			readOnly={props.readOnly}
+			disabled={props.disabled}
 		></input>
 	);
 };
 
 InputComponent.defaultProps = {
-	type: "text",
+	type: 'text',
 	maxLength: 255,
 	size: 999,
-	className: "",
-	placeholder: "",
+	className: '',
+	placeholder: '',
 	onchange: () => {},
 	readOnly: false,
 };

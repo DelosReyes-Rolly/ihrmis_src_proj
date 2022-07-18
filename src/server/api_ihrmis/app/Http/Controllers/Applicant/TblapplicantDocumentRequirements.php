@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantAttachmentsModel;
 use App\Models\Applicants\TblapplicantDocumentRequirementsModel;
+use App\Models\Applicants\TblapplicantRequirements;
 use App\Models\Library\CategoryGroupModel;
 use App\Services\Applicant\ApplicantDocumentRequirements;
 use Illuminate\Http\Request;
@@ -52,17 +53,17 @@ class TblapplicantDocumentRequirements extends Controller
 
     public function deleteApplicantDocument($att_id)
     {
-        $query = TblapplicantAttachmentsModel::where('att_id', $att_id)->first();
+        $query = TblapplicantRequirements::where('id', $att_id)->first();
         if ($query !== null) {
-            $stringName = $query->att_app_file;
+            $stringName = $query->req_app_file;
             $storedFile = explode(",", $stringName);
             foreach ($storedFile as $file) {
-                if (is_file(public_path("storage/applicant/applicant-requirements/" . $file))) {
-                    unlink(public_path("storage/applicant/applicant-requirements/" . $file));
+                if (is_file(public_path("storage/applicant/applicant-docs/" . $file))) {
+                    unlink(public_path("storage/applicant/applicant-docs/" . $file));
                 }
             }
-            TblapplicantAttachmentsModel::where('att_id', $att_id)->delete();
+            TblapplicantRequirements::where('id', $att_id)->delete();
+            return ($query->req_app_file);
         }
-        return ($query->att_app_file);
     }
 }

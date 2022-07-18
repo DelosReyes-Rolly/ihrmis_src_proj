@@ -21,7 +21,7 @@
 	<body>
 	
 		@foreach( $vacantpositions ?? '' as $value) 
-			<div class="tg-wrap" style="page-break-after: always">
+			<div class="tg-wrap" style="page-break-after: {{ count($vacantpositions) > 1 ? "always" : "auto" }}">
 				<table class="tg" style="table-layout: fixed; width:578px">
 					<colgroup>
 						<col style="width: 28px">
@@ -76,7 +76,7 @@
 							<td class="tg-73oq" colspan="3">Job Description </td>
 							<td class="tg-73oq" colspan="7">:</td>
 						</tr>
-						<?php $num_responsibility = count($value->tbldtyresponsibility); ?>
+						{{ $num_responsibility = count($value->tbldtyresponsibility); }}
 						@foreach( $value->tbldtyresponsibility ?? '' as $key => $value)
 							<tr>
 								<td class="tg-73oq" style="width: fit-content"></td>
@@ -97,11 +97,14 @@
 						</tr>
 						<tr>
 							<td class="tg-73oq"><br></td>
-						</tr>
+						</tr>	
 						<tr>
 							<td class="tg-73oq" colspan="10" style="text-align: justify">
 								Interested and qualified applicants may submit their requirements personally, through the mail, or online 
-								<span style="font-weight:bold;text-decoration:underline">on or before {{ $value->deadline_formatted }}</span>. For online applications, it is expected that original copies will be presented to the Personnel Division for verification within 10 calendar days. <span style="text-decoration:underline">Only those applications with complete requirements as enumerated below shall be entertained</span>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+								<span style="font-weight:bold;text-decoration:underline">on or before {{ $value->deadline_formatted }}</span>. 
+								For online applications, it is expected that original copies will be presented to the Personnel Division for verification within 10 calendar days. 
+								<span style="text-decoration:underline">Only those applications with complete requirements as enumerated below shall be entertained.</span>
+							</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq" style="padding-top: 10px" colspan="10"></td>
@@ -162,7 +165,7 @@
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
-							<td class="tg-mcqj" colspan="9">{{ $value->letter_head['letter_office'] }}</td>
+							<td class="tg-mcqj" colspan="9" style="font-weight: bold">{{ $value->letter_head['letter_office'] }}</td>
 						</tr>
 						<tr>
 							<td class="tg-73oq"></td>
@@ -250,7 +253,7 @@
 							<td class="tg-73oq"></td>
 						</tr>
 						<tr>
-							<td class="tg-mcqj" colspan="10">Date Posted: <span style="text-decoration:underline">{{ $value->date_submitted }}</span></td>
+							<td class="tg-mcqj" colspan="10">Date Posted: <span style="text-decoration:underline">{{ $value->formatted_date_submitted }}</span></td>
 						</tr>
 					</tbody>
 				</table>

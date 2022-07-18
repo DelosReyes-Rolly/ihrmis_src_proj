@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { AiFillLock, AiFillUnlock } from "react-icons/ai";
 import { BsArrowDown, BsArrowLeft, BsArrowUp } from "react-icons/bs";
 import { IoRefreshCircle } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,23 +10,54 @@ import {
   setBusy,
   setRefresh,
 } from "../../../../../features/reducers/popup_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 import IconComponent from "../../../../common/icon_component/icon";
+import { format } from "date-fns";
 import {
   recruitmentCMHeaders,
   recruitmentEligbilities,
 } from "../../static/table_items";
+import InputComponent from "../../../../common/input_component/input_component/input_component";
 
-const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
+const RecruitmentComparativeTable = ({
+  setPageType,
+  setApplicantId,
+  itm_state,
+  deadline,
+}) => {
   const mounted = useIsMounted();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const urlpath = window.location.pathname;
   const route = urlpath.split("/");
   const plantilla_id = route[5];
+  const [deadlineText, setDeadline] = useState();
   const [applicants, setApplicants] = useState([]);
   const { refresh } = useSelector((state) => state.popupResponse);
+  const closeOpenEvaluation = async (state) => {
+    const formData = new FormData();
+    formData.append("state", state);
+    formData.append("plantilla", plantilla_id);
+    let evalText = "opened";
+    await axios
+      .post(API_HOST + "update-evaluation", formData)
+      .then(() => {
+        popupAlert({
+          message: "Evaluation has been " + evalText,
+          type: ALERT_ENUM.success,
+        });
+        dispatch(setRefresh());
+      })
+      .catch((err) => {
+        popupAlert({
+          message: err.message,
+          type: ALERT_ENUM.fail,
+        });
+      });
+  };
+
   const getCMData = useCallback(async () => {
     dispatch(setBusy(true));
     await axios
@@ -71,10 +103,17 @@ const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
         });
         if (!mounted.current) return;
         setApplicants(dataPlot);
-        dispatch(setBusy(false));
       });
-  }, [plantilla_id, dispatch]);
 
+    dispatch(setBusy(false));
+  }, [plantilla_id, dispatch]);
+  useEffect(() => {
+    try {
+      setDeadline(format(new Date(deadline), "MMM dd, yyyy, hh:mm b"));
+    } catch {
+      setDeadline("");
+    }
+  }, [deadline]);
   useEffect(() => {
     getCMData();
   }, [getCMData, refresh]);
@@ -96,7 +135,7 @@ const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
   );
 
   return (
-    <div>
+    <>
       <div className="default-table document_table">
         <table className="table-design comparative-matrix">
           <thead>
@@ -170,7 +209,63 @@ const RecruitmentComparativeTable = ({ setPageType, setApplicantId }) => {
           </tbody>
         </table>
       </div>
-    </div>
+      <div
+        className="default-table"
+        style={{ display: "flex", justifyContent: "end" }}
+      >
+        {itm_state === 3 && (
+          <div
+            style={{
+              width: "13rem",
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "center",
+            }}
+          >
+            <label
+              style={{ fontSize: "small", color: "rgba(70, 70, 70, 0.8)" }}
+            >
+              Deadline
+            </label>
+            <InputComponent
+              name="evaluationDeadline"
+              value={deadlineText}
+              disabled={true}
+            />
+          </div>
+        )}
+        <button
+          className={
+            itm_state === 2
+              ? "button-components"
+              : "button-components delete-button-color"
+          }
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
+          onClick={() => {
+            closeOpenEvaluation(itm_state === 2 ? 3 : 2);
+          }}
+        >
+          {itm_state === 2 && (
+            <>
+              <AiFillUnlock style={{ padding: 0, margin: 0 }} size="14" />
+              <span> Open</span>
+            </>
+          )}
+          {itm_state === 3 && (
+            <>
+              <AiFillLock style={{ padding: 0, margin: 0 }} size="14" />
+              <span> Close</span>
+            </>
+          )}
+        </button>
+      </div>
+    </>
   );
 };
 export default RecruitmentComparativeTable;

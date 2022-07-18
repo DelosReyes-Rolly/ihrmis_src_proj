@@ -309,3 +309,6 @@ export const SGType = [
 	},
 ];
 
+export const SGType1 = Array.from({ length: 10 }, (x, i) => i);
+export const SGType2 = Array.from({ length: 10 }, (x, i) => i + 10);
+export const SGType3 = Array.from({ length: 10 }, (x, i) => i + 20);

@@ -14,6 +14,7 @@ class CommonHelpers
 
     public function cscStandardFormatter($data){
         $IligibilityHolder = $this->typeCscEligibility;
+
         $arrContainer = [];
         $EducType = ['Elementary', 'Secondary', 'Vocational/Trade', 'College', 'Graduate Studies'];
         foreach ($data as $value){
@@ -74,5 +75,4 @@ class CommonHelpers
         "Sanggunian Member",
         "Skill Eligibility",
     ];
-    
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Library;
 
+use App\Models\ExamScoreModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,5 +26,10 @@ class EvaluationBatteryModel extends Model
     public function Category()
     {
         return $this->hasOne(CategoryGroupModel::class, 'grp_id', 'bat_grp_id');
+    }
+
+    public function Battery()
+    {
+        return $this->hasOne(ExamScoreModel::class, 'exam_battery_id', 'bat_id');
     }
 }

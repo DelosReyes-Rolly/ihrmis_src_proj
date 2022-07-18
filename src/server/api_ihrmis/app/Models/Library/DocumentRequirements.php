@@ -14,6 +14,7 @@ class DocumentRequirements extends Model
 
     protected $fillable = [
         'doc_name',
+        'doc_itm_order',
         'doc_group',
     ];
     

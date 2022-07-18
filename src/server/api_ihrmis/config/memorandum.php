@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Custom config for Memo and Notification Report
  * template
@@ -17,6 +18,11 @@ return [
         'memo_name' => "ATTY. ANGELY P. MEDALLE-ALVIAR",
         'memo_position' => "Attorney V, Legal Division, and Officer-in-Charge",
         'memo_office' => "Office of the Director Administrative, and Legal Service",
+    ],
+
+    'memo_to_csc_info' => [
+        'memo_name' => "MS. MARGARITA G. REYES",
+        'memo_position' => "Director II",
+        'memo_office' => "Civil Service Commission – Field Office, DOST",
     ]
 ];
-

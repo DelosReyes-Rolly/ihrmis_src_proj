@@ -52,12 +52,17 @@ class PlantillaItemsService
 				$temp_result = [];
 				$temp_result['itm_no'] = $vacantpos->itm_no;
 				if ($vacant_state == 1) {
+
+					//search from applicant table if plantilla item has an applicant 
+					//appointed already
 					if (Tblapplicants::where('app_itm_id', $value['itm_id'])->exists()) {
 
+						//get applicant appointment data
 						$tbl_applicant_query =  Tblapplicants::where('app_itm_id', $value['itm_id'])->first();
-
+						//get applicant profile
 						$temp_result['applicant_profile'] = TblapplicantsProfile::find($tbl_applicant_query->app_id);
 
+						//if appointment exist
 						if ($applicantDataQry) {
 							if (Tblemployees::where('emp_id', $tbl_applicant_query->app_emp_id)->exists()) {
 								$temp_issave = $this->updateEmployeeProfile($tbl_applicant_query, $value);
@@ -74,16 +79,16 @@ class PlantillaItemsService
 							$temp_result['code'] = $temp_issave ? 200 : 500;
 						} else {
 
-							$temp_result['message'] = "No Applicant Profile yet.";
+							$temp_result['message'] = "No appointment yet.";
 							$temp_result['code'] = 500;
 							DB::rollBack();
 						}
 					} else {
-						$temp_result['message'] = "No applicant has applied yet to this Plantilla Item";
+						$temp_result['message'] = "No applicant appointed yet.";
 						$temp_result['code'] = 500;
 					}
 				} else {
-					$temp_result['message'] = "Selected position is filled already";
+					$temp_result['message'] = "Selected plantilla item is filled already.";
 					$temp_result['code'] = $temp_issave;
 				}
 				array_push($result, $temp_result);
@@ -171,6 +176,8 @@ class PlantillaItemsService
 		return $employee->save();
 	}
 
+
+
 	########################################## GET METHODS #######################################################
 
 	/**
@@ -249,9 +256,9 @@ class PlantillaItemsService
 	 * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
 	 * @return void
 	 */
-	public function generateMemoOnPostingVpForCscReport($selected_agency)
+	public function generateMemoOnPostingVpForCscReport()
 	{
-		$this->generateMemoOnPostingFor($selected_agency, 'CSC');
+		$this->generateMemoOnPostingFor('CSC');
 	}
 
 	/**
@@ -261,7 +268,7 @@ class PlantillaItemsService
 	 */
 	public function generateMemoOnPostingVpForDostReport($selected_agency)
 	{
-		$this->generateMemoOnPostingFor($selected_agency, 'DOST');
+		$this->generateMemoOnPostingFor('DOST', $selected_agency);
 	}
 
 	/**
@@ -296,7 +303,7 @@ class PlantillaItemsService
 		)->where('itm_state', $item_state)->get();
 
 		date_default_timezone_set('Asia/Manila');
-		$now = date('d/m/Y');
+		// $now = date('d/m/Y');
 
 		foreach ($item_query as $value) {
 			$csc_standard = $this->cHelper->cscStandardFormatter($value->tblpositions->tblpositionCscStandards);
@@ -309,9 +316,42 @@ class PlantillaItemsService
 			$value->deadline_formatted = date_format($date, "d F Y");
 			$value->letter_head = Config::get('memorandum.letter_head');
 			$value->memo_from_name = Config::get('memorandum.memo_from_info');
-			$value->date_submitted = $now;
+			$value->date_submitted = Carbon::now();
 			$value->formatted_date_submitted = Carbon::now()->format('d F Y');
 		}
+
+		return $item_query;
+	}
+
+	/**
+	 * getPlantillaItemDetailsById	
+	 */
+	public function getPlantillaItemDetailsById($item_id)
+	{
+		$item_query = TblplantillaItems::with(
+			'tbloffices',
+			'tbloffices.officeAgency',
+			'tblpositions',
+			'tblapplicants',
+			'tblpositions.tblpositionCscStandards',
+			'tbldtyresponsibility'
+		)->where('itm_id', $item_id)->first();
+
+		date_default_timezone_set('Asia/Manila');
+
+		$csc_standard = $this->cHelper->cscStandardFormatter($item_query->tblpositions->tblpositionCscStandards);
+		$item_query->education = $csc_standard["ed"] ?? "";
+		$item_query->experience = $csc_standard["ex"] ?? "";
+		$item_query->training = $csc_standard["tr"]  ?? "";
+		$item_query->eligibility = $csc_standard["cs"] ?? "";
+		unset($item_query->tblpositions->tblpositionCscStandards);
+		$date = date_create($item_query->deadline);
+		$item_query->deadline_formatted = date_format($date, "d F Y");
+		$item_query->letter_head = Config::get('memorandum.letter_head');
+		$item_query->memo_from_name = Config::get('memorandum.memo_from_info');
+		$date_submitted = date_create($item_query->date_submitted);
+		$item_query->formatted_date_submitted = $item_query->date_submitted == null ?
+			Carbon::now()->format('d F Y') : date_format($date_submitted, "d F Y");
 
 		return $item_query;
 	}
@@ -460,7 +500,7 @@ class PlantillaItemsService
 	 * Todo generate memo on posting
 	 * @return void
 	 */
-	private function generateMemoOnPostingFor($selected_agency, $memo)
+	private function generateMemoOnPostingFor($memo, $selected_agency = "")
 	{
 
 		date_default_timezone_set('Asia/Manila'); //define local time
@@ -476,22 +516,27 @@ class PlantillaItemsService
 			$itm->positionswithcscstandards = $positionswithcscstandards;
 		}
 
-		$decoded_selected_agency = json_decode($selected_agency, true);
+		if ($memo === 'DOST') {
 
-		$new_selected_agency_data = [];
-		foreach ($decoded_selected_agency as $itm) {
+			$decoded_selected_agency = json_decode($selected_agency, true);
 
-			array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
+			$new_selected_agency_data = [];
+			foreach ($decoded_selected_agency as $itm) {
+
+				array_push($new_selected_agency_data, $this->getAgency($itm['agn_id']));
+			}
+
+			$new_data['selected_agencies'] = $new_selected_agency_data;
 		}
-
 		// $date = date('m/d/Y');
 		$date = date("j F Y");
 
 		$new_data['vacantpositions'] = $data;
-		$new_data['selected_agencies'] = $new_selected_agency_data;
 		$new_data['date_memo'] = $date;
 		$new_data['memo'] = $memo;
+		$new_data['memo_to_csc'] = Config::get('memorandum.memo_to_csc_info');
 		$new_data['memo_from_name'] = Config::get('memorandum.memo_from_info');
+
 
 		// return $new_data;
 
@@ -515,13 +560,23 @@ class PlantillaItemsService
 	 * Todo this function will generate Notice of Vacancy report in PDF form
 	 * @return void
 	 */
-	public function generateNoticeofVacancyReports()
+	public function generateNoticeofVacancyReports($plantillaitems)
 	{
-		date_default_timezone_set('Asia/Manila'); //define local time
-		//get vacant position
 
+		$decoded_plantillaitems = json_decode($plantillaitems, true);
+
+		$selected_plantillaitems = [];
+		foreach ($decoded_plantillaitems as $itm) {
+
+			array_push($selected_plantillaitems, $this->getPlantillaItemDetailsById($itm['itm_id']));
+		}
+
+		//define local time
+		date_default_timezone_set('Asia/Manila');
+
+		//get vacant position
 		$new_data = [];
-		$new_data['vacantpositions'] = $this->getPlantillaItemDetails();
+		$new_data['vacantpositions'] = $selected_plantillaitems;
 		$date = date('m/d/Y');
 
 		$pdf = new MPDF();
@@ -537,6 +592,6 @@ class PlantillaItemsService
 
 		return $pdf->output('Notice of Vacancy_' . $date . '.pdf', "I");
 
-		// return $new_data;
+		// return $decoded_plantillaitems;
 	}
 }

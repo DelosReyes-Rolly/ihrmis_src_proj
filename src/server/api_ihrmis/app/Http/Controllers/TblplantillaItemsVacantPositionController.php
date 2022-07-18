@@ -97,19 +97,19 @@ class TblplantillaItemsVacantPositionController extends Controller
      * generateNoticeVpReport
      * Todo generate PDF file
      */
-    public function generateNoticeVpReport()
+    public function generateNoticeVpReport($plantillaitems)
     {
-        return $this->tblPantillaVacantPos->generateNoticeofVacancyReports();
+        return $this->tblPantillaVacantPos->generateNoticeofVacancyReports($plantillaitems);
     }
 
     /**
      * generateMemoOnPostingVPForCsc
      * Todo generate PDF file
      */
-    public function generateMemoOnPostingVPForCsc($selected_agency)
+    public function generateMemoOnPostingVPForCsc()
     {
 
-        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForCscReport($selected_agency);
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForCscReport();
     }
 
     /**
@@ -143,17 +143,32 @@ class TblplantillaItemsVacantPositionController extends Controller
 
     /**
      * getPlantillaItemDetails
-     * Todo get all PlantillaItem details
-     * @return array getPositionWithCsc
+     * Todo get all Plantilla Item details
+     * @return array  plantilla items
      */
     public function getPlantillaItemDetails($item_state = 1)
+    {
+
+        return GetPlantillaItemResource::collection(
+            $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
+        );
+
+        // return $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state);
+    }
+
+    /**
+     * getPlantillaItemDetailsById
+     * Todo get all Plantilla Item details
+     * @return array plantilla items
+     */
+    public function getPlantillaItemDetailsById($item_id)
     {
 
         // return GetPlantillaItemResource::collection(
         //     $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
         // );
 
-        return $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state);
+        return $this->tblPantillaVacantPos->getPlantillaItemDetailsById($item_id);
     }
 
     /**
