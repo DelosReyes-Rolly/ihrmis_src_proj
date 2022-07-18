@@ -44,6 +44,7 @@ const jvscrwFormSlice = createSlice({
        * IF TYPE IS 0 REBASE; IF TYPE IS 2 EDIT ARRAY, ELSE ADD ONE IN ARRAY
        */
       const { type, data } = actions.payload;
+      console.log(actions.payload);
 
       if (type === 2) {
         state.training = {

@@ -9,6 +9,9 @@ const CompetencyTable = ({ title = "EDUCATION", RTG_TYPE, detail }) => {
    * All use callback
    */
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editValue, setEditValue] = useState(null);
+  const [editArr, setEditArr] = useState([]);
 
   const [minMax, setMinMax] = useState({
     min: 0,
@@ -17,6 +20,11 @@ const CompetencyTable = ({ title = "EDUCATION", RTG_TYPE, detail }) => {
 
   const modalSetter = useCallback((boolValue) => {
     setModal(boolValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const editModalSetter = useCallback((boolValue) => {
+    setEditModal(boolValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -32,6 +40,14 @@ const CompetencyTable = ({ title = "EDUCATION", RTG_TYPE, detail }) => {
         isDisplay={modal}
         onClose={modalSetter}
         RTG_TYPE={RTG_TYPE}
+      />
+      <CompetencyModal
+        title={title}
+        isDisplay={editModal}
+        onClose={editModalSetter}
+        data={editValue}
+        RTG_TYPE={RTG_TYPE}
+        arrData={editArr}
       />
       {console.log("RENDER POS TABLE: ")}
       <div className="jvs-container">
@@ -50,9 +66,20 @@ const CompetencyTable = ({ title = "EDUCATION", RTG_TYPE, detail }) => {
                 PERCENTAGE (%)
               </td>
             </tr>
-            {detail?.map((item, index) => {
+            {detail?.map((item, index, arrayValue) => {
               return (
-                <tr key={index}>
+                <tr
+                  key={index}
+                  onClick={() => {
+                    setEditValue({
+                      index: index,
+                      rtg_factor: item.rtg_factor,
+                      rtg_percent: item.rtg_percent,
+                    });
+                    setEditArr(arrayValue);
+                    setEditModal(true);
+                  }}
+                >
                   <td colSpan="2">{item.rtg_factor}</td>
                   <td colSpan="2">{item.rtg_percent}</td>
                 </tr>

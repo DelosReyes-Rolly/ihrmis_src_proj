@@ -13,14 +13,22 @@ import {
   setCompEducation,
   setCompExperience,
 } from "../../../../../../../features/reducers/jvscrw_form_slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { COMPETENCY_ENUMS } from "./competency_table";
 import {
   ALERT_ENUM,
   popupAlert,
 } from "../../../../../../../helpers/alert_response";
 
-const CompetencyModal = ({ title, isDisplay, onClose, data, RTG_TYPE }) => {
+const CompetencyModal = ({
+  title,
+  isDisplay,
+  onClose,
+  RTG_TYPE,
+  // For Editing purposes
+  data = null,
+  arrData = [],
+}) => {
   const formHandler = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -35,26 +43,39 @@ const CompetencyModal = ({ title, isDisplay, onClose, data, RTG_TYPE }) => {
         .max(100, "Invalid input"),
     }),
     onSubmit: (values, { resetForm }) => {
-      const detailData = {
-        rtg_factor: values.rtg_factor,
-        rtg_percent: parseFloat(values.rtg_percent),
-      };
-      stateCompetencyAdder(RTG_TYPE, detailData);
-      //EDIT
-      if (data !== null) {
-        stateCompetencyUpdater(RTG_TYPE);
-      }
+      try {
+        const detailData = {
+          rtg_factor: values?.rtg_factor,
+          rtg_percent: parseFloat(values?.rtg_percent),
+        };
 
-      resetForm();
-      popupAlert({
-        message: "Changes were saved successfully",
-        type: ALERT_ENUM.success,
-      });
-      onClose(false);
+        //ADD
+        if (data === null) stateCompetencyAdder(RTG_TYPE, detailData);
+        //EDIT
+        if (data !== null) {
+          stateCompetencyUpdater(RTG_TYPE, detailData);
+        }
+
+        resetForm();
+        popupAlert({
+          message: "Changes were saved successfully",
+          type: ALERT_ENUM.success,
+        });
+        onClose(false);
+      } catch (error) {
+        popupAlert({
+          message: error.message,
+          type: ALERT_ENUM.fail,
+        });
+      }
     },
   });
 
   const dispatch = useDispatch();
+
+  const { education, experience, training } = useSelector(
+    (state) => state.jvscrwForm
+  );
 
   /**
    * Add data to array of competencies
@@ -74,15 +95,25 @@ const CompetencyModal = ({ title, isDisplay, onClose, data, RTG_TYPE }) => {
 
   const stateCompetencyUpdater = useCallback((setter, value, type = 2) => {
     if (setter === COMPETENCY_ENUMS.EDUCATION) {
-      // editDataInArray( detailData, index)
-      dispatch(setCompEducation({ type: type, data: value }));
+      // const arr = editDataInArray(arrData);
+      dispatch(setCompEducation({ type: type, data: [] }));
     }
-    if (setter === COMPETENCY_ENUMS.TRAINING) {
-      dispatch(setCompTraining({ type: type, data: value }));
-    }
-    if (setter === COMPETENCY_ENUMS.EXPERIENCE) {
-      dispatch(setCompExperience({ type: type, data: value }));
-    }
+    // if (setter === COMPETENCY_ENUMS.TRAINING) {
+    //   const arrayHolder = editDataInArray(
+    //     training?.competencies,
+    //     data.index,
+    //     value
+    //   );
+    //   dispatch(setCompTraining({ type: type, data: arrayHolder }));
+    // }
+    // if (setter === COMPETENCY_ENUMS.EXPERIENCE) {
+    //   const arrayHolder = editDataInArray(
+    //     experience?.competencies,
+    //     data.index,
+    //     value
+    //   );
+    //   dispatch(setCompExperience({ type: type, data: arrayHolder }));
+    // }
   }, []);
 
   return (
@@ -132,10 +163,16 @@ const CompetencyModal = ({ title, isDisplay, onClose, data, RTG_TYPE }) => {
 export default memo(CompetencyModal);
 
 const editDataInArray = (arrayValue, index, value) => {
-  let ARR_HOLDER = arrayValue;
-  ARR_HOLDER[index].rtg_factor = value.rtg_factor;
-  ARR_HOLDER[index].rtg_percent = value.rtg_percent;
-  return ARR_HOLDER;
+  let ArrHolder = [];
+
+  arrayValue?.map((item, i) => {
+    if (i === index) {
+      return ArrHolder.push(value);
+    }
+    return ArrHolder.push(item);
+  });
+
+  return ArrHolder;
 };
 
 const removeDataInArray = (arrayValue, index) => {
