@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
 import IconComponent from "../../icon_component/icon";
-import InputIconComponent from "../input_component/input_component";
 
 const SearchComponent = ({
 	placeholder = "Type to search",
@@ -10,7 +9,20 @@ const SearchComponent = ({
 	icon = <BsSearch />,
 	hideLabel = false,
 	cursor = "text",
+	className,
+	styleInput,
+	styleButton,
+	styleParentInputDiv,
+	iconClassName,
+	color,
+	onClick = null,
 }) => {
+	const inputElement = useRef();
+
+	const focusInput = () => {
+		inputElement.current.focus();
+	};
+
 	return (
 		<div className="search-container">
 			<div
@@ -20,15 +32,29 @@ const SearchComponent = ({
 				<label>Search</label>
 			</div>
 
-			<div className="input-div">
+			<div className={`input-div ${styleParentInputDiv}`}>
 				<input
-					className="custom-input"
+					className={`custom-input ${className}`}
 					placeholder={placeholder}
 					value={value}
 					onChange={onChange}
+					ref={inputElement}
+					style={styleInput}
 				/>
-				<button className="" type="submit">
-					{<IconComponent icon={icon} cursor={cursor} />}
+				<button
+					className=""
+					type="submit"
+					onClick={onClick ?? focusInput}
+					style={styleButton}
+				>
+					{
+						<IconComponent
+							icon={icon}
+							cursor={cursor}
+							color={color}
+							className={iconClassName}
+						/>
+					}
 				</button>
 			</div>
 		</div>

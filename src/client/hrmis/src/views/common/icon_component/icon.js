@@ -9,15 +9,21 @@ const IconComponent = ({
 	textHelper = "",
 	position = "top",
 	effect = "solid",
-	onClick = () => {},
+	onClick = null,
 	cursor = "pointer",
+	color = "map-get($primaryColor, regular)",
 }) => {
 	let addClassName = "plantilla-icon " + className;
 
 	return (
 		<React.Fragment>
 			{toolTipId && (
-				<ReactTooltip id={toolTipId} place={position} effect={effect}>
+				<ReactTooltip
+					id={toolTipId}
+					place={position}
+					effect={effect}
+					html={true}
+				>
 					{textHelper}
 				</ReactTooltip>
 			)}
@@ -28,7 +34,7 @@ const IconComponent = ({
 				data-for={toolTipId}
 				className={addClassName}
 				onClick={onClick}
-				style={{ cursor: cursor }}
+				style={{ cursor: cursor, color: color }}
 			>
 				{icon}
 			</span>

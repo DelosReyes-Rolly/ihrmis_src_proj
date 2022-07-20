@@ -76,7 +76,7 @@ export const SidebarOption = [
 	},
 	{
 		title: "Library",
-		id: 8,
+		id: 9,
 		icon: <IoAlbumsOutline size="20" />,
 		more: [
 			{

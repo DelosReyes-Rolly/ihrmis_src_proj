@@ -12,6 +12,8 @@ import IconComponent from "../../common/icon_component/icon";
 import SearchComponent from "../../common/input_component/search_input/search_input";
 import { InputIconComponent } from "../../common/input_component/input_component/input_component";
 import { BsSearch } from "react-icons/bs";
+import CalendarEventModal from "./calendar_event/calendar_event_modal";
+import { useToggleHelper } from "../../../helpers/use_hooks/toggle_helper";
 
 const CalendarView = () => {
 	const [weekendsVisible, setWeekendsVisible] = useState(true);
@@ -119,6 +121,8 @@ const CalendarView = () => {
 export default CalendarView;
 
 const RenderSidebar = () => {
+	let [toggleCalendarEventModal, setToggleCalendarEventModal] =
+		useToggleHelper(false);
 	return (
 		<React.Fragment>
 			<div className="calendar-app-sidebar">
@@ -131,7 +135,9 @@ const RenderSidebar = () => {
 							buttonLogoStart={
 								<MdAdd style={{ margin: -10, paddingRight: 20 }} size="20" />
 							}
-							onClick={() => {}}
+							onClick={() => {
+								setToggleCalendarEventModal();
+							}}
 						/>
 						<IconComponent
 							id="filter_cal_event"
@@ -148,6 +154,10 @@ const RenderSidebar = () => {
 					<div className="calendar-display-events"></div>
 				</div>
 			</div>
+			<CalendarEventModal
+				isDisplay={toggleCalendarEventModal}
+				onClose={() => setToggleCalendarEventModal()}
+			/>
 		</React.Fragment>
 	);
 };

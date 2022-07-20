@@ -15,10 +15,12 @@ const InputComponent = (props) => {
 			maxLength={props.maxLength}
 			minLength={props.minLength}
 			min={props.min}
+			max={props.max}
 			size={props.size}
 			placeholder={props.placeholder}
 			readOnly={props.readOnly}
 			disabled={props.disabled}
+			step={props.step}
 		></input>
 	);
 };
@@ -41,18 +43,7 @@ export const InputIconComponent = ({
 	value,
 	icon = <IoMdAdd size={20} />,
 	onClick,
-	is_right = true,
 	placeholder,
 }) => {
-	if (is_right) {
-		return <SearchComponent />;
-	}
-	return (
-		<div className="div-input-with-symbol">
-			<button type="submit" onClick={onClick}>
-				{icon}
-			</button>
-			<input name={name} onChange={onChange} value={value} />
-		</div>
-	);
+	return <SearchComponent />;
 };
