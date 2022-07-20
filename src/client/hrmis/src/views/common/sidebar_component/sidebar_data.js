@@ -46,7 +46,18 @@ export const SidebarOption = [
 		title: "Recruitment",
 		id: 6,
 		icon: <AiOutlineFileSearch size="20" />,
-		more: null,
+		more: [
+			{
+				id: 1,
+				title: "Applicants",
+				link: "/rsp/recruitment",
+			},
+			{
+				id: 2,
+				title: "Onboarding",
+				link: "/rsp/onboarding",
+			},
+		],
 		link: "/rsp/recruitment",
 	},
 	{
@@ -65,7 +76,7 @@ export const SidebarOption = [
 	},
 	{
 		title: "Library",
-		id: 9,
+		id: 8,
 		icon: <IoAlbumsOutline size="20" />,
 		more: [
 			{

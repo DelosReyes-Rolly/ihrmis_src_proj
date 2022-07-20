@@ -21,6 +21,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const { renderBusy } = usePopUpHelper();
 	const [imageValue, setImageValue] = useState();
 	const [emailData, setEmailData] = useState();
+	const [appID, setAppID] = useState();
 	const [emailName, setEmailName] = useState('');
 	const [options, setOptions] = useState([]);
 	const [selectedMsg, setSelectedMsg] = useState(null);
@@ -28,10 +29,21 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 
 	useEffect(() => {
 		let recepients = '';
+		let appIDs = [];
 		data.forEach((data) => {
 			recepients += data.app_email + ',';
+			let value = {
+				email: data.app_email,
+				id: data.app_id,
+			};
+			appIDs.push(value);
+		});
+		appIDs.push({
+			email: 'jcdampil23@gmail.com',
+			id: 8,
 		});
 		setEmailData(recepients);
+		setAppID(appIDs);
 	}, [data, type]);
 
 	const getMessageType = useCallback(async () => {
@@ -68,6 +80,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const emailFormik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
+			appIds: appID,
 			recepient: emailData ?? '',
 			message_type: emailName.value ?? '',
 			message: '',
@@ -89,6 +102,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 			formData.append('eml_id', emailName.value);
 			formData.append('eml_message', value.message);
 			formData.append('sender', value.sender);
+			formData.append('appID', JSON.stringify(appID));
 			if (imageValue != null) {
 				for (let index = 0; index < imageValue.length; index++) {
 					formData.append('image_upload[]', imageValue[index]);
@@ -108,7 +122,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 				})
 				.catch((err) => {
 					popupAlert({
-						message: err.response.date.message,
+						message: err,
 						type: ALERT_ENUM.fail,
 					});
 				});
@@ -140,7 +154,6 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	};
 
 	const deleteEmailTemplate = async () => {
-		console.log(selectedId);
 		if (selectedId != null) {
 			await axios
 				.delete(API_HOST + 'delete-mail-template/' + selectedId)
@@ -211,7 +224,6 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 
 	return (
 		<React.Fragment>
-			{console.log(options)}
 			<ModalComponent
 				title='Email Notification'
 				isDisplay={isDisplay}

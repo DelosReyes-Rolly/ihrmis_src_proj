@@ -10,6 +10,7 @@ import FailResponseComponent from "../views/common/response_component/fail_respo
 import FormPageFive from "../views/pds_form/parts/forms/form_page_five";
 import FormPageFour from "../views/pds_form/parts/forms/form_page_four";
 import FormPageOne from "../views/pds_form/parts/forms/form_page_one";
+import FormPageSix from "../views/pds_form/parts/forms/form_page_six";
 import FormPageThree from "../views/pds_form/parts/forms/form_page_three";
 import FormPageTwo from "../views/pds_form/parts/forms/form_page_two";
 import SuccessResponseComponent from "../views/common/response_component/success_response_component/success_response_component";
@@ -37,6 +38,7 @@ import EvaluationBatteryBaseComponent from "../views/library/evaluation_battery/
 import PositionLibrary from "../views/library/postion_page/position_library";
 import RecruitmentComparativeMatrix from "../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix";
 import FormSix from "../views/pds_form/parts/forms/form_six";
+import OnboardingMain from "../views/rsp_module/recruitment/onboarding/onboarding_main";
 import CalendarView from "../views/rsp_module/calendar/calendar_view";
 
 const MainRouter = () => {
@@ -136,6 +138,8 @@ const MainRouter = () => {
 							element={<RecruitmentComparativeMatrix />}
 						/>
 					</Route>
+
+					<Route path="/rsp/onboarding/" element={<OnboardingMain />}></Route>
 
 					<Route path="/rsp/request" element={<RequestView />} />
 

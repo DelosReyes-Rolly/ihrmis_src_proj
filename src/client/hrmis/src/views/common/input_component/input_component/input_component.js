@@ -18,6 +18,7 @@ const InputComponent = (props) => {
 			size={props.size}
 			placeholder={props.placeholder}
 			readOnly={props.readOnly}
+			disabled={props.disabled}
 		></input>
 	);
 };

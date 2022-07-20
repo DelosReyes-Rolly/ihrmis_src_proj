@@ -10,7 +10,7 @@ class TblapplicantRequirements extends Model
     use HasFactory;
 
     protected $table = 'tblapplicants_requirements';
-    protected $primaryKey = 'req_app_id';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'req_app_id',
         'req_app_doc_id',

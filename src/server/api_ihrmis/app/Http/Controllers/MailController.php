@@ -6,6 +6,7 @@ use App\Http\Resources\CommonResource;
 use App\Mail\CommonMail;
 use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
+use App\Models\ExamScoreModel;
 use App\Models\TblemailTemplate;
 use App\Models\TblplantillaItems;
 use Carbon\Carbon;
@@ -138,11 +139,11 @@ class MailController extends Controller
 
     public function recruitmentEmail(Request $request)
     {
-        if (is_string($request->eml_id)) {
-            $this->addEmailTemplate($request);
-        } else {
-            return $request;
-        }
+        // if (is_string($request->eml_id)) {
+        //     $this->addEmailTemplate($request);
+        // } else {
+        //     return $request;
+        // }
         $arrFiles = [];
 
         if (!empty($request->file(['image_upload']))) {
@@ -154,21 +155,56 @@ class MailController extends Controller
         $rawRecepient = explode(",", $request->recepient);
         $arrHolder = [];
 
-        foreach ($rawRecepient as $value) {
-            $tempEmail = trim($value, " ");
-            array_push($arrHolder, $tempEmail);
-            $data = [
-                "from" => env("MAIL_FROM_RECUITER"),
-                "email_from" => env("MAIL_FROM_ADDRESS"),
-                "email_to" => $tempEmail,
-                "date" => Carbon::now(),
-                "message_type" => $request->eml_name,
-                "message" => $request->eml_message,
-                "sender" => nl2br($request->sender),
-                "file" => $arrFiles
-            ];
-            Mail::to($tempEmail)->send(new CommonMail($data));
+        if ($request->eml_type == 'PER') {
+            foreach (json_decode($request->appID) as $value) {
+                $message = $request->eml_message;
+
+                $query = ExamScoreModel::with('BatteryData')->where('exam_app_id', $value->id)->get();
+                $message .= '
+                <table style="border:solid 1px black">';
+                foreach ($query as $bat) {
+                    $message .= '
+                    <tr>
+                    <td>' . $bat->BatteryData->bat_name . '</td>
+                    <td>' . $bat->exam_score . '</td>
+                    </tr>';
+                }
+
+                $message .= '</table>';
+
+                $tempEmail = trim($value->email, " ");
+                array_push($arrHolder, $tempEmail);
+                $data = [
+                    "from" => env("MAIL_FROM_RECUITER"),
+                    "email_from" => env("MAIL_FROM_ADDRESS"),
+                    "email_to" => $value->email,
+                    "date" => Carbon::now(),
+                    "message_type" => $request->eml_name,
+                    "message" => $message,
+                    "sender" => nl2br($request->sender),
+                    "file" => $arrFiles
+                ];
+                Mail::to($value->email)->send(new CommonMail($data));
+            }
         }
+        if ($request->eml_type != 'PER') {
+            foreach ($rawRecepient as $value) {
+                $tempEmail = trim($value, " ");
+                array_push($arrHolder, $tempEmail);
+                $data = [
+                    "from" => env("MAIL_FROM_RECUITER"),
+                    "email_from" => env("MAIL_FROM_ADDRESS"),
+                    "email_to" => $tempEmail,
+                    "date" => Carbon::now(),
+                    "message_type" => $request->eml_name,
+                    "message" => $request->eml_message,
+                    "sender" => nl2br($request->sender),
+                    "file" => $arrFiles
+                ];
+                Mail::to($tempEmail)->send(new CommonMail($data));
+            }
+        }
+
 
         return response()->json(["message" => "Mail Sent to" . implode(", ", $arrHolder)]);
     }

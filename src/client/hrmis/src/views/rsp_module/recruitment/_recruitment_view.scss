@@ -72,9 +72,15 @@
 	td:hover {
 		background-color: rgba(0, 110, 255, 0.1);
 	}
+	.td-file-list {
+		margin: 5px 0px;
+		display: flex;
+		flex-direction: row;
+		cursor: pointer;
+	}
 	tr {
 		display: flex;
-		justify-content: center;
+		// justify-content: center;
 	}
 	td {
 		padding: 0.5rem;
@@ -88,13 +94,12 @@
 	}
 	.col-1 {
 		cursor: pointer;
-		width: 90%;
 	}
 	.col-2 {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 10%;
+		width: 1.5rem;
 	}
 	.col-2 .plantilla-icon {
 		cursor: pointer;
@@ -154,4 +159,123 @@
 		}
 	}
 	margin-bottom: 1rem;
+}
+
+// ONBOARDING
+
+.onboarding-page {
+	margin: 10px 20px;
+	.w98 {
+		width: 98%;
+	}
+
+	.reg-tab-container {
+		flex-wrap: nowrap;
+		display: flex;
+		gap: 12px;
+	}
+	.reg-tab {
+		width: 100%;
+		font-size: 15px;
+		font-weight: 700;
+		border: none;
+		border-bottom-color: currentcolor;
+		border-bottom-style: none;
+		border-bottom-width: medium;
+		padding: 8px 0px;
+		background-color: whitesmoke;
+		color: rgba(70, 70, 70, 0.8);
+		border-bottom: 3px solid transparent;
+	}
+	.whole-container {
+		flex-wrap: nowrap;
+		display: flex;
+		gap: 12px;
+	}
+	.half {
+		width: 100%;
+		padding: 20px 20px;
+		.nowrap {
+			flex-wrap: nowrap;
+			display: flex;
+		}
+	}
+	.section-add {
+		width: 95%;
+		label {
+			color: #4276a4;
+			font-weight: 600;
+		}
+	}
+	.section-icon {
+		width: 10%;
+	}
+
+	.section_name {
+		border: 1px solid rgba(85, 85, 85, 0.6);
+		border-radius: 5px 5px 5px 5px;
+		color: rgba(85, 85, 85, 0.6);
+		display: flex;
+		flex-direction: row;
+		input {
+			border: none;
+		}
+		.button-components {
+			padding: 7px 7px;
+		}
+	}
+	.section_name:focus {
+		transition: 200ms;
+		border: 1px solid black;
+		color: black;
+	}
+}
+.accordion {
+	margin: 2rem auto;
+}
+.accordion-item {
+	width: 100%;
+}
+
+.accordion-title {
+	justify-content: space-between;
+	cursor: pointer;
+	background-color: rgb(0, 78, 135);
+	color: white;
+}
+
+.accordion-title:hover {
+	background-color: rgb(0, 60, 103);
+}
+
+.accordion-title,
+.accordion-content {
+	padding: 0.6rem;
+	display: flex;
+	border: 1px solid rgba(85, 85, 85, 0.6);
+}
+
+.battery {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	.container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 70%;
+		margin-bottom: 8px;
+		.item-modal-1 {
+			display: flex;
+			width: 30%;
+		}
+		.item-modal-2 {
+			display: flex;
+			width: 70%;
+			flex-direction: column;
+		}
+		.item-modal-3 {
+			width: 100%;
+		}
+	}
 }

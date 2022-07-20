@@ -9,13 +9,13 @@ import {
 	setBusy,
 	setRefresh,
 } from "../../../../../features/reducers/popup_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
 import ButtonComponent from "../../../../common/button_component/button_component.js";
 import IconComponent from "../../../../common/icon_component/icon";
-import InputComponent from "../../../../common/input_component/input_component/input_component";
-import ToggleSwitchComponent from "../../../../common/toggle_switch_component/toggle_switch";
+import RecruitmentDocumentModal from "../../page_components/page_modals/recruitment_document_modal/recruitment_document_modal";
 import {
 	competencyScore,
 	competencyToMessage,
@@ -26,19 +26,25 @@ import {
 } from "../../static/functions";
 import AssessmentsModal from "../page_modals/assessments_modal";
 import CompetencyAssessmentModal from "../page_modals/competency_assessment_modal";
+import RecruitmentOtherAssessment from "./recruitment_other_assessment";
 
-const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
+const RecruitmentRatingAssessment = ({
+	applicant_id,
+	plantilla,
+	setPageType,
+}) => {
 	const mounted = useIsMounted();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [applicant, setApplicant] = useState([]);
+	const [applicantAssumption, setApplicantAssumption] = useState([]);
 	const urlpath = window.location.pathname;
 	const route = urlpath.split("/");
 	const plantilla_id = route[5];
 	const app_route = route[6];
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const getCMData = useCallback(async () => {
-		dispatch(setBusy(true));
+		setBusy(true);
 		await axios
 			.get(API_HOST + "get-ra-data/" + plantilla_id + "/" + applicant_id)
 			.then((response) => {
@@ -84,11 +90,22 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 					perfor: 0,
 					subtotal2: 0,
 					total: 0,
+					app_appointed: data?.app_appointed,
+					app_appntmnt: data?.app_appntmnt,
+					app_assmptn: data?.app_assmptn,
+					app_period_from: data?.app_period_from,
+					app_period_to: data?.app_period_to,
 				};
 				if (!mounted.current) return;
 				setApplicant(values);
+			})
+			.catch((err) => {
+				popupAlert({
+					message: err.message,
+					type: ALERT_ENUM.fail,
+				});
 			});
-		dispatch(setBusy(false));
+		setBusy(false);
 	}, [applicant_id, plantilla_id, dispatch]);
 
 	useEffect(() => {
@@ -102,11 +119,9 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 	const [score, setScore] = useState(0);
 	const setAssessmentModalDetails = (type, score) => {
 		setAssessmentType(type);
-		// array.forEach((element) => {});
 		setModalToggle();
 		setScore(score);
 	};
-
 	// ================ Competency Assessment Modal ==================
 	const setCompetencyAssessmentModalDetails = (type, score) => {
 		setAssessmentType(type);
@@ -115,6 +130,12 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 		setScore(score);
 	};
 
+	const [attachmentsModal, setAttachmentsModalToggle] = useToggleHelper(false);
+	const [level, setLevel] = useState(3);
+	const setAttachmentModalDetails = (level) => {
+		setLevel(level);
+		setAttachmentsModalToggle();
+	};
 	return (
 		<>
 			<div className="default-table document_table">
@@ -206,7 +227,18 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 								/>
 								<b>{applicant?.exp_score}</b>
 							</td>
-							<th className="">Job Competency (30%)</th>
+							<th className="">
+								<div className="assessments-header">
+									Job Competency (30%)
+									<div>
+										<ButtonComponent
+											buttonLogoStart={<FiPaperclip />}
+											onClick={() => setAttachmentModalDetails(3)}
+											buttonName="Attach"
+										/>
+									</div>
+								</div>
+							</th>
 							<td>{applicant?.cmptncy}</td>
 							<td className="center">
 								<ButtonComponent
@@ -230,7 +262,13 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 					</tbody>
 				</table>
 				<RecruitmentHRMPSB />
-				<RecruitmentOtherAssessment />
+				<RecruitmentOtherAssessment
+					regular={plantilla?.itm_regular}
+					sg={plantilla?.tbl_positions?.pos_salary_grade}
+					appID={applicant_id}
+					setAttachmentModalDetails={setAttachmentModalDetails}
+					applicant={applicant}
+				/>
 				<AssessmentsModal
 					isDisplay={modalToggle}
 					type={assessmentType}
@@ -250,6 +288,14 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 					appID={applicant_id}
 				/>
 			</div>
+			<RecruitmentDocumentModal
+				isDisplay={attachmentsModal}
+				onClose={setAttachmentsModalToggle}
+				appID={applicant_id}
+				title={"Attachments"}
+				level={level ?? 3}
+				cluster="RP"
+			/>
 		</>
 	);
 };
@@ -320,112 +366,6 @@ const RecruitmentHRMPSB = ({}) => {
 					</tr>
 				</tbody>
 			</table>
-		</>
-	);
-};
-
-const RecruitmentOtherAssessment = ({}) => {
-	return (
-		<>
-			<table className="table-design comparative-matrix">
-				<thead>
-					<tr className="no-border">
-						<th className="main-header" colSpan={6}>
-							OTHER ASSESSMENTS
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th className=" center">
-							<div className="assessments-header">
-								Pre-employment Exam
-								<div>
-									<ButtonComponent
-										buttonLogoStart={<FiPaperclip />}
-										// onClick={() => setTogModal(true)}
-										buttonName="Attach"
-									/>
-								</div>
-							</div>
-						</th>
-						<td>Numerical Ability: 20</td>
-						<td className="w5">
-							<ButtonComponent
-								// onClick={() => setTogModal(true)}
-								buttonName="Score"
-							/>
-						</td>
-						<th className="">
-							<div className="assessments-header">
-								Psychological Exam
-								<div>
-									<ButtonComponent
-										buttonLogoStart={<FiPaperclip />}
-										// onClick={() => setTogModal(true)}
-										buttonName="Attach"
-									/>
-								</div>
-							</div>
-						</th>
-						<td>Emotional Stability: A</td>
-						<td className="w5">
-							<ButtonComponent
-								// onClick={() => setTogModal(true)}
-								buttonName="Score"
-							/>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div className="center-items">
-				<table className="table-design page-end" style={{ width: "60%" }}>
-					<thead>
-						<tr>
-							<th className="">APPOINTED</th>
-							<td>
-								<div className="center-items">
-									<ToggleSwitchComponent className />
-								</div>
-							</td>
-							<td>
-								<label htmlFor="effectivity">Date of Effectivity</label>
-								<InputComponent
-									name="effectivity"
-									// value={form.values.doc_name}
-									// onChange={form.handleChange}
-									maxLength="30"
-									type="date"
-								/>
-								{/* {form.touched.doc_name && form.errors.doc_name ? (
-									<span className='invalid-response'>{form.errors.doc_name}</span>
-								) : null} */}
-							</td>
-							<td>
-								<label htmlFor="effectivity">Date of Assumption</label>
-								<InputComponent
-									name="effectivity"
-									// value={form.values.doc_name}
-									// onChange={form.handleChange}
-									maxLength="30"
-									type="date"
-								/>
-								{/* {form.touched.doc_name && form.errors.doc_name ? (
-									<span className='invalid-response'>{form.errors.doc_name}</span>
-								) : null} */}
-							</td>
-							<td>
-								<div className="center-items">
-									<ButtonComponent
-										// onClick={() => setTogModal(true)}
-										buttonName="Save"
-									/>
-								</div>
-							</td>
-						</tr>
-					</thead>
-				</table>
-			</div>
 		</>
 	);
 };

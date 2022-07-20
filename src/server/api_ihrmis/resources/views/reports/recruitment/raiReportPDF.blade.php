@@ -89,12 +89,15 @@
             font-weight: normal;
             overflow: hidden;
             word-break: normal;
+            text-align: center;
         }
-
     </style>
 </head>
 
 <body class="dfs">
+    <?php
+    $status = ['Permanent', 'Provisional', 'Temporary', 'Substitute', 'Co-Terminous', 'Casual', 'Contractual', 'Job Order'];
+    ?>
     <htmlpageheader name="header">
         <span class="tfs">CS Form No. 2</span>
         <table class="dfs w100">
@@ -209,9 +212,55 @@
         <tbody>
             <?php 
                 $counter = 1;
-                if(!empty($data)):?>
-
+                if(!empty($details)):?>
+            <?php foreach ($details as $applicant) {?>
+            <tr>
+                <td class="td">{{ $counter++ }}</td>
+                <td class="td">
+                    <?= $applicant->app_appntmnt != null ? $applicant->app_appntmnt : $applicant->app_assmptn ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblapplicantsProfile->app_nm_last ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblapplicantsProfile->app_nm_first ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblapplicantsProfile->app_nm_extn ?? '' ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblapplicantsProfile->app_nm_mid ?? '' ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblPositions->pos_title ?? '' ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblplantillaItems->itm_no ?? '' ?>
+                </td>
+                <td class="td">
+                    <?= $applicant->TblPositions->pos_salary_grade ?? '' ?>
+                </td>
+                <td class="td"></td>
+                <td class="td">
+                    <?php if(!isset($applicant->app_appntmnt)):?>
+                    <?= $applicant->app_period_from ?> to
+                    <?= $applicant->app_period_to ?>
+                    <?php endif;?>
+                </td>
+                <td class="td"></td>
+                <td class="td">
+                    <?= $status[$applicant->TblplantillaItems->itm_status] ?>
+                </td>
+                <td class="td"></td>
+                <td class="td"></td>
+                <td class="td"></td>
+                <td class="td"></td>
+                <td class="td"></td>
+                <td class="td"></td>
+            </tr>
+            <?php } ?>
             <?php else:?>
+
             <?php for ($i=1; $i <= 15; $i++) { ?>
             <tr>
                 <td class="td">{{ $i }}</td>

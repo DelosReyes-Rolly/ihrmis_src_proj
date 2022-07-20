@@ -13,17 +13,20 @@ use Illuminate\Http\Request;
 class TblplantillaItemsController extends Controller
 {
     //
-    public function getPlantillaItem($type){
+    public function getPlantillaItem($type)
+    {
         $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->where('itm_regular', $type)->get();
         return TblplantillaItemsResource::collection($item_query);
     }
 
-    public function getOpenPlantillaItems(){
+    public function getOpenPlantillaItems()
+    {
         $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->get();
         return CommonResource::collection($item_query);
     }
 
-    public function getPlantillaItemById($id) {
+    public function getPlantillaItemById($id)
+    {
         $item_query = TblplantillaItems::find($id);
         return new CommonResource($item_query);
     }
@@ -46,34 +49,35 @@ class TblplantillaItemsController extends Controller
             $plantillaQry->itm_supv2_itm_id = $request->itm_supv2_itm_id ?? 0;
             $plantillaQry->itm_state = $request->itm_state ?? 1;
             $plantillaQry->save();
-
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "Failed, Try again later",
             ], 400);
         }
-            
+
         return response()->json([
             'message' => "Added Successfully",
         ], 200);
     }
-    
-    public function showItemDetail($id){
+
+    public function showItemDetail($id)
+    {
         $item_qry = TblplantillaItems::with('tbloffices', 'tblpositions')->findOrFail($id);
         return new TblplantillaItemsResource($item_qry);
     }
 
-    public function officePosition(){
+    public function officePosition()
+    {
 
         return new CommonResource([
-            'positions' => Tblpositions::get(), 
+            'positions' => Tblpositions::get(),
             'offices' => Tbloffices::get(),
         ]);
     }
 
     public function getDutiesAndResponsibility($id)
     {
-        $item_qry = TblplantillaDutiesRspnsblts::where('dty_itm_id' ,$id)->get();
+        $item_qry = TblplantillaDutiesRspnsblts::where('dty_itm_id', $id)->get();
         return CommonResource::collection($item_qry);
     }
 
@@ -96,19 +100,32 @@ class TblplantillaItemsController extends Controller
         ]);
     }
 
+    public function updateEvaluationState(Request $request)
+    {
+        return TblplantillaItems::updateOrCreate(
+            [
+                'itm_id' => $request->plantilla,
+            ],
+            [
+                'deadline' => $request->deadline,
+                'itm_state' => $request->state,
+                'grp_cluster' => $request->grp_cluster,
+            ]
+        );
+    }
 
-    public function removePlantilla($id){
+
+    public function removePlantilla($id)
+    {
         try {
             $itemQry = TblplantillaItems::where("itm_id", $id)->delete();
             return response()->json([
                 "message" => "Successfully deleted Plantilla"
             ], 200);
-
         } catch (\Throwable $th) {
             return response()->json([
                 "message" => "Unable To Delete Plantilla"
             ], 422);
-        }    
+        }
     }
-
 }
