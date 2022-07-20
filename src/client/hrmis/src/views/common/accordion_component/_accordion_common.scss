@@ -1,0 +1,74 @@
+.accordion-container {
+  cursor: default;
+  margin-bottom: 10px;
+  width: 100%;
+  .accordion-header {
+    z-index: 100;
+    user-select: none;
+    border-radius: 5px 5px 0px 0px;
+    padding: 5px 10px;
+    background-color: map-get($primaryColor, regular);
+    border: 1px solid map-get($primaryColor, regular);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title-header {
+      font-weight: 600;
+      color: white;
+      display: flex;
+      gap: 15px;
+      justify-content: space-between;
+      align-items: center;
+      .icon-accordion-div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .more-icon {
+      color: white;
+      .drop-list {
+        position: relative;
+        color: black;
+
+        .drop-list-item {
+          background-color: white;
+          position: absolute;
+          width: 200px;
+          right: 0px;
+          .item {
+            padding: 12px 15px;
+          }
+          .item:hover {
+            background-color: map-get($blackColor, 100);
+          }
+        }
+      }
+    }
+  }
+  .accordion-body {
+    background-color: white;
+    border: 1px solid map-get($blackColor, 400);
+    border-top: 0px;
+    border-radius: 0px 0px 5px 5px;
+    padding: 10px;
+  }
+}
+
+.accordion-trans-enter {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+.accordion-trans-enter-active {
+  opacity: 1;
+  transform: translateY(0px);
+  transition: transform 400ms, opacity 1000ms;
+}
+.accordion-trans-exit {
+  opacity: 1;
+}
+.accordion-trans-exit-active {
+  opacity: 0;
+  transform: translateY(-50px);
+  transition: transform 400ms, opacity 100ms;
+}

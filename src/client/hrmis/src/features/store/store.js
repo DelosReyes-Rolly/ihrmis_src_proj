@@ -8,6 +8,7 @@ import plantillaItemReducer from "../reducers/plantilla_item_slice";
 import vacantReducer from "../reducers/vacant_slice";
 import employeeReducer from "../reducers/employee_slice";
 import jvscrwFormReducer from "../reducers/jvscrw_form_slice";
+import onboardingReducer from "../reducers/onboarding_slice";
 
 const store = configureStore(
   {
@@ -21,6 +22,7 @@ const store = configureStore(
       vacant: vacantReducer,
       employee: employeeReducer,
       jvscrwForm: jvscrwFormReducer,
+      onboarding: onboardingReducer,
     },
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
