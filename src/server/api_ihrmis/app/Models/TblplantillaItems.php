@@ -30,6 +30,9 @@ class TblplantillaItems extends Model
         'itm_supv1_itm_id',
         'itm_supv2_itm_id',
         'itm_state',
+        'is_notify',
+        'date_submitted',
+        'deadline'
     ];
 
     public $timestamps = false;

@@ -3,7 +3,7 @@ import ModalComponent from "../../../../../common/modal_component/modal_componen
 import TextAreaComponent from "../../../../../common/input_component/textarea_input_component/textarea_input_component";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SelectComponent from "../../../../../common/input_component/select_component/select_component";
-import UploadAttachmentComponent from "../../../../../common/input_component/upload_attachment_component/upload_attachment_component copy";
+import UploadAttachmentComponent from "../../../../../common/input_component/upload_attachment_component/upload_attachment_component";
 import InputComponent from "../../../../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
 import {
@@ -23,6 +23,7 @@ import {
 	ALERT_ENUM,
 	popupAlert,
 } from "../../../../../../helpers/alert_response";
+import { setRefresh } from "../../../../../../features/reducers/popup_response";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
@@ -149,6 +150,7 @@ const PlantillaVpEmailModal = ({
 						popupAlert({
 							message: "Email was sent successfully.",
 						});
+						dispatch(setRefresh());
 						onClose();
 					}
 				})

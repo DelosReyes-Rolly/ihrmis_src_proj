@@ -2,6 +2,8 @@
 	color: map-get($primaryColor, regular);
 	font-size: 1.2em;
 	z-index: $sidebarIndex;
+	display: flex;
+	align-items: center;
 }
 
 .plantilla-icon:hover {

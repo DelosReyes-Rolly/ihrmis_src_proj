@@ -176,8 +176,6 @@ class PlantillaItemsService
 		return $employee->save();
 	}
 
-
-
 	########################################## GET METHODS #######################################################
 
 	/**
@@ -462,8 +460,8 @@ class PlantillaItemsService
 		$nextRankQrt = TblnextInRank::where('nir_itm_id', $itm_id)->get();
 
 		$itemSgValue = TblplantillaItems::where('itm_id', $itm_id)->with('tblpositions')->first();
-		
-		$arrEmpIdHolder =[];
+
+		$arrEmpIdHolder = [];
 		foreach ($nextRankQrt as $value) {
 			array_push($arrEmpIdHolder, $value->nir_emp_id);
 		}
@@ -475,7 +473,7 @@ class PlantillaItemsService
 				if ($items->employee != null) {
 					if (!in_array($items->employee->emp_id, $arrEmpIdHolder)) {
 						$name = $items->employee->emp_nm_last . ", " . $items->employee->emp_nm_last . " " .  $items->employee->emp_nm_mid . " " .  $items->employee->emp_nm_extn;
-						if($items->tblpositions->pos_salary_grade < $itemSgValue->tblpositions->pos_salary_grade){
+						if ($items->tblpositions->pos_salary_grade < $itemSgValue->tblpositions->pos_salary_grade) {
 							array_push($arrHolder, [
 								'nir_name' => $name,
 								'nir_email' =>  $items->employee->emp_ofc_email,

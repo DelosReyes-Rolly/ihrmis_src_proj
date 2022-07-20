@@ -1,6 +1,9 @@
-.plantilla-view {
-	padding: 0px 0px 30px 0px;
+@import "../../../views/rsp_module/calendar/calendar_view";
+
+.calendar-view {
+	padding: 10x 0px 30px 0px;
 }
+
 .tab-button {
 	padding: 20px 20px;
 }
@@ -49,10 +52,8 @@ hr.solid {
 /* SELECTOR STARTS HERE  */
 
 .selector-buttons {
-	box-sizing: border-box;
+	padding: 0px 30px;
 	display: flex;
-	width: 100%;
-	flex-direction: row;
 	justify-content: space-between !important;
 	align-items: center;
 }
@@ -98,10 +99,8 @@ hr.solid {
 }
 
 .search-container {
-	box-sizing: border-box;
 	display: flex;
 	align-items: center;
-	width: 100%;
 }
 
 /* SECOND TAB DISPLAY STARTS HERE  */
@@ -117,10 +116,6 @@ hr.solid {
 
 .non-regular {
 	margin: 20px;
-}
-
-.width-300 {
-	width: 300px;
 }
 
 @media only screen and (max-width: 800px) {

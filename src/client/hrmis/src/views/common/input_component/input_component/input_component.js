@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
+import { IoMdAdd } from "react-icons/io";
+import SearchComponent from "../search_input/search_input";
 
 const InputComponent = (props) => {
 	return (
 		<input
-			style={props.style ?? { marginTop: '3px' }}
+			style={props.style ?? { marginTop: "3px" }}
 			onChange={props.onChange}
 			value={props.value}
 			name={props.name}
@@ -13,22 +15,35 @@ const InputComponent = (props) => {
 			maxLength={props.maxLength}
 			minLength={props.minLength}
 			min={props.min}
+			max={props.max}
 			size={props.size}
 			placeholder={props.placeholder}
 			readOnly={props.readOnly}
 			disabled={props.disabled}
+			step={props.step}
 		></input>
 	);
 };
 
 InputComponent.defaultProps = {
-	type: 'text',
+	type: "text",
 	maxLength: 255,
 	size: 999,
-	className: '',
-	placeholder: '',
+	className: "",
+	placeholder: "",
 	onchange: () => {},
 	readOnly: false,
 };
 
 export default InputComponent;
+
+export const InputIconComponent = ({
+	name,
+	onChange,
+	value,
+	icon = <IoMdAdd size={20} />,
+	onClick,
+	placeholder,
+}) => {
+	return <SearchComponent />;
+};
