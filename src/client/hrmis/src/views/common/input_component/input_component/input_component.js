@@ -1,4 +1,6 @@
 import React from "react";
+import { IoMdAdd } from "react-icons/io";
+import SearchComponent from "../search_input/search_input";
 
 const InputComponent = (props) => {
 	return (
@@ -31,3 +33,25 @@ InputComponent.defaultProps = {
 };
 
 export default InputComponent;
+
+export const InputIconComponent = ({
+	name,
+	onChange,
+	value,
+	icon = <IoMdAdd size={20} />,
+	onClick,
+	is_right = true,
+	placeholder,
+}) => {
+	if (is_right) {
+		return <SearchComponent />;
+	}
+	return (
+		<div className="div-input-with-symbol">
+			<button type="submit" onClick={onClick}>
+				{icon}
+			</button>
+			<input name={name} onChange={onChange} value={value} />
+		</div>
+	);
+};

@@ -10,6 +10,7 @@ const IconComponent = ({
 	position = "top",
 	effect = "solid",
 	onClick = () => {},
+	cursor = "pointer",
 }) => {
 	let addClassName = "plantilla-icon " + className;
 
@@ -27,6 +28,7 @@ const IconComponent = ({
 				data-for={toolTipId}
 				className={addClassName}
 				onClick={onClick}
+				style={{ cursor: cursor }}
 			>
 				{icon}
 			</span>

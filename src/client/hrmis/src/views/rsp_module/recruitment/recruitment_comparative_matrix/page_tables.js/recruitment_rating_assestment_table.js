@@ -1,21 +1,21 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
-import { BsArrowLeft } from 'react-icons/bs';
-import { FiPaperclip } from 'react-icons/fi';
-import { IoInformationCircle, IoRefreshCircle } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useCallback, useEffect, useState } from "react";
+import { BsArrowLeft } from "react-icons/bs";
+import { FiPaperclip } from "react-icons/fi";
+import { IoInformationCircle, IoRefreshCircle } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
 	setBusy,
 	setRefresh,
-} from '../../../../../features/reducers/popup_response';
-import { API_HOST } from '../../../../../helpers/global/global_config';
-import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
-import { useToggleHelper } from '../../../../../helpers/use_hooks/toggle_helper';
-import ButtonComponent from '../../../../common/button_component/button_component.js.js';
-import IconComponent from '../../../../common/icon_component/icon';
-import InputComponent from '../../../../common/input_component/input_component/input_component';
-import ToggleSwitchComponent from '../../../../common/toggle_switch_component/toggle_switch';
+} from "../../../../../features/reducers/popup_response";
+import { API_HOST } from "../../../../../helpers/global/global_config";
+import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
+import ButtonComponent from "../../../../common/button_component/button_component.js";
+import IconComponent from "../../../../common/icon_component/icon";
+import InputComponent from "../../../../common/input_component/input_component/input_component";
+import ToggleSwitchComponent from "../../../../common/toggle_switch_component/toggle_switch";
 import {
 	competencyScore,
 	competencyToMessage,
@@ -23,9 +23,9 @@ import {
 	eligibilityToMessage,
 	experienceToMessage,
 	trainingToMessage,
-} from '../../static/functions';
-import AssessmentsModal from '../page_modals/assessments_modal';
-import CompetencyAssessmentModal from '../page_modals/competency_assessment_modal';
+} from "../../static/functions";
+import AssessmentsModal from "../page_modals/assessments_modal";
+import CompetencyAssessmentModal from "../page_modals/competency_assessment_modal";
 
 const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 	const mounted = useIsMounted();
@@ -33,14 +33,14 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 	const dispatch = useDispatch();
 	const [applicant, setApplicant] = useState([]);
 	const urlpath = window.location.pathname;
-	const route = urlpath.split('/');
+	const route = urlpath.split("/");
 	const plantilla_id = route[5];
 	const app_route = route[6];
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const getCMData = useCallback(async () => {
 		dispatch(setBusy(true));
 		await axios
-			.get(API_HOST + 'get-ra-data/' + plantilla_id + '/' + applicant_id)
+			.get(API_HOST + "get-ra-data/" + plantilla_id + "/" + applicant_id)
 			.then((response) => {
 				let data = response.data?.data[0] ?? [];
 				let eligibilites = eligibilityToMessage(data.tblapplicant_eligibility);
@@ -58,13 +58,13 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 					app_id: data?.tblapplicants_profile?.app_id,
 					applicant_name:
 						data?.tblapplicants_profile?.app_nm_last +
-						' ' +
+						" " +
 						data?.tblapplicants_profile?.app_nm_first +
-						' ' +
+						" " +
 						data?.tblapplicants_profile?.app_nm_mid +
-						' (' +
+						" (" +
 						data?.tblapplicants_profile?.app_sex +
-						')',
+						")",
 					elig: eligibilites,
 					edu: education,
 					edu_score: data?.tbl_assessments.ass_education,
@@ -96,7 +96,7 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 	}, [getCMData, refresh]);
 
 	// ============== Educ, Training, EXP Modal ==================
-	const [assessmentType, setAssessmentType] = useState('');
+	const [assessmentType, setAssessmentType] = useState("");
 	const [modalToggle, setModalToggle] = useToggleHelper(false);
 	const [competencyModal, setCompetencyModalToggle] = useToggleHelper(false);
 	const [score, setScore] = useState(0);
@@ -117,98 +117,98 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 
 	return (
 		<>
-			<div className='default-table document_table'>
-				<table className='table-design comparative-matrix'>
+			<div className="default-table document_table">
+				<table className="table-design comparative-matrix">
 					<thead>
-						<tr className='no-border'>
-							<th className='w5'>
+						<tr className="no-border">
+							<th className="w5">
 								<IconComponent
-									id='ra_back'
-									className=''
-									icon={<BsArrowLeft size='25' />}
-									toolTipId='ra_back_tooltip'
+									id="ra_back"
+									className=""
+									icon={<BsArrowLeft size="25" />}
+									toolTipId="ra_back_tooltip"
 									onClick={() => {
 										if (app_route !== undefined) {
-											navigate('/rsp/recruitment');
+											navigate("/rsp/recruitment");
 										}
-										setPageType('');
+										setPageType("");
 									}}
-									textHelper={'Go Back'}
+									textHelper={"Go Back"}
 								/>
 							</th>
-							<th className='main-header' colSpan={4}>
+							<th className="main-header" colSpan={4}>
 								RATINGS AND ASSESSMENT
 							</th>
-							<th className='w5'>
+							<th className="w5">
 								<IconComponent
-									id='ra_refresh'
-									className=''
-									icon={<IoRefreshCircle size='30' />}
-									toolTipId='ra_refresh_tooltip'
+									id="ra_refresh"
+									className=""
+									icon={<IoRefreshCircle size="30" />}
+									toolTipId="ra_refresh_tooltip"
 									onClick={() => dispatch(setRefresh())}
-									textHelper={'Reload'}
+									textHelper={"Reload"}
 								/>
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<th className=''>Name of Applicant</th>
-							<td style={{ width: '35%' }}>{applicant?.applicant_name}</td>
-							<td className='w5'>
+							<th className="">Name of Applicant</th>
+							<td style={{ width: "35%" }}>{applicant?.applicant_name}</td>
+							<td className="w5">
 								<IconComponent
-									id='ra_pds'
-									className=''
-									icon={<IoInformationCircle size='30' />}
-									toolTipId='ra_pds_tooltip'
+									id="ra_pds"
+									className=""
+									icon={<IoInformationCircle size="30" />}
+									toolTipId="ra_pds_tooltip"
 									// TODO: Connect Sean Employee PDS to this button,
 									// need to create
-									onClick={() => console.log('view_pds')}
-									textHelper={'View PDS'}
+									onClick={() => console.log("view_pds")}
+									textHelper={"View PDS"}
 								/>
 							</td>
-							<th className=''>Eligibility</th>
+							<th className="">Eligibility</th>
 							<td colSpan={2}>{applicant?.elig}</td>
 						</tr>
 						<tr>
-							<th className=''>Education (10%)</th>
+							<th className="">Education (10%)</th>
 							<td>{applicant?.edu}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(0, applicant?.edu_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.edu_score}</b>
 							</td>
-							<th className=''>Relevant Trainings (10%)</th>
-							<td style={{ width: '35%' }}>{applicant?.trn}</td>
-							<td className='center'>
+							<th className="">Relevant Trainings (10%)</th>
+							<td style={{ width: "35%" }}>{applicant?.trn}</td>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(1, applicant?.trn_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.trn_score}</b>
 							</td>
 						</tr>
 						<tr>
-							<th className=''>Relevant Experience (15%)</th>
+							<th className="">Relevant Experience (15%)</th>
 							<td>{applicant?.exp}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(2, applicant?.exp_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.exp_score}</b>
 							</td>
-							<th className=''>Job Competency (30%)</th>
+							<th className="">Job Competency (30%)</th>
 							<td>{applicant?.cmptncy}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setCompetencyAssessmentModalDetails(
@@ -216,14 +216,14 @@ const RecruitmentRatingAssessment = ({ applicant_id, setPageType }) => {
 											applicant?.cmptncyScore
 										);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.cmptncyScore}</b>
 							</td>
 						</tr>
 						<tr>
-							<th className=' assessments-header'>Sub-total</th>
-							<th className='' colSpan={5}>
+							<th className=" assessments-header">Sub-total</th>
+							<th className="" colSpan={5}>
 								{applicant?.subtotal}
 							</th>
 						</tr>
@@ -258,20 +258,20 @@ export default RecruitmentRatingAssessment;
 const RecruitmentHRMPSB = ({}) => {
 	return (
 		<>
-			<table className='table-design comparative-matrix'>
+			<table className="table-design comparative-matrix">
 				<thead>
-					<tr className='no-border'>
-						<th className='main-header' colSpan={6}>
+					<tr className="no-border">
+						<th className="main-header" colSpan={6}>
 							HRMPSB
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<th className='' rowSpan={2}>
+						<th className="" rowSpan={2}>
 							Attributes (25%)
-							<div className='fs-small'>
-								<ol type='a'>
+							<div className="fs-small">
+								<ol type="a">
 									<li>Pleasing Personality;</li>
 									<li>Sharpness of Mind;</li>
 									<li>Ability to express ideas/communication skills;</li>
@@ -284,39 +284,39 @@ const RecruitmentHRMPSB = ({}) => {
 								</ol>
 							</div>
 						</th>
-						<td rowSpan={2} style={{ width: '35%' }}></td>
-						<td rowSpan={2} className='w5'>
+						<td rowSpan={2} style={{ width: "35%" }}></td>
+						<td rowSpan={2} className="w5">
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
-								buttonName='Score'
+								buttonName="Score"
 							/>
 						</td>
-						<th className=''>Commendable Accomplishments (5%)</th>
-						<td style={{ width: '35%' }}></td>
-						<td className='w5'>
+						<th className="">Commendable Accomplishments (5%)</th>
+						<td style={{ width: "35%" }}></td>
+						<td className="w5">
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
-								buttonName='Score'
+								buttonName="Score"
 							/>
 						</td>
 					</tr>
 					<tr>
-						<th className=''>Performance (5%)</th>
+						<th className="">Performance (5%)</th>
 						<td></td>
 						<td>
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
-								buttonName='Score'
+								buttonName="Score"
 							/>
 						</td>
 					</tr>
 					<tr>
-						<th className=' assessments-header'>Sub-total</th>
-						<th className='' colSpan={5}></th>
+						<th className=" assessments-header">Sub-total</th>
+						<th className="" colSpan={5}></th>
 					</tr>
 					<tr>
-						<th className=' assessments-header'>TOTAL (100%)</th>
-						<th className='' colSpan={5}></th>
+						<th className=" assessments-header">TOTAL (100%)</th>
+						<th className="" colSpan={5}></th>
 					</tr>
 				</tbody>
 			</table>
@@ -327,98 +327,98 @@ const RecruitmentHRMPSB = ({}) => {
 const RecruitmentOtherAssessment = ({}) => {
 	return (
 		<>
-			<table className='table-design comparative-matrix'>
+			<table className="table-design comparative-matrix">
 				<thead>
-					<tr className='no-border'>
-						<th className='main-header' colSpan={6}>
+					<tr className="no-border">
+						<th className="main-header" colSpan={6}>
 							OTHER ASSESSMENTS
 						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<th className=' center'>
-							<div className='assessments-header'>
+						<th className=" center">
+							<div className="assessments-header">
 								Pre-employment Exam
 								<div>
 									<ButtonComponent
 										buttonLogoStart={<FiPaperclip />}
 										// onClick={() => setTogModal(true)}
-										buttonName='Attach'
+										buttonName="Attach"
 									/>
 								</div>
 							</div>
 						</th>
 						<td>Numerical Ability: 20</td>
-						<td className='w5'>
+						<td className="w5">
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
-								buttonName='Score'
+								buttonName="Score"
 							/>
 						</td>
-						<th className=''>
-							<div className='assessments-header'>
+						<th className="">
+							<div className="assessments-header">
 								Psychological Exam
 								<div>
 									<ButtonComponent
 										buttonLogoStart={<FiPaperclip />}
 										// onClick={() => setTogModal(true)}
-										buttonName='Attach'
+										buttonName="Attach"
 									/>
 								</div>
 							</div>
 						</th>
 						<td>Emotional Stability: A</td>
-						<td className='w5'>
+						<td className="w5">
 							<ButtonComponent
 								// onClick={() => setTogModal(true)}
-								buttonName='Score'
+								buttonName="Score"
 							/>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div className='center-items'>
-				<table className='table-design page-end' style={{ width: '60%' }}>
+			<div className="center-items">
+				<table className="table-design page-end" style={{ width: "60%" }}>
 					<thead>
 						<tr>
-							<th className=''>APPOINTED</th>
+							<th className="">APPOINTED</th>
 							<td>
-								<div className='center-items'>
+								<div className="center-items">
 									<ToggleSwitchComponent className />
 								</div>
 							</td>
 							<td>
-								<label htmlFor='effectivity'>Date of Effectivity</label>
+								<label htmlFor="effectivity">Date of Effectivity</label>
 								<InputComponent
-									name='effectivity'
+									name="effectivity"
 									// value={form.values.doc_name}
 									// onChange={form.handleChange}
-									maxLength='30'
-									type='date'
+									maxLength="30"
+									type="date"
 								/>
 								{/* {form.touched.doc_name && form.errors.doc_name ? (
 									<span className='invalid-response'>{form.errors.doc_name}</span>
 								) : null} */}
 							</td>
 							<td>
-								<label htmlFor='effectivity'>Date of Assumption</label>
+								<label htmlFor="effectivity">Date of Assumption</label>
 								<InputComponent
-									name='effectivity'
+									name="effectivity"
 									// value={form.values.doc_name}
 									// onChange={form.handleChange}
-									maxLength='30'
-									type='date'
+									maxLength="30"
+									type="date"
 								/>
 								{/* {form.touched.doc_name && form.errors.doc_name ? (
 									<span className='invalid-response'>{form.errors.doc_name}</span>
 								) : null} */}
 							</td>
 							<td>
-								<div className='center-items'>
+								<div className="center-items">
 									<ButtonComponent
 										// onClick={() => setTogModal(true)}
-										buttonName='Save'
+										buttonName="Save"
 									/>
 								</div>
 							</td>
