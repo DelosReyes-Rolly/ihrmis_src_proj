@@ -1,69 +1,71 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const plantillaItemSlice = createSlice({
-  name: "user",
-  initialState: {
-    plantilla_items: [],
-    next_rank: false,
-    context_menu: false,
-    rank_email: false,
-    next_rank_list: [],
-    email_recepients: "",
-    select_agency: false,
-    selected_agency_rank: null,
-    notify_office: false,
-    selected_agency: [],
-    item_id: null,
-    emailtemplate_data: null,
-    selected_employee: [],
-  },
-  reducers: {
-    setNextRank: (state) => {
-      state.next_rank = !state.next_rank;
-    },
+	name: "user",
+	initialState: {
+		plantilla_items: [],
+		next_rank: false,
+		context_menu: false,
+		rank_email: false,
+		next_rank_list: [],
+		email_recepients: "",
+		select_agency: false,
+		selected_agency_rank: null,
+		notify_office: false,
+		selected_agency: [],
+		item_id: null,
+		emailtemplate_data: null,
+		selected_employee: [],
+		is_notify: false,
+		selected_filter_value: undefined,
+	},
+	reducers: {
+		setNextRank: (state) => {
+			state.next_rank = !state.next_rank;
+		},
 
-    setContextMenu: (state) => {
-      state.context_menu = !state.context_menu;
-    },
+		setContextMenu: (state) => {
+			state.context_menu = !state.context_menu;
+		},
 
-    setRankEmail: (state) => {
-      state.rank_email = !state.rank_email;
-    },
+		setRankEmail: (state) => {
+			state.rank_email = !state.rank_email;
+		},
 
-    setNextRankList: (state, action) => {
-      state.next_rank_list = [...action.payload];
-    },
+		setNextRankList: (state, action) => {
+			state.next_rank_list = [...action.payload];
+		},
 
-    setEmailRecepients: (state, action) => {
-      const emailArr = action.payload;
-      state.email_recepients = emailArr?.join(", ");
-      // console.log(state.email_recepients);
-    },
+		setEmailRecepients: (state, action) => {
+			const emailArr = action.payload;
+			state.email_recepients = emailArr?.join(", ");
+			// console.log(state.email_recepients);
+		},
 
-    setSelectAgency: (state) => {
-      state.select_agency = !state.select_agency;
-    },
+		setSelectAgency: (state) => {
+			state.select_agency = !state.select_agency;
+		},
 
-    setNotifyOffice: (state) => {
-      state.notify_office = !state.notify_office;
-    },
+		setNotifyOffice: (state) => {
+			state.notify_office = !state.notify_office;
+		},
 
-    setSelectedAgency: (state, action) => {
-      const { payload } = action;
-      state.selected_agency = payload;
-      // console.log(payload);
-    },
+		setSelectedAgency: (state, action) => {
+			const { payload } = action;
+			state.selected_agency = payload;
+			// console.log(payload);
+		},
 
-    setItemID: (state, action) => {
-      const { payload } = action;
-      state.item_id = payload;
-      // console.log(state.item_id);
-    },
+		setItemID: (state, action) => {
+			const { payload } = action;
+			state.item_id = payload;
+			// console.log(state.item_id);
+		},
 
-    setVcEmailTemplateData: (state, action) => {
-      state.emailtemplate_data = action.payload;
-      // console.log(state.selected_plantilla);
-    },
+		setVcEmailTemplateData: (state, action) => {
+			state.emailtemplate_data = action.payload;
+			// console.log(state.selected_plantilla);
+		},
 
 		setSelectedPlantillaItems: (state, action) => {
 			const { payload } = action;
@@ -71,34 +73,46 @@ export const plantillaItemSlice = createSlice({
 			// console.log(state.plantilla_items);
 		},
 
-    setSelectedAgencyRank: (state, action) => {
-      const { payload } = action;
-      state.selected_agency_rank = payload;
-      // console.log(state.selected_agency_rank);
-    },
+		setSelectedAgencyRank: (state, action) => {
+			const { payload } = action;
+			state.selected_agency_rank = payload;
+			// console.log(state.selected_agency_rank);
+		},
 
-    setSelectedEmployee: (state, action) => {
-      const { payload } = action;
-      state.selected_employee = payload;
-      // console.log(state.selected_agency_rank);
-    },
-  },
+		setSelectedEmployee: (state, action) => {
+			const { payload } = action;
+			state.selected_employee = payload;
+			// console.log(state.selected_agency_rank);
+		},
+
+		setIsNotifyOffice: (state, action) => {
+			const { payload } = action;
+			state.is_notify = payload;
+		},
+
+		setSelectedFiterValue: (state, action) => {
+			const { payload } = action;
+			state.selected_filter_value = payload;
+		},
+	},
 });
 
 export const {
-  setContextMenu,
-  setNextRank,
-  setRankEmail,
-  setNextRankList,
-  setEmailRecepients,
-  setSelectAgency,
-  setNotifyOffice,
-  setSelectedAgency,
-  setItemID,
-  setVcEmailTemplateData,
-  setSelectedPlantillaItems,
-  setSelectedAgencyRank,
-  setSelectedEmployee,
+	setContextMenu,
+	setNextRank,
+	setRankEmail,
+	setNextRankList,
+	setEmailRecepients,
+	setSelectAgency,
+	setNotifyOffice,
+	setSelectedAgency,
+	setItemID,
+	setVcEmailTemplateData,
+	setSelectedPlantillaItems,
+	setSelectedAgencyRank,
+	setSelectedEmployee,
+	setIsNotifyOffice,
+	setSelectedFiterValue,
 } = plantillaItemSlice.actions;
 
 export default plantillaItemSlice.reducer;

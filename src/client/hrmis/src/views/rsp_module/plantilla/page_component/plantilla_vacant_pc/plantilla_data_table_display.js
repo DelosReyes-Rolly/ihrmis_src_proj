@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { itemState, statusDisplay } from "../../static/display_option";
+import { statusDisplay } from "../../static/display_option";
 import {
 	useTable,
 	useSortBy,
@@ -31,6 +31,7 @@ import {
 	setVcEmailTemplateData,
 	setSelectedPlantillaItems,
 	setSelectedAgencyRank,
+	setIsNotifyOffice,
 } from "../../../../../features/reducers/plantilla_item_slice";
 import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email_modal";
 
@@ -41,9 +42,9 @@ import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email
  */
 export const PlantillaDataTableDisplay = ({ type }) => {
 	const refresh = useSelector((state) => state.popupResponse.refresh);
-	const { plantilla_items } = useSelector((state) => state.plantillaItem);
 	const [plotData, setPlotData] = useState([]);
 	const dispatch = useDispatch();
+	const { is_notify } = useSelector((state) => state.plantillaItem);
 
 	const getVcEmailTemplateData = async (item_id) => {
 		await axios
@@ -79,10 +80,16 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 	};
 
 	const onCLickRow = (rowData) => {
+		console.log(rowData);
 		dispatch(setItemID(rowData?.itm_id));
 		dispatch(setEmailRecepients([rowData?.agn_head_email]));
 		getVcEmailTemplateData(rowData?.itm_id);
 		dispatch(setSelectedAgencyRank(rowData?.ofc_agn_id));
+		if (rowData?.is_notify > 0) {
+			dispatch(setIsNotifyOffice(true));
+		} else {
+			dispatch(setIsNotifyOffice(false));
+		}
 	};
 
 	useLayoutEffect(() => {
@@ -99,6 +106,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 			"itm_state",
 			"ofc_agn_id",
 			"agn_head_email",
+			"is_notify",
 		],
 		filters: [
 			{
@@ -181,6 +189,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 	const setSelectedRowsData = async (selectedFlatRowsData) => {
 		let selectedItems = [];
 		let temp_selected = [];
+		// console.log(selectedFlatRowsData);
 		selectedFlatRowsData?.forEach((element) => {
 			let sdata = {};
 			sdata["itm_id"] = element.itm_id;
@@ -198,7 +207,8 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 		} else {
 			dispatch(setSelectedPlantillaItems([]));
 		}
-	}, [plantilla_items]);
+	}, [selectedFlatRows]);
+
 	return (
 		<React.Fragment>
 			<FilterPlantillaItems
@@ -265,7 +275,8 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 														>
 															<DropdownVpMenu
 																itemList={plantillaItemsVacantPosMenuItems}
-																title={<MdMoreHoriz size="15" />}
+																title={<MdMoreHoriz size="20" />}
+																className="dropdown-three-dots"
 																alignItems="end"
 																tooltipData={{
 																	toolTipId: "other-actions",

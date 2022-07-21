@@ -44,7 +44,10 @@ export const tableHeaderColumnName = [
 		Header: "Agency Email",
 		accessor: "agn_head_email",
 	},
-	,
+	{
+		Header: "Is Notify",
+		accessor: "is_notify",
+	},
 ];
 
 //Initialized or assigned menu items and links

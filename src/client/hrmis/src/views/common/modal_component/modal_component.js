@@ -1,6 +1,6 @@
 import React from "react";
 import { MdClose } from "react-icons/md";
-import ButtonComponent from "../button_component/button_component.js.js";
+import ButtonComponent from "../button_component/button_component.js";
 import { CSSTransition } from "react-transition-group";
 import { CgMaximizeAlt } from "react-icons/cg";
 

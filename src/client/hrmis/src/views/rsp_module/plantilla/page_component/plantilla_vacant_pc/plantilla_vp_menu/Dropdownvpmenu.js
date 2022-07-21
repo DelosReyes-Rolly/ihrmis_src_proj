@@ -93,7 +93,7 @@ const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 	const navigate = useNavigate();
 	const { toastSuccessFailMessage } = useSweetAlertHelper();
 
-	const { selected_agency, plantilla_items, item_id } = useSelector(
+	const { selected_agency, plantilla_items, item_id, is_notify } = useSelector(
 		(state) => state.plantillaItem
 	);
 
@@ -138,11 +138,11 @@ const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 				if (typeof itemlink === "string" && itemlink !== "#") {
 					navigate(itemlink);
 					return;
-				} else if (typeof itemlink === "function") {
+				}
+				if (typeof itemlink === "function") {
 					itemlink();
 					return;
 				}
-				return;
 			}
 		}
 	};
@@ -189,6 +189,13 @@ const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 		return;
 	};
 
+	const disabled = {
+		listStyle: "none",
+		cursor: "not-allowed",
+		backgroundColor: "#cccccc",
+		color: "#666666",
+	};
+
 	return (
 		<React.Fragment>
 			<ul
@@ -202,9 +209,18 @@ const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 				{itemList?.map((element, key) => {
 					return (
 						<li
-							style={{ listStyle: "none" }}
+							style={
+								is_notify && element?.label.includes("JVS")
+									? disabled
+									: {
+											listStyle: "none",
+									  }
+							}
 							className="ul-menu-item"
-							onClick={() => linkNavigationHandler(element)}
+							onClick={() => {
+								if (is_notify && element?.label.includes("JVS")) return;
+								else linkNavigationHandler(element);
+							}}
 							key={key}
 						>
 							{element?.label}

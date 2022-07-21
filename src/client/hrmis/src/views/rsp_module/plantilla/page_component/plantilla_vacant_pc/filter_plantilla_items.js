@@ -2,6 +2,8 @@ import { plantillaItemSelectFilter } from "../../static/filter_items";
 import React, { useLayoutEffect, useState } from "react";
 import { useAsyncDebounce } from "react-table";
 import SearchComponent from "../../../../common/input_component/search_input/search_input";
+import { setSelectedFiterValue } from "../../../../../features/reducers/plantilla_item_slice";
+import { useDispatch } from "react-redux";
 
 /**
  * FilterPlantillaItems
@@ -17,11 +19,9 @@ import SearchComponent from "../../../../common/input_component/search_input/sea
  * @returns
  */
 export const FilterPlantillaItems = ({
-	type,
 	search,
 	setSearch,
 	statusFilter,
-	preFilteredRows,
 	globalFilter,
 	setGlobalFilter,
 	setAllFilters,
@@ -34,9 +34,10 @@ export const FilterPlantillaItems = ({
 	const [value, setValue] = useState(globalFilter);
 	const [disabledOption, setDisabledOption] = useState(false);
 	const [counter, setcounter] = useState(0);
+	const dispatch = useDispatch();
+
 	const handleChange = useAsyncDebounce((e) => {
 		let tvalue = e.target.value;
-		console.log("selected: " + selected.value);
 		if (counter === 0 && selected.value !== "FB") {
 			setDisabledOption(true);
 			setcounter(+1);
@@ -50,13 +51,10 @@ export const FilterPlantillaItems = ({
 			statusFilter("itm_state", tvalue);
 		}
 
-		console.log(selected.value);
-		console.log(preFilteredRows);
+		dispatch(setSelectedFiterValue(selected.value));
+		// console.log(selected.value);
+		// console.log(preFilteredRows);
 	});
-
-	// useLayoutEffect(() => {
-	// 	setFiltersTable(selected);
-	// });
 
 	return (
 		<React.Fragment>
@@ -91,34 +89,15 @@ export const FilterPlantillaItems = ({
 						</select>
 					</span>
 				</div>
-				<SearchFilter
-					type={type}
-					search={search}
-					setSearch={setSearch}
-					statusFilter={statusFilter}
-				/>
+				<div style={{ width: "300px" }}>
+					<SearchComponent
+						value={search || ""}
+						onChange={(e) => setSearch(e.target.value)}
+					/>
+				</div>
 			</div>
 		</React.Fragment>
 	);
 };
 
 export default FilterPlantillaItems;
-
-const SearchFilter = ({ type, search, setSearch, statusFilter }) => {
-	return (
-		<React.Fragment>
-			<div className="search-container">
-				<span className="margin-right-1 selector-search-label">
-					<label>Search</label>
-				</span>
-				<span>
-					<SearchComponent
-						placeholder="Search"
-						value={search || ""}
-						onChange={(e) => setSearch(e.target.value)}
-					/>
-				</span>
-			</div>
-		</React.Fragment>
-	);
-};

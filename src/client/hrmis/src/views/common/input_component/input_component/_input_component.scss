@@ -24,12 +24,41 @@ input[type="date"]:focus {
   color: black;
 }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-}
+// input[type="date"]: {
+//   color: black;
+// }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+//InputIconComponent styling
+
+.div-input-with-symbol {
+  width: 100%;
+  margin: 5px 0px 20px 0px;
+  display: flex;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: large;
+    color: map-get($blackColor, 400);
+    padding: 5px;
+    border: 1px solid map-get($primaryColor, 400);
+    border-right: none;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  input:focus {
+    outline: none;
+    color: map-get($blackColor, regular);
+    border-right: none;
+  }
+
+  button {
+    cursor: pointer;
+    color: map-get($primaryColor, regular);
+    padding: 0px 10px;
+    border: 1px solid map-get($primaryColor, 400);
+    border-left: none;
+    border-radius: 0px 5px 5px 0px;
+    background-color: white;
+  }
 }
