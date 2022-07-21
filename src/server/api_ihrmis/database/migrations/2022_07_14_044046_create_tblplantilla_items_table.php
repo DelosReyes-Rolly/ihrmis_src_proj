@@ -28,8 +28,9 @@ class CreateTblplantillaItemsTable extends Migration
             $table->unsignedInteger('itm_source')->index('itm_source')->comment('Source of fund. Basis of compensation.');
             $table->unsignedInteger('itm_supv1_itm_id')->index('itm_supv1_itm_id')->comment('Position of immediate supervisor.');
             $table->unsignedInteger('itm_supv2_itm_id')->index('itm_supv2_itm_id')->comment('Position of next higher supervisor.');
-            $table->unsignedTinyInteger('itm_state')->comment('Define the state of the plantilla position. 0 - Vacant, 1 - Acquired');
-            $table->integer('itm_is_vacant')->default(0)->comment('State of plantilla');
+            $table->unsignedTinyInteger('itm_state')->comment('Define the state of the plantilla position. [0-Filled, 1-
+Vacant, 2-Process/Close, 3-Open, 4-Pending, 5-
+Remove].');
             $table->timestamps();
         });
     }

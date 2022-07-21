@@ -251,6 +251,11 @@ const DutiesAndRespoView = ({ plotData }) => {
           {
             Header: "Percentage of Working Time",
             accessor: "dty_itm_percent",
+            Cell: ({ cell }) => (
+              <div style={{ width: "100%", textAlign: "center" }}>
+                <div>{cell.row.values.dty_itm_percent} %</div>
+              </div>
+            ),
           },
           {
             Header: "Competency Level",

@@ -7,6 +7,7 @@ export const API_HOST = "http://localhost:8000/api/";
 // export const API_HOST = "http://127.0.0.1:8000/api/";
 export const SANCTUM = "http://localhost:8000/";
 // export const SANCTUM = "http://localhost:8000/";
+export const APP_HOST = "http://localhost:3000/ihrmis/";
 
 //Validation Constant
 export const validationRequired = Yup.string()

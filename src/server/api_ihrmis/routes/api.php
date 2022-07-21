@@ -20,6 +20,7 @@ use App\Http\Controllers\Library\DocumentRequirements;
 use App\Http\Controllers\Library\EvaluationBattery;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
 use App\Http\Controllers\TblTransactionStagesController;
+use App\Models\TblonboardingSections;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -107,7 +109,7 @@ Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequir
 //=======================================================================================
 // JVSCRW END POINTS
 //=======================================================================================
-Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
+Route::get('pos-csc-plantilla/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
@@ -309,3 +311,18 @@ Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmpl
 // LIBRARY CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployeeHistoryService"]);
+
+
+//=======================================================================================
+// ONBOARDING CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('get-all-onboarding-section', [OnboardingController::class, "getOnboardingSections"]);
+Route::post('add-onboarding-section', [OnboardingController::class, "addOnboardingSections"]);
+Route::post('modify-onboarding-section', [OnboardingController::class, "updateOnboardingSections"]);
+Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class, "removeOnboardingSections"]);
+Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
+Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
+Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);
+
+
+

@@ -22,7 +22,7 @@ class TblofficesFactory extends Factory
             'ofc_type' => rand(1,12),
             'ofc_name' => strtoupper($this->faker->unique()->lexify('DOST OFFICE - ????? ??????')),
             'ofc_acronym' => strtoupper($this->faker->unique()->lexify('DO-??')),
-            'ofc_agn_id' => rand(7,9), //-->Change 
+            'ofc_agn_id' => rand(1,3), //-->Change 
             'ofc_area_code' => $this->faker->randomNumber(3, true),
             'ofc_area_type' => $this->faker->randomElement($this->area_type),
             'ofc_email_addr' => $this->faker->unique()->companyEmail()
