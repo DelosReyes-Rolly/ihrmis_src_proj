@@ -21,6 +21,10 @@ import { API_HOST } from '../../../../helpers/global/global_config';
 import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response';
 import RecruitmentDateSelector from './page_modals/recruitment_date_selector';
 import { useNavigate } from 'react-router-dom';
+import RecruitmentDocumentModal from './page_modals/recruitment_document_modal/recruitment_document_modal';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { setRefresh } from '../../../../features/reducers/popup_response';
 
 const RecruitmentBaseComponent = () => {
 	const [toggleState, setToggleState] = useState(1);
@@ -32,6 +36,7 @@ const RecruitmentBaseComponent = () => {
 		setToggleState(index);
 	};
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const [selectedApplicants, setSelectedApplicants] = useState([]);
 	useEffect(() => {
 		if (reportValue === 'POA' || reportValue === 'CM') {
@@ -71,6 +76,38 @@ const RecruitmentBaseComponent = () => {
 			}
 		}
 	}, [reportValue]);
+
+	const disqualifySelected = async (data, stage) => {
+		console.log(data);
+		const formData = new FormData();
+		let selectedIDs = [];
+		data.forEach((element) => {
+			let values = {
+				app_id: element.app_id,
+				stg: stage,
+			};
+			selectedIDs.push(values);
+		});
+		formData.append('applicants', JSON.stringify(selectedIDs));
+
+		await axios
+			.post(API_HOST + 'add-applicant-statuses', formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			.then((res) => {
+				popupAlert({
+					message: 'Applicant Status saved successfully',
+					type: ALERT_ENUM.success,
+				});
+				dispatch(setRefresh());
+			})
+			.catch((err) => {
+				popupAlert({
+					message: 'Document failed to save',
+					type: ALERT_ENUM.fail,
+				});
+			});
+	};
 
 	return (
 		<React.Fragment>
@@ -133,6 +170,12 @@ const RecruitmentBaseComponent = () => {
 							icon={
 								toggleState === 1 ? <AiFillMinusCircle /> : <AiFillPlusCircle />
 							}
+							onClick={() => {
+								disqualifySelected(
+									selectedApplicants,
+									toggleState === 1 ? 3 : 2
+								);
+							}}
 							toolTipId='rc-ap-disq'
 							textHelper={
 								toggleState === 1
@@ -198,6 +241,15 @@ const RecruitmentBaseComponent = () => {
 								setReportValue('');
 							}}
 						/>
+						{/* <RecruitmentDocumentModal
+							isDisplay={value === 2 ? true : false}
+							onClose={() => {
+								setValue(0);
+							}}
+							appID={modalData?.appID}
+							level={1}
+							cluster='RP'
+						/> */}
 					</div>
 				</div>
 			</div>

@@ -79,7 +79,7 @@ const EvaluationBatteryModal = ({
 				.post(API_HOST + 'evaluation-battery', value)
 				.then(() => {
 					popupAlert({
-						message: data?.grp_id ? 'Battery was edited' : 'Battery was added',
+						message: 'Battery was saved',
 						type: ALERT_ENUM.success,
 					});
 					dispatch(setRefresh());
@@ -176,8 +176,23 @@ const EvaluationBatteryModal = ({
 		}
 	};
 
-	const handleRemove = (item_id) => {
-		setBattery(battery.filter((item) => item.bat_itm_order !== item_id));
+	const handleRemove = async (itm_order, itm_id) => {
+		await axios
+			.delete(API_HOST + 'delete-evaluation-battery/' + itm_id)
+			.then(() => {
+				popupAlert({
+					message: 'Battery was deleted',
+					type: ALERT_ENUM.success,
+				});
+				dispatch(setRefresh());
+			})
+			.catch((err) => {
+				popupAlert({
+					message: err.message,
+					type: ALERT_ENUM.fail,
+				});
+			});
+		setBattery(battery.filter((item) => item.bat_itm_order !== itm_order));
 	};
 	return (
 		<React.Fragment>
@@ -282,7 +297,10 @@ const EvaluationBatteryModal = ({
 									style={{ display: 'flex', flexDirection: 'column' }}
 								>
 									{battery.map(
-										({ bat_itm_order, bat_name, bat_points }, index) => {
+										(
+											{ bat_id, bat_itm_order, bat_name, bat_points },
+											index
+										) => {
 											return (
 												<Draggable
 													key={bat_itm_order}
@@ -336,7 +354,7 @@ const EvaluationBatteryModal = ({
 																	<AiOutlineMinusCircle
 																		onClick={() => {
 																			// dispatch(removeDutyResponsibility(id));
-																			handleRemove(bat_itm_order);
+																			handleRemove(bat_itm_order, bat_id);
 																		}}
 																		style={{ color: 'red', paddingLeft: '5px' }}
 																		className='button-add-remove'

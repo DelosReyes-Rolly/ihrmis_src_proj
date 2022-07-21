@@ -28,6 +28,8 @@ const RecruitmentOtherAssessment = ({
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [score, setScore] = useState(0);
 	const [exam, setExam] = useState([]);
+	const [psychScore, setPsychScore] = useState(0);
+	const [psychExam, setPsychExam] = useState([]);
 	const [initials, setInitials] = useState([]);
 	const [validation, setValidation] = useState([]);
 
@@ -37,7 +39,6 @@ const RecruitmentOtherAssessment = ({
 		validationSchema: Yup.object(validation),
 		onSubmit: async (value, { resetForm }) => {
 			value.appID = appID;
-			console.log(Yup.object());
 			// renderBusy(true);
 			await axios
 				.post(API_HOST + 'save-appointment', value)
@@ -65,11 +66,18 @@ const RecruitmentOtherAssessment = ({
 			examScore = examScore + data.score;
 		});
 		setScore(examScore);
-	}, [exam]);
+		let psychExamScore = 0;
+		psychExam.forEach((data) => {
+			psychExamScore = psychExamScore + data.score;
+		});
+		setPsychScore(psychExamScore);
+	}, [exam, psychExam]);
 	useEffect(() => {
 		calculate();
 	}, [calculate]);
+
 	const [examModal, setExamModalToggle] = useToggleHelper(false);
+	const [psychExamModal, setPsychExamModalToggle] = useToggleHelper(false);
 
 	// Appointment
 	const getApplicantData = useCallback(async () => {
@@ -105,7 +113,6 @@ const RecruitmentOtherAssessment = ({
 				assumption: Yup.date().required('This field is required'),
 			});
 		}
-		console.log(applicant);
 	}, [applicant, regular]);
 	useEffect(() => {
 		getApplicantData();
@@ -148,7 +155,7 @@ const RecruitmentOtherAssessment = ({
 								onClick={() => setExamModalToggle(true)}
 								buttonName='Score'
 							/>
-							<b>{score}</b>
+							<b>{!isNaN(score) ? score : ''}</b>
 						</td>
 						<th className=''>
 							<div className='assessments-header'>
@@ -162,12 +169,21 @@ const RecruitmentOtherAssessment = ({
 								</div>
 							</div>
 						</th>
-						<td>Emotional Stability: A</td>
+						<td>
+							{psychExam.map((data, key) => {
+								return (
+									<p key={key}>
+										{data?.title} : {data?.score}
+									</p>
+								);
+							})}
+						</td>
 						<td className='w5'>
 							<ButtonComponent
-								// onClick={() => setTogModal(true)}
+								onClick={() => setPsychExamModalToggle(true)}
 								buttonName='Score'
 							/>
+							<b>{!isNaN(psychScore) ? psychScore : ''}</b>
 						</td>
 					</tr>
 				</tbody>
@@ -175,11 +191,20 @@ const RecruitmentOtherAssessment = ({
 			<BatteryExamModal
 				isDisplay={examModal}
 				onClose={setExamModalToggle}
-				type={''}
+				type={4}
 				sg={sg}
 				appID={appID}
 				exam={exam}
 				setExam={setExam}
+			/>
+			<BatteryExamModal
+				isDisplay={psychExamModal}
+				onClose={setPsychExamModalToggle}
+				type={5}
+				sg={sg}
+				appID={appID}
+				exam={psychExam}
+				setExam={setPsychExam}
 			/>
 			<div className='center-items'>
 				<form onSubmit={form.handleSubmit} onClick={(e) => e.stopPropagation()}>

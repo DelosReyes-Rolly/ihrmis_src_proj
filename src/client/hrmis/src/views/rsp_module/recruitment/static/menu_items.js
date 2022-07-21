@@ -131,7 +131,7 @@ export const recruitmentReportList = [
 	},
 	{
 		id: "RAI",
-		label: "Reports on Appointments Issued",
+		label: "Reports on Appointment Issued",
 		link: "#",
 	},
 	{

@@ -121,4 +121,20 @@ class RecruitmentController extends Controller
     {
         return $this->recruitmentSerivce->saveAppointment($request);
     }
+
+    public function getHRMPSB($appID, $type)
+    {
+        return CommonResource::collection(
+            $this->recruitmentSerivce->getHRMPSB($appID, $type)
+        );
+    }
+
+    public function saveHRMPSB(Request $request)
+    {
+        return $this->recruitmentSerivce->saveHRMPSB($request);
+    }
+    public function saveHRMPSBRemarks(Request $request)
+    {
+        return $this->recruitmentSerivce->saveHRMPSBRemarks($request);
+    }
 }

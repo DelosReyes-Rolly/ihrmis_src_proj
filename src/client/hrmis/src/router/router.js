@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import {
+	Routes,
+	Route,
+	Navigate,
+	useNavigate,
+	useLocation,
+} from 'react-router-dom';
 import {
 	SentEmailConfirmation,
 	SuccessEmailConfirmation,
@@ -39,18 +45,26 @@ import PositionLibrary from '../views/library/postion_page/position_library';
 import RecruitmentComparativeMatrix from '../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix';
 import FormSix from '../views/pds_form/parts/forms/form_six';
 import OnboardingMain from '../views/rsp_module/recruitment/onboarding/onboarding_main';
+import UserAccountsBaseComponent from '../views/library/user_accounts/parts/user_accounts_base_component';
+import HRMPSB from '../views/rsp_module/hrmpsb/hrmpsb_base_component';
+import HRMPSBpositions from '../views/rsp_module/hrmpsb/parts/hrmpsb_open_positions';
+import HRMPSBDetails from '../views/rsp_module/hrmpsb/parts/hrmpsb_details';
+import HRMPSBEvaluation from '../views/rsp_module/hrmpsb/parts/hrmpsb_evaluation';
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
 	const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
 	const isFail = useSelector((state) => state.popupResponse.isFail);
 	const navigate = useNavigate();
+	const location = useLocation();
+	useEffect(() => {
+		// if (window.sessionStorage.getItem('token') == null) navigate('/');
+		if (window.sessionStorage.getItem('user_level') === '3') {
+			// navigate('/hrmpsb');
+		}
 
-	// useEffect(() => {
-	// 	if (window.sessionStorage.getItem('token') == null) navigate('/');
-
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location]);
 
 	return (
 		<React.Fragment>
@@ -224,6 +238,21 @@ const MainRouter = () => {
 						path='/library/service-history'
 						element={<HistoryServiceLibrary />}
 					/>
+					<Route
+						path='/library/user-accounts'
+						element={<UserAccountsBaseComponent />}
+					/>
+				</Route>
+				<Route path='/hrmpsb' element={<HRMPSB />}>
+					<Route path='/hrmpsb/' element={<HRMPSBpositions />}></Route>
+					<Route
+						path='/hrmpsb/details/:item'
+						element={<HRMPSBDetails />}
+					></Route>
+					<Route
+						path='/hrmpsb/evaluation/:item/:item2'
+						element={<HRMPSBEvaluation />}
+					></Route>
 				</Route>
 				{/* ===========================================
              404 PAGE: WHEN ROUTES AREN'T DEFINE

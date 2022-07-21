@@ -106,6 +106,11 @@ export const SidebarOption = [
 				title: 'Service History',
 				link: '/library/service-history',
 			},
+			{
+				id: 8,
+				title: 'User Accounts',
+				link: '/library/user-accounts',
+			},
 		],
 		link: '/library',
 	},

@@ -121,3 +121,17 @@ export const libraryDocumentRequirementsBreadCrumbs = [
     link: "#",
   },
 ];
+export const libraryUserAcouuntsBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "User Accounts",
+    link: "#",
+  },
+];

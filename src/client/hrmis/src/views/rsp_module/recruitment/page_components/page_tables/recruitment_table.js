@@ -1,4 +1,4 @@
-import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
+import { BsArrowDown, BsArrowDownUp, BsArrowUp } from 'react-icons/bs';
 import { MdAdd, MdMoreHoriz } from 'react-icons/md';
 import axios from 'axios';
 import {
@@ -325,10 +325,10 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 													<BsArrowUp />
 												)
 											) : (
-												''
+												<BsArrowDownUp style={{ opacity: '60%' }} />
 											)}
 										</span>
-										{column.render('Header')}
+										&nbsp;{column.render('Header')}
 									</th>
 								))}
 							</tr>
