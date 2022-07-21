@@ -1,28 +1,28 @@
 .plantilla-view {
-  .three-idiot {
-    padding: 10px 20px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-  }
+	.three-idiot {
+		padding: 20px 20px;
+		display: flex;
+		justify-content: flex-end;
+		gap: 20px;
+	}
 }
 
 .vacant-position-filter {
-  margin: 0px 20px;
+	margin: 0px 20px;
 }
 
 .dropdown-three-dots {
-  background-color: transparent;
-  border: none;
-  color: map-get($primaryColor, regular);
+	background-color: transparent;
+	border: none;
+	color: map-get($primaryColor, regular);
 }
 
 .dropdown-three-dots:hover {
-  color: map-get($blackColor, regular);
+	color: map-get($blackColor, regular);
 }
 
 @media only screen and (max-width: 800px) {
-  .three-idiot {
-    padding-right: 10px;
-  }
+	.three-idiot {
+		padding-right: 10px;
+	}
 }

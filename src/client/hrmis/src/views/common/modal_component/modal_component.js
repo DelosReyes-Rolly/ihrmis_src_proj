@@ -1,29 +1,57 @@
 import React from "react";
 import { MdClose } from "react-icons/md";
-import ButtonComponent from "../button_component/button_component.js.js";
+import ButtonComponent from "../button_component/button_component.js";
 import { CSSTransition } from "react-transition-group";
+import { CgMaximizeAlt } from "react-icons/cg";
 
 const ModalComponent = (props) => {
+  const buttonAlignment = {
+    padding: "0px",
+    margin: "0px",
+    background: "whitesmoke",
+    border: "none",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
   const modalViewFunction = () => {
     return (
       <React.Fragment>
         <div className="modal-component-div" onClick={props.onClose}>
           {props.addElement}
-          <form onSubmit={props.onSubmit} onClick={(e) => e.stopPropagation()}>
+          <form
+            style={props.fullScreen ? { maxWidth: "98%" } : {}}
+            onSubmit={props.onSubmit}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mcf-header">
               <h3>{props.title}</h3>
-              <button
-                type="button"
-                onClick={props.onClose}
+
+              <div
                 style={{
-                  padding: "0px",
-                  margin: "0px",
-                  background: "whitesmoke",
-                  border: "none",
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "15px",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <MdClose size="20px" />
-              </button>
+                <button
+                  type="button"
+                  onClick={props.onMaxView}
+                  style={buttonAlignment}
+                >
+                  <CgMaximizeAlt size="17px" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={props.onClose}
+                  style={buttonAlignment}
+                >
+                  <MdClose size="20px" />
+                </button>
+              </div>
             </div>
             <hr style={{ border: "1px solid rgba(70, 70, 70, 0.1)" }} />
             <div className="mcf-body">{props.children}</div>

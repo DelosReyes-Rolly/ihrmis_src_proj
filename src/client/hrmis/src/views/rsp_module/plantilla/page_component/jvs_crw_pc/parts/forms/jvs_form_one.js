@@ -71,8 +71,8 @@ const JvsFormOne = () => {
       .get(API_HOST + "jvscrw/" + item)
       .then((res) => {
         dispatch(setPlantilla(res.data.data));
-        dispatch(setPosition(res.data.data?.position));
-        dispatch(setOffice(res.data.data?.office));
+        dispatch(setPosition(res.data?.data?.position));
+        dispatch(setOffice(res.data?.data.office));
 
         const cscQualification = res.data?.data.position.csc_standards;
 
@@ -88,9 +88,7 @@ const JvsFormOne = () => {
           }
         });
       })
-      .catch((err) => {
-        console.log(err.message);
-      });
+      .catch((err) => console.log(err.message));
     // dispatch(setBusy(false));
   };
 
@@ -300,7 +298,7 @@ const JvsFormOne = () => {
         >
           <img src={dostLogo} width="50px" height="50px" alt="dost-logo" />
           <h3>Department of Science and Technology</h3>
-          <p>General Santos Avenue, Bicutan Taguig City</p> <br />
+          <p>General Santos Avenue, Bicutan, Taguig City</p> <br />
           <h2>JOB VACANCY SPECIFICATION & CRITERIA RATING FORM</h2>
         </div>
       </div>
@@ -375,10 +373,11 @@ const JvsFormOne = () => {
             </tr>
             <tr>
               <td className="row-percent-50" colSpan="2">
+                {office.ofc_head_ofc && <p>{office?.ofc_head_ofc},</p>}
                 {office?.ofc_name}
               </td>
               <td className="row-percent-50" colSpan="2">
-                {plantilla_item?.agency}
+                {office?.ofc_name}
               </td>
             </tr>
             {/* THIRD HEADER  */}
@@ -392,7 +391,7 @@ const JvsFormOne = () => {
             </tr>
             <tr>
               <td className="row-percent-50" colSpan="2">
-                {plantilla_item?.report_to}
+                {office?.ofc_head}
               </td>
               <td className="row-percent-50" colSpan="2">
                 {position?.salary_grade}
@@ -468,10 +467,7 @@ const JvsFormOne = () => {
       <div style={{ marginBottom: "5px" }}>
         <TextAreaComponent
           value={minimum_req}
-          onChange={(e) => {
-            dispatch(setMinimumRequirement(e.target.value));
-            console.log(minimum_req);
-          }}
+          onChange={(e) => dispatch(setMinimumRequirement(e.target.value))}
           row="2"
         />
       </div>

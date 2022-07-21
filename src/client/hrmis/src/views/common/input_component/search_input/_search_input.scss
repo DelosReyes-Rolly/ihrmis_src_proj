@@ -1,22 +1,38 @@
-.input-div{
-    margin:  auto;
+.input-div {
+	width: 100%;
+	display: flex;
+
+	.custom-input {
+		// height: 10px 20px;
+		width: 100%;
+		box-sizing: border-box;
+		font-size: 15px;
+		color: map-get($blackColor, 400);
+		padding: 6px;
+		border: 1px solid map-get($primaryColor, 400);
+		border-right: none;
+		border-radius: 5px 0px 0px 5px;
+	}
+
+	.custom-input:focus {
+		border-right: none;
+		outline: none;
+		color: map-get($blackColor, regular);
+	}
+
+	button {
+		cursor: text;
+		color: map-get($primaryColor, regular);
+		padding: 0px 10px;
+		border: 1px solid map-get($primaryColor, 400);
+		border-left: none;
+		border-radius: 0px 5px 5px 0px;
+		background-color: white;
+		padding: 6px;
+	}
+
+	button:focus {
+		border-left: none;
+		outline: none;
+	}
 }
-
-.custom-input{
-    height: 10px 20px;
-    padding: 6px;
-    font-size: 15;
-    width: 100%;
-    box-sizing: border-box;
-    color: rgba(70, 70, 70, .9);
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid rgba(70, 70, 70, 0.2);
-}
-
-.custom-input:focus{
-    outline: rgba(70, 70, 70, 0.5);
-    border: 1px solid rgba(70, 70, 70, 0.5);
-}
-
-

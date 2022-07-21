@@ -1,135 +1,143 @@
 .plantilla-view {
-  padding: 0px 0px 30px 0px;
+	padding: 0px 0px 30px 0px;
 }
 .tab-button {
-  padding: 20px 20px;
+	padding: 20px 20px;
 }
 /* TABS STARTS HERE  */
 .tab-tap {
-  background-color: whitesmoke;
-  color: rgba(70, 70, 70, 0.6);
-  border: none;
-  padding-bottom: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  position: relative;
-  overflow: hidden;
-  border-bottom: 3px solid transparent;
+	background-color: whitesmoke;
+	color: rgba(70, 70, 70, 0.6);
+	border: none;
+	padding-bottom: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	position: relative;
+	overflow: hidden;
+	border-bottom: 3px solid transparent;
 }
 
 .tab-tap:hover {
-  float: inline-end;
-  transition: 0.3s;
-  color: #1da1f2;
-  border-bottom: 3px solid #1da1f2;
-  z-index: 1;
+	float: inline-end;
+	transition: 0.3s;
+	color: #1da1f2;
+	border-bottom: 3px solid #1da1f2;
+	z-index: 1;
 }
 
 .tab-tap-activate {
-  float: inline-end;
-  transition: 0.3s;
-  color: #1da1f2;
-  border-bottom: 3px solid #1da1f2;
-  z-index: 1;
+	float: inline-end;
+	transition: 0.3s;
+	color: #1da1f2;
+	border-bottom: 3px solid #1da1f2;
+	z-index: 1;
 }
 
 hr.solid {
-  top: -2px;
-  position: relative;
-  border-top: 1px solid #bbbbbb77;
-  z-index: 0;
+	top: -2px;
+	position: relative;
+	border-top: 1px solid #bbbbbb77;
+	z-index: 0;
 }
 
 .tab-badge-add-style {
-  position: relative;
-  top: -6px;
-  left: 3px;
+	position: relative;
+	top: -6px;
+	left: 3px;
 }
 
 /* SELECTOR STARTS HERE  */
 
 .selector-buttons {
-  padding: 0px 30px;
-  display: flex;
-  justify-content: space-between !important;
-  align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	width: 100%;
+	flex-direction: row;
+	justify-content: space-between !important;
+	align-items: center;
 }
 
 .selector-container {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
 }
 
 .selector-span-1 button span {
-  margin-left: 5px;
+	margin-left: 5px;
 }
 
 .selector-span-1 select {
-  padding: 5px 10px;
-  font-weight: 600;
-  border-radius: 4px;
-  color: map-get($primaryColor, regular);
-  border: 2px solid map-get($primaryColor, regular);
-  overflow: hidden;
-  background-color: white;
+	padding: 5px 10px;
+	font-weight: 600;
+	border-radius: 4px;
+	color: map-get($primaryColor, regular);
+	border: 2px solid map-get($primaryColor, regular);
+	overflow: hidden;
+	background-color: white;
 }
 
 .selector-span-1 select:focus {
-  padding: 5px 10px;
-  font-weight: 600;
-  border-radius: 4px;
-  color: map-get($primaryColor, regular);
-  border: 2px solid map-get($primaryColor, regular);
-  overflow: hidden;
-  background-color: whitesmoke;
+	padding: 5px 10px;
+	font-weight: 600;
+	border-radius: 4px;
+	color: map-get($primaryColor, regular);
+	border: 2px solid map-get($primaryColor, regular);
+	overflow: hidden;
+	background-color: whitesmoke;
 }
 
 .selector-span-1 select:hover {
-  transition: 0.3s;
-  background-color: whitesmoke;
+	transition: 0.3s;
+	background-color: whitesmoke;
 }
 
 .selector-search-label {
-  color: rgba(70, 70, 70, 0.8);
-  font-size: 14px;
+	color: rgba(70, 70, 70, 0.8);
+	font-size: 14px;
 }
 
 .search-container {
-  display: flex;
-  align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	width: 100%;
 }
 
 /* SECOND TAB DISPLAY STARTS HERE  */
 
 .show-none {
-  display: none;
-  align-items: center;
+	display: none;
+	align-items: center;
 }
 
 .current-tab {
-  display: block;
+	display: block;
 }
 
 .non-regular {
-  margin: 20px;
+	margin: 20px;
+}
+
+.width-300 {
+	width: 300px;
 }
 
 @media only screen and (max-width: 800px) {
-  .selector-buttons {
-    flex-direction: column;
-    justify-content: flex-start !important;
-    align-items: flex-start !important;
-    padding: 0px 20px;
-  }
+	.selector-buttons {
+		flex-direction: column;
+		justify-content: flex-start !important;
+		align-items: flex-start !important;
+		padding: 0px 20px;
+	}
 
-  .selector-search-label {
-    display: none;
-  }
+	.selector-search-label {
+		display: none;
+	}
 
-  .search-container {
-    display: block;
-    margin: 0px;
-    width: 100% !important;
-  }
+	.search-container {
+		display: block;
+		margin: 0px;
+		width: 100% !important;
+	}
 }

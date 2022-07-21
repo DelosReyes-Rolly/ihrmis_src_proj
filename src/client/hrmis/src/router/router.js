@@ -44,12 +44,13 @@ import EvaluationBatteryBaseComponent from '../views/library/evaluation_battery/
 import PositionLibrary from '../views/library/postion_page/position_library';
 import RecruitmentComparativeMatrix from '../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix';
 import FormSix from '../views/pds_form/parts/forms/form_six';
-import OnboardingMain from '../views/rsp_module/recruitment/onboarding/onboarding_main';
 import UserAccountsBaseComponent from '../views/library/user_accounts/parts/user_accounts_base_component';
 import HRMPSB from '../views/rsp_module/hrmpsb/hrmpsb_base_component';
 import HRMPSBpositions from '../views/rsp_module/hrmpsb/parts/hrmpsb_open_positions';
 import HRMPSBDetails from '../views/rsp_module/hrmpsb/parts/hrmpsb_details';
 import HRMPSBEvaluation from '../views/rsp_module/hrmpsb/parts/hrmpsb_evaluation';
+import OnboardingMain from '../views/rsp_module/recruitment/onboarding/onboarding_main';
+import CalendarView from '../views/rsp_module/calendar/calendar_view';
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -74,15 +75,17 @@ const MainRouter = () => {
 
 			<Routes>
 				{/* ===========================================
-             AUTHENTICATION ROUTE IS DEFINED HERE
-            ===========================================
-        */}
+				AUTHENTICATION ROUTE IS DEFINED HERE
+				===========================================
+				*/}
+
 				<Route exact path='/' element={<LoginView />} />
 
 				{/* ===========================================
-             RSP MODULE ROUTES ARE DEFINED HERE
-            ===========================================
-        */}
+					RSP MODULE ROUTES ARE DEFINED HERE
+					===========================================
+				*/}
+
 				<Route exact path='/rsp' element={<MainPageLayout />}>
 					{/* RSP MODULE ROUTES */}
 					<Route index element={<Navigate to='/rsp/dashboard' />} />
@@ -155,11 +158,13 @@ const MainRouter = () => {
 					<Route path='/rsp/request' element={<RequestView />} />
 
 					<Route path='/rsp/compensation' element={<CompensationView />} />
+
+					<Route path='/rsp/calendar' element={<CalendarView />} />
 				</Route>
-				{/* ===========================================
-             PDS ROUTES ARE DEFINED HERE
-            ===========================================
-        */}
+				{/* 	===========================================
+					PDS ROUTES ARE DEFINED HERE
+																																																																																																																																																																																																																																		===========================================
+				*/}
 				<Route path='/applicant/:position' element={<FormPageOne />}></Route>
 				<Route path='/pds-applicant'>
 					<Route path='/pds-applicant'>
@@ -168,6 +173,7 @@ const MainRouter = () => {
 							path='/pds-applicant/form-page-one/:item'
 							element={<FormPageOne />}
 						/>
+
 						<Route exact path='/pds-applicant/' element={<FormPageOne />} />
 					</Route>
 
@@ -206,15 +212,17 @@ const MainRouter = () => {
 						element={<SuccessEmailConfirmation />}
 					/>
 				</Route>
+
 				{/* ===========================================
-             JVS ROUTE IS DEFINED HERE
-            ===========================================
-        */}
+				JVS ROUTE IS DEFINED HERE
+				===========================================
+				*/}
+
 				<Route path='/jvs-crw/:item' element={<JvscrsForm />} />
 				{/* ===========================================
-             LIBRARY ROUTES ARE DEFINED HERE
-            ===========================================
-        */}
+						LIBRARY ROUTES ARE DEFINED HERE
+						===========================================
+					*/}
 				<Route path='/library' element={<MainPageLayout />}>
 					<Route index element={<Navigate to='/library/office/' />} />
 					<Route path='/library/office/' element={<LibraryOfficeView />} />
@@ -238,10 +246,6 @@ const MainRouter = () => {
 						path='/library/service-history'
 						element={<HistoryServiceLibrary />}
 					/>
-					<Route
-						path='/library/user-accounts'
-						element={<UserAccountsBaseComponent />}
-					/>
 				</Route>
 				<Route path='/hrmpsb' element={<HRMPSB />}>
 					<Route path='/hrmpsb/' element={<HRMPSBpositions />}></Route>
@@ -255,9 +259,9 @@ const MainRouter = () => {
 					></Route>
 				</Route>
 				{/* ===========================================
-             404 PAGE: WHEN ROUTES AREN'T DEFINE
-            ===========================================
-        */}
+             		404 PAGE: WHEN ROUTES AREN'T DEFINE
+            		===========================================
+				*/}
 				<Route
 					path='*'
 					element={

@@ -1,7 +1,7 @@
 import React from 'react';
 import masthead from '../../assets/images/masthead.png';
 import InputComponent from '../common/input_component/input_component/input_component';
-import ButtonComponent from '../common/button_component/button_component.js.js';
+import ButtonComponent from '../common/button_component/button_component.js';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';

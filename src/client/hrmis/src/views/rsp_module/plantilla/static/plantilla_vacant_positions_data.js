@@ -1,6 +1,6 @@
 import {
 	printVacantPositions,
-	printNoticeOFVacany,
+	printNoticeOfVacancy,
 } from "../../../../router/outside_routes";
 
 /**
@@ -44,7 +44,10 @@ export const tableHeaderColumnName = [
 		Header: "Agency Email",
 		accessor: "agn_head_email",
 	},
-	,
+	{
+		Header: "Is Notify",
+		accessor: "is_notify",
+	},
 ];
 
 //Initialized or assigned menu items and links
@@ -74,7 +77,7 @@ export const plantillaItemsVacantPosMenuItems = [
 export const plantillaItemsReportsMenuItems = [
 	{
 		id: 1,
-		label: "Memo on Posting of Vacancy",
+		label: "Memo on Posting of Posting of Announcement of Vacancy",
 		link: "#",
 	},
 	{
@@ -85,7 +88,7 @@ export const plantillaItemsReportsMenuItems = [
 	{
 		id: 3,
 		label: "Notice of Vacancy",
-		link: printNoticeOFVacany,
+		link: printNoticeOfVacancy,
 	},
 ];
 

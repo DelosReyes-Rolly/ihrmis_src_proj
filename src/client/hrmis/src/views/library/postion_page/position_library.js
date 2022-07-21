@@ -62,7 +62,7 @@ const TableDisplay = () => {
       },
       {
         Header: "SG",
-        accessor: "education",
+        accessor: "pos_salary_grade",
       },
       {
         Header: "Experience",
@@ -93,6 +93,7 @@ const TableDisplay = () => {
   return (
     <React.Fragment>
       <ActualTable columns={columns} data={data} />
+      <div style={{ height: "50px" }}></div>
     </React.Fragment>
   );
 };
@@ -167,6 +168,15 @@ const ActualTable = ({ columns, data }) => {
           })}
         </tbody>
       </table>
+      <p
+        style={{
+          fontSize: "small",
+          color: "rgba(70, 70, 70, 0.6)",
+          marginTop: "10px",
+        }}
+      >
+        Total of {rows.length} entries
+      </p>
     </div>
   );
 };

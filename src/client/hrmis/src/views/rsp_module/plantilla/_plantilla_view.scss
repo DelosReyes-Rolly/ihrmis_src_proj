@@ -27,6 +27,68 @@
   .item-modal-5 {
     width: 100%;
   }
+
+  .source-fund-label {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    .icon-button-clickable {
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      color: map-get($primaryColor, 600);
+      transition: 200ms;
+    }
+    .icon-button-clickable:hover {
+      color: map-get($primaryColor, regular);
+    }
+
+    .icon-button-clickable:active {
+      transform: translate(0px, 1px);
+    }
+  }
+}
+
+.div-dty-res-percent-inp {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+
+  flex-direction: row;
+  margin-top: 3px;
+  input {
+    padding: 0 8px;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    border-radius: 5px 0px 0px 5px;
+    border: 1px solid #55555555;
+    outline: none;
+    color: #55555599;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  input:focus {
+    transition: 200ms;
+    border: 1px solid #55555599;
+    color: black;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    padding: 6px 8px;
+    border-radius: 0px 5px 5px 0px;
+    color: #212529;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e6e6e6;
+    border: 1px solid #55555555;
+  }
 }
 
 .next-rank-modal-container {

@@ -13,7 +13,7 @@ import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
 import { API_HOST } from '../../../../../helpers/global/global_config';
 import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
 import { useToggleHelper } from '../../../../../helpers/use_hooks/toggle_helper';
-import ButtonComponent from '../../../../common/button_component/button_component.js.js';
+import ButtonComponent from '../../../../common/button_component/button_component.js';
 import IconComponent from '../../../../common/icon_component/icon';
 import RecruitmentDocumentModal from '../../page_components/page_modals/recruitment_document_modal/recruitment_document_modal';
 import {
@@ -50,14 +50,14 @@ const RecruitmentRatingAssessment = ({
 		total: 0,
 	});
 	const urlpath = window.location.pathname;
-	const route = urlpath.split('/');
+	const route = urlpath.split("/");
 	const plantilla_id = route[5];
 	const app_route = route[6];
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const getCMData = useCallback(async () => {
 		setBusy(true);
 		await axios
-			.get(API_HOST + 'get-ra-data/' + plantilla_id + '/' + applicant_id)
+			.get(API_HOST + "get-ra-data/" + plantilla_id + "/" + applicant_id)
 			.then((response) => {
 				let data = response.data?.data[0] ?? [];
 				let eligibilites = eligibilityToMessage(data.tblapplicant_eligibility);
@@ -113,13 +113,13 @@ const RecruitmentRatingAssessment = ({
 					app_id: data?.tblapplicants_profile?.app_id,
 					applicant_name:
 						data?.tblapplicants_profile?.app_nm_last +
-						' ' +
+						" " +
 						data?.tblapplicants_profile?.app_nm_first +
-						' ' +
+						" " +
 						data?.tblapplicants_profile?.app_nm_mid +
-						' (' +
+						" (" +
 						data?.tblapplicants_profile?.app_sex +
-						')',
+						")",
 					elig: eligibilites,
 					edu: education,
 					edu_score: data?.tbl_assessments?.ass_education,
@@ -160,7 +160,7 @@ const RecruitmentRatingAssessment = ({
 	}, [getCMData, refresh]);
 
 	// ============== Educ, Training, EXP Modal ==================
-	const [assessmentType, setAssessmentType] = useState('');
+	const [assessmentType, setAssessmentType] = useState("");
 	const [modalToggle, setModalToggle] = useToggleHelper(false);
 	const [competencyModal, setCompetencyModalToggle] = useToggleHelper(false);
 	const [score, setScore] = useState(0);
@@ -185,109 +185,109 @@ const RecruitmentRatingAssessment = ({
 	};
 	return (
 		<>
-			<div className='default-table document_table'>
-				<table className='table-design comparative-matrix'>
+			<div className="default-table document_table">
+				<table className="table-design comparative-matrix">
 					<thead>
-						<tr className='no-border'>
-							<th className='w5'>
+						<tr className="no-border">
+							<th className="w5">
 								<IconComponent
-									id='ra_back'
-									className=''
-									icon={<BsArrowLeft size='25' />}
-									toolTipId='ra_back_tooltip'
+									id="ra_back"
+									className=""
+									icon={<BsArrowLeft size="25" />}
+									toolTipId="ra_back_tooltip"
 									onClick={() => {
 										if (app_route !== undefined) {
-											navigate('/rsp/recruitment');
+											navigate("/rsp/recruitment");
 										}
-										setPageType('');
+										setPageType("");
 									}}
-									textHelper={'Go Back'}
+									textHelper={"Go Back"}
 								/>
 							</th>
-							<th className='main-header' colSpan={4}>
+							<th className="main-header" colSpan={4}>
 								RATINGS AND ASSESSMENT
 							</th>
-							<th className='w5'>
+							<th className="w5">
 								<IconComponent
-									id='ra_refresh'
-									className=''
-									icon={<IoRefreshCircle size='30' />}
-									toolTipId='ra_refresh_tooltip'
+									id="ra_refresh"
+									className=""
+									icon={<IoRefreshCircle size="30" />}
+									toolTipId="ra_refresh_tooltip"
 									onClick={() => dispatch(setRefresh())}
-									textHelper={'Reload'}
+									textHelper={"Reload"}
 								/>
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<th className=''>Name of Applicant</th>
-							<td style={{ width: '35%' }}>{applicant?.applicant_name}</td>
-							<td className='w5'>
+							<th className="">Name of Applicant</th>
+							<td style={{ width: "35%" }}>{applicant?.applicant_name}</td>
+							<td className="w5">
 								<IconComponent
-									id='ra_pds'
-									className=''
-									icon={<IoInformationCircle size='30' />}
-									toolTipId='ra_pds_tooltip'
+									id="ra_pds"
+									className=""
+									icon={<IoInformationCircle size="30" />}
+									toolTipId="ra_pds_tooltip"
 									// TODO: Connect Sean Employee PDS to this button,
 									// need to create
-									onClick={() => console.log('view_pds')}
-									textHelper={'View PDS'}
+									onClick={() => console.log("view_pds")}
+									textHelper={"View PDS"}
 								/>
 							</td>
-							<th className=''>Eligibility</th>
+							<th className="">Eligibility</th>
 							<td colSpan={2}>{applicant?.elig}</td>
 						</tr>
 						<tr>
-							<th className=''>Education (10%)</th>
+							<th className="">Education (10%)</th>
 							<td>{applicant?.edu}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(0, applicant?.edu_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.edu_score}</b>
 							</td>
-							<th className=''>Relevant Trainings (10%)</th>
-							<td style={{ width: '35%' }}>{applicant?.trn}</td>
-							<td className='center'>
+							<th className="">Relevant Trainings (10%)</th>
+							<td style={{ width: "35%" }}>{applicant?.trn}</td>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(1, applicant?.trn_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.trn_score}</b>
 							</td>
 						</tr>
 						<tr>
-							<th className=''>Relevant Experience (15%)</th>
+							<th className="">Relevant Experience (15%)</th>
 							<td>{applicant?.exp}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setAssessmentModalDetails(2, applicant?.exp_score);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.exp_score}</b>
 							</td>
-							<th className=''>
-								<div className='assessments-header'>
+							<th className="">
+								<div className="assessments-header">
 									Job Competency (30%)
 									<div>
 										<ButtonComponent
 											buttonLogoStart={<FiPaperclip />}
 											onClick={() => setAttachmentModalDetails(3)}
-											buttonName='Attach'
+											buttonName="Attach"
 										/>
 									</div>
 								</div>
 							</th>
 							<td>{applicant?.cmptncy}</td>
-							<td className='center'>
+							<td className="center">
 								<ButtonComponent
 									onClick={() => {
 										setCompetencyAssessmentModalDetails(
@@ -295,14 +295,14 @@ const RecruitmentRatingAssessment = ({
 											applicant?.cmptncyScore
 										);
 									}}
-									buttonName='Score'
+									buttonName="Score"
 								/>
 								<b>{applicant?.cmptncyScore}</b>
 							</td>
 						</tr>
 						<tr>
-							<th className=' assessments-header'>Sub-total</th>
-							<th className='' colSpan={5}>
+							<th className=" assessments-header">Sub-total</th>
+							<th className="" colSpan={5}>
 								{applicant?.subtotal}
 							</th>
 						</tr>
@@ -343,9 +343,9 @@ const RecruitmentRatingAssessment = ({
 				isDisplay={attachmentsModal}
 				onClose={setAttachmentsModalToggle}
 				appID={applicant_id}
-				title={'Attachments'}
+				title={"Attachments"}
 				level={level ?? 3}
-				cluster='RP'
+				cluster="RP"
 			/>
 		</>
 	);

@@ -23,6 +23,7 @@ import {
 	ALERT_ENUM,
 	popupAlert,
 } from "../../../../../../helpers/alert_response";
+import { setRefresh } from "../../../../../../features/reducers/popup_response";
 
 export const EMAIL_ENUM = {
 	regular: "regular",
@@ -93,9 +94,9 @@ const PlantillaVpEmailModal = ({
 	const emailFormik = useFormik({
 		enableReinitialize: true,
 		initialValues: {
-			recepient: "",
+			recepient: email_recepients,
 			message_type: 1,
-			message: "",
+			message: selectedMsg,
 			sender: senderDefault,
 			image_upload: "",
 			deadline: "",
@@ -118,6 +119,7 @@ const PlantillaVpEmailModal = ({
 			formData.append("message_type", value.message_type);
 			formData.append("message", value.message);
 			formData.append("sender", value.sender);
+			formData.append("itm_id", emailtemplate_data?.itm_id);
 
 			if (type === EMAIL_ENUM.next_rank) {
 				formData.append("deadline", value.deadline);
@@ -132,29 +134,35 @@ const PlantillaVpEmailModal = ({
 				.post(endpoint ?? API_HOST + "notify-vacant-office", formData, {
 					headers: { "Content-Type": "multipart/form-data" },
 				})
-				.then(() => {
-					dispatch(setEmailRecepients([]));
-					dispatch(setVcEmailTemplateData(null));
-					setSelectedMsg("");
-					resetForm();
-					popupAlert({
-						message: "Email was sent successfully",
-					});
-					onClose();
+				.then((res) => {
+					let response = res.data;
+					console.log(response);
+					if (response.message.includes("Error")) {
+						popupAlert({
+							message: "Error, email not sent. Please try again.",
+							type: ALERT_ENUM.fail,
+						});
+					} else {
+						dispatch(setEmailRecepients([]));
+						dispatch(setVcEmailTemplateData(null));
+						setSelectedMsg("");
+						resetForm();
+						popupAlert({
+							message: "Email was sent successfully.",
+						});
+						dispatch(setRefresh());
+						onClose();
+					}
 				})
 				.catch((err) => {
 					popupAlert({
-						message: err.response.date.message,
+						message: err.response.message,
 						type: ALERT_ENUM.fail,
 					});
 				});
 			renderBusy(false);
 		},
 	});
-
-	useEffect(() => {
-		emailFormik.setFieldValue("recepient", email_recepients);
-	}, [email_recepients]);
 
 	useLayoutEffect(() => {
 		getMessageType();
@@ -201,8 +209,8 @@ const PlantillaVpEmailModal = ({
 						itemList={mType}
 						value={emailFormik.values.message_type}
 						onChange={(e) => {
-							emailFormik.handleChange(e);
 							selectedType(e.target.value);
+							emailFormik.handleChange(e);
 						}}
 						defaultTitle="Subject"
 					/>
@@ -268,7 +276,7 @@ const PlantillaVpEmailModal = ({
 					<UploadAttachmentComponent
 						name="image_upload"
 						formik={emailFormik}
-						accept="image/png, image/jpeg"
+						accept="image/png, image/jpeg,application/pdf"
 						isMulti={true}
 						onChange={(e) => {
 							const files = Array.prototype.slice.call(e.target.files);

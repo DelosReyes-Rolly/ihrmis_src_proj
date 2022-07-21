@@ -1,12 +1,12 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { SyncLoader } from "react-spinners";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import ModalComponent from "../../../../common/modal_component/modal_component";
-import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
-import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
+// import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
+// import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
 import { API_HOST } from "../../../../../helpers/global/global_config";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { noticeOfVacancyTemplate } from "./notice_vacancy_template";
 import TinyMceEditorComponent from "../../../../common/tinymce/tinymce_component";
 
@@ -19,10 +19,10 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 	const [axiosCall] = useAxiosCallHelper();
 
 	const getPlantillaItemDetails = async () => {
-		axiosCall("get", API_HOST + "getPlantillaItemDetails/").then(
+		axiosCall("get", API_HOST + "getPlantillaItemDetails").then(
 			(response) => {
-				//	console.log(response.data.data);
 				setPlantillaItems(response.data.data);
+				console.log(response.data);
 			},
 			(error) => {
 				console.log(error);
@@ -30,7 +30,7 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 		);
 	};
 
-	useLayoutEffect(() => {
+	useMemo(() => {
 		getPlantillaItemDetails();
 	}, [isDisplay]);
 
@@ -69,6 +69,7 @@ const PostingOnJobVacancyModal = ({ isDisplay, onClose }) => {
 			>
 				<div className="posting-job-vacancy-main">
 					{plantilla_items?.map((data, index) => {
+						// console.log(data);
 						return (
 							<React.Fragment key={index}>
 								{index === page ? (
@@ -146,7 +147,8 @@ const EditableContentTemplate = ({
 				setFieldValue={(val) => {
 					onChangeHandler(val, true);
 				}}
-				value={itemData?.content}
+				initialValue={itemData?.content}
+				// value={itemData?.content}
 				// value={}
 				// toolbar={{
 				// 	options: [
@@ -198,7 +200,7 @@ const EditableContentTemplate = ({
 				<InputComponent
 					className="margin-left"
 					type="date"
-					value={itemData?.date}
+					value={itemData?.deadline ?? ""}
 					onChange={(e) => onChangeHandler(e.target.value, false)}
 				/>
 			</div>
