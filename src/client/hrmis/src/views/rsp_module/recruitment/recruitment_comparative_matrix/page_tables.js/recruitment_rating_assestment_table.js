@@ -1,21 +1,21 @@
-import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
-import { BsArrowLeft } from 'react-icons/bs';
-import { FiPaperclip } from 'react-icons/fi';
-import { IoInformationCircle, IoRefreshCircle } from 'react-icons/io5';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import React, { useCallback, useEffect, useState } from "react";
+import { BsArrowLeft } from "react-icons/bs";
+import { FiPaperclip } from "react-icons/fi";
+import { IoInformationCircle, IoRefreshCircle } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
 	setBusy,
 	setRefresh,
-} from '../../../../../features/reducers/popup_response';
-import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
-import { API_HOST } from '../../../../../helpers/global/global_config';
-import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
-import { useToggleHelper } from '../../../../../helpers/use_hooks/toggle_helper';
-import ButtonComponent from '../../../../common/button_component/button_component.js';
-import IconComponent from '../../../../common/icon_component/icon';
-import RecruitmentDocumentModal from '../../page_components/page_modals/recruitment_document_modal/recruitment_document_modal';
+} from "../../../../../features/reducers/popup_response";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { API_HOST } from "../../../../../helpers/global/global_config";
+import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
+import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper";
+import ButtonComponent from "../../../../common/button_component/button_component.js";
+import IconComponent from "../../../../common/icon_component/icon";
+import RecruitmentDocumentModal from "../../page_components/page_modals/recruitment_document_modal/recruitment_document_modal";
 import {
 	competencyScore,
 	competencyToMessage,
@@ -23,11 +23,11 @@ import {
 	eligibilityToMessage,
 	experienceToMessage,
 	trainingToMessage,
-} from '../../static/functions';
-import AssessmentsModal from '../page_modals/assessments_modal';
-import CompetencyAssessmentModal from '../page_modals/competency_assessment_modal';
-import RecruitmentHRMPSB from './recruitment_hrmpsb';
-import RecruitmentOtherAssessment from './recruitment_other_assessment';
+} from "../../static/functions";
+import AssessmentsModal from "../page_modals/assessments_modal";
+import CompetencyAssessmentModal from "../page_modals/competency_assessment_modal";
+import RecruitmentHRMPSB from "./recruitment_hrmpsb";
+import RecruitmentOtherAssessment from "./recruitment_other_assessment";
 
 const RecruitmentRatingAssessment = ({
 	applicant_id,
@@ -40,12 +40,12 @@ const RecruitmentRatingAssessment = ({
 	const [applicant, setApplicant] = useState([]);
 	const [hrmpsbScore, setHrmpsbScore] = useState({
 		1: 0,
-		attRemark: '',
+		attRemark: "",
 		2: 0,
-		accomRemark: '',
+		accomRemark: "",
 		3: 0,
-		perRemark: '',
-		assPSBDate: '',
+		perRemark: "",
+		assPSBDate: "",
 		hrmTotal: 0,
 		total: 0,
 	});
@@ -193,6 +193,7 @@ const RecruitmentRatingAssessment = ({
 								<IconComponent
 									id="ra_back"
 									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<BsArrowLeft size="25" />}
 									toolTipId="ra_back_tooltip"
 									onClick={() => {
@@ -207,10 +208,10 @@ const RecruitmentRatingAssessment = ({
 							<th className="main-header" colSpan={4}>
 								RATINGS AND ASSESSMENT
 							</th>
-							<th className="w5">
+							<th className="w5 center">
 								<IconComponent
 									id="ra_refresh"
-									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<IoRefreshCircle size="30" />}
 									toolTipId="ra_refresh_tooltip"
 									onClick={() => dispatch(setRefresh())}
@@ -226,7 +227,7 @@ const RecruitmentRatingAssessment = ({
 							<td className="w5">
 								<IconComponent
 									id="ra_pds"
-									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<IoInformationCircle size="30" />}
 									toolTipId="ra_pds_tooltip"
 									// TODO: Connect Sean Employee PDS to this button,
