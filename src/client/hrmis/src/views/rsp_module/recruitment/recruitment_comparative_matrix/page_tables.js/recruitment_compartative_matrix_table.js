@@ -16,10 +16,11 @@ import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 import IconComponent from "../../../../common/icon_component/icon";
 import { format } from "date-fns";
 import {
-  recruitmentCMHeaders,
-  recruitmentEligbilities,
-} from "../../static/table_items";
-import InputComponent from "../../../../common/input_component/input_component/input_component";
+	recruitmentCMHeaders,
+	recruitmentEligbilities,
+} from '../../static/table_items';
+import InputComponent from '../../../../common/input_component/input_component/input_component';
+import { competencyScore, competencyToMessage } from '../../static/functions';
 
 const RecruitmentComparativeTable = ({
   setPageType,
@@ -58,52 +59,86 @@ const RecruitmentComparativeTable = ({
       });
   };
 
-  const getCMData = useCallback(async () => {
-    dispatch(setBusy(true));
-    await axios
-      .get(API_HOST + "get-cm-data/" + plantilla_id)
-      .then((response) => {
-        let data = response.data.data.applicants ?? [];
-        let dataPlot = [];
-        let count = 1;
-        data.forEach((data) => {
-          let eligibilites = "";
-          data.tblapplicant_eligibility.forEach((eligibility) => {
-            eligibilites +=
-              " " + recruitmentEligbilities[eligibility.cse_app_title];
-          });
-          let values = {
-            app_id: data?.tblapplicants_profile?.app_id,
-            no: count++,
-            applicant_name:
-              data?.tblapplicants_profile?.app_nm_last +
-              " " +
-              data?.tblapplicants_profile?.app_nm_first +
-              " " +
-              data?.tblapplicants_profile?.app_nm_mid +
-              " (" +
-              data?.tblapplicants_profile?.app_sex +
-              ")",
-            elig: eligibilites,
-            edu: data?.tbl_assessments?.ass_education,
-            exp: data?.tbl_assessments?.ass_experience,
-            trn: data?.tbl_assessments?.ass_training,
-            cmptncy: 0,
-            subtotal:
-              data?.tbl_assessments?.ass_education +
-              data?.tbl_assessments?.ass_experience +
-              data?.tbl_assessments?.ass_training,
-            attrbts: 0,
-            accom: 0,
-            perfor: 0,
-            subtotal2: 0,
-            total: 0,
-          };
-          dataPlot.push(values);
-        });
-        if (!mounted.current) return;
-        setApplicants(dataPlot);
-      });
+	const getCMData = useCallback(async () => {
+		dispatch(setBusy(true));
+		await axios
+			.get(API_HOST + 'get-cm-data/' + plantilla_id)
+			.then((response) => {
+				let data = response.data.data.applicants ?? [];
+				let dataPlot = [];
+				let count = 1;
+				data.forEach((data) => {
+					let eligibilites = '';
+					data.tblapplicant_eligibility.forEach((eligibility) => {
+						eligibilites +=
+							' ' + recruitmentEligbilities[eligibility.cse_app_title];
+					});
+					let competency = competencyToMessage(data?.tblcmptncy_ratings);
+					let cmptncyTotal = competencyScore(data?.tbl_cmptcy_score);
+					let raSubTotal =
+						cmptncyTotal +
+						data?.tbl_assessments?.ass_education +
+						data?.tbl_assessments?.ass_experience +
+						data?.tbl_assessments?.ass_training;
+					let attributesAverage = 0;
+					let commendableAverage = 0;
+					let performanceAverage = 0;
+					let total = 0;
+					let attributeCount = 0;
+					let commendableCount = 0;
+					let performanceCount = 0;
+					data?.tbl_hrmpsb_score.forEach((scores) => {
+						switch (scores.hrmpsb_type) {
+							case 1:
+								attributeCount++;
+								attributesAverage += scores?.hrmpsb_score;
+								break;
+							case 2:
+								commendableCount++;
+								commendableAverage += scores?.hrmpsb_score;
+								break;
+							case 3:
+								performanceCount++;
+								performanceAverage += scores?.hrmpsb_score;
+								break;
+							default:
+								break;
+						}
+					});
+					let attributes = attributesAverage / attributeCount;
+					let commendable = commendableAverage / commendableCount;
+					let performance = performanceAverage / performanceCount;
+					let hrmTotal = attributes + commendable + performance;
+					let actualTotal = hrmTotal + raSubTotal;
+					let values = {
+						app_id: data?.tblapplicants_profile?.app_id,
+						no: count++,
+						applicant_name:
+							data?.tblapplicants_profile?.app_nm_last +
+							' ' +
+							data?.tblapplicants_profile?.app_nm_first +
+							' ' +
+							data?.tblapplicants_profile?.app_nm_mid +
+							' (' +
+							data?.tblapplicants_profile?.app_sex +
+							')',
+						elig: eligibilites,
+						edu: data?.tbl_assessments?.ass_education,
+						exp: data?.tbl_assessments?.ass_experience,
+						trn: data?.tbl_assessments?.ass_training,
+						cmptncy: cmptncyTotal,
+						subtotal: raSubTotal,
+						attrbts: !isNaN(attributes) ? attributes : '',
+						accom: !isNaN(commendable) ? commendable : '',
+						perfor: !isNaN(performance) ? performance : '',
+						subtotal2: !isNaN(hrmTotal) ? hrmTotal : '',
+						total: actualTotal,
+					};
+					dataPlot.push(values);
+				});
+				if (!mounted.current) return;
+				setApplicants(dataPlot);
+			});
 
     dispatch(setBusy(false));
   }, [plantilla_id, dispatch]);

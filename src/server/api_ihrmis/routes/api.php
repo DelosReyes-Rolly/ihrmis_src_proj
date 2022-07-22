@@ -173,6 +173,7 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
+Route::delete('delete-evaluation-battery/{itm_id}',[EvaluationBattery::class, 'deleteSpecific']);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
@@ -180,10 +181,15 @@ Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::cl
 //=======================================================================================
 Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
+Route::get('user-accounts', [AuthController::class, "getUsers"]);
+Route::post('update-user', [AuthController::class, "updateUser"]);
 
 
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
+Route::post('save-hrmpsb-remarks', [RecruitmentController::class, 'saveHRMPSBRemarks']);
+
+
 Route::post('employement-exam', [RecruitmentController::class, 'saveEmploymentExam']);
 
 Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
@@ -195,6 +201,12 @@ Route::get('get-battery-exam/{level}/{sg}/{appID}', [RecruitmentController::clas
 Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-assessment/{appID}', [RecruitmentController::class, "getAssessment"]);
 Route::post('save-appointment', [RecruitmentController::class, "saveAppointment"]);
+Route::get('get-hrmpsb-evaluation/{appID}/{type}', [RecruitmentController::class, "getHRMPSB"]);
+
+
+Route::post('save-hrmpsb-evaluation', [RecruitmentController::class, "saveHRMPSB"]);
+
+
 
 Route::get('getRAIDATA/{month}/{year}', [RecruitmentController::class, "getRAIDATA"]);
 
@@ -274,6 +286,7 @@ Route::get('get-transaction-stage-select/{cluster}', [TblTransactionStagesContro
  * Applicant Status Endpoints
  */
 Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveStatus']);
+Route::post('add-applicant-statuses', [TblapplicantStatusController::class, 'saveStatuses']);
 
 
 //=======================================================================================

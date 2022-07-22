@@ -181,3 +181,17 @@ export const calendarBreadCrumbs = [
 		link: "#",
 	},
 ];
+export const libraryUserAcouuntsBreadCrumbs = [
+  {
+    name: "Home",
+    link: "/ihrmis/rsp",
+  },
+  {
+    name: "Library",
+    link: "#",
+  },
+  {
+    name: "User Accounts",
+    link: "#",
+  },
+];

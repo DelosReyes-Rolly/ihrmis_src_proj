@@ -7,7 +7,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import InputComponent from "../../../common/input_component/input_component/input_component";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import SearchComponent from "../../../common/input_component/search_input/search_input";
 import { IoIosCalendar } from "react-icons/io";
 import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper";

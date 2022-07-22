@@ -53,7 +53,7 @@ class QualifiedApplicantsResource extends JsonResource
         $civil_status = $civil_statuses[$this->TblapplicantsProfile->app_civil_status];
         $email = $this->TblapplicantsProfile->app_email_addr;
         $number = $this->TblapplicantsProfile->app_mobile_no;
-        $profile_message = $age . " Years Old; " . $civil_status . ";\n" . $email . ";\n" . $number;
+        $profile_message = $age . " years Old; " . $civil_status . ";\n" . $email . ";\n" . $number;
 
         /**
          * Loop through  and Trainings to get Highest
@@ -72,6 +72,7 @@ class QualifiedApplicantsResource extends JsonResource
         }
         $highest['education_level'] = 0;
         $highest['education'] = "";
+        $highest['education_text'] = "";
         foreach ($this->tblapplicantEducation as $appEducation) {
             $current = $appEducation->edu_app_level;
             if ($current > $highest['education_level']) {
@@ -119,7 +120,7 @@ class QualifiedApplicantsResource extends JsonResource
             $year_text = " years of experience";
         }
 
-        $name = $this->TblapplicantsProfile->app_nm_last . ", " . $this->TblapplicantsProfile->app_nm_first;
+        $name = $this->TblapplicantsProfile->app_nm_last . ", " . $this->TblapplicantsProfile->app_nm_first . ' ' . substr($this->TblapplicantsProfile->app_nm_mid, 0, 1) . '.';
         $email = $this->TblapplicantsProfile->app_email_addr;
         $position_message = $this->TblPositions->pos_title . ";\n" . $this->TblOffices->ofc_acronym;
         $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .

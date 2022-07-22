@@ -330,3 +330,15 @@
     }
   }
 }
+.no-borders {
+	th {
+		border: none;
+	}
+	td {
+		border: none;
+	}
+}
+
+.w15 {
+	width: 15%;
+}

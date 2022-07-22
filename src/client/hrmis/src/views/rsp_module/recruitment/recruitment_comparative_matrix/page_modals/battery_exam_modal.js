@@ -18,7 +18,16 @@ import {
 } from '../../../../library/static/library_input_items';
 import TextAreaComponent from '../../../../common/input_component/textarea_input_component/textarea_input_component';
 
-const BatteryExamModal = ({ isDisplay, onClose, sg, appID, exam, setExam }) => {
+const BatteryExamModal = ({
+	isDisplay,
+	onClose,
+	sg,
+	appID,
+	exam,
+	setExam,
+	type,
+	title,
+}) => {
 	const [initialVals, setVals] = useState([]);
 	const [validationData, setValidationData] = useState({});
 	const mounted = useIsMounted();
@@ -39,9 +48,8 @@ const BatteryExamModal = ({ isDisplay, onClose, sg, appID, exam, setExam }) => {
 		if (SGType2.includes(sg)) sgType = 2;
 		if (SGType3.includes(sg)) sgType = 3;
 		if (sgType === 0 || appID === undefined) return;
-		renderBusy(true);
 		await axios
-			.get(API_HOST + 'get-battery-exam/3/' + sgType + '/' + appID)
+			.get(API_HOST + 'get-battery-exam/' + type + '/' + sgType + '/' + appID)
 			.then((response) => {
 				let data = response.data?.data ?? [];
 				let dataPlot = [];
@@ -68,13 +76,16 @@ const BatteryExamModal = ({ isDisplay, onClose, sg, appID, exam, setExam }) => {
 				});
 				setExam(dataPlot);
 				setValidationData(yupValidation);
-				let vals = {
-					date: assessment.ass_exam_date ?? '',
-					remarks: assessment.ass_exam_remarks ?? '',
-				};
+				let vals = { date: '', remarks: '' };
+				if (type === 4) {
+					vals.date = assessment.ass_exam_date ?? '';
+					vals.remarks = assessment.ass_exam_remarks ?? '';
+				} else if (type === 5) {
+					vals.date = assessment.ass_psych_date ?? '';
+					vals.remarks = assessment.ass_psych_remarks ?? '';
+				}
 				setVals(...initials, vals);
 			});
-		renderBusy(false);
 	};
 
 	useEffect(() => {
@@ -95,6 +106,7 @@ const BatteryExamModal = ({ isDisplay, onClose, sg, appID, exam, setExam }) => {
 			formData.append('date', form.values.date);
 			formData.append('remarks', form.values.remarks);
 			formData.append('app_id', appID);
+			formData.append('type', type);
 			await axios
 				.post(API_HOST + 'employement-exam', formData)
 				.then(() => {
@@ -119,7 +131,7 @@ const BatteryExamModal = ({ isDisplay, onClose, sg, appID, exam, setExam }) => {
 	return (
 		<React.Fragment>
 			<ModalComponent
-				title='Pre-employment Exam'
+				title={title ?? 'Pre-employment Exam'}
 				isDisplay={isDisplay}
 				onClose={onClose}
 				onSubmit={form.handleSubmit}
