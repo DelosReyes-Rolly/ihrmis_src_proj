@@ -160,7 +160,7 @@ const RecruitmentOtherAssessment = ({
 						<th className="">
 							<div className="assessments-header">
 								Psychological Exam
-								<div>
+								<div className="center">
 									<ButtonComponent
 										buttonLogoStart={<FiPaperclip />}
 										onClick={() => setAttachmentModalDetails(5)}
