@@ -1,27 +1,27 @@
 .input-component {
-	box-sizing: border-box;
-	width: 100%;
-	outline: none;
-	border-radius: 5px 5px 5px 5px;
-	border: 1px solid #55555555;
-	padding: 6px 8px;
-	color: #55555599;
-	display: block;
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  border-radius: 5px 5px 5px 5px;
+  border: 1px solid #55555555;
+  padding: 6px 8px;
+  color: #55555599;
+  display: block;
 }
 
 .input-component:focus {
-	transition: 200ms;
-	border: 1px solid #55555599;
-	color: black;
+  transition: 200ms;
+  border: 1px solid #55555599;
+  color: black;
 }
 
 input[type="date"] {
-	color: #55555599;
+  color: #55555599;
 }
 
 input[type="date"]:focus {
-	transition: 200ms;
-	color: black;
+  transition: 200ms;
+  color: black;
 }
 
 // input[type="date"]: {
@@ -31,34 +31,34 @@ input[type="date"]:focus {
 //InputIconComponent styling
 
 .div-input-with-symbol {
-	width: 100%;
-	margin: 5px 0px 20px 0px;
-	display: flex;
+  width: 100%;
+  margin: 5px 0px 20px 0px;
+  display: flex;
 
-	input {
-		width: 100%;
-		box-sizing: border-box;
-		font-size: large;
-		color: map-get($blackColor, 400);
-		padding: 5px;
-		border: 1px solid map-get($primaryColor, 400);
-		border-right: none;
-		border-radius: 5px 0px 0px 5px;
-	}
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: large;
+    color: map-get($blackColor, 400);
+    padding: 5px;
+    border: 1px solid map-get($primaryColor, 400);
+    border-right: none;
+    border-radius: 5px 0px 0px 5px;
+  }
 
-	input:focus {
-		outline: none;
-		color: map-get($blackColor, regular);
-		border-right: none;
-	}
+  input:focus {
+    outline: none;
+    color: map-get($blackColor, regular);
+    border-right: none;
+  }
 
-	button {
-		cursor: pointer;
-		color: map-get($primaryColor, regular);
-		padding: 0px 10px;
-		border: 1px solid map-get($primaryColor, 400);
-		border-left: none;
-		border-radius: 0px 5px 5px 0px;
-		background-color: white;
-	}
+  button {
+    cursor: pointer;
+    color: map-get($primaryColor, regular);
+    padding: 0px 10px;
+    border: 1px solid map-get($primaryColor, 400);
+    border-left: none;
+    border-radius: 0px 5px 5px 0px;
+    background-color: white;
+  }
 }

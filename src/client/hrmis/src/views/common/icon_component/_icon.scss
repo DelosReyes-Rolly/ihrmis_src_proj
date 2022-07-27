@@ -1,16 +1,17 @@
 .plantilla-icon {
-	color: map-get($primaryColor, regular);
-	font-size: 1.2em;
-	z-index: $sidebarIndex;
-	display: flex;
-	align-items: center;
+  color: map-get($primaryColor, regular);
+  font-size: 1.2em;
+  z-index: $sidebarIndex;
+  display: flex;
+  justify-content: start;
+  align-items: start;
 }
 
 .plantilla-icon:hover {
-	cursor: pointer;
-	@include zoomInEffect();
+  cursor: pointer;
+  @include zoomInEffect();
 }
 
 .swal2-icon:hover {
-	@include zoomInEffect();
+  @include zoomInEffect();
 }

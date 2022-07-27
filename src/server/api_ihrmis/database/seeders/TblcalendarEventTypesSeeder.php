@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\TblcalendarEventTypes;
+use App\Models\Calendar\TblcalendarEventTypes;
 use Illuminate\Database\Seeder;
 
 class TblcalendarEventTypesSeeder extends Seeder

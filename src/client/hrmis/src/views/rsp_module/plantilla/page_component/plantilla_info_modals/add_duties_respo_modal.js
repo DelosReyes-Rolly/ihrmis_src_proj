@@ -144,6 +144,7 @@ const AddPlantillaItemDutiesAndRespoModal = ({
         title="Duties and Responsibilities"
         onSubmit={dtyFormik.handleSubmit}
         onSubmitType="submit"
+        onSubmitName="Save"
         isDisplay={isDisplay}
         onClose={onClose}
       >
@@ -238,17 +239,20 @@ const AddPlantillaItemDutiesAndRespoModal = ({
                                   marginLeft: "5px",
                                 }}
                               >
-                                <InputComponent
-                                  value={dty_itm_percent}
-                                  type="number"
-                                  onChange={(e) => {
-                                    handleArrayChange(
-                                      "dty_itm_percent",
-                                      index,
-                                      e
-                                    );
-                                  }}
-                                />
+                                <div className="div-dty-res-percent-inp">
+                                  <input
+                                    value={dty_itm_percent}
+                                    type="number"
+                                    onChange={(e) => {
+                                      handleArrayChange(
+                                        "dty_itm_percent",
+                                        index,
+                                        e
+                                      );
+                                    }}
+                                  />
+                                  <span>%</span>
+                                </div>
                               </div>
                               <div style={{ width: "25%", marginLeft: "5px" }}>
                                 <InputComponent
@@ -303,15 +307,19 @@ const AddPlantillaItemDutiesAndRespoModal = ({
             ) : null}
           </div>
           <div style={{ width: "25%", marginRight: "5px", marginLeft: "5px" }}>
-            <InputComponent
-              name="dty_itm_percent"
-              value={addDataToArray.dty_itm_percent}
-              type="number"
-              onChange={(e) => {
-                handleAddChange("dty_itm_percent", e.target.value);
-                dtyFormik.handleChange(e);
-              }}
-            />
+            <div className="div-dty-res-percent-inp">
+              <input
+                name="dty_itm_percent"
+                value={addDataToArray.dty_itm_percent}
+                type="number"
+                onChange={(e) => {
+                  handleAddChange("dty_itm_percent", e.target.value);
+                  dtyFormik.handleChange(e);
+                }}
+              />
+              <span>%</span>
+            </div>
+
             {dtyFormik.touched.dty_itm_percent &&
             dtyFormik.errors.dty_itm_percent ? (
               <p className="error-validation-styles">

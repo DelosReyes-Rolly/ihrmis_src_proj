@@ -12,32 +12,35 @@ const IconComponent = ({
 	onClick = () => {},
 	cursor = "pointer",
 	color = "map-get($primaryColor, regular)",
+	divStyle,
 }) => {
 	let addClassName = "plantilla-icon " + className;
-
+	let style = { display: "flex", ...divStyle };
 	return (
 		<React.Fragment>
-			{toolTipId && (
-				<ReactTooltip
-					id={toolTipId}
-					place={position}
-					effect={effect}
-					html={true}
-				>
-					{textHelper}
-				</ReactTooltip>
-			)}
+			<div style={style}>
+				{toolTipId && (
+					<ReactTooltip
+						id={toolTipId}
+						place={position}
+						effect={effect}
+						html={true}
+					>
+						{textHelper}
+					</ReactTooltip>
+				)}
 
-			<span
-				id={id}
-				data-tip
-				data-for={toolTipId}
-				className={addClassName}
-				onClick={onClick}
-				style={{ cursor: cursor, color: color }}
-			>
-				{icon}
-			</span>
+				<span
+					id={id}
+					data-tip
+					data-for={toolTipId}
+					className={addClassName}
+					onClick={onClick}
+					style={{ cursor: cursor, color: color }}
+				>
+					{icon}
+				</span>
+			</div>
 		</React.Fragment>
 	);
 };

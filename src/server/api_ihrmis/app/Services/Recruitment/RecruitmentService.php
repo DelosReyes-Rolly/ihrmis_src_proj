@@ -4,6 +4,7 @@ namespace App\Services\Recruitment;
 
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsAssessments;
+use App\Models\Applicants\TblHrmpsbScore;
 use App\Models\ExamScoreModel;
 use App\Models\Library\EvaluationBatteryModel;
 use App\Models\TblCmptncyAssessment;
@@ -59,12 +60,17 @@ class RecruitmentService
             'tblapplicantExperience',
             'tblapplicantTrainings',
             'TblapplicantsProfile',
+            'TblcmptncyRatings',
+            'TblAssessments',
+            'TblCmptcyScore',
+            'TblCmptcy',
+            'TblHrmpsbScore',
+            'TblUser',
             'TblplantillaItems',
             'TblPositions',
             'tblapplicantsStatus',
             'tbltransactionStages',
             'TblOffices',
-            'TblAssessments'
         )->where('app_itm_id', $plantilla_id)->get();
 
         //Get Position Requirements
@@ -207,6 +213,8 @@ class RecruitmentService
             'TblAssessments',
             'TblCmptcyScore',
             'TblCmptcy',
+            'TblHrmpsbScore',
+            'TblUser',
         )->where('app_itm_id', $plantilla_id)->where('app_id', $applicant_id)->get();
         return $applicant_query;
     }
@@ -671,8 +679,7 @@ class RecruitmentService
         $date = $request->date;
 
         foreach ($_POST as $key => $value) {
-            $values[] = $value;
-            if ($key != 'app_id' && $key != 'date' && $key != 'remarks') {
+            if ($key != 'app_id' && $key != 'date' && $key != 'remarks' && $key != 'type') {
                 $query = ExamScoreModel::where("exam_app_id", $appID)->where("exam_battery_id", $key)->first();
                 if (!isset($query)) {
                     $query = new ExamScoreModel();
@@ -685,8 +692,14 @@ class RecruitmentService
         }
         try {
             $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
-            $query->ass_exam_remarks = $request->remarks;
-            $query->ass_exam_date = $request->date;
+            if ($request->type == 4) {
+                $query->ass_exam_remarks = $request->remarks;
+                $query->ass_exam_date = $request->date;
+            } else {
+                $query->ass_psych_remarks = $request->remarks;
+                $query->ass_psych_date = $request->date;
+            }
+
 
             $query->save();
         } catch (\Throwable $th) {
@@ -717,5 +730,52 @@ class RecruitmentService
         return response()->json([
             'message' => "Saved Successfully",
         ], 200);
+    }
+
+    public function getHRMPSB($appID, $type)
+    {
+        $query = TblHrmpsbScore::with('TblAssessment', 'TblUser')->where('hrmpsb_app_id', $appID)->where('hrmpsb_type', $type)->get();
+        if (empty($query)) {
+            return response()->json(['message' => "Selected Applicant does not exist"], 404);
+        } else {
+            return $query;
+        }
+    }
+
+    public function saveHRMPSB(Request $request)
+    {
+        $eval = json_decode($request->evaluation);
+        $test = [];
+        foreach ($eval as $key => $value) {
+            $query = TblHrmpsbScore::where("hrmpsb_user_id", $request->hrmpsb_user_id)
+                ->where("hrmpsb_type", $value->type)
+                ->where("hrmpsb_app_id", $request->appID)->first();
+            if (!isset($query)) {
+                $query = new TblHrmpsbScore();
+            }
+            $query->hrmpsb_user_id = $request->hrmpsb_user_id;
+            $query->hrmpsb_app_id = $request->appID;
+            $query->hrmpsb_type = $value->type;
+            $query->hrmpsb_score = $value->score;
+            $query->hrmpsb_remarks = $value->remark;
+            $query->save();
+        }
+        return $query;
+    }
+
+    public function saveHRMPSBRemarks(Request $request)
+    {
+        $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
+        if ($request->type == 1) {
+            $query->ass_attribute = $request->remarks;
+        }
+        if ($request->type == 2) {
+            $query->ass_accomplishment = $request->remarks;
+        }
+        if ($request->type == 3) {
+            $query->ass_performance = $request->remarks;
+        }
+        $query->save();
+        return $query;
     }
 }

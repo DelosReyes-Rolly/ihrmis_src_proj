@@ -96,7 +96,6 @@
         .th {
             font-weight: bold;
         }
-
     </style>
 </head>
 
@@ -233,6 +232,67 @@
             <?php $counter = 1; ?>
             @foreach ($applicants as $applicant)
                 {
+                <?php
+                $competencyMessage = '';
+                $competencyScore = 0;
+                $array = [];
+                $converter = [];
+                $converter['AS'] = 'Analytical Skills, ';
+                $converter['CW'] = 'Creative Work, ';
+                $converter['CS'] = 'Computational Skills, ';
+                $converter['OE'] = 'Oral Exam, ';
+                $converter['WE'] = 'Written Exam, ';
+                $converter['OT'] = 'Other, ';
+                foreach ($applicant->TblcmptncyRatings as $data) {
+                    if (isset($converter[$data->rtg_com_type])) {
+                        $array[$data->rtg_com_type] = $converter[$data->rtg_com_type];
+                    }
+                }
+                foreach ($array as $key => $value) {
+                    if ($value != null) {
+                        $competencyMessage .= $value;
+                    }
+                }
+                foreach ($applicant->TblCmptcyScore as $data) {
+                    if (isset($converter[$data->com_type])) {
+                        $competencyScore += $data->com_ass_score;
+                    }
+                }
+                $attributeCount = 0;
+                $commendableCount = 0;
+                $performanceCount = 0;
+                $attributesAverage = 0;
+                $commendableAverage = 0;
+                $performanceAverage = 0;
+                foreach ($applicant->TblHrmpsbScore as $scores) {
+                    switch ($scores->hrmpsb_type) {
+                        case 1:
+                            $attributeCount++;
+                            $attributesAverage += $scores->hrmpsb_score;
+                            break;
+                        case 2:
+                            $commendableCount++;
+                            $commendableAverage += $scores->hrmpsb_score;
+                            break;
+                        case 3:
+                            $performanceCount++;
+                            $performanceAverage += $scores->hrmpsb_score;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                $attributes = $attributesAverage / $attributeCount;
+                $commendable = $commendableAverage / $commendableCount;
+                $performance = $performanceAverage / $performanceCount;
+                $hrmpsbTotal = $attributes + $commendable + $performance;
+                $raSubTotal = $competencyScore + $applicant->TblAssessments->ass_education + $applicant->TblAssessments->ass_experience + $applicant->TblAssessments->ass_training;
+                $total = $hrmpsbTotal + $raSubTotal;
+                
+                $attributeMessage = $applicant->TblAssessments->ass_attribute;
+                $commendableMessage = $applicant->TblAssessments->ass_accomplishment;
+                $performanceMessage = $applicant->TblAssessments->ass_performance;
+                ?>
                 <tr>
                     <td class="td center">{{ $counter++ }}</td>
                     <td class="td">
@@ -265,7 +325,9 @@
                         {{ $education->edu_app_honors == 'N/A' || $education->edu_app_honors == 'None' ? '' : $education->edu_app_honors }}<br><br>
                         <?php }?>
                     </td>
-                    <td class="td"></td>
+                    <td class="td center">
+                        <?= $applicant->TblAssessments->ass_education ?? '' ?>
+                    </td>
                     <td class="td center">
                         <?php foreach ($applicant->tblapplicantExperience as $experience) { ?>
                         {{ $experience->exp_app_position }}<br><br>
@@ -273,7 +335,9 @@
                         {{ $experience->exp_app_agency }}
                         <?php }?>
                     </td>
-                    <td class="td"></td>
+                    <td class="td center">
+                        <?= $applicant->TblAssessments->ass_experience ?? '' ?>
+                    </td>
                     <td class="td center">
                         <?php 
                         $counter = 1;
@@ -284,19 +348,24 @@
                         {{ date('d M Y', strtotime($training->trn_app_from)) . ' - ' . date('d M Y', strtotime($training->trn_app_to)) }}<br><br>
                         <?php }?>
                     </td>
-
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
-                    <td class="td"></td>
+                    <td class="td center">
+                        <?= $applicant->TblAssessments->ass_training ?? '' ?>
+                    </td>
+                    <td class="td center">
+                        <?= $competencyMessage ?? '' ?>
+                    </td>
+                    <td class="td center"><?= $competencyScore ?? '' ?></td>
+                    <td class="td center">
+                        <?= $raSubTotal ?? '' ?>
+                    </td>
+                    <td class="td center">{{ $attributeMessage ?? '' }}</td>
+                    <td class="td center">{{ $attributes ?? '' }}</td>
+                    <td class="td center">{{ $commendableMessage ?? '' }}</td>
+                    <td class="td center">{{ $commendable ?? '' }}</td>
+                    <td class="td center">{{ $performanceMessage ?? '' }}</td>
+                    <td class="td center">{{ $performance ?? '' }}</td>
+                    <td class="td center">{{ $hrmpsbTotal ?? '' }}</td>
+                    <td class="td center">{{ $total ?? '' }}</td>
                 </tr>
                 }
             @endforeach

@@ -26,6 +26,7 @@ import {
 } from "../../static/functions";
 import AssessmentsModal from "../page_modals/assessments_modal";
 import CompetencyAssessmentModal from "../page_modals/competency_assessment_modal";
+import RecruitmentHRMPSB from "./recruitment_hrmpsb";
 import RecruitmentOtherAssessment from "./recruitment_other_assessment";
 
 const RecruitmentRatingAssessment = ({
@@ -37,7 +38,17 @@ const RecruitmentRatingAssessment = ({
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [applicant, setApplicant] = useState([]);
-	const [applicantAssumption, setApplicantAssumption] = useState([]);
+	const [hrmpsbScore, setHrmpsbScore] = useState({
+		1: 0,
+		attRemark: "",
+		2: 0,
+		accomRemark: "",
+		3: 0,
+		perRemark: "",
+		assPSBDate: "",
+		hrmTotal: 0,
+		total: 0,
+	});
 	const urlpath = window.location.pathname;
 	const route = urlpath.split("/");
 	const plantilla_id = route[5];
@@ -57,9 +68,47 @@ const RecruitmentRatingAssessment = ({
 				let cmptncyTotal = competencyScore(data?.tbl_cmptcy_score);
 				let raSubTotal =
 					cmptncyTotal +
-					data?.tbl_assessments.ass_education +
-					data?.tbl_assessments.ass_experience +
-					data?.tbl_assessments.ass_training;
+					data?.tbl_assessments?.ass_education +
+					data?.tbl_assessments?.ass_experience +
+					data?.tbl_assessments?.ass_training;
+				let score = Object.assign({}, hrmpsbScore);
+				score.total = 0;
+				let attributesAverage = 0;
+				let commendableAverage = 0;
+				let performanceAverage = 0;
+				let total = 0;
+				let attributeCount = 0;
+				let commendableCount = 0;
+				let performanceCount = 0;
+				data?.tbl_hrmpsb_score.forEach((scores) => {
+					switch (scores.hrmpsb_type) {
+						case 1:
+							attributeCount++;
+							attributesAverage += scores?.hrmpsb_score;
+							break;
+						case 2:
+							commendableCount++;
+							commendableAverage += scores?.hrmpsb_score;
+							break;
+						case 3:
+							performanceCount++;
+							performanceAverage += scores?.hrmpsb_score;
+							break;
+						default:
+							break;
+					}
+				});
+				score[1] = attributesAverage / attributeCount;
+				score[2] = commendableAverage / commendableCount;
+				score[3] = performanceAverage / performanceCount;
+				score.hrmTotal = score[1] + score[2] + score[3];
+				score.total = score.hrmTotal + raSubTotal;
+				score.attRemark = data?.tbl_assessments?.ass_attribute;
+				score.accomRemark = data?.tbl_assessments?.ass_accomplishment;
+				score.perRemark = data?.tbl_assessments?.ass_performance;
+				score.assPSBDate = data?.tbl_assessments?.ass_psb_eval_date;
+				setHrmpsbScore(score);
+
 				let values = {
 					app_id: data?.tblapplicants_profile?.app_id,
 					applicant_name:
@@ -73,11 +122,11 @@ const RecruitmentRatingAssessment = ({
 						")",
 					elig: eligibilites,
 					edu: education,
-					edu_score: data?.tbl_assessments.ass_education,
+					edu_score: data?.tbl_assessments?.ass_education,
 					exp: experience,
-					exp_score: data?.tbl_assessments.ass_experience,
+					exp_score: data?.tbl_assessments?.ass_experience,
 					trn: training,
-					trn_score: data?.tbl_assessments.ass_training,
+					trn_score: data?.tbl_assessments?.ass_training,
 					cmptncy: competency,
 					cmptncyScore: cmptncyTotal,
 					cmptncyScores: data?.tbl_cmptcy_score,
@@ -85,16 +134,14 @@ const RecruitmentRatingAssessment = ({
 					cmptncyRemarks: data?.tbl_assessments.ass_remarks,
 					jvs: data?.tblcmptncy_ratings,
 					subtotal: raSubTotal,
-					attrbts: 0,
-					accom: 0,
-					perfor: 0,
-					subtotal2: 0,
-					total: 0,
 					app_appointed: data?.app_appointed,
 					app_appntmnt: data?.app_appntmnt,
 					app_assmptn: data?.app_assmptn,
 					app_period_from: data?.app_period_from,
 					app_period_to: data?.app_period_to,
+					app_hrmpsb_attribute: data?.tbl_assessments.ass_attribute,
+					app_hrmpsb_accomplishment: data?.tbl_assessments.ass_accomplishment,
+					app_hrmpsb_performance: data?.tbl_assessments.ass_performance,
 				};
 				if (!mounted.current) return;
 				setApplicant(values);
@@ -146,6 +193,7 @@ const RecruitmentRatingAssessment = ({
 								<IconComponent
 									id="ra_back"
 									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<BsArrowLeft size="25" />}
 									toolTipId="ra_back_tooltip"
 									onClick={() => {
@@ -160,10 +208,10 @@ const RecruitmentRatingAssessment = ({
 							<th className="main-header" colSpan={4}>
 								RATINGS AND ASSESSMENT
 							</th>
-							<th className="w5">
+							<th className="w5 center">
 								<IconComponent
 									id="ra_refresh"
-									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<IoRefreshCircle size="30" />}
 									toolTipId="ra_refresh_tooltip"
 									onClick={() => dispatch(setRefresh())}
@@ -179,7 +227,7 @@ const RecruitmentRatingAssessment = ({
 							<td className="w5">
 								<IconComponent
 									id="ra_pds"
-									className=""
+									divStyle={{ justifyContent: "center" }}
 									icon={<IoInformationCircle size="30" />}
 									toolTipId="ra_pds_tooltip"
 									// TODO: Connect Sean Employee PDS to this button,
@@ -261,7 +309,11 @@ const RecruitmentRatingAssessment = ({
 						</tr>
 					</tbody>
 				</table>
-				<RecruitmentHRMPSB />
+				<RecruitmentHRMPSB
+					hrmpsbScore={hrmpsbScore}
+					appID={applicant_id}
+					applicant={applicant}
+				/>
 				<RecruitmentOtherAssessment
 					regular={plantilla?.itm_regular}
 					sg={plantilla?.tbl_positions?.pos_salary_grade}
@@ -300,72 +352,3 @@ const RecruitmentRatingAssessment = ({
 	);
 };
 export default RecruitmentRatingAssessment;
-
-const RecruitmentHRMPSB = ({}) => {
-	return (
-		<>
-			<table className="table-design comparative-matrix">
-				<thead>
-					<tr className="no-border">
-						<th className="main-header" colSpan={6}>
-							HRMPSB
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th className="" rowSpan={2}>
-							Attributes (25%)
-							<div className="fs-small">
-								<ol type="a">
-									<li>Pleasing Personality;</li>
-									<li>Sharpness of Mind;</li>
-									<li>Ability to express ideas/communication skills;</li>
-									<li>Good quality of response;</li>
-									<li>Self-confidence;</li>
-									<li>Judgement and logical thinking;</li>
-									<li>Initiative;</li>
-									<li>Willingness and ability to learn;</li>
-									<li>Other relevant attributes;</li>
-								</ol>
-							</div>
-						</th>
-						<td rowSpan={2} style={{ width: "35%" }}></td>
-						<td rowSpan={2} className="w5">
-							<ButtonComponent
-								// onClick={() => setTogModal(true)}
-								buttonName="Score"
-							/>
-						</td>
-						<th className="">Commendable Accomplishments (5%)</th>
-						<td style={{ width: "35%" }}></td>
-						<td className="w5">
-							<ButtonComponent
-								// onClick={() => setTogModal(true)}
-								buttonName="Score"
-							/>
-						</td>
-					</tr>
-					<tr>
-						<th className="">Performance (5%)</th>
-						<td></td>
-						<td>
-							<ButtonComponent
-								// onClick={() => setTogModal(true)}
-								buttonName="Score"
-							/>
-						</td>
-					</tr>
-					<tr>
-						<th className=" assessments-header">Sub-total</th>
-						<th className="" colSpan={5}></th>
-					</tr>
-					<tr>
-						<th className=" assessments-header">TOTAL (100%)</th>
-						<th className="" colSpan={5}></th>
-					</tr>
-				</tbody>
-			</table>
-		</>
-	);
-};

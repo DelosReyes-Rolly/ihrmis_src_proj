@@ -20,6 +20,7 @@ use App\Http\Controllers\Library\DocumentRequirements;
 use App\Http\Controllers\Library\EvaluationBattery;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
 use App\Http\Controllers\TblCalendarController;
 use App\Http\Controllers\TblofficesController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
 use App\Http\Controllers\TblTransactionStagesController;
+use App\Models\TblonboardingSections;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -108,7 +110,7 @@ Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequir
 //=======================================================================================
 // JVSCRW END POINTS
 //=======================================================================================
-Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
+Route::get('pos-csc-plantilla/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
 Route::get('jvscrw-get-jvs-ver/{itemId}', [TbljvsController::class, "allJvsVersion"]);
@@ -172,6 +174,7 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
+Route::delete('delete-evaluation-battery/{itm_id}', [EvaluationBattery::class, 'deleteSpecific']);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
@@ -179,10 +182,15 @@ Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::cl
 //=======================================================================================
 Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
+Route::get('user-accounts', [AuthController::class, "getUsers"]);
+Route::post('update-user', [AuthController::class, "updateUser"]);
 
 
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
+Route::post('save-hrmpsb-remarks', [RecruitmentController::class, 'saveHRMPSBRemarks']);
+
+
 Route::post('employement-exam', [RecruitmentController::class, 'saveEmploymentExam']);
 
 Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
@@ -194,6 +202,12 @@ Route::get('get-battery-exam/{level}/{sg}/{appID}', [RecruitmentController::clas
 Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-assessment/{appID}', [RecruitmentController::class, "getAssessment"]);
 Route::post('save-appointment', [RecruitmentController::class, "saveAppointment"]);
+Route::get('get-hrmpsb-evaluation/{appID}/{type}', [RecruitmentController::class, "getHRMPSB"]);
+
+
+Route::post('save-hrmpsb-evaluation', [RecruitmentController::class, "saveHRMPSB"]);
+
+
 
 Route::get('getRAIDATA/{month}/{year}', [RecruitmentController::class, "getRAIDATA"]);
 
@@ -275,6 +289,7 @@ Route::get('get-transaction-stage-select/{cluster}', [TblTransactionStagesContro
  * Applicant Status Endpoints
  */
 Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveStatus']);
+Route::post('add-applicant-statuses', [TblapplicantStatusController::class, 'saveStatuses']);
 
 
 //=======================================================================================
@@ -307,7 +322,6 @@ Route::post('add-update-emp_edu/{edu_id?}', [EmployeeController::class, "addUpda
 Route::get('get-emp_edu/{emp_id}', [EmployeeController::class, "getEmployeeEducation"]);
 Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmployeeEducation"]);
 
-
 //=======================================================================================
 // LIBRARY CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -317,3 +331,14 @@ Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployee
 // CALENDAR CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('getCalendarEventTypes', [TblCalendarController::class, "getCalendarEventTypes"]);
+
+//=======================================================================================
+// ONBOARDING CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('get-all-onboarding-section', [OnboardingController::class, "getOnboardingSections"]);
+Route::post('add-onboarding-section', [OnboardingController::class, "addOnboardingSections"]);
+Route::post('modify-onboarding-section', [OnboardingController::class, "updateOnboardingSections"]);
+Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class, "removeOnboardingSections"]);
+Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
+Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
+Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);

@@ -21,4 +21,20 @@ class TblapplicantStatusController extends Controller
             'message' => "Added Successfully",
         ]);
     }
+
+    public function saveStatuses(Request $request)
+    {
+        $test = json_decode($request->applicants);
+        foreach ($test as $key => $value) {
+            $dataToSave = new TblapplicantsStatus();
+            $dataToSave->sts_app_id = $value->app_id;
+            $dataToSave->sts_app_stg_id = $value->stg;
+            $dataToSave->save();
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Added Successfully",
+        ]);
+    }
 }
