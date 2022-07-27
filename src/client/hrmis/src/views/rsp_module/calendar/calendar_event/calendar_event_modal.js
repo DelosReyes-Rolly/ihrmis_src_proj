@@ -92,6 +92,7 @@ const CalendarEventModal = ({ isDisplay, onClose }) => {
 				onCloseName={onCloseNameLabel}
 				onPressed={onDelete}
 				onSubmitName={onSubmitName}
+				displayMaxView="none"
 			>
 				<div className="calendar-event-main">
 					<div className="calendar-event-fields">
