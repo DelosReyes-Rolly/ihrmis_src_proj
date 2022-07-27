@@ -22,6 +22,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
+use App\Http\Controllers\TblCalendarController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -173,7 +174,7 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
-Route::delete('delete-evaluation-battery/{itm_id}',[EvaluationBattery::class, 'deleteSpecific']);
+Route::delete('delete-evaluation-battery/{itm_id}', [EvaluationBattery::class, 'deleteSpecific']);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
@@ -228,6 +229,8 @@ Route::delete('delete-mail-template/{template_id}', [MailController::class, "del
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 Route::post('recruitment-common-email', [MailController::class, 'recruitmentEmail']);
+
+
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -319,12 +322,15 @@ Route::post('add-update-emp_edu/{edu_id?}', [EmployeeController::class, "addUpda
 Route::get('get-emp_edu/{emp_id}', [EmployeeController::class, "getEmployeeEducation"]);
 Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmployeeEducation"]);
 
-
 //=======================================================================================
 // LIBRARY CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployeeHistoryService"]);
 
+//=======================================================================================
+// CALENDAR CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('getCalendarEventTypes', [TblCalendarController::class, "getCalendarEventTypes"]);
 
 //=======================================================================================
 // ONBOARDING CONTROLLER ENDPOINTS
@@ -336,6 +342,3 @@ Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class,
 Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
 Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
 Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);
-
-
-

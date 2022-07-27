@@ -1,78 +1,78 @@
 $colorTheme: (
-  primary: #4276a4,
-  secondary: rgba(0, 0, 0, 0.5),
-  background: whitesmoke,
-  fonts: rgba(70, 70, 70, 0.8),
+	primary: #4276a4,
+	secondary: rgba(0, 0, 0, 0.5),
+	background: whitesmoke,
+	fonts: rgba(70, 70, 70, 0.8),
 );
 
 .modal-component-div {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $modalIndex;
-  background-color: map-get($colorTheme, secondary);
-  overflow-y: scroll;
-  scroll-behavior: smooth;
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: $modalIndex;
+	background-color: map-get($colorTheme, secondary);
+	overflow-y: scroll;
+	scroll-behavior: smooth;
 
-  form {
-    padding: 10px 0px;
-    border-radius: 5px;
-    max-width: 50%;
-    margin: 50px auto 20px auto;
-    background-color: map-get($colorTheme, background);
+	form {
+		padding: 10px 0px;
+		border-radius: 5px;
+		max-width: 50%;
+		margin: 50px auto 20px auto;
+		background-color: map-get($colorTheme, background);
 
-    .mcf-header {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: row;
-      padding: 10px 20px 15px 20px;
+		.mcf-header {
+			display: flex;
+			justify-content: space-between;
+			flex-direction: row;
+			padding: 10px 20px 15px 20px;
 
-      button:hover {
-        transition: 0.5s;
-        color: rgb(241, 68, 68);
-      }
-    }
+			button:hover {
+				transition: 0.5s;
+				color: rgb(241, 68, 68);
+			}
+		}
 
-    .mcf-body {
-      font-size: small;
-      color: map-get($colorTheme, fonts);
-      padding: 20px 20px;
-    }
+		.mcf-body {
+			font-size: small;
+			color: map-get($colorTheme, fonts);
+			padding: 20px 20px;
+		}
 
-    .mcf-footer {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 15px 20px 5px 20px;
-      gap: 10px;
-      .ft-button {
-        color: map-get($colorTheme, fonts);
-      }
+		.mcf-footer {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			align-items: center;
+			padding: 15px 20px 5px 20px;
+			gap: 10px;
+			.ft-button {
+				color: map-get($colorTheme, fonts);
+			}
 
-      .ft-button:hover {
-        background-color: rgb(196, 196, 196) !important;
-      }
-    }
-  }
+			.ft-button:hover {
+				background-color: rgb(196, 196, 196) !important;
+			}
+		}
+	}
 }
 
 .modal-trans-enter {
-  opacity: 0;
-  transform: translateY(-50px);
+	opacity: 0;
+	transform: translateY(-50px);
 }
 .modal-trans-enter-active {
-  opacity: 1;
-  transform: translateY(0px);
-  transition: transform 400ms, opacity 400ms;
+	opacity: 1;
+	transform: translateY(0px);
+	transition: transform 400ms, opacity 400ms;
 }
 .modal-trans-exit {
-  opacity: 1;
+	opacity: 1;
 }
 .modal-trans-exit-active {
-  opacity: 0;
-  transform: translateY(-50px);
-  transition: transform 400ms, opacity 400ms;
+	opacity: 0;
+	transform: translateY(-50px);
+	transition: transform 400ms, opacity 400ms;
 }
