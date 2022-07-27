@@ -21,6 +21,7 @@ use App\Http\Controllers\Library\EvaluationBattery;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
+use App\Http\Controllers\TblCalendarController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -214,6 +215,8 @@ Route::delete('delete-mail-template/{template_id}', [MailController::class, "del
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 Route::post('recruitment-common-email', [MailController::class, 'recruitmentEmail']);
+
+
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -309,3 +312,8 @@ Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmpl
 // LIBRARY CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployeeHistoryService"]);
+
+//=======================================================================================
+// CALENDAR CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('getCalendarEventTypes', [TblCalendarController::class, "getCalendarEventTypes"]);

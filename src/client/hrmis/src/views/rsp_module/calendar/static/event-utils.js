@@ -6,11 +6,13 @@ export const INITIAL_EVENTS = [
 		id: createEventId(),
 		title: "All-day event",
 		start: todayStr,
+		typ_evn_id: 1,
 	},
 	{
 		id: createEventId(),
 		title: "Timed event",
 		start: todayStr + "T12:00:00",
+		typ_evn_id: 2,
 	},
 ];
 

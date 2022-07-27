@@ -25,11 +25,16 @@
 		flex-direction: row;
 		gap: 10px;
 		justify-items: start;
+		align-items: center;
 	}
 }
 
 .calendar-date-field {
 	width: 300px;
+}
+
+.calendar-date-label {
+	padding-bottom: 4px;
 }
 
 .calendar-custom-input {
@@ -44,8 +49,59 @@
 	color: black;
 }
 
+.calendar-all-day {
+	display: flex;
+	flex-direction: row;
+	gap: 6px;
+	align-items: center;
+	justify-items: center;
+}
+
+.event-all-day {
+	display: block;
+}
+
+.calendar-checkbox {
+	margin-top: 4px;
+}
+
+.event-time-end-label {
+	display: none;
+}
+
+.date-picker-modified {
+	position: relative;
+	.hidden-input-flag {
+		opacity: 0;
+		margin-top: 0;
+		font-size: 1px;
+		padding: 0px;
+		height: 0px;
+		float: left;
+	}
+}
+
+.calendar-datepicker {
+	width: 300px;
+}
+
+.react-datepicker-popper {
+	top: -22px !important;
+}
+
 @media only screen and (max-width: 800px) {
-	.calendar-date-field {
-		width: 200px;
+	.calendar-event-fields {
+		flex-direction: column;
+	}
+
+	.calendar-date-label {
+		padding-bottom: -10px;
+	}
+
+	.calendar-event-datetime {
+		flex-direction: column;
+	}
+	.calendar-event-time-group {
+		flex-direction: column;
 	}
 }

@@ -9,7 +9,7 @@ const IconComponent = ({
 	textHelper = "",
 	position = "top",
 	effect = "solid",
-	onClick = null,
+	onClick = () => {},
 	cursor = "pointer",
 	color = "map-get($primaryColor, regular)",
 }) => {
