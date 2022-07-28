@@ -37,14 +37,3 @@ InputComponent.defaultProps = {
 };
 
 export default InputComponent;
-
-export const InputIconComponent = ({
-	name,
-	onChange,
-	value,
-	icon = <IoMdAdd size={20} />,
-	onClick,
-	placeholder,
-}) => {
-	return <SearchComponent />;
-};

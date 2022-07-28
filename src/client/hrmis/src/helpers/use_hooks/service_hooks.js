@@ -6,7 +6,15 @@ const useServiceHooks = () => {
 		}
 	};
 
-	return [removeElementByClass];
+	const triggerClickById = (id) => {
+		document.getElementById(id).click();
+	};
+
+	const triggerClickByClassName = (id) => {
+		document.getElementsByClassName(id).click();
+	};
+
+	return [removeElementByClass, triggerClickById, triggerClickByClassName];
 };
 
 export default useServiceHooks;

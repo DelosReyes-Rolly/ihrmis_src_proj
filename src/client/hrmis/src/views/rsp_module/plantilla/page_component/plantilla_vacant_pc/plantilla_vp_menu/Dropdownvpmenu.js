@@ -20,10 +20,10 @@ const DropdownVpMenu = ({
 	itemList,
 	alignItems = "start",
 	tooltipData = { position: "top", effect: "solid" },
+	isScrollable = false,
 }) => {
 	const [dropable, setDropable] = useState(false);
 	const [Xpos, Ypos, location, size] = usePositionSetter(dropable);
-
 	const timerRef = useRef();
 
 	const navigate = useNavigate();
@@ -81,6 +81,7 @@ const DropdownVpMenu = ({
 					xpos={Xpos}
 					ypos={Ypos}
 					size={size}
+					isScrollable={isScrollable}
 				/>
 			)}
 		</div>
@@ -89,9 +90,25 @@ const DropdownVpMenu = ({
 
 export default DropdownVpMenu;
 
-const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
+const DropList = ({
+	itemList = [],
+	display = "none",
+	xpos,
+	ypos,
+	size,
+	isScrollable,
+}) => {
 	const navigate = useNavigate();
 	const { toastSuccessFailMessage } = useSweetAlertHelper();
+	const scrollableStyle = {
+		display: display,
+		position: "fixed",
+		top: ypos - 10,
+		left: xpos + 180,
+		overflow: "auto",
+		overscrollBehaviorY: "smooth",
+		cursor: "pointer",
+	};
 
 	const { selected_agency, plantilla_items, item_id, is_notify } = useSelector(
 		(state) => state.plantillaItem
@@ -196,11 +213,17 @@ const DropList = ({ itemList = [], display = "none", xpos, ypos, size }) => {
 		color: "#666666",
 	};
 
+	const defstyle = {
+		display: display,
+		position: "fixed",
+		top: ypos,
+		left: xpos,
+	};
 	return (
 		<React.Fragment>
 			<ul
 				className="ul-dropdown-container"
-				style={{ display: display, position: "fixed", top: ypos, left: xpos }}
+				style={isScrollable ? scrollableStyle : defstyle}
 				ref={size}
 			>
 				<div className="ul-menu-item-arrow">
