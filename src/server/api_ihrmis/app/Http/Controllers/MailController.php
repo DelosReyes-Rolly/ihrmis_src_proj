@@ -6,6 +6,7 @@ use App\Http\Resources\CommonResource;
 use App\Mail\CommonMail;
 use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
+use App\Models\Applicants\Tblapplicants;
 use App\Models\ExamScoreModel;
 use App\Models\TblemailTemplate;
 use App\Models\TblplantillaItems;
@@ -24,6 +25,18 @@ class MailController extends Controller
         }
         $mailQry = TblemailTemplate::get();
         return CommonResource::collection($mailQry);
+    }
+
+    public function addEmail(Request $request)
+    {
+        $mailQry = TblemailTemplate::firstOrNew(['eml_id' => $request->eml_id]);
+        $mailQry->eml_type = $request->eml_type;
+        $mailQry->eml_name = $request->eml_name;
+        $mailQry->eml_message = $request->eml_message;
+        if ($request->eml_link != null) {
+            $mailQry->eml_link = $request->eml_link;
+        }
+        $mailQry->save();
     }
 
     public function addEmailTemplate($request)
@@ -139,11 +152,11 @@ class MailController extends Controller
 
     public function recruitmentEmail(Request $request)
     {
-        // if (is_string($request->eml_id)) {
-        //     $this->addEmailTemplate($request);
-        // } else {
-        //     return $request;
-        // }
+        if (is_string($request->eml_id)) {
+            $this->addEmailTemplate($request);
+        } else {
+            return $request;
+        }
         $arrFiles = [];
 
         if (!empty($request->file(['image_upload']))) {
@@ -187,7 +200,40 @@ class MailController extends Controller
                 Mail::to($value->email)->send(new CommonMail($data));
             }
         }
-        if ($request->eml_type != 'PER') {
+        if ($request->eml_type == 'BCK') {
+            foreach (json_decode($request->appID) as $value) {
+                $query = Tblapplicants::with('tblReference', 'tblPositions')->where('app_id', $value->id)->first();
+                $pos_title = $query->tblPositions->pos_title;
+                $references = $query->tblReference;
+                $test = [];
+
+                foreach ($references as $reference) {
+                    $message = $request->eml_message;
+                    $message .= '<br><br>
+                    <a href="' . env("FRONTEND_PAGE_URL") . 'background-check/' . $reference->ref_id . '/' . $value->id . '" 
+                    style="width:100%;text-align:center">Background Check Form</a>
+                    ';
+                    $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
+                    $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
+                    $tempEmail = trim($reference->ref_app_email, "");
+                    $data = [
+                        "from" => env("MAIL_FROM_RECUITER"),
+                        "email_from" => env("MAIL_FROM_ADDRESS"),
+                        "email_to" => $tempEmail,
+                        "date" => Carbon::now(),
+                        "message_type" => $request->eml_name,
+                        "message" => $replaced_reference,
+                        "sender" => nl2br($request->sender),
+                        "file" => $arrFiles
+                    ];
+                    if (!in_array($tempEmail, $arrHolder)) {
+                        array_push($arrHolder, $tempEmail);
+                        Mail::to($tempEmail)->send(new CommonMail($data));
+                    }
+                }
+            }
+        }
+        if ($request->eml_type != 'PER' && $request->eml_type != 'BCK') {
             foreach ($rawRecepient as $value) {
                 $tempEmail = trim($value, " ");
                 array_push($arrHolder, $tempEmail);
