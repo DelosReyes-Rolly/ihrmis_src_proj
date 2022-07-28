@@ -1,20 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import ModalComponent from '../../../../common/modal_component/modal_component';
-import TextAreaComponent from '../../../../common/input_component/textarea_input_component/textarea_input_component';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import UploadAttachmentComponent from '../../../../common/input_component/upload_attachment_component/upload_attachment_component';
-import InputComponent from '../../../../common/input_component/input_component/input_component';
-import { useFormik } from 'formik';
-import { API_HOST } from '../../../../../helpers/global/global_config';
-import * as Yup from 'yup';
-import axios from 'axios';
-import RichTextEditorComponent from '../../../../common/rich_text_editor_component/rich_text_editor_component';
-import { usePopUpHelper } from '../../../../../helpers/use_hooks/popup_helper';
-import Creatable from 'react-select/creatable';
-import { ALERT_ENUM, popupAlert } from '../../../../../helpers/alert_response';
-import { BsXCircle, BsPlusCircle } from 'react-icons/bs';
-import IconComponent from '../../../../common/icon_component/icon';
-import { useIsMounted } from '../../../../../helpers/use_hooks/isMounted';
+import React, { useCallback, useEffect, useState } from "react";
+import ModalComponent from "../../../../common/modal_component/modal_component";
+import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import UploadAttachmentComponent from "../../../../common/input_component/upload_attachment_component/upload_attachment_component";
+import InputComponent from "../../../../common/input_component/input_component/input_component";
+import { useFormik } from "formik";
+import { API_HOST } from "../../../../../helpers/global/global_config";
+import * as Yup from "yup";
+import axios from "axios";
+import RichTextEditorComponent from "../../../../common/rich_text_editor_component/rich_text_editor_component";
+import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
+import Creatable from "react-select/creatable";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { BsXCircle, BsPlusCircle, BsCheckCircle } from "react-icons/bs";
+import IconComponent from "../../../../common/icon_component/icon";
+import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 
 const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const [mType, setmType] = useState([]);
@@ -22,16 +22,16 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const [imageValue, setImageValue] = useState();
 	const [emailData, setEmailData] = useState();
 	const [appID, setAppID] = useState();
-	const [emailName, setEmailName] = useState('');
+	const [emailName, setEmailName] = useState("");
 	const [options, setOptions] = useState([]);
 	const [selectedMsg, setSelectedMsg] = useState(null);
 	const [selectedId, setSelectedId] = useState(0);
 
 	useEffect(() => {
-		let recepients = '';
+		let recepients = "";
 		let appIDs = [];
 		data.forEach((data) => {
-			recepients += data.app_email + ',';
+			recepients += data.app_email + ",";
 			let value = {
 				email: data.app_email,
 				id: data.app_id,
@@ -39,7 +39,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 			appIDs.push(value);
 		});
 		appIDs.push({
-			email: 'jcdampil23@gmail.com',
+			email: "jcdampil23@gmail.com",
 			id: 8,
 		});
 		setEmailData(recepients);
@@ -50,7 +50,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 		let arrHolder = [];
 		let arrHolder2 = [];
 		await axios
-			.get(API_HOST + 'mail-template/' + type)
+			.get(API_HOST + "mail-template/" + type)
 			.then((res) => {
 				const dataMType = res?.data?.data;
 				console.log(dataMType);
@@ -81,42 +81,43 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 		enableReinitialize: true,
 		initialValues: {
 			appIds: appID,
-			recepient: emailData ?? '',
-			message_type: emailName.value ?? '',
-			message: '',
-			sender: '',
-			image_upload: '',
+			recepient: emailData ?? "",
+			message_type: emailName.value ?? "",
+			message: "",
+			sender:
+				"Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City",
+			image_upload: "",
 		},
 		validationSchema: Yup.object({
-			recepient: Yup.string().required('This field is required'),
-			message_type: Yup.string().required('This field is required'),
-			message: Yup.string().required('This field is required'),
-			sender: Yup.string().required('This field is required'),
+			recepient: Yup.string().required("This field is required"),
+			message_type: Yup.string().required("This field is required"),
+			message: Yup.string().required("This field is required"),
+			sender: Yup.string().required("This field is required"),
 		}),
 		onSubmit: async (value, { resetForm }) => {
 			renderBusy(true);
 			const formData = new FormData();
-			formData.append('recepient', value.recepient);
-			formData.append('eml_type', type);
-			formData.append('eml_name', emailName.label);
-			formData.append('eml_id', emailName.value);
-			formData.append('eml_message', value.message);
-			formData.append('sender', value.sender);
-			formData.append('appID', JSON.stringify(appID));
+			formData.append("recepient", value.recepient);
+			formData.append("eml_type", type);
+			formData.append("eml_name", emailName.label);
+			formData.append("eml_id", emailName.value);
+			formData.append("eml_message", value.message);
+			formData.append("sender", value.sender);
+			formData.append("appID", JSON.stringify(appID));
 			if (imageValue != null) {
 				for (let index = 0; index < imageValue.length; index++) {
-					formData.append('image_upload[]', imageValue[index]);
+					formData.append("image_upload[]", imageValue[index]);
 				}
 			}
 			await axios
-				.post(endpoint ?? API_HOST + 'notify-vacant-office', formData, {
-					headers: { 'Content-Type': 'multipart/form-data' },
+				.post(endpoint ?? API_HOST + "notify-vacant-office", formData, {
+					headers: { "Content-Type": "multipart/form-data" },
 				})
 				.then(() => {
-					setSelectedMsg('');
+					setSelectedMsg("");
 					resetForm();
 					popupAlert({
-						message: 'Email was sent successfully',
+						message: "Email was sent successfully",
 					});
 					onClose();
 				})
@@ -127,22 +128,23 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 					});
 				});
 			renderBusy(false);
+			resetForm();
 		},
 	});
 	const addEmailTemplate = async () => {
 		const formData = new FormData();
-		formData.append('eml_type', type);
-		formData.append('eml_name', emailName.label);
-		formData.append('eml_id', emailName.value);
-		formData.append('eml_message', emailFormik.values.message);
+		formData.append("eml_type", type);
+		formData.append("eml_name", emailName.label);
+		formData.append("eml_id", emailName.value);
+		formData.append("eml_message", emailFormik.values.message);
 		await axios
-			.post(endpoint ?? API_HOST + 'add_mail-template', formData, {
-				headers: { 'Content-Type': 'multipart/form-data' },
+			.post(API_HOST + "add_mail-template", formData, {
+				headers: { "Content-Type": "multipart/form-data" },
 			})
 			.then(() => {
-				setSelectedMsg('');
+				setSelectedMsg("");
 				popupAlert({
-					message: 'Email Template was Saved Successfully',
+					message: "Email Template was Saved Successfully",
 				});
 			})
 			.catch((err) => {
@@ -156,13 +158,13 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 	const deleteEmailTemplate = async () => {
 		if (selectedId != null) {
 			await axios
-				.delete(API_HOST + 'delete-mail-template/' + selectedId)
+				.delete(API_HOST + "delete-mail-template/" + selectedId)
 				.then(() => {
-					setSelectedMsg('');
+					setSelectedMsg("");
 					setSelectedId(null);
 					setEmailName({ label: null, value: null });
 					popupAlert({
-						message: 'Email Template was Deleted Successfully',
+						message: "Message type deleted successfully",
 					});
 					getMessageType();
 				})
@@ -174,7 +176,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 				});
 		} else {
 			popupAlert({
-				message: 'Please Select an Email Template to delete',
+				message: "Please Select an Email Template to delete",
 				type: ALERT_ENUM.fail,
 			});
 		}
@@ -188,27 +190,27 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 			margin: 3,
 			marginLeft: 5,
 			borderRadius: 5,
-			width: '99%',
-			display: 'flex',
+			width: "99%",
+			display: "flex",
 		}),
 
 		control: (provided, state) => ({
 			...provided,
-			width: '100%',
-			backgroundColor: 'white',
+			width: "100%",
+			backgroundColor: "white",
 			padding: 0,
-			borderRadius: '5px 0px 0px 5px',
-			fontSize: 'small',
+			borderRadius: "5px 0px 0px 5px",
+			fontSize: "small",
 			border: state.isFocused
-				? '1px solid 	#A9A9A9 !important'
-				: '1px solid #DCDCDC !important',
+				? "1px solid 	#A9A9A9 !important"
+				: "1px solid #DCDCDC !important",
 
-			boxShadow: 'none',
+			boxShadow: "none",
 		}),
 
 		singleValue: (provided, state) => {
 			const opacity = state.isDisabled ? 0.5 : 1;
-			const transition = 'opacity 300ms';
+			const transition = "opacity 300ms";
 			return {
 				...provided,
 				opacity,
@@ -218,46 +220,47 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 
 		container: (provided) => ({
 			...provided,
-			width: '90%',
+			width: "90%",
 		}),
 	};
 
 	return (
 		<React.Fragment>
 			<ModalComponent
-				title='Email Notification'
+				title="Email Notification"
 				isDisplay={isDisplay}
 				onSubmit={emailFormik.handleSubmit}
-				onSubmitType='submit'
+				onSubmitType="submit"
 				onClose={onClose}
-				onSubmitName='Send'
+				onSubmitName="Send"
+				onPressedHidden={true}
 			>
 				<div>
 					<label>Recepient:</label>
 					<InputComponent
-						name='recepient'
+						name="recepient"
 						value={emailFormik.values.recepient}
 						onChange={emailFormik.handleChange}
 					/>
 
 					{emailFormik.touched.recepient && emailFormik.errors.recepient ? (
-						<p className='error-validation-styles'>
+						<p className="error-validation-styles">
 							{emailFormik.errors.recepient}
 						</p>
 					) : null}
 				</div>
 				<br />
 				<label>Message:</label>
-				<div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
+				<div style={{ width: "100%", display: "flex", flexDirection: "row" }}>
 					<Creatable
-						name='message_type'
+						name="message_type"
 						options={options}
 						styles={customStyles}
 						value={{
-							label: options.label ?? emailName.label ?? 'Select Template',
-							value: options.value ?? emailName.value ?? '0',
+							label: options.label ?? emailName.label ?? "Select Template",
+							value: options.value ?? emailName.value ?? "0",
 						}}
-						className='creatable-design'
+						className="creatable-design"
 						isClearable={true}
 						onChange={(e) => {
 							setEmailName({ label: e?.label, value: e?.value });
@@ -266,6 +269,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 									if (mType[index].id === e.value) {
 										setSelectedId(mType[index].id);
 										setSelectedMsg(mType[index].message);
+										emailFormik.setFieldValue("message", mType[index].message);
 									}
 								}
 							} else {
@@ -273,25 +277,25 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 							}
 						}}
 					/>
-					<div className='email_icon'>
+					<div className="email_icon">
 						<IconComponent
-							id='add=email-template'
-							icon={<BsPlusCircle />}
-							className='plantilla-icon save'
-							toolTipId='email-add'
-							textHelper='Create this email template'
+							id="add=email-template"
+							icon={<BsCheckCircle />}
+							className="plantilla-icon save"
+							toolTipId="email-add"
+							textHelper="Create this email template"
 							onClick={() => {
 								addEmailTemplate();
 							}}
 						/>
 					</div>
-					<div className='email_icon'>
+					<div className="email_icon">
 						<IconComponent
-							id='delete-email-template'
+							id="delete-email-template"
 							icon={<BsXCircle />}
-							className='plantilla-icon delete'
-							toolTipId='email-delete'
-							textHelper='Delete this email Template'
+							className="plantilla-icon delete"
+							toolTipId="email-delete"
+							textHelper="Delete this email Template"
 							onClick={() => {
 								deleteEmailTemplate();
 							}}
@@ -309,7 +313,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 					/> */}
 					{emailFormik.touched.message_type &&
 					emailFormik.errors.message_type ? (
-						<p className='error-validation-styles'>
+						<p className="error-validation-styles">
 							{emailFormik.errors.message_type}
 						</p>
 					) : null}
@@ -317,14 +321,14 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 
 				<br />
 				<div>
-					<div className='email-modal-plantilla'>
+					<div className="email-modal-plantilla">
 						<RichTextEditorComponent
-							setFieldValue={(val) => emailFormik.setFieldValue('message', val)}
+							setFieldValue={(val) => emailFormik.setFieldValue("message", val)}
 							value={selectedMsg}
 						/>
 					</div>
 					{emailFormik.touched.message && emailFormik.errors.message ? (
-						<p className='error-validation-styles'>
+						<p className="error-validation-styles">
 							{emailFormik.errors.message}
 						</p>
 					) : null}
@@ -334,17 +338,17 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 				<div>
 					<label>Sender:</label>
 					<TextAreaComponent
-						style={{ whiteSpace: 'pre-line' }}
-						name='sender'
+						style={{ whiteSpace: "pre-line" }}
+						name="sender"
 						value={
-							emailFormik.values.sender === ''
-								? 'Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City'
+							emailFormik.values.sender === ""
+								? "Personnel Division, Administrative and Legal Service\nDepartment of Science and Technology\nGen. Santos Avenue. Bicutan, Taguig City"
 								: emailFormik.values.sender
 						}
 						onChange={emailFormik.handleChange}
 					/>
 					{emailFormik.touched.sender && emailFormik.errors.sender ? (
-						<p className='error-validation-styles'>
+						<p className="error-validation-styles">
 							{emailFormik.errors.sender}
 						</p>
 					) : null}
@@ -353,9 +357,9 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 				<div>
 					<label>Attachment:</label>
 					<UploadAttachmentComponent
-						name='image_upload'
+						name="image_upload"
 						formik={emailFormik}
-						accept='image/png, image/jpeg'
+						accept="image/png, image/jpeg"
 						isMulti={true}
 						onChange={(e) => {
 							setImageValue(e.target.files);
@@ -363,7 +367,7 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 					/>
 					{emailFormik.touched.image_upload &&
 					emailFormik.errors.image_upload ? (
-						<p className='error-validation-styles'>
+						<p className="error-validation-styles">
 							{emailFormik.errors.image_upload}
 						</p>
 					) : null}

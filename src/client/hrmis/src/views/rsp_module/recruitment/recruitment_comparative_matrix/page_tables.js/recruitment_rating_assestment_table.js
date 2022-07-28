@@ -232,7 +232,9 @@ const RecruitmentRatingAssessment = ({
 									toolTipId="ra_pds_tooltip"
 									// TODO: Connect Sean Employee PDS to this button,
 									// need to create
-									onClick={() => console.log("view_pds")}
+									onClick={() =>
+										navigate("/pds-applicant/form-page-one/" + applicant_id)
+									}
 									textHelper={"View PDS"}
 								/>
 							</td>

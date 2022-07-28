@@ -1,27 +1,46 @@
 .button-components {
-  padding: 7px 15px 7px 15px;
-  border: none;
-  color: white;
-  background: map-get($primaryColor, regular);
-  border-radius: 5px;
-  border: 1px solid map-get($primaryColor, regular);
-  font-weight: 600;
-  display: flex;
-  flex-direction: row;
-  text-align: end;
-  align-items: center;
+	padding: 7px 15px 7px 15px;
+	border: none;
+	color: white;
+	background: map-get($primaryColor, regular);
+	border-radius: 5px;
+	border: 1px solid map-get($primaryColor, regular);
+	font-weight: 600;
+	display: flex;
+	flex-direction: row;
+	text-align: end;
+	align-items: center;
 }
+
+.delete-button-color {
+	padding: 7px 15px 7px 15px;
+	border: none;
+	color: white;
+	border-radius: 5px;
+	font-weight: 600;
+	display: flex;
+	flex-direction: row;
+	text-align: end;
+	align-items: center;
+	background: map-get($redColor, regular);
+	border: 1px solid map-get($redColor, regular) !important;
+}
+
+.delete-button-color:hover {
+	background: map-get($redColor, hover) !important;
+}
+
 .button-components:hover {
-  transition: 0.3s;
-  background-color: #033e72;
+	transition: 0.3s;
+	background-color: #033e72;
 }
 
 .bc-logo-component {
-  display: flex;
-  align-items: center;
-  text-align: center;
+	display: flex;
+	align-items: center;
+	text-align: center;
 }
 
 .button-components:active {
-  transform: translateY(2px);
+	transform: translateY(2px);
 }

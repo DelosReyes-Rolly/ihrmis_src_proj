@@ -1,6 +1,6 @@
-import { BsArrowDown, BsArrowDownUp, BsArrowUp } from 'react-icons/bs';
-import { MdAdd, MdMoreHoriz } from 'react-icons/md';
-import axios from 'axios';
+import { BsArrowDown, BsArrowDownUp, BsArrowUp } from "react-icons/bs";
+import { MdAdd, MdMoreHoriz } from "react-icons/md";
+import axios from "axios";
 import {
 	useTable,
 	useSortBy,
@@ -38,6 +38,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 	const [plotApplicantData, setApplicantData] = useState([]);
 	const [value, setValue] = useState(0);
 	const [modalData, setModalData] = useState([]);
+	const [documentApplicant, setDocumentApplicant] = useState([]);
 	const [position, setPositions] = useState("");
 	const navigate = useNavigate();
 
@@ -48,8 +49,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 			data.forEach((element) => {
 				let values2 = [];
 				values2 = {
-					pos_id: element.itm_id,
-					pos_title: element.tblpositions.pos_title,
+					id: element.itm_id,
+					title: element.tblpositions.pos_title,
 				};
 				let exists = positions.some(
 					(position) => position.pos_id === element.itm_id
@@ -63,6 +64,33 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 			setPositionsFilter(positions);
 		});
 	};
+
+	const statusFilters = [
+		{
+			id: 1,
+			title: "Completed",
+		},
+		{
+			id: 2,
+			title: "Qualified",
+		},
+		{
+			id: 3,
+			title: "Disqualified",
+		},
+		{
+			id: 4,
+			title: "Incomplete",
+		},
+		{
+			id: 5,
+			title: "Appointed",
+		},
+		{
+			id: 6,
+			title: "Deferred",
+		},
+	];
 
 	const applicantDataApi = useCallback(async () => {
 		await axios
@@ -86,6 +114,9 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 						let position_message = data[i].position_message
 							.split("\n")
 							.map((str, key) => <p key={key}>{str}</p>);
+						let sts_remark =
+							type === 2 ? `Disqualified ${data[i].fail_message}` : "Qualified";
+						let statusID = type === 1 ? 2 : 3;
 						let values = {
 							app_id: data[i].app_id ?? "N/a",
 							app_email: data[i].app_email,
@@ -94,7 +125,8 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 							pos_applied: position_message ?? "N/A",
 							position: data[i].plantilla ?? "N/A",
 							app_qualifications: qualification_message ?? "N/A",
-							sts_App_remarks: "To be done",
+							sts_App_remarks: data[i].status_message ?? sts_remark ?? "",
+							status: data[i].status ?? statusID,
 						};
 						dataPlot.push(values);
 					}
@@ -144,6 +176,10 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 				Header: "Status",
 				accessor: "sts_App_remarks",
 			},
+			{
+				Header: "Status",
+				accessor: "status",
+			},
 		],
 		[]
 	);
@@ -163,7 +199,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 		}
 	);
 	const initialState = {
-		hiddenColumns: ["app_id", "app_email", "position"],
+		hiddenColumns: ["app_id", "app_email", "position", "status"],
 	};
 	const {
 		getTableProps,
@@ -229,6 +265,9 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 					modalData.app_id
 			);
 		}
+		if (value === 2) {
+			setDocumentApplicant(modalData.app_id);
+		}
 		if (value === 4) {
 			navigate("/rsp/dashboard");
 		}
@@ -280,10 +319,32 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 										<option
 											className="options"
 											key={key}
-											defaultValue={item.pos_id}
-											value={item.pos_id}
+											defaultValue={item.id}
+											value={item.id}
 										>
-											{item.pos_title}
+											{item.title}
+										</option>
+									);
+								})}
+							</select>
+						</span>
+						<span className="filter_buttons margin-left-1 selector-span-1">
+							<select
+								defaultValue={"DEFAULT"}
+								onChange={(e) => {
+									setFilter("status", e.target.value);
+								}}
+							>
+								<option value="">All</option>
+								{statusFilters.map((item, key) => {
+									return (
+										<option
+											className="options"
+											key={key}
+											defaultValue={item.id}
+											value={item.id}
+										>
+											{item.title}
 										</option>
 									);
 								})}
@@ -308,7 +369,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 								className="main-header"
 								{...headerGroup.getHeaderGroupProps()}
 							>
-								{headerGroup.headers.map((column) => (
+								{headerGroup.headers.map((column, index) => (
 									<th {...column.getHeaderProps(column.getSortByToggleProps())}>
 										<span>
 											{column.isSorted ? (
@@ -318,10 +379,12 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 													<BsArrowUp />
 												)
 											) : (
-												<BsArrowDownUp style={{ opacity: '60%' }} />
+												index !== 0 && (
+													<BsArrowDownUp style={{ opacity: "60%" }} />
+												)
 											)}
 										</span>
-										&nbsp;{column.render('Header')}
+										&nbsp;{column.render("Header")}
 									</th>
 								))}
 							</tr>
@@ -411,9 +474,9 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
 				onClose={() => {
 					setValue(0);
 				}}
-				appID={modalData?.appID}
+				appID={documentApplicant}
 				level={1}
-				cluster='RP'
+				cluster="RP"
 			/>
 			<RecruitmentStatusModal
 				isDisplay={value === 3 ? true : false}

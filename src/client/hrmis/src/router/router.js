@@ -52,6 +52,9 @@ import HRMPSBEvaluation from "../views/rsp_module/hrmpsb/parts/hrmpsb_evaluation
 import OnboardingMain from "../views/rsp_module/recruitment/onboarding/onboarding_main";
 import CalendarView from "../views/rsp_module/calendar/calendar_view";
 import BackgroundCheckFormOne from "../views/pds_form/backgorund_check/forms/background_check_one";
+import BackgroundCheckFormTwo from "../views/pds_form/backgorund_check/forms/background_check_two";
+import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/background_check_three";
+import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -166,10 +169,28 @@ const MainRouter = () => {
 					PDS ROUTES ARE DEFINED HERE
 																																																																																																																																																																																																																																		===========================================
 				*/}
-				<Route
-					path="/background-check/:item/:item2"
-					element={<BackgroundCheckFormOne />}
-				></Route>
+				<Route path="/background-check/">
+					<Route
+						exact
+						path="/background-check/:reference/:applicant"
+						element={<BackgroundCheckFormOne />}
+					/>
+					<Route
+						exact
+						path="/background-check/two/:reference/:applicant"
+						element={<BackgroundCheckFormTwo />}
+					/>
+					<Route
+						exact
+						path="/background-check/three/:reference/:applicant"
+						element={<BackgroundCheckFormThree />}
+					/>
+					<Route
+						exact
+						path="/background-check/thank-you"
+						element={<BackgroundCheckThankYou />}
+					/>
+				</Route>
 
 				<Route path="/applicant/:position" element={<FormPageOne />}></Route>
 				<Route path="/pds-applicant">

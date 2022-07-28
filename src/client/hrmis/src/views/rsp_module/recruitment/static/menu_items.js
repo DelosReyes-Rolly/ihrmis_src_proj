@@ -85,7 +85,7 @@ export const recruitmentMenuItem = [
 	},
 	{
 		id: 3,
-		label: "Disqualify",
+		label: "Failed",
 		link: "#",
 	},
 	{
@@ -108,7 +108,7 @@ export const recruitmentDisqualifiedMenuItem = [
 	},
 	{
 		id: 3,
-		label: "Qualify",
+		label: "Passed",
 		link: "#",
 	},
 	{

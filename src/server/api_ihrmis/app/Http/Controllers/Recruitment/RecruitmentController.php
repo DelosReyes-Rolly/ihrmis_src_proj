@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantsAssessments;
+use App\Models\Tbloffices;
 use App\Services\Recruitment\RecruitmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -54,6 +55,14 @@ class RecruitmentController extends Controller
             4 => "Bachelor's",
             5 => "Doctorate",
         ];
+        $statuses = [
+            1 => "Completed",
+            2 => "Qualified",
+            3 => "Disqualified",
+            4 => "Incomplete",
+            5 => "Appointed",
+            6 => "Deferred",
+        ];
         $applicants = [];
         if (isset($qualified_applicants[0])) {
             foreach ($qualified_applicants as $applicant) {
@@ -63,7 +72,16 @@ class RecruitmentController extends Controller
                 $email = $data->TblapplicantsProfile->app_email_addr;
                 $number = $data->TblapplicantsProfile->app_mobile_no;
                 $profile_message = $age . " years Old; " . $civil_status . ";\n" . $email . ";\n" . $number;
-
+                $status_message = null;
+                $statusID = null;
+                if (count($data->tblapplicantsStatus) != 0) {
+                    $status = $data->tblapplicantsStatus[count($data->tblapplicantsStatus) - 1];
+                    $status_message = $statuses[$status->sts_app_stg_id];
+                    if ($status->sts_app_remarks != null) {
+                        $status_message .= ' ' . $status->sts_app_remarks;
+                    }
+                    $statusID = $status->sts_app_stg_id;
+                }
                 /**
                  * Loop through  and Trainings to get Highest
                  */
@@ -131,7 +149,8 @@ class RecruitmentController extends Controller
 
                 $name = $data->TblapplicantsProfile->app_nm_last . ", " . $data->TblapplicantsProfile->app_nm_first . ' ' . substr($data->TblapplicantsProfile->app_nm_mid, 0, 1) . '.';
                 $email = $data->TblapplicantsProfile->app_email_addr;
-                $position_message = $data->TblPositions->pos_title . ";\n" . $data->TblOffices->ofc_acronym;
+                $parent_office = Tbloffices::where('ofc_id', $data->TblOffices->ofc_ofc_id)->first();
+                $position_message = $data->TblPositions->pos_title . ";\n" . $parent_office->ofc_acronym . '-' . $data->TblOffices->ofc_acronym;
                 $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
                     $highest['experience_years'] . $year_text . "\n" . $highest['training_hours'] . " hours training in " .
                     $highest['training'] . "; " . $highest['eligibility'] . "";
@@ -143,6 +162,9 @@ class RecruitmentController extends Controller
                     'profile_message' => $profile_message,
                     'qualification_message' => $qualification_message,
                     'position_message' => $position_message,
+                    'status' => $statusID,
+                    'status_message' =>  $status_message,
+                    'fail_message' => $data->failedIn,
                     'position' => $data->TblPositions->pos_title,
                     'plantilla' => $data->TblplantillaItems->itm_id,
                 ];
