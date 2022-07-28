@@ -9,6 +9,7 @@ use App\Http\Controllers\Applicant\TblapplicantEducationsController;
 use App\Http\Controllers\Applicant\TblapplicantExperiencesController;
 use App\Http\Controllers\Applicant\TblapplicantOtherInfoController;
 use App\Http\Controllers\Applicant\TblapplicantProfileController;
+use App\Http\Controllers\Applicant\TblApplicantReferenceCheck;
 use App\Http\Controllers\Applicant\TblapplicantReferencesController;
 use App\Http\Controllers\Applicant\TblapplicantRequirementsController;
 use App\Http\Controllers\Applicant\TblapplicantStatusController;
@@ -93,6 +94,10 @@ Route::get('new-reference/{id}', [TblapplicantReferencesController::class, "getR
 Route::post('new-reference/{id?}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
 Route::delete('new-reference/{id}', [TblapplicantReferencesController::class, "removeReferenceRecord"]);
 
+//crud-ref-check
+Route::get('get-reference-check/{reference}', [TblApplicantReferenceCheck::class, "getReferenceCheck"]);
+Route::post('new-reference-check', [TblApplicantReferenceCheck::class, "addReferenceCheckAnswer"]);
+
 //Info
 Route::get('new-get-delcaration/{id}', [TblapplicantDeclarationController::class, "getDataDeclaration"]);
 Route::post('new-declaration/{id}', [TblapplicantDeclarationController::class, "onSubmitDecleration"]);
@@ -173,7 +178,7 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
-Route::delete('delete-evaluation-battery/{itm_id}',[EvaluationBattery::class, 'deleteSpecific']);
+Route::delete('delete-evaluation-battery/{itm_id}', [EvaluationBattery::class, 'deleteSpecific']);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
@@ -183,31 +188,19 @@ Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
 Route::get('user-accounts', [AuthController::class, "getUsers"]);
 Route::post('update-user', [AuthController::class, "updateUser"]);
-
-
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
 Route::post('save-hrmpsb-remarks', [RecruitmentController::class, 'saveHRMPSBRemarks']);
-
-
 Route::post('employement-exam', [RecruitmentController::class, 'saveEmploymentExam']);
-
 Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
 Route::get('get-cm-data/{plantilla_id}', [RecruitmentController::class, "getCMData"]);
 Route::get('get-ra-data/{plantilla_id}/{applicant_id}', [RecruitmentController::class, "getRAData"]);
-
 Route::get('get-battery-exam/{level}/{sg}/{appID}', [RecruitmentController::class, "getBattery"]);
-
 Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-assessment/{appID}', [RecruitmentController::class, "getAssessment"]);
 Route::post('save-appointment', [RecruitmentController::class, "saveAppointment"]);
 Route::get('get-hrmpsb-evaluation/{appID}/{type}', [RecruitmentController::class, "getHRMPSB"]);
-
-
 Route::post('save-hrmpsb-evaluation', [RecruitmentController::class, "saveHRMPSB"]);
-
-
-
 Route::get('getRAIDATA/{month}/{year}', [RecruitmentController::class, "getRAIDATA"]);
 
 //Reports
@@ -223,7 +216,7 @@ Route::get('getApplicantAgency/{offceId}', [RecruitmentController::class, "getAp
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('mail-template/{type?}', [MailController::class, "getEmailTemplate"]);
-Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
+Route::post('add_mail-template', [MailController::class, "addEmail"]);
 Route::delete('delete-mail-template/{template_id}', [MailController::class, "deleteEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
@@ -336,6 +329,3 @@ Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class,
 Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
 Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
 Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);
-
-
-

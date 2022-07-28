@@ -85,7 +85,6 @@ class RecruitmentService
         $education = [];
         $experience = [];
         $training = [];
-
         /**
          * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.
          */
@@ -114,7 +113,9 @@ class RecruitmentService
             $applicantEducSpecify = [];
             $applicantExpField = [];
             $applicantTrnCmptncy = [];
+            $failedIn = '';
             $requirements = 0;
+
             if (count($applicant->tblapplicantsStatus) != 0) {
                 $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
                 if ($status->sts_app_stg_id == 2) {
@@ -154,31 +155,56 @@ class RecruitmentService
                     }
                 }
             }
+            $check = false;
             foreach ($civil_service_type as $CS) {
                 if (in_array($CS, $applicantEligibility)) {
                     $requirements++;
+                    $check = true;
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Elegibility,';
+            }
+
+            $check = false;
             foreach ($education as $ED) {
                 $exploded_requirement = explode(':', $ED);
                 if (in_array($exploded_requirement[0], $applicantEducLevel) && in_array($exploded_requirement[1], $applicantEducSpecify)) {
                     $requirements++;
+                    $check = true;
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Education,';
+            }
+
+            $check = false;
             foreach ($experience as $EXP) {
                 foreach ($applicantExpField as $applicant_exp) {
                     if ($EXP == $applicant_exp['field'] && $experienceYears <= $applicant_exp['years']) {
                         $requirements++;
+                        $check = true;
                     }
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Experience,';
+            }
+
+            $check = false;
             foreach ($training as $TRN) {
                 foreach ($applicantTrnCmptncy as $applicant_trn) {
                     if ($TRN == $applicant_trn['competency'] && $trainingHours <= $applicant_trn['hours']) {
                         $requirements++;
+                        $check = true;
                     }
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Training,';
+            }
+            $applicant->failedIn = $failedIn;
+
             if ($requirements >= 4) {
                 array_push($qualified_applicants, $applicant);
             } else {
@@ -288,10 +314,11 @@ class RecruitmentService
             }
         }
         $requirements = [
-            'exp' => ucfirst($number->format($experienceYears)) . ' (' . $experienceYears . ')' . ' years of relevant experience',
+            // 'exp' => ucfirst($number->format($experienceYears)) . ' (' . $experienceYears . ' years of relevant experience',
+            'exp' => $experienceYears . ' years of relevant experience',
             // 'edu' => $education_level($highest['education_level']) . ' relevant to the job'
             'edu' => $education_level[$highest] . ' relevant to the job',
-            'trn' => ucfirst($number->format($trainingHours)) . ' (' . $trainingHours . ')' . ' hours of relevant training',
+            'trn' => $trainingHours . ' hours of relevant training',
             'eli' => $civil_service_text,
         ];
         return $requirements;

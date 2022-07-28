@@ -137,4 +137,9 @@ class Tblapplicants extends Model
     {
         return $this->HasManyThrough(User::class, TblHrmpsbScore::class, 'hrmpsb_app_id', 'user_id', 'app_id', 'hrmpsb_user_id');
     }
+
+    public function tblReference()
+    {
+        return $this->hasMany(TblapplicantReferences::class, 'ref_app_id', 'app_id');
+    }
 }

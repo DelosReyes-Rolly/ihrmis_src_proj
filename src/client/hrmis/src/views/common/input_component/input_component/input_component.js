@@ -21,6 +21,7 @@ const InputComponent = (props) => {
 			readOnly={props.readOnly}
 			disabled={props.disabled}
 			step={props.step}
+			checked={props.checked}
 		></input>
 	);
 };
