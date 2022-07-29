@@ -279,6 +279,24 @@ export const GroupClusterData = [
 		title: 'Other',
 	},
 ];
+export const UserAccountLevel = [
+	{
+		id: 1,
+		title: 'Admin',
+	},
+	{
+		id: 2,
+		title: 'End-User',
+	},
+	{
+		id: 3,
+		title: 'HRMPSB',
+	},
+	{
+		id: 4,
+		title: 'Employee',
+	},
+];
 export const getDocumentGroup = async () => {
 	let groups = [];
 	await axios

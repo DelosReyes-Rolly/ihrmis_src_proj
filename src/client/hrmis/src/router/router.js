@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import {
   SentEmailConfirmation,
   SuccessEmailConfirmation,
@@ -10,7 +16,7 @@ import FailResponseComponent from "../views/common/response_component/fail_respo
 import FormPageFive from "../views/pds_form/parts/forms/form_page_five";
 import FormPageFour from "../views/pds_form/parts/forms/form_page_four";
 import FormPageOne from "../views/pds_form/parts/forms/form_page_one";
-// import FormPageSix from "../views/pds_form/parts/forms/form_page_six";
+import FormPageSix from "../views/pds_form/parts/forms/form_page_six";
 import FormPageThree from "../views/pds_form/parts/forms/form_page_three";
 import FormPageTwo from "../views/pds_form/parts/forms/form_page_two";
 import SuccessResponseComponent from "../views/common/response_component/success_response_component/success_response_component";
@@ -38,21 +44,33 @@ import EvaluationBatteryBaseComponent from "../views/library/evaluation_battery/
 import PositionLibrary from "../views/library/postion_page/position_library";
 import RecruitmentComparativeMatrix from "../views/rsp_module/recruitment/recruitment_comparative_matrix/recruitment_comparative_matrix";
 import FormSix from "../views/pds_form/parts/forms/form_six";
+import UserAccountsBaseComponent from "../views/library/user_accounts/parts/user_accounts_base_component";
+import HRMPSB from "../views/rsp_module/hrmpsb/hrmpsb_base_component";
+import HRMPSBpositions from "../views/rsp_module/hrmpsb/parts/hrmpsb_open_positions";
+import HRMPSBDetails from "../views/rsp_module/hrmpsb/parts/hrmpsb_details";
+import HRMPSBEvaluation from "../views/rsp_module/hrmpsb/parts/hrmpsb_evaluation";
 import OnboardingMain from "../views/rsp_module/recruitment/onboarding/onboarding_main";
 import CalendarView from "../views/rsp_module/calendar/calendar_view";
 import WelcomeAboardPage from "../views/rsp_module/recruitment/welcome_aboard_page/welcome_aboard_page";
+import BackgroundCheckFormOne from "../views/pds_form/backgorund_check/forms/background_check_one";
+import BackgroundCheckFormTwo from "../views/pds_form/backgorund_check/forms/background_check_two";
+import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/background_check_three";
+import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
   const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
   const isFail = useSelector((state) => state.popupResponse.isFail);
   const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    // if (window.sessionStorage.getItem('token') == null) navigate('/');
+    if (window.sessionStorage.getItem("user_level") === "3") {
+      // navigate('/hrmpsb');
+    }
 
-  // useEffect(() => {
-  // 	if (window.sessionStorage.getItem('token') == null) navigate('/');
-
-  // 	// eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   return (
     <React.Fragment>
@@ -152,6 +170,29 @@ const MainRouter = () => {
 					PDS ROUTES ARE DEFINED HERE
 																																																																																																																																																																																																																																		===========================================
 				*/}
+        <Route path="/background-check/">
+          <Route
+            exact
+            path="/background-check/:reference/:applicant"
+            element={<BackgroundCheckFormOne />}
+          />
+          <Route
+            exact
+            path="/background-check/two/:reference/:applicant"
+            element={<BackgroundCheckFormTwo />}
+          />
+          <Route
+            exact
+            path="/background-check/three/:reference/:applicant"
+            element={<BackgroundCheckFormThree />}
+          />
+          <Route
+            exact
+            path="/background-check/thank-you"
+            element={<BackgroundCheckThankYou />}
+          />
+        </Route>
+
         <Route path="/applicant/:position" element={<FormPageOne />}></Route>
         <Route path="/pds-applicant">
           <Route path="/pds-applicant">
@@ -173,33 +214,27 @@ const MainRouter = () => {
             path="/pds-applicant/form-page-two/:item"
             element={<FormPageTwo />}
           />
-
           <Route
             path="/pds-applicant/form-page-three/:item"
             element={<FormPageThree />}
           />
-
           <Route
             path="/pds-applicant/form-page-four/:item"
             element={<FormPageFour />}
           />
-
           <Route
             path="/pds-applicant/form-page-five/:item"
             element={<FormPageFive />}
           />
-
           <Route
             path="/pds-applicant/form-page-six/:item"
             element={<FormSix />}
             // element={<FormPageSix />}
           />
-
           <Route
             path="/pds-applicant/email-confirmation/:email"
             element={<SentEmailConfirmation />}
           />
-
           <Route
             path="/pds-applicant/success-confirmation/:item"
             element={<SuccessEmailConfirmation />}
@@ -215,7 +250,7 @@ const MainRouter = () => {
         {/* ===========================================
 						LIBRARY ROUTES ARE DEFINED HERE
 						===========================================
-					*/}
+				*/}
         <Route path="/library" element={<MainPageLayout />}>
           <Route index element={<Navigate to="/library/office/" />} />
           <Route path="/library/office/" element={<LibraryOfficeView />} />
@@ -239,6 +274,21 @@ const MainRouter = () => {
             path="/library/service-history"
             element={<HistoryServiceLibrary />}
           />
+          <Route
+            path="/library/user-accounts"
+            element={<UserAccountsBaseComponent />}
+          />
+        </Route>
+        <Route path="/hrmpsb" element={<HRMPSB />}>
+          <Route path="/hrmpsb/" element={<HRMPSBpositions />}></Route>
+          <Route
+            path="/hrmpsb/details/:item"
+            element={<HRMPSBDetails />}
+          ></Route>
+          <Route
+            path="/hrmpsb/evaluation/:item/:item2"
+            element={<HRMPSBEvaluation />}
+          ></Route>
         </Route>
         {/* ===========================================
              		404 PAGE: WHEN ROUTES AREN'T DEFINE

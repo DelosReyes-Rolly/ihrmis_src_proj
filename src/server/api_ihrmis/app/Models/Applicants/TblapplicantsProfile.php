@@ -2,6 +2,7 @@
 
 namespace App\Models\Applicants;
 
+use App\Http\Controllers\Applicant\TblApplicantReferenceCheck;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,5 +56,13 @@ class TblapplicantsProfile extends Model
     public function tblapplicants()
     {
         return $this->hasOne(Tblapplicants::class, 'app_id', 'app_id');
+    }
+
+    public function tblReference(){
+        return $this->hasMany(TblapplicantReferences::class,'ref_app_id','app_id');
+    }
+
+    public function tblReferenceChecks(){
+        return $this->hasMany(TblApplicantReferenceCheckModel::class,'chk_ref_app_id','app_id');
     }
 }

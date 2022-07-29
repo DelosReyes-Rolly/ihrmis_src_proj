@@ -4,6 +4,7 @@ namespace App\Services\Recruitment;
 
 use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsAssessments;
+use App\Models\Applicants\TblHrmpsbScore;
 use App\Models\ExamScoreModel;
 use App\Models\Library\EvaluationBatteryModel;
 use App\Models\TblCmptncyAssessment;
@@ -59,12 +60,17 @@ class RecruitmentService
             'tblapplicantExperience',
             'tblapplicantTrainings',
             'TblapplicantsProfile',
+            'TblcmptncyRatings',
+            'TblAssessments',
+            'TblCmptcyScore',
+            'TblCmptcy',
+            'TblHrmpsbScore',
+            'TblUser',
             'TblplantillaItems',
             'TblPositions',
             'tblapplicantsStatus',
             'tbltransactionStages',
             'TblOffices',
-            'TblAssessments'
         )->where('app_itm_id', $plantilla_id)->get();
 
         //Get Position Requirements
@@ -79,7 +85,6 @@ class RecruitmentService
         $education = [];
         $experience = [];
         $training = [];
-
         /**
          * Gets All Applicant Qualifications and inserts it into an Array (due to the possibility) for comparison.
          */
@@ -108,7 +113,9 @@ class RecruitmentService
             $applicantEducSpecify = [];
             $applicantExpField = [];
             $applicantTrnCmptncy = [];
+            $failedIn = '';
             $requirements = 0;
+
             if (count($applicant->tblapplicantsStatus) != 0) {
                 $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
                 if ($status->sts_app_stg_id == 2) {
@@ -148,31 +155,56 @@ class RecruitmentService
                     }
                 }
             }
+            $check = false;
             foreach ($civil_service_type as $CS) {
                 if (in_array($CS, $applicantEligibility)) {
                     $requirements++;
+                    $check = true;
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Elegibility,';
+            }
+
+            $check = false;
             foreach ($education as $ED) {
                 $exploded_requirement = explode(':', $ED);
                 if (in_array($exploded_requirement[0], $applicantEducLevel) && in_array($exploded_requirement[1], $applicantEducSpecify)) {
                     $requirements++;
+                    $check = true;
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Education,';
+            }
+
+            $check = false;
             foreach ($experience as $EXP) {
                 foreach ($applicantExpField as $applicant_exp) {
                     if ($EXP == $applicant_exp['field'] && $experienceYears <= $applicant_exp['years']) {
                         $requirements++;
+                        $check = true;
                     }
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Experience,';
+            }
+
+            $check = false;
             foreach ($training as $TRN) {
                 foreach ($applicantTrnCmptncy as $applicant_trn) {
                     if ($TRN == $applicant_trn['competency'] && $trainingHours <= $applicant_trn['hours']) {
                         $requirements++;
+                        $check = true;
                     }
                 }
             }
+            if (!$check) {
+                $failedIn .= 'Training,';
+            }
+            $applicant->failedIn = $failedIn;
+
             if ($requirements >= 4) {
                 array_push($qualified_applicants, $applicant);
             } else {
@@ -207,6 +239,8 @@ class RecruitmentService
             'TblAssessments',
             'TblCmptcyScore',
             'TblCmptcy',
+            'TblHrmpsbScore',
+            'TblUser',
         )->where('app_itm_id', $plantilla_id)->where('app_id', $applicant_id)->get();
         return $applicant_query;
     }
@@ -280,10 +314,11 @@ class RecruitmentService
             }
         }
         $requirements = [
-            'exp' => ucfirst($number->format($experienceYears)) . ' (' . $experienceYears . ')' . ' years of relevant experience',
+            // 'exp' => ucfirst($number->format($experienceYears)) . ' (' . $experienceYears . ' years of relevant experience',
+            'exp' => $experienceYears . ' years of relevant experience',
             // 'edu' => $education_level($highest['education_level']) . ' relevant to the job'
             'edu' => $education_level[$highest] . ' relevant to the job',
-            'trn' => ucfirst($number->format($trainingHours)) . ' (' . $trainingHours . ')' . ' hours of relevant training',
+            'trn' => $trainingHours . ' hours of relevant training',
             'eli' => $civil_service_text,
         ];
         return $requirements;
@@ -671,8 +706,7 @@ class RecruitmentService
         $date = $request->date;
 
         foreach ($_POST as $key => $value) {
-            $values[] = $value;
-            if ($key != 'app_id' && $key != 'date' && $key != 'remarks') {
+            if ($key != 'app_id' && $key != 'date' && $key != 'remarks' && $key != 'type') {
                 $query = ExamScoreModel::where("exam_app_id", $appID)->where("exam_battery_id", $key)->first();
                 if (!isset($query)) {
                     $query = new ExamScoreModel();
@@ -685,8 +719,14 @@ class RecruitmentService
         }
         try {
             $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
-            $query->ass_exam_remarks = $request->remarks;
-            $query->ass_exam_date = $request->date;
+            if ($request->type == 4) {
+                $query->ass_exam_remarks = $request->remarks;
+                $query->ass_exam_date = $request->date;
+            } else {
+                $query->ass_psych_remarks = $request->remarks;
+                $query->ass_psych_date = $request->date;
+            }
+
 
             $query->save();
         } catch (\Throwable $th) {
@@ -717,5 +757,52 @@ class RecruitmentService
         return response()->json([
             'message' => "Saved Successfully",
         ], 200);
+    }
+
+    public function getHRMPSB($appID, $type)
+    {
+        $query = TblHrmpsbScore::with('TblAssessment', 'TblUser')->where('hrmpsb_app_id', $appID)->where('hrmpsb_type', $type)->get();
+        if (empty($query)) {
+            return response()->json(['message' => "Selected Applicant does not exist"], 404);
+        } else {
+            return $query;
+        }
+    }
+
+    public function saveHRMPSB(Request $request)
+    {
+        $eval = json_decode($request->evaluation);
+        $test = [];
+        foreach ($eval as $key => $value) {
+            $query = TblHrmpsbScore::where("hrmpsb_user_id", $request->hrmpsb_user_id)
+                ->where("hrmpsb_type", $value->type)
+                ->where("hrmpsb_app_id", $request->appID)->first();
+            if (!isset($query)) {
+                $query = new TblHrmpsbScore();
+            }
+            $query->hrmpsb_user_id = $request->hrmpsb_user_id;
+            $query->hrmpsb_app_id = $request->appID;
+            $query->hrmpsb_type = $value->type;
+            $query->hrmpsb_score = $value->score;
+            $query->hrmpsb_remarks = $value->remark;
+            $query->save();
+        }
+        return $query;
+    }
+
+    public function saveHRMPSBRemarks(Request $request)
+    {
+        $query = TblapplicantsAssessments::firstOrNew(["ass_app_id" => $request->app_id]);
+        if ($request->type == 1) {
+            $query->ass_attribute = $request->remarks;
+        }
+        if ($request->type == 2) {
+            $query->ass_accomplishment = $request->remarks;
+        }
+        if ($request->type == 3) {
+            $query->ass_performance = $request->remarks;
+        }
+        $query->save();
+        return $query;
     }
 }

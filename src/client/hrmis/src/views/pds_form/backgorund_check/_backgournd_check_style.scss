@@ -1,0 +1,34 @@
+.two {
+	display: flex;
+	height: 1rem;
+	padding: 1rem 0rem;
+	width: 80%;
+	.radio-buttons {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+	}
+}
+
+.five {
+	display: flex;
+	height: 1rem;
+	padding: 1rem 0rem;
+	width: 70%;
+	.radio-buttons {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+	}
+}
+.nine {
+	display: flex;
+	padding: 1rem 0rem;
+	width: 80%;
+	flex-wrap: wrap;
+	.checkbox {
+		width: auto !important;
+	}
+}

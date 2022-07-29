@@ -30,24 +30,13 @@ class EvaluationBattery extends Controller
      */
     public function store(Request $request)
     {
-        $delete = false;
-        $checker = EvaluationBatteryModel::where("bat_grp_id", $request->bat_grp_id)->where("bat_sg_type", $request->bat_sg_type)->get();
-        if (!$checker->isEmpty()) {
-            $delete = true;
-        }
         if (!empty($request->battery)) {
-
-            if ($delete) {
-                EvaluationBatteryModel::where("bat_grp_id", $request->bat_grp_id)->where("bat_sg_type", $request->bat_sg_type)->delete();
-                while ($delete) {
-                    $checker2 = EvaluationBatteryModel::where("bat_grp_id", $request->bat_grp_id)->where("bat_sg_type", $request->bat_sg_type)->first();
-                    if ($checker2->isEmpty()) {
-                        $delete = false;
-                    }
-                }
-            }
             foreach ($request->battery as $battery) {
-                $query = EvaluationBatteryModel::firstOrNew(["bat_id" => $request->bat_id]);
+                if (empty($battery['bat_id'])) {
+                    $query = new EvaluationBatteryModel;
+                } else {
+                    $query = EvaluationBatteryModel::firstOrNew(["bat_id" => $battery['bat_id']]);
+                }
                 $query->bat_itm_order = $battery['bat_itm_order'];
                 $query->bat_name = $battery['bat_name'];
                 $query->bat_points = $battery['bat_points'];
@@ -85,6 +74,15 @@ class EvaluationBattery extends Controller
     public function destroy($id)
     {
         EvaluationBatteryModel::where('bat_grp_id', $id)->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => "Deleted Succesfully",
+        ]);
+    }
+
+    public function deleteSpecific($id)
+    {
+        EvaluationBatteryModel::where('bat_id', $id)->delete();
         return response()->json([
             'status' => 200,
             'message' => "Deleted Succesfully",

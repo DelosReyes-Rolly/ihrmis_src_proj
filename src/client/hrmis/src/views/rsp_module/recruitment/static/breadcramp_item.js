@@ -20,11 +20,11 @@ export const ComparartiveBreadCrumbs =[
     },
     {
         name: 'Recruitment',
-        link: '/ihrmis/rsp/recruitment'
+        link: '/rsp/recruitment'
     },
     {
         name: 'Applicants',
-        link: '/ihrmis/rsp/recruitment'
+        link: '/rsp/recruitment'
     },
     {
         name: 'Comparative Matrix',

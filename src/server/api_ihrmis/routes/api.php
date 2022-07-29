@@ -9,6 +9,7 @@ use App\Http\Controllers\Applicant\TblapplicantEducationsController;
 use App\Http\Controllers\Applicant\TblapplicantExperiencesController;
 use App\Http\Controllers\Applicant\TblapplicantOtherInfoController;
 use App\Http\Controllers\Applicant\TblapplicantProfileController;
+use App\Http\Controllers\Applicant\TblApplicantReferenceCheck;
 use App\Http\Controllers\Applicant\TblapplicantReferencesController;
 use App\Http\Controllers\Applicant\TblapplicantRequirementsController;
 use App\Http\Controllers\Applicant\TblapplicantsController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\Recruitment\RecruitmentController;
+use App\Http\Controllers\TblCalendarController;
 use App\Http\Controllers\TblofficesController;
 use App\Http\Controllers\TblplantillaDtyAndRspnsbltyController;
 use App\Http\Controllers\TblplantillaItemsController;
@@ -91,6 +93,10 @@ Route::delete('new-other-info/{id}', [TblapplicantOtherInfoController::class, "r
 Route::get('new-reference/{id}', [TblapplicantReferencesController::class, "getReferenceRecord"]);
 Route::post('new-reference/{id?}', [TblapplicantReferencesController::class, "addReferenceRecord"]);
 Route::delete('new-reference/{id}', [TblapplicantReferencesController::class, "removeReferenceRecord"]);
+
+//crud-ref-check
+Route::get('get-reference-check/{reference}', [TblApplicantReferenceCheck::class, "getReferenceCheck"]);
+Route::post('new-reference-check', [TblApplicantReferenceCheck::class, "addReferenceCheckAnswer"]);
 
 //Info
 Route::get('new-get-delcaration/{id}', [TblapplicantDeclarationController::class, "getDataDeclaration"]);
@@ -172,6 +178,7 @@ Route::resource('positions-csc-std', TblpositionsController::class);
 Route::resource('category-groups', Library\CategoryGroup::class);
 Route::resource('documentary-requirements', Library\DocumentRequirements::class);
 Route::resource('evaluation-battery', Library\EvaluationBattery::class);
+Route::delete('delete-evaluation-battery/{itm_id}', [EvaluationBattery::class, 'deleteSpecific']);
 Route::get('evaluation-battery/{grpID}/{sg}', [EvaluationBattery::class, "show"]);
 Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::class, "show"]);
 //=======================================================================================
@@ -179,22 +186,21 @@ Route::get('documentary-requirements/{grpID}', [Library\DocumentRequirements::cl
 //=======================================================================================
 Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
-
-
+Route::get('user-accounts', [AuthController::class, "getUsers"]);
+Route::post('update-user', [AuthController::class, "updateUser"]);
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
+Route::post('save-hrmpsb-remarks', [RecruitmentController::class, 'saveHRMPSBRemarks']);
 Route::post('employement-exam', [RecruitmentController::class, 'saveEmploymentExam']);
-
 Route::get('get-cm-detail/{plantilla_id}', [RecruitmentController::class, "getPositionCM"]);
 Route::get('get-cm-data/{plantilla_id}', [RecruitmentController::class, "getCMData"]);
 Route::get('get-ra-data/{plantilla_id}/{applicant_id}', [RecruitmentController::class, "getRAData"]);
-
 Route::get('get-battery-exam/{level}/{sg}/{appID}', [RecruitmentController::class, "getBattery"]);
-
 Route::get('get-complete-applicant/{id}', [RecruitmentController::class, "getCompleteApplicantsProfile"]);
 Route::get('get-assessment/{appID}', [RecruitmentController::class, "getAssessment"]);
 Route::post('save-appointment', [RecruitmentController::class, "saveAppointment"]);
-
+Route::get('get-hrmpsb-evaluation/{appID}/{type}', [RecruitmentController::class, "getHRMPSB"]);
+Route::post('save-hrmpsb-evaluation', [RecruitmentController::class, "saveHRMPSB"]);
 Route::get('getRAIDATA/{month}/{year}', [RecruitmentController::class, "getRAIDATA"]);
 
 //Reports
@@ -210,11 +216,13 @@ Route::get('getApplicantAgency/{offceId}', [RecruitmentController::class, "getAp
 // MAIL CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('mail-template/{type?}', [MailController::class, "getEmailTemplate"]);
-Route::post('add_mail-template', [MailController::class, "addEmailTemplate"]);
+Route::post('add_mail-template', [MailController::class, "addEmail"]);
 Route::delete('delete-mail-template/{template_id}', [MailController::class, "deleteEmailTemplate"]);
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 Route::post('recruitment-common-email', [MailController::class, 'recruitmentEmail']);
+
+
 //=======================================================================================
 // VACANT POSITIONS CONTROLLER ENDPOINTS
 //=======================================================================================
@@ -273,6 +281,7 @@ Route::get('get-transaction-stage-select/{cluster}', [TblTransactionStagesContro
  * Applicant Status Endpoints
  */
 Route::post('add-applicant-status', [TblapplicantStatusController::class, 'saveStatus']);
+Route::post('add-applicant-statuses', [TblapplicantStatusController::class, 'saveStatuses']);
 
 
 //=======================================================================================
@@ -305,12 +314,15 @@ Route::post('add-update-emp_edu/{edu_id?}', [EmployeeController::class, "addUpda
 Route::get('get-emp_edu/{emp_id}', [EmployeeController::class, "getEmployeeEducation"]);
 Route::delete('remove-emp_edu/{edu_id}', [EmployeeController::class, "removeEmployeeEducation"]);
 
-
 //=======================================================================================
 // LIBRARY CONTROLLER ENDPOINTS
 //=======================================================================================
 Route::get('get-history-service/{id?}', [EmployeeController::class, "getEmployeeHistoryService"]);
 
+//=======================================================================================
+// CALENDAR CONTROLLER ENDPOINTS
+//=======================================================================================
+Route::get('getCalendarEventTypes', [TblCalendarController::class, "getCalendarEventTypes"]);
 
 //=======================================================================================
 // ONBOARDING CONTROLLER ENDPOINTS

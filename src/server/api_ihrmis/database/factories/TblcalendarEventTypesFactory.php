@@ -31,7 +31,7 @@ class TblcalendarEventTypesFactory extends Factory
             'Gratuity',
             'Other'
         ];
-        
+
         return [
             'typ_evn_name' => $this->faker->unique()->randomElement($types)
         ];

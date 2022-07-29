@@ -16,6 +16,8 @@ const SearchComponent = ({
 	iconClassName,
 	color,
 	onClick = null,
+	type = "submit",
+	readOnly = false,
 }) => {
 	const inputElement = useRef();
 
@@ -40,10 +42,11 @@ const SearchComponent = ({
 					onChange={onChange}
 					ref={inputElement}
 					style={styleInput}
+					readOnly={readOnly}
 				/>
 				<button
 					className=""
-					type="submit"
+					type={type}
 					onClick={onClick ?? focusInput}
 					style={styleButton}
 				>
