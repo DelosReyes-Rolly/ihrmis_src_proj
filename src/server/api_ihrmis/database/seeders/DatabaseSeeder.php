@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TblemployeesSeeder::class);
         $this->call(TblpositionsSeeder::class);
         $this->call(TblplantillaItemsSeeder::class);
+        $this->call(TblcalendarEventTypesSeeder::class);
     }
 }

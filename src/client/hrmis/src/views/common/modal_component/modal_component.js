@@ -13,6 +13,7 @@ const ModalComponent = (props) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    allowFullscreen: false,
   };
   const modalViewFunction = () => {
     return (
@@ -36,13 +37,15 @@ const ModalComponent = (props) => {
                   alignItems: "center",
                 }}
               >
-                <button
-                  type="button"
-                  onClick={props.onMaxView}
-                  style={buttonAlignment}
-                >
-                  <CgMaximizeAlt size="17px" />
-                </button>
+                {props.allowFullscreen && (
+                  <button
+                    type="button"
+                    onClick={props.onMaxView}
+                    style={buttonAlignment}
+                  >
+                    <CgMaximizeAlt size="17px" />
+                  </button>
+                )}
 
                 <button
                   type="button"

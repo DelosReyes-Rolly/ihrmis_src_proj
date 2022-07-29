@@ -242,6 +242,11 @@
           padding: 10px;
           user-select: none;
         }
+
+        .onnoarding-table-name-font-style {
+          color: black !important;
+          font-weight: 600;
+        }
       }
       .onboarding-section-item:hover {
         background-color: map-get($blackColor, 100);
@@ -254,17 +259,29 @@
     .schedule-container {
       width: 100%;
       padding: 0 10px;
+
       .onboarding-tr-hover {
-        table {
-          border-collapse: collapse;
-          border: none;
+        .onboarding-sched-on-delete-appointees {
+          display: flex;
+          justify-content: flex-end;
+          padding-right: 10px;
+          color: $errorColor;
         }
       }
       .onboarding-tr-hover:hover {
         background-color: map-get($blackColor, 100);
+        .onboarding-sched-on-delete-appointees {
+          color: $errorColor;
+        }
       }
       .onboarding-tr-hover-focus {
         background-color: map-get($blackColor, 100);
+        .onboarding-sched-on-delete-appointees {
+          color: $errorColor;
+        }
+      }
+      .input-center {
+        text-align: center;
       }
     }
 
@@ -273,6 +290,35 @@
       z-index: 100000 !important;
     }
   }
+}
+
+.date-picker-modified {
+  position: relative;
+  .hidden-input-flag {
+    opacity: 0;
+    margin-top: 0;
+    font-size: 1px;
+    padding: 0px;
+    height: 0px;
+    float: left;
+  }
+
+  // .react-datepicker-wrapper {
+  //   width: 100%;
+  //   // position: absolute;
+  //   // top: 35px;
+  //   // z-index: 0;
+  //   // right: 1px;
+  //   .react-datepicker__input-container {
+  //     width: 100%;
+  //     input {
+  //       // box-sizing: border-box;
+  //       // width: 100% !important;
+  //       // font-size: 0px;
+  //       // height: 0% !important;
+  //     }
+  //   }
+  // }
 }
 
 .div-input-with-symbol {
@@ -330,3 +376,5 @@
     }
   }
 }
+
+@import "./welcome_aboard_page/welcome_aboard_page";

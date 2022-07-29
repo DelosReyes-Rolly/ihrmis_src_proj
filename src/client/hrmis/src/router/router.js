@@ -40,6 +40,7 @@ import RecruitmentComparativeMatrix from "../views/rsp_module/recruitment/recrui
 import FormSix from "../views/pds_form/parts/forms/form_six";
 import OnboardingMain from "../views/rsp_module/recruitment/onboarding/onboarding_main";
 import CalendarView from "../views/rsp_module/calendar/calendar_view";
+import WelcomeAboardPage from "../views/rsp_module/recruitment/welcome_aboard_page/welcome_aboard_page";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -209,7 +210,7 @@ const MainRouter = () => {
 				JVS ROUTE IS DEFINED HERE
 				===========================================
 				*/}
-
+        <Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
         <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
         {/* ===========================================
 						LIBRARY ROUTES ARE DEFINED HERE

@@ -1,27 +1,17 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { useSelector } from "react-redux";
+import axios from "axios";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useGlobalFilter, useTable } from "react-table";
+import {
+  setSelectedAppointees,
+  setSelectedSched,
+} from "../../../../../features/reducers/onboarding_slice";
 import { generateColor } from "../../../../../helpers/color_generator";
+import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_helper";
 
-export const OnboardingNewAppointeesTableContainer = ({}) => {
-  const fakeData = [
-    {
-      photo:
-        "https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.6435-9/92570137_122795239342588_8975076326750814208_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeEIHgmkKd4L0hyft0xeP2IP6HK7gf275FzocruB_bvkXLFbMHk78JGN3t90HxLwCUwAXqlGK_YXrfGawQsIAE-z&_nc_ohc=C4uLxRotvOMAX-62mlw&_nc_ht=scontent.fmnl4-2.fna&oh=00_AT_FN1dXwWmYCwvpPs2I2braQ1DAiJxxavPbq5ThV7h9LQ&oe=62FC3BF1",
-      name: "Sean Terrence Calzada",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo:
-        "https://scontent.fmnl4-2.fna.fbcdn.net/v/t39.30808-1/278384744_10216260483304885_5216491995943139373_n.jpg?stp=dst-jpg_s200x200&_nc_cat=106&ccb=1-7&_nc_sid=7206a8&_nc_eui2=AeGc4iVYH_VHIo1Y06qxOTiLXpj3lzeCBKtemPeXN4IEq8yGUxTDV6OI9EcqVAQSovedH60Nau38HFybFRYwFJuJ&_nc_ohc=xkI6eEX4sjQAX9ym-wi&_nc_ht=scontent.fmnl4-2.fna&oh=00_AT-c2LJfmfIHzoi_H9sh0JTEr9L9LeXv5VM87WjISJlgYg&oe=62DBA16A",
-      name: "Legee Valmoria",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-  ];
-
+export const OnboardingNewAppointeesTableContainer = () => {
+  const [newAppointees, setNewAppointees] = useState([]);
   const columns = useMemo(
     () => [
       {
@@ -49,8 +39,15 @@ export const OnboardingNewAppointeesTableContainer = ({}) => {
             Cell: ({ cell }) => {
               return (
                 <React.Fragment>
-                  <div style={{}}>
-                    <div style={{ fontWeight: "bold" }}>
+                  <div>
+                    <div
+                      className=""
+                      style={{
+                        fontWeight: "bold",
+                        color: "#000000",
+                        fontSize: "medium !important",
+                      }}
+                    >
                       {cell.row.values.name}
                     </div>
                     <div style={{ color: "#00000080", fontSize: "small" }}>
@@ -69,13 +66,33 @@ export const OnboardingNewAppointeesTableContainer = ({}) => {
             Header: "",
             accessor: "office",
           },
+          {
+            Header: "",
+            accessor: "app_id",
+          },
+          {
+            Header: "",
+            accessor: "emp_id",
+          },
+          {
+            Header: "",
+            accessor: "itm_id",
+          },
         ],
       },
     ],
     []
   );
 
-  const data = useMemo(() => fakeData, [fakeData]);
+  const data = useMemo(() => newAppointees, [newAppointees]);
+  const fetchNewAppointees = async () => {
+    await axios
+      .get(API_HOST + "all-new-appointed")
+      .then((res) => setNewAppointees(res.data?.data))
+      .catch((err) => console.log(err.message));
+  };
+
+  useEffect(() => fetchNewAppointees(), []);
 
   return (
     <React.Fragment>
@@ -84,10 +101,22 @@ export const OnboardingNewAppointeesTableContainer = ({}) => {
   );
 };
 
-const AppointeesTable = ({ data, columns }) => {
-  const { searchField } = useSelector((state) => state.onboarding);
+export const AppointeesTable = ({
+  data,
+  columns,
+  searchable = true,
+  removableAppointees = false,
+}) => {
+  const { searchField, currentTable } = useSelector(
+    (state) => state.onboarding
+  );
 
-  const initialState = { hiddenColumns: ["position", "office"] };
+  const dispatch = useDispatch();
+
+  const initialState = {
+    hiddenColumns: ["position", "office", "app_id", "emp_id", "itm_id"],
+  };
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -104,12 +133,35 @@ const AppointeesTable = ({ data, columns }) => {
     useGlobalFilter
   );
 
-  const [refTopic, focus, blur] = useMapFocusHelper(
+  // Hook for Focus divs
+  const [refTopic, focus, removeFocus, selectableFocus] = useMapFocusHelper(
     "onboarding-tr-hover",
     "onboarding-tr-hover-focus"
   );
 
-  useEffect(() => setGlobalFilter(searchField), [searchField]);
+  // Collecting values and idisplaying highlighted option
+  const collectingSelectedItem = (i, value, length) => {
+    if (removableAppointees === false) {
+      selectableFocus(i);
+      dispatch(setSelectedAppointees(value));
+    }
+    if (removableAppointees === true) {
+      focus(i, length);
+    }
+  };
+
+  const removableOnFocus = (length) => {
+    if (removableAppointees === true) removeFocus(length);
+  };
+
+  useEffect(() => {
+    if (searchable) setGlobalFilter(searchField);
+  }, [searchField]);
+
+  useEffect(() => {
+    if (currentTable === 0)
+      if (removableAppointees === false) removeFocus(data?.length);
+  }, [currentTable, data]);
 
   return (
     <React.Fragment>
@@ -127,7 +179,11 @@ const AppointeesTable = ({ data, columns }) => {
             >
               {headerGroup.headers.map((column) => (
                 <th
-                  style={{ padding: "0px 0px", color: "#004e87" }}
+                  style={{
+                    padding: "0px 0px",
+                    color: "#004e87",
+                    fontSize: "medium",
+                  }}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -145,8 +201,12 @@ const AppointeesTable = ({ data, columns }) => {
                 ref={(el) => (refTopic.current[i] = el)}
                 className="onboarding-tr-hover"
                 {...row.getRowProps()}
-                onClick={() => focus(i, arr.length)}
-                onBlur={() => blur(arr.length)}
+                onClick={() => {
+                  collectingSelectedItem(i, row.values.app_id, arr.length);
+                  // selectableFocus(i);
+                  // dispatch(setSelectedAppointees(row.values.app_id));
+                }}
+                onBlur={() => removableOnFocus(arr.length)}
                 tabIndex={i}
               >
                 {row.cells.map((cell) => {
@@ -157,7 +217,9 @@ const AppointeesTable = ({ data, columns }) => {
                           cell.column.id === "name"
                             ? "5px 0px 5px 5px"
                             : "5px 5px",
-                        width: cell.column.id === "photo" ? "30px" : null,
+                        width: cell.column.id === "photo" ? "50px" : null,
+                        color: "black",
+                        fontSize: cell.column.id !== "photo" ? "medium" : null,
                       }}
                       {...cell.getCellProps()}
                     >
@@ -174,85 +236,18 @@ const AppointeesTable = ({ data, columns }) => {
   );
 };
 
-export const OnboardingNewScheduleTableContainer = ({}) => {
-  const stringigy = JSON.stringify([
-    {
-      photo: null,
-      name: "Tezada",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Haist well job",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Xyliegh Calzada",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-  ]);
+export const OnboardingNewScheduleTableContainer = () => {
+  const [schedules, setSchedules] = useState([]);
 
-  const stringigy2 = JSON.stringify([
-    {
-      photo:
-        "https://scontent.fmnl4-2.fna.fbcdn.net/v/t1.6435-9/92570137_122795239342588_8975076326750814208_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeEIHgmkKd4L0hyft0xeP2IP6HK7gf275FzocruB_bvkXLFbMHk78JGN3t90HxLwCUwAXqlGK_YXrfGawQsIAE-z&_nc_ohc=C4uLxRotvOMAX-62mlw&_nc_ht=scontent.fmnl4-2.fna&oh=00_AT_FN1dXwWmYCwvpPs2I2braQ1DAiJxxavPbq5ThV7h9LQ&oe=62FC3BF1",
-      name: "Sean Terrence Calzada",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Leegeee",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo:
-        "https://scontent.fmnl4-4.fna.fbcdn.net/v/t1.6435-9/176334729_4698490976834737_6071377516544915750_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeFs6X329Ipn4Q4aA9JiJu8Ldw_--MyJ5dd3D_74zInl16dgRbRZEU9nj7yYc-e9jPMbyiuv677FrPrDNiZLBAP_&_nc_ohc=IJOZi1ekyzwAX963lUw&_nc_ht=scontent.fmnl4-4.fna&oh=00_AT8yjmLGM-NGm4tkD0ipCs0DNlw-K18FTxqu5C-2UsyBZQ&oe=62FC64FD",
-      name: "Dampil",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Migs",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Chinnette",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Rose",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-    {
-      photo: null,
-      name: "Aren",
-      position: "Officer",
-      office: "ITD-CO",
-    },
-  ]);
-
-  const fakeData = [
-    {
-      appointees: stringigy,
-      schedule: "12 Dec 2014, 8:40 AM",
-    },
-    {
-      appointees: stringigy2,
-      schedule: "12 Aug 2014, 12:40 PM",
-    },
-  ];
+  const fetchOnboardingSchedule = async () => {
+    await axios
+      .get(API_HOST + "onboarding-schedule")
+      .then((res) => {
+        setSchedules([...res?.data]);
+        console.log(res?.data);
+      })
+      .catch((err) => console.log(err.message));
+  };
 
   const columns = useMemo(
     () => [
@@ -273,13 +268,19 @@ export const OnboardingNewScheduleTableContainer = ({}) => {
             Header: "",
             accessor: "schedule",
           },
+          {
+            Header: "",
+            accessor: "evn_id",
+          },
         ],
       },
     ],
     []
   );
 
-  const data = useMemo(() => fakeData, [fakeData]);
+  useEffect(() => fetchOnboardingSchedule(), []);
+
+  const data = useMemo(() => schedules, [schedules]);
   return (
     <React.Fragment>
       <ScheduleTable data={data} columns={columns} />
@@ -288,8 +289,11 @@ export const OnboardingNewScheduleTableContainer = ({}) => {
 };
 
 const ScheduleTable = ({ data, columns }) => {
-  const initialState = { hiddenColumns: ["position", "office", "photo"] };
-  const { searchField } = useSelector((state) => state.onboarding);
+  const initialState = { hiddenColumns: ["evn_id"] };
+  const { searchField, currentTable } = useSelector(
+    (state) => state.onboarding
+  );
+  const dispatch = useDispatch();
 
   const {
     getTableProps,
@@ -309,10 +313,19 @@ const ScheduleTable = ({ data, columns }) => {
 
   useEffect(() => setGlobalFilter(searchField), [searchField]);
 
-  const [refSchedule, focus, blur] = useMapFocusHelper(
+  const [refSchedule, focus, removeFocus] = useMapFocusHelper(
     "onboarding-tr-hover",
     "onboarding-tr-hover-focus"
   );
+
+  const collectingSelectedItem = (i, value, length) => {
+    focus(i, length);
+    dispatch(setSelectedSched(value));
+  };
+
+  useEffect(() => {
+    if (currentTable === 1) removeFocus(data?.length);
+  }, [currentTable, data]);
 
   return (
     <React.Fragment>
@@ -348,8 +361,10 @@ const ScheduleTable = ({ data, columns }) => {
                 ref={(el) => (refSchedule.current[i] = el)}
                 className="onboarding-tr-hover"
                 {...row.getRowProps()}
-                onClick={() => focus(i, arr.length)}
-                onBlur={() => blur(arr.length)}
+                onClick={() => {
+                  collectingSelectedItem(i, row.values.evn_id, arr.length);
+                  // console.log(row.values.evn_id);
+                }}
                 tabIndex={i}
               >
                 {row.cells.map((cell) => {
@@ -361,7 +376,7 @@ const ScheduleTable = ({ data, columns }) => {
                             ? "8px 5px"
                             : "8px 0px",
                         fontSize:
-                          cell.column.id === "schedule" ? "small" : null,
+                          cell.column.id === "schedule" ? "medium" : null,
                       }}
                       {...cell.getCellProps()}
                     >
@@ -388,12 +403,12 @@ const ScheduleAppointeesImages = ({ objectOfContent }) => {
               <div
                 key={key}
                 style={{
-                  borderRadius: "40px",
+                  borderRadius: "50px",
                   display: "flex",
                   marginLeft: key > 0 ? "-8px" : null,
                   backgroundColor: "rgba(96,96,96,0.2)",
                   zIndex: arr.length - key,
-                  width: "30px",
+                  width: "50px",
                   fontSize: "x-small",
                   alignItems: "center",
                   justifyContent: "center",
@@ -411,14 +426,14 @@ const ScheduleAppointeesImages = ({ objectOfContent }) => {
               className="image-zoom-effect-user"
               key={key}
               style={{
-                borderRadius: "40px",
+                borderRadius: "50px",
                 display: "flex",
                 marginLeft: key > 0 ? "-10px" : null,
                 backgroundColor: "white",
                 color: "rgba(0,0,0,0.7)",
                 zIndex: arr.length - key,
-                width: "30px",
-                height: "30px",
+                width: "50px",
+                height: "50px",
               }}
             >
               <AppointeesImageDisplay photo={item?.photo} name={item?.name} />
@@ -430,16 +445,16 @@ const ScheduleAppointeesImages = ({ objectOfContent }) => {
   );
 };
 
-const AppointeesImageDisplay = ({ photo = null, name = null }) => {
+export const AppointeesImageDisplay = ({ photo = null, name = null }) => {
   const rng = generateColor(name);
   const firstLetterName = name[0].toUpperCase();
   if (photo === null) {
     return (
       <div
         style={{
-          width: "30px",
-          height: "30px",
-          borderRadius: "30px",
+          width: "50px",
+          height: "50px",
+          borderRadius: "50px",
           backgroundColor: `${rng}`,
           display: "flex",
           justifyContent: "center",
@@ -452,13 +467,13 @@ const AppointeesImageDisplay = ({ photo = null, name = null }) => {
     );
   }
   return (
-    <div style={{ width: "30px", height: "30px", borderRadius: "30px" }}>
+    <div style={{ width: "50px", height: "50px", borderRadius: "50px" }}>
       <img
         style={{
           objectFit: "cover",
-          width: "30px",
-          height: "30px",
-          borderRadius: "30px",
+          width: "50px",
+          height: "50px",
+          borderRadius: "50px",
         }}
         src={photo}
         alt="sadfaxcfsddsf"

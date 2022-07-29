@@ -1,5 +1,6 @@
 .input-component {
   box-sizing: border-box;
+  margin-top: 3px;
   width: 100%;
   outline: none;
   border-radius: 5px 5px 5px 5px;
@@ -13,6 +14,11 @@
   transition: 200ms;
   border: 1px solid #55555599;
   color: black;
+}
+
+input:disabled {
+  color: #55555599;
+  background-color: map-get($blackColor, 100);
 }
 
 input[type="date"] {
