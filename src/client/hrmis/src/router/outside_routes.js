@@ -45,3 +45,7 @@ export const printJvsCrwReport = async (jvs) => {
 export const navigateResourceOnbording = () => {
   window.open(APP_HOST + "rsp/resource-onboarding", "_tab");
 };
+
+export const outsiteWebHelper = (link) => {
+  window.open(link, "_tab");
+};

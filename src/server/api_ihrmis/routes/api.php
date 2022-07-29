@@ -12,12 +12,12 @@ use App\Http\Controllers\Applicant\TblapplicantProfileController;
 use App\Http\Controllers\Applicant\TblApplicantReferenceCheck;
 use App\Http\Controllers\Applicant\TblapplicantReferencesController;
 use App\Http\Controllers\Applicant\TblapplicantRequirementsController;
+use App\Http\Controllers\Applicant\TblapplicantsController;
 use App\Http\Controllers\Applicant\TblapplicantStatusController;
 use App\Http\Controllers\Applicant\TblapplicantTrainingsController;
 use App\Http\Controllers\Applicant\TblapplicantVoluntaryController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Jvs\TbljvsController;
-use App\Http\Controllers\Library\DocumentRequirements;
 use App\Http\Controllers\Library\EvaluationBattery;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
@@ -30,7 +30,6 @@ use App\Http\Controllers\TblplantillaItemsController;
 use App\Http\Controllers\TblplantillaItemsVacantPositionController;
 use App\Http\Controllers\TblpositionsController;
 use App\Http\Controllers\TblTransactionStagesController;
-use App\Models\TblonboardingSections;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -335,3 +334,13 @@ Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class,
 Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
 Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
 Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);
+Route::post('new-onboarding-schedule', [OnboardingController::class, "createScheduleForOnboarding"]);
+Route::get('onboarding-schedule', [OnboardingController::class, "getAllScheduleForOnboarding"]);
+Route::post('selected-appointees', [OnboardingController::class, "getSelectedAppointees"]);
+Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOnboardingSchedule"]);
+
+Route::get('all-new-appointed', [TblapplicantsController::class, "getAppointedApplicantsWithEmpId"]);
+// Route::post('')
+
+
+
