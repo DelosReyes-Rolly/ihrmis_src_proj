@@ -6,7 +6,7 @@ use App\Models\Applicants\TblapplicantsAssessments;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use App\Models\Tblpositions;
-use App\Models\Employee\Tblemployees;
+use App\Models\Employees\Tblemployees;
 use App\Models\TblCmptncyAssessment;
 use App\Models\Tbljvs;
 use App\Models\TbljvsCompetencies;

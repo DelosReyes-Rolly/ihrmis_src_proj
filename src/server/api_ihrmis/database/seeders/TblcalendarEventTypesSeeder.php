@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Calendar\TblcalendarEventTypes;
+use App\Models\TblcalendarEventTypes;
 use Illuminate\Database\Seeder;
 
 class TblcalendarEventTypesSeeder extends Seeder
@@ -14,6 +14,6 @@ class TblcalendarEventTypesSeeder extends Seeder
      */
     public function run()
     {
-        TblcalendarEventTypes::factory()->count(14)->create();
+        TblcalendarEventTypes::factory()->count(14)->create(); 
     }
 }

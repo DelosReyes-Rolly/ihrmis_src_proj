@@ -26,6 +26,7 @@
 		"event-utils": "^2.1.0",
 		"formik": "^2.2.9",
 		"fs-extra": "^10.1.0",
+		"google-map-react": "^2.2.0",
 		"html-react-parser": "^2.0.0",
 		"html-to-draftjs": "^1.5.0",
 		"iso-3166-country-list": "^0.2.0",

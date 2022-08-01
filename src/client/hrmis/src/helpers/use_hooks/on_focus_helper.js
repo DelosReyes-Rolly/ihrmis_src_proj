@@ -8,7 +8,7 @@ import { useRef } from "react";
 export const useMapFocusHelper = (classNameOne, classNameTwo) => {
   const reference = useRef([]);
 
-  const focusEventFunction = (index, length) => {
+  const focusOnly = (index, length) => {
     // MAKE A MOCK ARRAY
     const makeArray = [...Array(parseInt(length)).keys()];
     // MODIFY CLASSNAME OF ALL INDEX
@@ -20,7 +20,7 @@ export const useMapFocusHelper = (classNameOne, classNameTwo) => {
     tr.className = `${classNameOne} ${classNameTwo}`;
   };
 
-  const onBlurEventFunction = (length) => {
+  const removeSelected = (length) => {
     // MAKE A MOCK ARRAY
     const makeArray = [...Array(parseInt(length)).keys()];
     // MODIFY CLASSNAME OF ALL INDEX
@@ -29,5 +29,15 @@ export const useMapFocusHelper = (classNameOne, classNameTwo) => {
     });
   };
 
-  return [reference, focusEventFunction, onBlurEventFunction];
+  const selectableFocus = (index) => {
+    // MODIFY CLASSNAME OF SELECTED INDEX
+    const tr = reference.current[index];
+    if (tr.className === classNameOne) {
+      tr.className = `${classNameOne} ${classNameTwo}`;
+    } else {
+      tr.className = classNameOne;
+    }
+  };
+
+  return [reference, focusOnly, removeSelected, selectableFocus];
 };

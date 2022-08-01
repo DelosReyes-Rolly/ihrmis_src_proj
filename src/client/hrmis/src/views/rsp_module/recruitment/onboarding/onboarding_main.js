@@ -1,6 +1,6 @@
 import BreadcrumbComponent from "../../../common/breadcrumb_component/Breadcrumb";
 import { OnboardingBreadCrumbs } from "../static/breadcramp_item";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
@@ -25,6 +25,7 @@ import {
   OnboardingNewAppointeesTableContainer,
   OnboardingNewScheduleTableContainer,
 } from "./onboarding_components/onboarding_tables";
+import OnboardingSchedulModal from "./onboarding_components/onboarding_schedule_modal";
 
 const OnboardingMain = () => {
   const { renderBusy } = usePopUpHelper();
@@ -75,6 +76,8 @@ const OnboardingMain = () => {
     navigateResourceOnbording();
   };
 
+  const [openModal, setOpenModal] = useState(false);
+
   useEffect(() => {
     fetchOnBoarding();
   }, []);
@@ -97,9 +100,9 @@ const OnboardingMain = () => {
           <div className="orientation-body">
             <div className="topic-container">
               <div className="topic-section-1">
-                <InvicibleDragIcon>
+                <InvisibleDragIcon>
                   <div>Section</div>
-                </InvicibleDragIcon>
+                </InvisibleDragIcon>
                 <div onClick={navigateOnboardingPage}>
                   <IconComponent
                     toolTipId="onboarding"
@@ -109,7 +112,7 @@ const OnboardingMain = () => {
                 </div>
               </div>
 
-              <InvicibleDragIcon>
+              <InvisibleDragIcon>
                 <div style={{ width: "100%" }}>
                   <InputIconComponent
                     name="sec_onb_name"
@@ -118,7 +121,7 @@ const OnboardingMain = () => {
                     onClick={form.handleSubmit}
                   />
                 </div>
-              </InvicibleDragIcon>
+              </InvisibleDragIcon>
 
               <AccordionListComponent list={section} />
             </div>
@@ -133,6 +136,13 @@ const OnboardingMain = () => {
                   marginTop: "10px",
                 }}
               >
+                <div>
+                  <OnboardingSchedulModal
+                    isDisplay={openModal}
+                    onClose={() => setOpenModal(false)}
+                  />
+                </div>
+
                 <IconComponent
                   toolTipId="print"
                   textHelper="Generate the New Hire Orientation Checklist Report of selected appointees. Also applicable to appointees collected in schedule list."
@@ -143,6 +153,7 @@ const OnboardingMain = () => {
                   toolTipId="calendar"
                   textHelper="Open a modal box (RC-201 #2) to schedule the onboarding/orientation of selected appointees. When schedule is selected, open the modal box (RC-201 #2) to edit the schedule."
                   icon={<BsCalendar3RangeFill size={20} />}
+                  onClick={() => setOpenModal(true)}
                 />
 
                 <IconComponent
@@ -199,7 +210,7 @@ const InputIconComponent = ({
   );
 };
 
-export const InvicibleDragIcon = ({ children, padding }) => {
+export const InvisibleDragIcon = ({ children, padding }) => {
   return (
     <React.Fragment>
       <div

@@ -68,6 +68,7 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
         onClose={onClose}
         fullScreen={fullScreen}
         onMaxView={() => setFullscreen(!fullScreen)}
+        allowFullscreen={true}
       >
         <div>
           <div style={{ marginBottom: "10px" }}>
