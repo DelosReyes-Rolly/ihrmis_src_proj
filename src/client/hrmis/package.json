@@ -29,6 +29,7 @@
 		"html-react-parser": "^2.0.0",
 		"html-to-draftjs": "^1.5.0",
 		"iso-3166-country-list": "^0.2.0",
+		"moment": "^2.29.4",
 		"phil-reg-prov-mun-brgy": "^1.1.0",
 		"react": "^17.0.2",
 		"react-beautiful-dnd": "^13.1.0",
