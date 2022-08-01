@@ -7,6 +7,8 @@ import RecruitmentComparativeTable from "./page_tables.js/recruitment_compartati
 import RecruitmentRatingAssessment from "./page_tables.js/recruitment_rating_assestment_table";
 import { useIsMounted } from "../../../../helpers/use_hooks/isMounted";
 import { useSelector } from "react-redux";
+import moment from "moment";
+import { setHours, setMinutes } from "date-fns";
 
 const RecruitmentComparativeMatrix = () => {
 	const mounted = useIsMounted();
@@ -19,6 +21,7 @@ const RecruitmentComparativeMatrix = () => {
 	const [page, setPageType] = useState("");
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const [requirements, setRequirements] = useState();
+	const [deadlineText, setDeadline] = useState();
 	const getCMData = useCallback(async () => {
 		await axios
 			.get(API_HOST + "get-cm-detail/" + plantilla_id)
@@ -26,13 +29,17 @@ const RecruitmentComparativeMatrix = () => {
 				if (!mounted.current) return;
 				setPlantilla(response.data.data.plantilla);
 				setRequirements(response.data.data.requirements);
+				const deadline = response.data.data.plantilla.deadline;
+				if (deadline != null) {
+					setDeadline(setHours(setMinutes(new Date(), 30), 16));
+				}
+				setDeadline(setHours(setMinutes(new Date(deadline), 30), 16));
 			});
 	}, [plantilla_id, refresh]);
 	useEffect(() => {
 		if (applicant !== undefined) {
 			setApplicantId(applicant);
 			setPageType("ra");
-			console.log(plantilla?.itm_regular);
 		}
 		getCMData();
 	}, [getCMData]);
@@ -105,7 +112,8 @@ const RecruitmentComparativeMatrix = () => {
 							setPageType={setPageType}
 							setApplicantId={setApplicantId}
 							itm_state={plantilla?.itm_state}
-							deadline={plantilla?.deadline}
+							deadline={deadlineText}
+							setDeadline={setDeadline}
 						/>
 					)}
 					{page === "ra" && (

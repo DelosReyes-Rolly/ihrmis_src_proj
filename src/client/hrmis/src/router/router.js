@@ -58,19 +58,20 @@ import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/b
 import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
 
 const MainRouter = () => {
-  const isBusy = useSelector((state) => state.popupResponse.isBusy);
-  const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
-  const isFail = useSelector((state) => state.popupResponse.isFail);
-  const navigate = useNavigate();
-  const location = useLocation();
-  useEffect(() => {
-    // if (window.sessionStorage.getItem('token') == null) navigate('/');
-    if (window.sessionStorage.getItem("user_level") === "3") {
-      // navigate('/hrmpsb');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+	const isBusy = useSelector((state) => state.popupResponse.isBusy);
+	const isSuccess = useSelector((state) => state.popupResponse.isSuccess);
+	const isFail = useSelector((state) => state.popupResponse.isFail);
+	const navigate = useNavigate();
+	const location = useLocation();
+	useEffect(() => {
+		// if (window.sessionStorage.getItem('token') == null) navigate('/');
+		if (window.sessionStorage.getItem("user_level") === "3") {
+			if (!location.pathname.includes("/hrmpsb")) {
+				navigate("/hrmpsb");
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location]);
 
   return (
     <React.Fragment>
