@@ -17,6 +17,10 @@ class TblonboardingSections extends Model
         'sec_onb_order',
         'sec_onb_name'
     ];
-
     public $timestamps = false;
+
+    public function sectionitem()
+    {
+        return $this->hasMany(TblonboardingSectionItems::class, "itm_sec_onb_id" , "sec_onb_id")->orderBy('itm_onb_order');
+    }
 }

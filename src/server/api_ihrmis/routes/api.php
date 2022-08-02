@@ -339,7 +339,13 @@ Route::get('onboarding-schedule', [OnboardingController::class, "getAllScheduleF
 Route::post('selected-appointees', [OnboardingController::class, "getSelectedAppointees"]);
 Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOnboardingSchedule"]);
 
+
+Route::get('get-onboarding-lists', [OnboardingController::class, "getOnboardingSectionsAndSectionItem"]);
+
 Route::get('all-new-appointed', [TblapplicantsController::class, "getAppointedApplicantsWithEmpId"]);
+
+
+
 // Route::post('')
 
 

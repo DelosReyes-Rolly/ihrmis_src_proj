@@ -6,6 +6,7 @@ use App\Http\Resources\CommonResource;
 use App\Http\Resources\Onboarding\NewAppointeesResource;
 use App\Http\Resources\Onboarding\OnboardingScheduleResource;
 use App\Models\Applicants\Tblapplicants;
+use App\Models\Tblattachments;
 use App\Models\TblcalendarEvent;
 use App\Models\TblonboardingSectionItems;
 use App\Models\TblonboardingSections;
@@ -92,6 +93,7 @@ class OnboardingController extends Controller{
         foreach ($qry as $item) {
             if($item->itm_onb_order > $value) $value = $item->itm_onb_order;
         }
+        
         $qry = new TblonboardingSectionItems();
         $qry->itm_sec_onb_id = $request->itm_sec_onb_id;
         $qry->itm_onb_order = $value + 1;
@@ -99,6 +101,27 @@ class OnboardingController extends Controller{
         $qry->itm_onb_url = $request->itm_onb_url;
         $qry->itm_onb_content = $request->itm_onb_content;
         $qry->save();
+        
+        // File Hnalder
+        $arrFiles = [];
+        if (!empty($request->file(['files']))) {
+            foreach ($request->file(['files']) as $value) {
+                array_push($arrFiles, $value);
+            }
+        }
+
+        if(!empty($arrFiles)){
+            foreach ($arrFiles as $file) {
+                $original = $file->getClientOriginalName();
+                $filenameStr = $qry->itm_onb_id . "-". Carbon::now() . "-file-" . time() . "-" . $original;
+                $file->storeAs('storage/onboarding/', $filenameStr);
+                $attachmentQry = new Tblattachments();
+                $attachmentQry->att_source = "Tblattachments|".$qry->itm_onb_id;
+                $attachmentQry->att_name = $filenameStr;
+                $attachmentQry->att_file = "public/onboarding/";
+                $attachmentQry->save();
+            }
+        }
 
         return response()->json([
             "message" => "Successfully Added"
@@ -170,6 +193,41 @@ class OnboardingController extends Controller{
     public function getSingleOnboardingSchedule($id){
         $qry = TblcalendarEvent::where('evn_id', $id)->first();
         return new CommonResource($qry);
+    }
+
+    public function getOnboardingSectionsAndSectionItem(){
+        $qry = TblonboardingSections::orderBy('sec_onb_order', 'ASC')->with("sectionitem")->get();
+        $arrayHolder = [];
+        foreach ($qry as $value) {
+            $arrayContentHolder = [];
+            foreach ($value->sectionitem as $item) {
+                $arrayAttachmentHolder = [];
+                $qryAttach = Tblattachments::where('att_source','Tblattachments|'.$item->itm_onb_id)->get();
+                foreach ($qryAttach as $key => $links) {
+                    array_push($arrayAttachmentHolder, $links->att_file.$links->att_name);
+                }
+                array_push($arrayContentHolder,[ 
+                    'itm_onb_id' => $item->itm_onb_id,
+                    'itm_sec_onb_id' => $item->itm_sec_onb_id,
+                    'itm_onb_order' => $item->itm_onb_order,
+                    'itm_onb_name' => $item->itm_onb_name,
+                    'itm_onb_url' => $item->itm_onb_url,
+                    'itm_onb_content' => $item->itm_onb_content,
+                    'attachments' => $arrayAttachmentHolder
+                ]);
+            }
+
+            array_push($arrayHolder,[ 
+                'sec_onb_id' => $value->sec_onb_id,
+                'sec_onb_order' => $value->sec_onb_order,
+                'sec_onb_name' => $value->sec_onb_name,
+                'sectionitem' => $arrayContentHolder,
+            ]);
+            $arrayContentHolder = [];
+        }
+        
+
+        return response()->json($arrayHolder, 200);
     }
     
 }

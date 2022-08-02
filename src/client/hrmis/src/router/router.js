@@ -56,6 +56,7 @@ import BackgroundCheckFormOne from "../views/pds_form/backgorund_check/forms/bac
 import BackgroundCheckFormTwo from "../views/pds_form/backgorund_check/forms/background_check_two";
 import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/background_check_three";
 import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
+import GetStartedPage from "../views/rsp_module/recruitment/get_started_page/get_start_page";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -247,6 +248,7 @@ const MainRouter = () => {
 				*/}
         <Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
         <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
+        <Route path="/get-start-page" element={<GetStartedPage />} />
         {/* ===========================================
 						LIBRARY ROUTES ARE DEFINED HERE
 						===========================================
