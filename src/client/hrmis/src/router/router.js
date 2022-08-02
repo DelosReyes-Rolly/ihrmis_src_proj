@@ -56,6 +56,11 @@ import BackgroundCheckFormOne from "../views/pds_form/backgorund_check/forms/bac
 import BackgroundCheckFormTwo from "../views/pds_form/backgorund_check/forms/background_check_two";
 import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/background_check_three";
 import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
+import JoinPageMainComponent from "../views/rsp_module/recruitment/join_page/join_page_main_component";
+import JoinPageFormOne from "../views/rsp_module/recruitment/join_page/join_page_form_one";
+import JoinPageFormTwo from "../views/rsp_module/recruitment/join_page/join_page_form_two";
+import JoinPageFormThree from "../views/rsp_module/recruitment/join_page/join_page_form_three";
+import JoinPageFormFour from "../views/rsp_module/recruitment/join_page/join_page_form_four";
 
 const MainRouter = () => {
 	const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -244,8 +249,24 @@ const MainRouter = () => {
 
 				{/* ===========================================
 				JVS ROUTE IS DEFINED HERE
-			===========================================
-		*/}
+				===========================================
+				*/}
+				<Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
+				<Route path="/join-page" element={<JoinPageMainComponent />}>
+					<Route path="/join-page/" element={<JoinPageFormOne />} />
+
+					<Route path="/join-page/one/:item" element={<JoinPageFormOne />} />
+					<Route path="/join-page/two/:item" element={<JoinPageFormTwo />} />
+					<Route
+						path="/join-page/three/:item"
+						element={<JoinPageFormThree />}
+					/>
+					<Route path="/join-page/four/:item" element={<JoinPageFormFour />} />
+				</Route>
+				{/* ===========================================
+						LIBRARY ROUTES ARE DEFINED HERE
+						===========================================
+				*/}
 				<Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
 				<Route path="/jvs-crw/:item" element={<JvscrsForm />} />
 				{/* ===========================================

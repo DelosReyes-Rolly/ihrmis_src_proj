@@ -22,6 +22,7 @@ import {
 	YTDOSTV,
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const WelcomeAboardPage = () => {
 	return (
@@ -39,6 +40,7 @@ const WelcomeAboardPage = () => {
 export default WelcomeAboardPage;
 
 const AboardFirstPage = () => {
+	const navigate = useNavigate();
 	return (
 		<React.Fragment>
 			<div className="aboard_holder">
@@ -98,7 +100,12 @@ const AboardFirstPage = () => {
 									</p>
 								</div>
 							</div>
-							<div className="div-click-container">
+							<div
+								className="div-click-container"
+								onClick={() => {
+									navigate("/join-page");
+								}}
+							>
 								<HiUserGroup size={28} color={"#004e87"} />
 								<div>
 									<p className="container-title">Join our workforce</p>

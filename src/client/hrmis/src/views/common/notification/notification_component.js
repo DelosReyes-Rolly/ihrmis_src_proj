@@ -4,8 +4,10 @@ import { AiFillCaretUp, AiOutlineBell } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { setRefresh } from "../../../features/reducers/popup_response";
 import { API_HOST } from "../../../helpers/global/global_config";
+import { useIsMounted } from "../../../helpers/use_hooks/isMounted";
 
 const NotificationComponent = () => {
+	const mounted = useIsMounted();
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const dispatch = useDispatch();
 	const [tog, setTog] = useState(false);
@@ -28,6 +30,7 @@ const NotificationComponent = () => {
 
 	const getNotification = async () => {
 		await axios.get(API_HOST + "get-notification").then((res) => {
+			if (!mounted.current) return;
 			setItemList(res.data.data);
 		});
 	};
