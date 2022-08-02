@@ -257,14 +257,22 @@ const MainRouter = () => {
 
 					<Route path="/join-page/one/:item" element={<JoinPageFormOne />} />
 					<Route path="/join-page/two/:item" element={<JoinPageFormTwo />} />
-					<Route path="/join-page/three/:item" element={<JoinPageFormThree/>} />
-					<Route path="/join-page/four/:item" element={<JoinPageFormFour/>} />
+					<Route
+						path="/join-page/three/:item"
+						element={<JoinPageFormThree />}
+					/>
+					<Route path="/join-page/four/:item" element={<JoinPageFormFour />} />
 				</Route>
-				<Route path="/jvs-crw/:item" element={<JvscrsForm />} />
 				{/* ===========================================
 						LIBRARY ROUTES ARE DEFINED HERE
 						===========================================
 				*/}
+				<Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
+				<Route path="/jvs-crw/:item" element={<JvscrsForm />} />
+				{/* ===========================================
+						LIBRARY ROUTES ARE DEFINED HERE
+			===========================================
+		*/}
 				<Route path="/library" element={<MainPageLayout />}>
 					<Route index element={<Navigate to="/library/office/" />} />
 					<Route path="/library/office/" element={<LibraryOfficeView />} />

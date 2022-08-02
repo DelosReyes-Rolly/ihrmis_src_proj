@@ -1,10 +1,27 @@
 import React from "react";
 import dostLogo from "../../../../assets/images/logo.png";
+import sikatlogo from "../../../../assets/images/sikat.png";
+import scanmo from "../../../../assets/images/SCANMO.CO.png";
+import watch from "../../../../assets/images/watch.png";
+import wwwlogo from "../../../../assets/images/www.png";
+import ytlogo from "../../../../assets/images/ytlogo.png";
 import { IoIosSend } from "react-icons/io";
 import { HiUserGroup } from "react-icons/hi";
 import { TiMessages } from "react-icons/ti";
 import { outsiteWebHelper } from "../../../../router/outside_routes";
-import GoogleMapReact from "google-map-react";
+import {
+	ABODIES,
+	DOSTWEBSITE,
+	RDINSTITUTES,
+	REGIONALOFFICES,
+	SCANMO,
+	SIKAT,
+	SPCOUNCILS,
+	STSINSTITUTE,
+	WATCH,
+	YTDOSTV,
+} from "./static/dost_attachedagencylinks_data";
+import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const WelcomeAboardPage = () => {
@@ -156,7 +173,24 @@ const AboardSecondPage = () => {
 								})}
 							</ul>
 						</div>
-						<div></div>
+						<div className="body-1-div2"></div>
+						<div className="body-1-div3"></div>
+						<div className="body-1-div4">
+							<div>
+								<img
+									src={sikatlogo}
+									width="50px"
+									height="50px"
+									alt="sikat-logo"
+									style={{ cursor: "pointer" }}
+									onClick={() => outsiteWebHelper(SIKAT)}
+								/>
+							</div>
+							<p style={{ marginTop: "10px", textAlign: "center" }}>
+								Samahan para sa ika-uunlad nga mga Kawani ng Agham at
+								Teknolohiya (SIKAT)
+							</p>
+						</div>
 					</div>
 					<div className="body-2">
 						<div>
@@ -174,7 +208,6 @@ const AboardSecondPage = () => {
 								})}
 							</ul>
 						</div>
-
 						<div style={{ marginTop: "15px" }}>
 							<h3>Research and Development Institutes</h3>
 							<ul>
@@ -190,7 +223,6 @@ const AboardSecondPage = () => {
 								})}
 							</ul>
 						</div>
-
 						<div style={{ marginTop: "15px" }}>
 							<h3>Scienctific and Technological Service Institutes</h3>
 							<ul>
@@ -206,7 +238,6 @@ const AboardSecondPage = () => {
 								})}
 							</ul>
 						</div>
-
 						<div style={{ marginTop: "15px" }}>
 							<h3>Advisory Bodies</h3>
 							<ul>
@@ -225,20 +256,66 @@ const AboardSecondPage = () => {
 					</div>
 					<div className="body-3">
 						<div style={{ width: "100%", height: "50%" }}>
-							<GoogleMapReact
-								bootstrapURLKeys={{
-									key: "AIzaSyCfvLZ7TfPHtlK5PkdsCdmlggTVwA98gFs",
-								}}
-								defaultCenter={defaultProps.center}
-								defaultZoom={defaultProps.zoom}
-								yesIWantToUseGoogleMapApiInternals
-							>
-								<AnyReactComponent
-									lat="14.490234780697362"
-									lng="121.0490488570856"
-									text="DOST"
-								/>
-							</GoogleMapReact>
+							<DostMapComponent />
+						</div>
+						<div className="body-3-div2">
+							<div className="body-3-div2-div1">
+								<div className="no-content"></div>
+								<div className="connect-with-us">
+									<p>Connect with us:</p>
+									<div className="body-3-div2-div1-content">
+										<div>
+											<FaFacebookSquare size={"38"} cursor={"pointer"} />
+										</div>
+										<div>
+											<FaTwitterSquare size={"38"} cursor={"pointer"} />
+										</div>
+										<div>
+											<img
+												src={watch}
+												alt="dostv-logo"
+												width="34px"
+												height="34px"
+												style={{ cursor: "pointer" }}
+												onClick={() => outsiteWebHelper(WATCH)}
+											/>
+										</div>
+										<div>
+											<img
+												src={wwwlogo}
+												alt="dost-logo"
+												width="34px"
+												height="34px"
+												style={{ cursor: "pointer" }}
+												onClick={() => outsiteWebHelper(DOSTWEBSITE)}
+											/>
+										</div>
+										<div>
+											<img
+												src={ytlogo}
+												alt="dost-logo"
+												width="38px"
+												height="38px"
+												style={{ cursor: "pointer" }}
+												onClick={() => outsiteWebHelper(YTDOSTV)}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div className="body-3-div2-div2">
+								<div>
+									<img
+										src={scanmo}
+										alt="scanmo-logo"
+										style={{ cursor: "pointer" }}
+										onClick={() => outsiteWebHelper(SCANMO)}
+									/>
+								</div>
+								<p style={{ marginTop: "5px", textAlign: "center" }}>
+									Leave Feedback. Rate us.
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -252,197 +329,31 @@ const AboardSecondPage = () => {
 	);
 };
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
-
-const REGIONALOFFICES = [
-	{
-		id: 1,
-		label: "DOST National Capital Region (NCR)",
-		link: "https://ncr.dost.gov.ph",
-	},
-	{
-		id: 2,
-		label: "DOST Cordillera Administrative Region (CAR)",
-		link: "https://car.dost.gov.ph",
-	},
-	{
-		id: 3,
-		label: "DOST Region I",
-		link: "https://region1.dost.gov.ph",
-	},
-	{
-		id: 4,
-		label: "DOST DOST Region II",
-		link: "https://region2.dost.gov.ph",
-	},
-	{
-		id: 5,
-		label: "DOST DOST Region III",
-		link: "https://region3.dost.gov.ph",
-	},
-	{
-		id: 6,
-		label: "DOST DOST Region IV-A (CALABARZON)",
-		link: "https://region4a.dost.gov.ph",
-	},
-	{
-		id: 7,
-		label: "DOST DOST Region IV-B (MIMAROPA)",
-		link: "https://region4b.dost.gov.ph",
-	},
-	{
-		id: 8,
-		label: "DOST Region V",
-		link: "https://region5.dost.gov.ph",
-	},
-	{
-		id: 9,
-		label: "DOST Region VI",
-		link: "https://region6.dost.gov.ph",
-	},
-	{
-		id: 10,
-		label: "DOST Region VII",
-		link: "https://region7.dost.gov.ph",
-	},
-	{
-		id: 11,
-		label: "DOST Region VIII",
-		link: "https://region8.dost.gov.ph",
-	},
-	{
-		id: 12,
-		label: "DOST Region IX",
-		link: "https://region9.dost.gov.ph",
-	},
-	{
-		id: 13,
-		label: "DOST Region X",
-		link: "https://region10.dost.gov.ph",
-	},
-	{
-		id: 14,
-		label: "DOST Region XI",
-		link: "https://region11.dost.gov.ph",
-	},
-	{
-		id: 15,
-		label: "DOST Region XII",
-		link: "https://region12.dost.gov.ph",
-	},
-	{
-		id: 16,
-		label: "DOST CARAGA REGION",
-		link: "https://caraga.dost.gov.ph",
-	},
-	{
-		id: 17,
-		label: "DOST Autonomous Region in Muslim Mindanao (ARMM)",
-		link: "https://armm.dost.gov.ph",
-	},
-];
-
-const SPCOUNCILS = [
-	{
-		id: 1,
-		link: "http://www.pcaarrd.dost.gov.ph",
-		label:
-			"Philippine Council for Agriculture, Aquatic and Natural Resources Research and Development (PCAARRD)",
-	},
-	{
-		id: 2,
-		link: "https://www.pchrd.dost.gov.ph",
-		label: "Philippine Council for Health Research and Development (PCHRD)",
-	},
-	{
-		id: 3,
-		link: "https://pcieerd.dost.gov.ph",
-		label:
-			"Philippine council for Industry, Energy and Emerging Technology Research and Development (PCIEERD)",
-	},
-];
-
-const RDINSTITUTES = [
-	{
-		id: 1,
-		link: "https://asti.dost.gov.ph",
-		label: "Advance Science and Technology Institute (ASTI)",
-	},
-	{
-		id: 2,
-		link: "https://www.fnri.dost.gov.ph",
-		label: "FOod and Nutrition Research Institute (FNRI)",
-	},
-	{
-		id: 3,
-		link: "https://fprdi.dost.gov.ph",
-		label: "Forests Product Research and Development Institute (FPRDI)",
-	},
-	{
-		id: 4,
-		link: "https://itdi.dost.gov.ph",
-		label: "Industrial Technology Development Institute (ITDI)",
-	},
-	{
-		id: 5,
-		link: "https://mirdc.dost.gov.ph",
-		label: "Metal Industry Research and Development Center (MIRDC)",
-	},
-	{
-		id: 6,
-		link: "https://pnri.dost.gov.ph",
-		label: "Philippine Nuclear Research Institute (PNRI)",
-	},
-	{
-		id: 7,
-		link: "https://ptri.dost.gov.ph",
-		label: "Philippine Textile Research Institute (PTRI)",
-	},
-];
-
-const STSINSTITUTE = [
-	{
-		id: 1,
-		link: "https://www.pagasa.dost.gov.ph",
-		label:
-			"Philippine Atmospheric, Geophysical and Astronomical Services Administration (PAGASA)",
-	},
-	{
-		id: 2,
-		link: "https://www.phivolcs.dost.gov.ph",
-		label: "Philippine Institute of Volcanology and Seismology (PHILVOLCS)",
-	},
-	{
-		id: 3,
-		link: "http://www.pshs.edu.ph",
-		label: "Phlippine Science High School (PSHS) System",
-	},
-	{
-		id: 4,
-		link: "https://www.sei.dost.gov.ph",
-		label: "Science Education Institute (SEI))",
-	},
-	{
-		id: 5,
-		link: "https://stii.dost.gov.ph",
-		label: "Science and Technology Information Institute(STII)",
-	},
-	{
-		id: 6,
-		link: "http://www.tapi.dost.gov.ph",
-		label: "Technology Application and Promotion (TAPI)",
-	},
-];
-
-const ABODIES = [
-	{
-		id: 1,
-		link: "https://www.nast.ph",
-		label: "National Academy of Science and Technology (NAST)",
-	},
-	{
-		id: 2,
-		link: "https://nrcp.dost.gov.ph",
-		label: "National Research Council of the Philippines (NRCP)",
-	},
-];
+const DostMapComponent = () => {
+	return (
+		<React.Fragment>
+			<div class="mapouter">
+				<div class="gmap_canvas">
+					<iframe
+						width="700"
+						height="400"
+						id="gmap_canvas"
+						src="https://maps.google.com/maps?q=National%20Academy%20of%20Science%20and%20Technology&t=&z=17&ie=UTF8&iwloc=&output=embed"
+						frameborder="0"
+						scrolling="no"
+						marginheight="0"
+						marginwidth="0"
+					></iframe>
+				</div>
+			</div>
+			<div className="take-a-tour">
+				<a
+					target={"_blank"}
+					href="https://maps.google.com/maps?ll=14.490599,121.050117&z=17&t=m&hl=en-US&gl=US&mapclient=embed&cid=4615072221923205496"
+				>
+					Take a Tour
+				</a>
+			</div>
+		</React.Fragment>
+	);
+};
