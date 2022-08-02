@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
-  Routes,
-  Route,
-  Navigate,
-  useNavigate,
-  useLocation,
+	Routes,
+	Route,
+	Navigate,
+	useNavigate,
+	useLocation,
 } from "react-router-dom";
 import {
-  SentEmailConfirmation,
-  SuccessEmailConfirmation,
+	SentEmailConfirmation,
+	SuccessEmailConfirmation,
 } from "../views/pds_form/parts/previous_next";
 import LoaderComponent from "../views/common/loader_component/loader_component";
 import FailResponseComponent from "../views/common/response_component/fail_response_component/fail_response_component";
@@ -73,239 +73,239 @@ const MainRouter = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 
-  return (
-    <React.Fragment>
-      {isBusy && <LoaderComponent />}
-      {isSuccess && <SuccessResponseComponent />}
-      {isFail && <FailResponseComponent />}
+	return (
+		<React.Fragment>
+			{isBusy && <LoaderComponent />}
+			{isSuccess && <SuccessResponseComponent />}
+			{isFail && <FailResponseComponent />}
 
-      <Routes>
-        {/* ===========================================
+			<Routes>
+				{/* ===========================================
 				AUTHENTICATION ROUTE IS DEFINED HERE
 				===========================================
 				*/}
 
-        <Route exact path="/" element={<LoginView />} />
+				<Route exact path="/" element={<LoginView />} />
 
-        {/* ===========================================
+				{/* ===========================================
 					RSP MODULE ROUTES ARE DEFINED HERE
 					===========================================
 				*/}
 
-        <Route exact path="/rsp" element={<MainPageLayout />}>
-          {/* RSP MODULE ROUTES */}
-          <Route index element={<Navigate to="/rsp/dashboard" />} />
-          <Route path="/rsp/dashboard" element={<DashboardView />} />
+				<Route exact path="/rsp" element={<MainPageLayout />}>
+					{/* RSP MODULE ROUTES */}
+					<Route index element={<Navigate to="/rsp/dashboard" />} />
+					<Route path="/rsp/dashboard" element={<DashboardView />} />
 
-          <Route path="/rsp/plantilla" element={<PlantillaView />}>
-            <Route
-              path="/rsp/plantilla/"
-              element={<EmployeePageComponentView />}
-            />
-            <Route
-              path="/rsp/plantilla/employee"
-              element={<EmployeePageComponentView />}
-            />
+					<Route path="/rsp/plantilla" element={<PlantillaView />}>
+						<Route
+							path="/rsp/plantilla/"
+							element={<EmployeePageComponentView />}
+						/>
+						<Route
+							path="/rsp/plantilla/employee"
+							element={<EmployeePageComponentView />}
+						/>
 
-            <Route
-              path="/rsp/plantilla/employee/:item"
-              element={<EmployeePds />}
-            />
+						<Route
+							path="/rsp/plantilla/employee/:item"
+							element={<EmployeePds />}
+						/>
 
-            <Route
-              exact
-              path="/rsp/plantilla/plantilla-items"
-              element={<PlantillaItemPageComponentView />}
-            />
-            <Route
-              path="/rsp/plantilla/plantilla-items/jvs-crw/:item"
-              element={<JvsCrwPageComponentView />}
-            />
+						<Route
+							exact
+							path="/rsp/plantilla/plantilla-items"
+							element={<PlantillaItemPageComponentView />}
+						/>
+						<Route
+							path="/rsp/plantilla/plantilla-items/jvs-crw/:item"
+							element={<JvsCrwPageComponentView />}
+						/>
 
-            <Route
-              path="/rsp/plantilla/plantilla-items/info/:item"
-              element={<PlantillaItemInformation />}
-            />
-          </Route>
+						<Route
+							path="/rsp/plantilla/plantilla-items/info/:item"
+							element={<PlantillaItemInformation />}
+						/>
+					</Route>
 
-          <Route
-            exact
-            path="/rsp/plantilla/plantilla-items/vacantpositions"
-            element={<PlantillaVacantPageComponent />}
-          />
+					<Route
+						exact
+						path="/rsp/plantilla/plantilla-items/vacantpositions"
+						element={<PlantillaVacantPageComponent />}
+					/>
 
-          <Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
+					<Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
 
-          <Route
-            exact
-            path="/rsp/plantilla/plantilla-items/vacantpositions"
-            element={<PlantillaVacantPageComponent />}
-          />
+					<Route
+						exact
+						path="/rsp/plantilla/plantilla-items/vacantpositions"
+						element={<PlantillaVacantPageComponent />}
+					/>
 
-          <Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
+					<Route path="/rsp/jvs" element={<JvsCrwPageComponentView />} />
 
-          <Route path="/rsp/recruitment" element={<RecruitmentView />}>
-            <Route
-              path="/rsp/recruitment/"
-              element={<RecruitmentBaseComponent />}
-            />
-            <Route
-              path="/rsp/recruitment/comparative-matrix/:item"
-              element={<RecruitmentComparativeMatrix />}
-            />
-            <Route
-              path="/rsp/recruitment/comparative-matrix/:item/:item2"
-              element={<RecruitmentComparativeMatrix />}
-            />
-          </Route>
+					<Route path="/rsp/recruitment" element={<RecruitmentView />}>
+						<Route
+							path="/rsp/recruitment/"
+							element={<RecruitmentBaseComponent />}
+						/>
+						<Route
+							path="/rsp/recruitment/comparative-matrix/:item"
+							element={<RecruitmentComparativeMatrix />}
+						/>
+						<Route
+							path="/rsp/recruitment/comparative-matrix/:item/:item2"
+							element={<RecruitmentComparativeMatrix />}
+						/>
+					</Route>
 
-          <Route path="/rsp/onboarding/" element={<OnboardingMain />}></Route>
+					<Route path="/rsp/onboarding/" element={<OnboardingMain />}></Route>
 
-          <Route path="/rsp/request" element={<RequestView />} />
+					<Route path="/rsp/request" element={<RequestView />} />
 
-          <Route path="/rsp/compensation" element={<CompensationView />} />
+					<Route path="/rsp/compensation" element={<CompensationView />} />
 
-          <Route path="/rsp/calendar" element={<CalendarView />} />
-        </Route>
-        {/* 	===========================================
+					<Route path="/rsp/calendar" element={<CalendarView />} />
+				</Route>
+				{/* 	===========================================
 					PDS ROUTES ARE DEFINED HERE
 																																																																																																																																																																																																																																		===========================================
 				*/}
-        <Route path="/background-check/">
-          <Route
-            exact
-            path="/background-check/:reference/:applicant"
-            element={<BackgroundCheckFormOne />}
-          />
-          <Route
-            exact
-            path="/background-check/two/:reference/:applicant"
-            element={<BackgroundCheckFormTwo />}
-          />
-          <Route
-            exact
-            path="/background-check/three/:reference/:applicant"
-            element={<BackgroundCheckFormThree />}
-          />
-          <Route
-            exact
-            path="/background-check/thank-you"
-            element={<BackgroundCheckThankYou />}
-          />
-        </Route>
+				<Route path="/background-check/">
+					<Route
+						exact
+						path="/background-check/:reference/:applicant"
+						element={<BackgroundCheckFormOne />}
+					/>
+					<Route
+						exact
+						path="/background-check/two/:reference/:applicant"
+						element={<BackgroundCheckFormTwo />}
+					/>
+					<Route
+						exact
+						path="/background-check/three/:reference/:applicant"
+						element={<BackgroundCheckFormThree />}
+					/>
+					<Route
+						exact
+						path="/background-check/thank-you"
+						element={<BackgroundCheckThankYou />}
+					/>
+				</Route>
 
-        <Route path="/applicant/:position" element={<FormPageOne />}></Route>
-        <Route path="/pds-applicant">
-          <Route path="/pds-applicant">
-            <Route
-              exact
-              path="/pds-applicant/form-page-one/:item"
-              element={<FormPageOne />}
-            />
+				<Route path="/applicant/:position" element={<FormPageOne />}></Route>
+				<Route path="/pds-applicant">
+					<Route path="/pds-applicant">
+						<Route
+							exact
+							path="/pds-applicant/form-page-one/:item"
+							element={<FormPageOne />}
+						/>
 
-            <Route exact path="/pds-applicant/" element={<FormPageOne />} />
-          </Route>
+						<Route exact path="/pds-applicant/" element={<FormPageOne />} />
+					</Route>
 
-          <Route
-            path="/pds-applicant/applicant/:plantilla"
-            element={<FormPageOne />}
-          />
+					<Route
+						path="/pds-applicant/applicant/:plantilla"
+						element={<FormPageOne />}
+					/>
 
-          <Route
-            path="/pds-applicant/form-page-two/:item"
-            element={<FormPageTwo />}
-          />
-          <Route
-            path="/pds-applicant/form-page-three/:item"
-            element={<FormPageThree />}
-          />
-          <Route
-            path="/pds-applicant/form-page-four/:item"
-            element={<FormPageFour />}
-          />
-          <Route
-            path="/pds-applicant/form-page-five/:item"
-            element={<FormPageFive />}
-          />
-          <Route
-            path="/pds-applicant/form-page-six/:item"
-            element={<FormSix />}
-            // element={<FormPageSix />}
-          />
-          <Route
-            path="/pds-applicant/email-confirmation/:email"
-            element={<SentEmailConfirmation />}
-          />
-          <Route
-            path="/pds-applicant/success-confirmation/:item"
-            element={<SuccessEmailConfirmation />}
-          />
-        </Route>
+					<Route
+						path="/pds-applicant/form-page-two/:item"
+						element={<FormPageTwo />}
+					/>
+					<Route
+						path="/pds-applicant/form-page-three/:item"
+						element={<FormPageThree />}
+					/>
+					<Route
+						path="/pds-applicant/form-page-four/:item"
+						element={<FormPageFour />}
+					/>
+					<Route
+						path="/pds-applicant/form-page-five/:item"
+						element={<FormPageFive />}
+					/>
+					<Route
+						path="/pds-applicant/form-page-six/:item"
+						element={<FormSix />}
+						// element={<FormPageSix />}
+					/>
+					<Route
+						path="/pds-applicant/email-confirmation/:email"
+						element={<SentEmailConfirmation />}
+					/>
+					<Route
+						path="/pds-applicant/success-confirmation/:item"
+						element={<SuccessEmailConfirmation />}
+					/>
+				</Route>
 
-        {/* ===========================================
+				{/* ===========================================
 				JVS ROUTE IS DEFINED HERE
-				===========================================
-				*/}
-        <Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
-        <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
-        {/* ===========================================
+			===========================================
+		*/}
+				<Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
+				<Route path="/jvs-crw/:item" element={<JvscrsForm />} />
+				{/* ===========================================
 						LIBRARY ROUTES ARE DEFINED HERE
-						===========================================
-				*/}
-        <Route path="/library" element={<MainPageLayout />}>
-          <Route index element={<Navigate to="/library/office/" />} />
-          <Route path="/library/office/" element={<LibraryOfficeView />} />
-          <Route
-            path="/library/category-groups/"
-            element={<CategoryGroupsBaseComponent />}
-          />
-          <Route
-            path="/library/documentary-requirements/"
-            element={<DocumentRequirementsBase />}
-          />
-          <Route
-            path="/library/evaluation-battery/"
-            element={<EvaluationBatteryBaseComponent />}
-          />
-          <Route
-            path="/library/position-csc-library"
-            element={<PositionLibrary />}
-          />
-          <Route
-            path="/library/service-history"
-            element={<HistoryServiceLibrary />}
-          />
-          <Route
-            path="/library/user-accounts"
-            element={<UserAccountsBaseComponent />}
-          />
-        </Route>
-        <Route path="/hrmpsb" element={<HRMPSB />}>
-          <Route path="/hrmpsb/" element={<HRMPSBpositions />}></Route>
-          <Route
-            path="/hrmpsb/details/:item"
-            element={<HRMPSBDetails />}
-          ></Route>
-          <Route
-            path="/hrmpsb/evaluation/:item/:item2"
-            element={<HRMPSBEvaluation />}
-          ></Route>
-        </Route>
-        {/* ===========================================
+			===========================================
+		*/}
+				<Route path="/library" element={<MainPageLayout />}>
+					<Route index element={<Navigate to="/library/office/" />} />
+					<Route path="/library/office/" element={<LibraryOfficeView />} />
+					<Route
+						path="/library/category-groups/"
+						element={<CategoryGroupsBaseComponent />}
+					/>
+					<Route
+						path="/library/documentary-requirements/"
+						element={<DocumentRequirementsBase />}
+					/>
+					<Route
+						path="/library/evaluation-battery/"
+						element={<EvaluationBatteryBaseComponent />}
+					/>
+					<Route
+						path="/library/position-csc-library"
+						element={<PositionLibrary />}
+					/>
+					<Route
+						path="/library/service-history"
+						element={<HistoryServiceLibrary />}
+					/>
+					<Route
+						path="/library/user-accounts"
+						element={<UserAccountsBaseComponent />}
+					/>
+				</Route>
+				<Route path="/hrmpsb" element={<HRMPSB />}>
+					<Route path="/hrmpsb/" element={<HRMPSBpositions />}></Route>
+					<Route
+						path="/hrmpsb/details/:item"
+						element={<HRMPSBDetails />}
+					></Route>
+					<Route
+						path="/hrmpsb/evaluation/:item/:item2"
+						element={<HRMPSBEvaluation />}
+					></Route>
+				</Route>
+				{/* ===========================================
              		404 PAGE: WHEN ROUTES AREN'T DEFINE
             		===========================================
 				*/}
-        <Route
-          path="*"
-          element={
-            <React.Fragment>
-              <FourOfourPage />
-            </React.Fragment>
-          }
-        />
-      </Routes>
-    </React.Fragment>
-  );
+				<Route
+					path="*"
+					element={
+						<React.Fragment>
+							<FourOfourPage />
+						</React.Fragment>
+					}
+				/>
+			</Routes>
+		</React.Fragment>
+	);
 };
 
 export default MainRouter;
