@@ -19,7 +19,7 @@ const RecruitmentStatusModal = ({ isDisplay, onClose, rowData }) => {
 	const getTransactionSelectOptions = async () => {
 		if (!mounted.current) return;
 		await axios
-			.get(API_HOST + "get-transaction-stage-select/app")
+			.get(API_HOST + "get-transaction-stage-select/2")
 			.then((response) => {
 				let options = [];
 				let data = response.data.data;
