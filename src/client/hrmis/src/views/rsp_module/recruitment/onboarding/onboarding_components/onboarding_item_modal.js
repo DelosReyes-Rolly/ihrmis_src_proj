@@ -17,7 +17,9 @@ import UploadAttachmentComponent from "../../../../common/input_component/upload
 
 const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
   const [content, setContent] = useState("");
+  const [attachments, setAttachments] = useState([]);
   const dispatch = useDispatch();
+
   const form = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -26,6 +28,7 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
       itm_onb_name: data?.itm_onb_name ?? "",
       itm_onb_url: data?.itm_onb_url ?? "",
       itm_onb_content: data?.itm_onb_content ?? "",
+      files: "",
     },
     validationSchema: Yup.object({
       itm_onb_name: validationRequired,
@@ -33,9 +36,22 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
       itm_onb_content: Yup.string().typeError("Invalid Input"),
     }),
     onSubmit: async (value, { resetForm }) => {
+      const formData = new FormData();
+      formData.append("itm_onb_id", value?.itm_onb_id);
+      formData.append("itm_sec_onb_id", value?.itm_sec_onb_id);
+      formData.append("itm_onb_name", value?.itm_onb_name);
+      formData.append("itm_onb_url", value?.itm_onb_url);
+      formData.append("itm_onb_content", value?.itm_onb_content);
+
+      if (attachments.length > 0) {
+        for (let index = 0; index < attachments.length; index++) {
+          formData.append("files[]", attachments[index]);
+        }
+      }
+
       dispatch(setBusy(true));
       await axios
-        .post(API_HOST + "add-onboarding-section-item", value)
+        .post(API_HOST + "add-onboarding-section-item", formData)
         .then(() => {
           dispatch(setBusy(false));
           dispatch(setUpdateSectionItem());
@@ -52,7 +68,7 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
           dispatch(setBusy(false));
         });
 
-      onClose();
+      // onClose();
     },
   });
 
@@ -115,7 +131,14 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
           </div>
           <div style={{ marginBottom: "10px" }}>
             <label>Attachment</label>
-            <UploadAttachmentComponent />
+            <UploadAttachmentComponent
+              formik={form}
+              name="files"
+              isMulti={true}
+              onChange={(e) => {
+                setAttachments(e.target.files);
+              }}
+            />
           </div>
         </div>
       </ModalComponent>

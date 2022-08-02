@@ -11,7 +11,6 @@ class ApplicantDocumentRequirements
 
     public function saveDocuments(Request $request)
     {
-
         $arrFiles = [];
         $filenameStr = '';
         $applicantId = $request->applicant_id;
