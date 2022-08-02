@@ -57,6 +57,11 @@ import BackgroundCheckFormTwo from "../views/pds_form/backgorund_check/forms/bac
 import BackgroundCheckFormThree from "../views/pds_form/backgorund_check/forms/background_check_three";
 import BackgroundCheckThankYou from "../views/pds_form/backgorund_check/forms/background_check_thank_you";
 import GetStartedPage from "../views/rsp_module/recruitment/get_started_page/get_start_page";
+import JoinPageMainComponent from "../views/rsp_module/recruitment/join_page/join_page_main_component";
+import JoinPageFormOne from "../views/rsp_module/recruitment/join_page/join_page_form_one";
+import JoinPageFormTwo from "../views/rsp_module/recruitment/join_page/join_page_form_two";
+import JoinPageFormThree from "../views/rsp_module/recruitment/join_page/join_page_form_three";
+import JoinPageFormFour from "../views/rsp_module/recruitment/join_page/join_page_form_four";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -67,9 +72,10 @@ const MainRouter = () => {
   useEffect(() => {
     // if (window.sessionStorage.getItem('token') == null) navigate('/');
     if (window.sessionStorage.getItem("user_level") === "3") {
-      // navigate('/hrmpsb');
+      if (!location.pathname.includes("/hrmpsb")) {
+        navigate("/hrmpsb");
+      }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
@@ -246,13 +252,27 @@ const MainRouter = () => {
 				JVS ROUTE IS DEFINED HERE
 				===========================================
 				*/}
+
         <Route path="/welcome_aboard" element={<WelcomeAboardPage />} />
         <Route path="/jvs-crw/:item" element={<JvscrsForm />} />
         <Route path="/get-start-page" element={<GetStartedPage />} />
+
+        <Route path="/join-page" element={<JoinPageMainComponent />}>
+          <Route path="/join-page/" element={<JoinPageFormOne />} />
+
+          <Route path="/join-page/one/:item" element={<JoinPageFormOne />} />
+          <Route path="/join-page/two/:item" element={<JoinPageFormTwo />} />
+          <Route
+            path="/join-page/three/:item"
+            element={<JoinPageFormThree />}
+          />
+          <Route path="/join-page/four/:item" element={<JoinPageFormFour />} />
+        </Route>
+
         {/* ===========================================
-						LIBRARY ROUTES ARE DEFINED HERE
-						===========================================
-				*/}
+			LIBRARY ROUTES ARE DEFINED HERE
+			===========================================
+		*/}
         <Route path="/library" element={<MainPageLayout />}>
           <Route index element={<Navigate to="/library/office/" />} />
           <Route path="/library/office/" element={<LibraryOfficeView />} />

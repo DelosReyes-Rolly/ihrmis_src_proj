@@ -3,7 +3,7 @@ import React from "react";
 const SelectComponent = (props) => {
 	return (
 		<select
-			className="select-component"
+			className={`select-component ${props.className}`}
 			id={props.id}
 			value={props.value}
 			style={{ marginTop: "3px" }}
