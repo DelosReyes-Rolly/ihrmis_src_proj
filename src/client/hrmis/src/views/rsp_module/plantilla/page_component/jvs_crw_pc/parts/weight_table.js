@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { MdAdd } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { bubbleSort } from "../../../../../../helpers/bubble_sort_helper.js";
@@ -11,14 +11,36 @@ const WeightingTable = ({ title, type, jvsId, data, specific }) => {
   const dispatch = useDispatch();
 
   const [isDisplay, setIsDisplay] = useToggleHelper();
-  let min, max;
-  let ratingArr = [];
 
-  const getMaxMin = (arr) => {
-    const newSortedArr = bubbleSort(arr);
-    min = newSortedArr[0];
-    max = newSortedArr[newSortedArr.length - 1];
-  };
+  let minnimum = 0;
+  let maximum = 0;
+
+  const minMax = useCallback(() => {
+    const arrHolder = [];
+    let min = 0;
+    let max = 0;
+    data?.forEach((element) => {
+      arrHolder.push(element.rtg_percent);
+    });
+
+    arrHolder.forEach((element, index) => {
+      if (index === 0) {
+        min = element;
+        max = element;
+      }
+      if (max > element) {
+        max = element;
+      }
+      if (min < element) {
+      }
+      min = element;
+    });
+
+    return {
+      min: max,
+      max: min,
+    };
+  }, [data]);
 
   const [compotencyValue, setCompetencyValue] = useState({
     rtg_percent: "",
@@ -74,12 +96,6 @@ const WeightingTable = ({ title, type, jvsId, data, specific }) => {
           {data === undefined
             ? null
             : data.map((item, index, arr) => {
-                ratingArr.push(item.rtg_percent);
-
-                if (index + 1 == arr.length) {
-                  getMaxMin(ratingArr);
-                }
-
                 return (
                   <tr
                     key={index}
@@ -115,7 +131,7 @@ const WeightingTable = ({ title, type, jvsId, data, specific }) => {
               style={{ textAlign: "center" }}
               className="percent-20-wide"
             >
-              {min}
+              {minMax().min}
             </th>
             {/* LEAST */}
             <th
@@ -123,14 +139,14 @@ const WeightingTable = ({ title, type, jvsId, data, specific }) => {
               style={{ textAlign: "right" }}
               className="percent-30-wide"
             >
-              Miximum Factor Weight
+              Maximum Factor Weight
             </th>
             <th
               colSpan="2"
               style={{ textAlign: "center" }}
               className="percent-20-wide"
             >
-              {max}
+              {minMax().max}
             </th>
             {/* HIGHEST */}
           </tr>
@@ -147,4 +163,4 @@ const WeightingTable = ({ title, type, jvsId, data, specific }) => {
   );
 };
 
-export default WeightingTable;
+export default memo(WeightingTable);
