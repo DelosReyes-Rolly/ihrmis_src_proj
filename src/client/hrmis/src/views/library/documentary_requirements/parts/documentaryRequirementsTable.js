@@ -1,20 +1,20 @@
-import React, { useMemo, useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
-import { API_HOST } from '../../../../helpers/global/global_config.js';
-import { useTable, useSortBy, useGlobalFilter, useFilters } from 'react-table';
-import { BsArrowDown, BsArrowUp } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
-import { useToggleHelper } from '../../../../helpers/use_hooks/toggle_helper.js';
-import { MdAdd } from 'react-icons/md';
-import { usePopUpHelper } from '../../../../helpers/use_hooks/popup_helper.js';
-import { setRefresh } from '../../../../features/reducers/popup_response';
-import { ALERT_ENUM, popupAlert } from '../../../../helpers/alert_response.js';
-import DocumentaryRequirementsModal from './documentaryRequirementsModal.js';
-import { useIsMounted } from '../../../../helpers/use_hooks/isMounted.js';
-import SearchComponent from '../../../common/input_component/search_input/search_input.js';
-import { GroupClusterData } from '../../static/library_input_items.js';
-import { useSelectValueCon } from '../../../../helpers/use_hooks/select_value_cons.js';
-import DocumentRequirementsModalTest from './documentRequirements.js';
+import React, { useMemo, useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import { API_HOST } from "../../../../helpers/global/global_config.js";
+import { useTable, useSortBy, useGlobalFilter, useFilters } from "react-table";
+import { BsArrowDown, BsArrowUp } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { useToggleHelper } from "../../../../helpers/use_hooks/toggle_helper.js";
+import { MdAdd } from "react-icons/md";
+import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper.js";
+import { setRefresh } from "../../../../features/reducers/popup_response";
+import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response.js";
+import DocumentaryRequirementsModal from "./documentaryRequirementsModal.js";
+import { useIsMounted } from "../../../../helpers/use_hooks/isMounted.js";
+import SearchComponent from "../../../common/input_component/search_input/search_input.js";
+import { GroupClusterData } from "../../static/library_input_items.js";
+import { useSelectValueCon } from "../../../../helpers/use_hooks/select_value_cons.js";
+import DocumentRequirementsModalTest from "./documentRequirements.js";
 
 const DocumentaryRequirementsTable = () => {
 	const mounted = useIsMounted();
@@ -26,7 +26,7 @@ const DocumentaryRequirementsTable = () => {
 	const { trueValue } = useSelectValueCon();
 	const documentRequirmentsData = useCallback(async () => {
 		await axios
-			.get(API_HOST + 'documentary-requirements')
+			.get(API_HOST + "documentary-requirements")
 			.then((response) => {
 				let data = response.data ?? [];
 				let dataPlot = [];
@@ -55,27 +55,27 @@ const DocumentaryRequirementsTable = () => {
 	const columns = useMemo(
 		() => [
 			{
-				Header: 'Document Names',
-				accessor: 'doc_name',
+				Header: "Document Names",
+				accessor: "doc_name",
 			},
 			{
-				Header: 'Document Group',
-				accessor: 'doc_group',
+				Header: "Document Group",
+				accessor: "doc_group",
 			},
 			{
-				Header: 'Document Group Text',
-				accessor: 'doc_group_text',
+				Header: "Document Group Text",
+				accessor: "doc_group_text",
 			},
 			{
-				Header: 'Document Cluster',
-				accessor: 'doc_group_cluster',
+				Header: "Document Cluster",
+				accessor: "doc_group_cluster",
 			},
 		],
 		[]
 	);
 
 	const initialState = {
-		hiddenColumns: ['doc_group'],
+		hiddenColumns: ["doc_group"],
 	};
 
 	const {
@@ -101,7 +101,7 @@ const DocumentaryRequirementsTable = () => {
 			.delete(API_HOST + `documentary-requirements/${record}`)
 			.then(() => {
 				popupAlert({
-					message: 'Document Requirement was deleted',
+					message: "Document Requirement was deleted",
 					type: ALERT_ENUM.success,
 				});
 			})
@@ -124,34 +124,41 @@ const DocumentaryRequirementsTable = () => {
 	};
 	return (
 		<>
-			<div className='selector-buttons'>
-				<div className='selector-container'>
+			<div className="selector-buttons">
+				<div className="selector-container" style={{ width: "100%" }}>
 					{/* <span className='selector-span-1'> */}
 					{/* <ButtonComponent/> */}
 					<button
-						className='filter_buttons button-components'
+						className="btn-primary"
+						onClick={() => setToggleOfficeModal()}
+					>
+						<MdAdd style={{ padding: 0, margin: 0 }} size="14" />
+						<span>Requirements</span>
+					</button>
+					{/* <button
+						className="filter_buttons button-components"
 						onClick={() => setToggleOfficeModal()}
 						style={{
-							cursor: 'pointer',
-							display: 'flex',
-							justifyContent: 'center',
-							alignItems: 'center',
-							textAlign: 'center',
+							cursor: "pointer",
+							display: "flex",
+							justifyContent: "center",
+							alignItems: "center",
+							textAlign: "center",
 						}}
 					>
-						<MdAdd style={{ padding: 0, margin: 0 }} size='14' />
+						<MdAdd style={{ padding: 0, margin: 0 }} size="14" />
 						<span>Documentary Requirement</span>
-					</button>
+					</button> */}
 				</div>
-				<div className='search-container'>
-					<span className='margin-right-1 selector-search-label'>
-						<label>Search</label>
-					</span>
+				<div
+					className="search-container"
+					style={{ justifyContent: "flex-end" }}
+				>
 					<span>
 						<SearchComponent
-							placeholder='Search'
+							placeholder="Search"
 							onChange={(e) => {
-								setGlobalFilter(e.target.value ?? '');
+								setGlobalFilter(e.target.value ?? "");
 							}}
 						/>
 					</span>
@@ -171,17 +178,17 @@ const DocumentaryRequirementsTable = () => {
 						setToggleOfficeModal();
 					}
 				}}
-				removeName={dataState !== null ? 'Delete' : 'Close'}
+				removeName={dataState !== null ? "Delete" : "Close"}
 			/>
 			<div
-				className='default-table'
-				style={{ maxHeight: '68vh', overflowY: 'auto' }}
+				className="default-table"
+				style={{ maxHeight: "68vh", overflowY: "auto" }}
 			>
-				<table className='table-design' {...getTableProps()}>
+				<table className="table-design" {...getTableProps()}>
 					<thead>
 						{headerGroups.map((headerGroup) => (
 							<tr
-								className='main-header'
+								className="main-header"
 								{...headerGroup.getHeaderGroupProps()}
 							>
 								{headerGroup.headers.map((column) => (
@@ -194,10 +201,10 @@ const DocumentaryRequirementsTable = () => {
 													<BsArrowUp />
 												)
 											) : (
-												''
+												""
 											)}
 										</span>
-										{column.render('Header')}
+										{column.render("Header")}
 									</th>
 								))}
 							</tr>
@@ -214,7 +221,7 @@ const DocumentaryRequirementsTable = () => {
 
 							return (
 								<tr
-									className='trHoverBody'
+									className="trHoverBody"
 									{...row.getRowProps()}
 									onClick={() => {
 										passModalData(officeData);
@@ -223,7 +230,7 @@ const DocumentaryRequirementsTable = () => {
 									{row.cells.map((cell, key) => {
 										return (
 											<td key={key} {...cell.getCellProps()}>
-												{cell.render('Cell')}
+												{cell.render("Cell")}
 											</td>
 										);
 									})}
@@ -235,10 +242,10 @@ const DocumentaryRequirementsTable = () => {
 			</div>
 			<p
 				style={{
-					fontSize: 'small',
-					color: 'rgba(70, 70, 70, 0.6)',
-					width: '100%',
-					margin: '0px 20px',
+					fontSize: "small",
+					color: "rgba(70, 70, 70, 0.6)",
+					width: "100%",
+					margin: "0px 20px",
 				}}
 			>
 				Total of {rows.length} entries

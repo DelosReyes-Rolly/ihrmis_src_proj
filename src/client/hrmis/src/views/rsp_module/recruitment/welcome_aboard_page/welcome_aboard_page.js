@@ -3,7 +3,6 @@ import dostLogo from "../../../../assets/images/logo.png";
 import sikatlogo from "../../../../assets/images/sikat.png";
 import scanmo from "../../../../assets/images/SCANMO.CO.png";
 import watch from "../../../../assets/images/watch.png";
-import wwwlogo from "../../../../assets/images/www.png";
 import ytlogo from "../../../../assets/images/ytlogo.png";
 import { IoIosSend } from "react-icons/io";
 import { HiUserGroup } from "react-icons/hi";
@@ -23,6 +22,7 @@ import {
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { BsGlobe } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 const WelcomeAboardPage = () => {
 	return (
@@ -40,6 +40,7 @@ const WelcomeAboardPage = () => {
 export default WelcomeAboardPage;
 
 const AboardFirstPage = () => {
+	const navigate = useNavigate();
 	return (
 		<React.Fragment>
 			<div className="aboard_holder">
@@ -99,7 +100,12 @@ const AboardFirstPage = () => {
 									</p>
 								</div>
 							</div>
-							<div className="div-click-container">
+							<div
+								className="div-click-container"
+								onClick={() => {
+									navigate("/join-page");
+								}}
+							>
 								<HiUserGroup size={28} color={"#004e87"} />
 								<div>
 									<p className="container-title">Join our workforce</p>

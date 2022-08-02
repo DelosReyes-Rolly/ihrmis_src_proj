@@ -21,6 +21,7 @@ const ButtonComponent = (props) => {
 				form={props.form}
 				onClick={props.onClick}
 				type={props.type}
+				disabled={props.disabled}
 				style={{
 					background: props.bgColor,
 					color: props.color,

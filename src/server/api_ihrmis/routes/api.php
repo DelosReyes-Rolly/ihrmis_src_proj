@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountRequestResource as AccResource;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\Applicant\TblapplicantChildrenController;
 use App\Http\Controllers\Applicant\TblapplicantCseligibilitiesController;
@@ -188,6 +189,11 @@ Route::post('login', [AuthController::class, "login"]);
 Route::post('register', [AuthController::class, "register"]);
 Route::get('user-accounts', [AuthController::class, "getUsers"]);
 Route::post('update-user', [AuthController::class, "updateUser"]);
+
+Route::resource('account-request', AccountRequestResource::class);
+Route::post('account-check-code/{id}', [AccResource::class, 'checkCode']);
+Route::get('account-confirmed/{id}', [AccResource::class, 'getConfirmed']);
+
 Route::post('assessment-score', [RecruitmentController::class, 'saveAssessment']);
 Route::post('competency-assessment-score', [RecruitmentController::class, 'saveCompetencyAssessment']);
 Route::post('save-hrmpsb-remarks', [RecruitmentController::class, 'saveHRMPSBRemarks']);
@@ -221,6 +227,8 @@ Route::delete('delete-mail-template/{template_id}', [MailController::class, "del
 Route::post('notify-vacant-office', [MailController::class, "notifyVacantPlantillaEmail"]);
 Route::post('notify-next-rank', [MailController::class, "notifyNextRank"]);
 Route::post('recruitment-common-email', [MailController::class, 'recruitmentEmail']);
+Route::get('verify-account/{id}', [MailController::class, "verifyAccount"]);
+Route::get('verified-account/{id}', [MailController::class, "verifiedAccount"]);
 
 
 //=======================================================================================
@@ -340,5 +348,11 @@ Route::get('onboarding-schedule', [OnboardingController::class, "getAllScheduleF
 Route::post('selected-appointees', [OnboardingController::class, "getSelectedAppointees"]);
 Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOnboardingSchedule"]);
 
+
+Route::get('get-onboarding-lists', [OnboardingController::class, "getOnboardingSectionsAndSectionItem"]);
+
 Route::get('all-new-appointed', [TblapplicantsController::class, "getAppointedApplicantsWithEmpId"]);
+
+
+
 // Route::post('')

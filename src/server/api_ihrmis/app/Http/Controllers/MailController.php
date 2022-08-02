@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CommonResource;
+use App\Mail\AccountRequestVeification;
 use App\Mail\CommonMail;
 use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
+use App\Models\AccountRequestModel;
 use App\Models\Applicants\Tblapplicants;
 use App\Models\ExamScoreModel;
 use App\Models\TblemailTemplate;
+use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
 use Carbon\Carbon;
 use Exception;
@@ -64,6 +67,98 @@ class MailController extends Controller
     {
         // $mailQry = TblemailType::all();
         // return CommonResource::collection($mailQry);
+    }
+
+    public function verifyAccount($id)
+    {
+        $query = AccountRequestModel::where('acc_req_id', $id)->first();
+        $message = '<p>Dear ' . $query->acc_req_title_id . ' ' . $query->acc_req_first_name . ' ' . $query->acc_req_last_name . '</p>';
+        $message .= '<br><p>Please confirm your email address to complete your request. Your verification code is ' . $query->acc_req_code . '</p>';
+        $message .= '<br><p>If you are having trouble verifying your email account, you may reply to this email and make sure to describe things
+            exactly as they appear on your screen and/or attach a screenshot of the page where you see an error message or encounter another problem.
+            <br><br> 
+            ' . env("MAIL_FROM_RECRUITER") . '<br>
+            <i>Department of Science and Technology</i>
+            <p style="font-size:small;">Gen. Santos Avenue, Bicutan, Taguig City</p>
+            <br><br> 
+            <br>
+            DISCLAIMER: If you have received this email by mistake and didn\'t initiate such request, please disregard and delete this email immediately;
+            do not use it for any purpose, nor disclose its contents to anyone. This email (including any attachment/s) is confidential  and/or may 
+            also be legally priviledged. The sender cannot guarantee that email transmissions are secure or error-free as information may be corrupted,
+            arrive late, incomplete, or contain viruses, and therefore does not accept any liability for any errors or omissions in the context of the message.
+        </p>';
+        $data = [
+            "from" => env("MAIL_FROM_RECUITER"),
+            "email_from" => env("MAIL_FROM_ADDRESS"),
+            "email_to" => $query->acc_req_email,
+            "date" => Carbon::now(),
+            "message_type" => 'Email verification for Account Request',
+            "message" => $message,
+            "sender" => env("MAIL_FROM_ADDRESS"),
+        ];
+        Mail::to($query->acc_req_email)->send(new AccountRequestVeification($data));
+    }
+
+    public function verifiedAccount($id)
+    {
+        $query = AccountRequestModel::with('TblPositions', 'TblOffice')->where('acc_req_id', $id)->first();
+        $parentOffice = '';
+
+        if ($query->acc_req_verified === 1) {
+            $office = [];
+            if ($query->TblOffice->ofc_ofc_id !== null) {
+                $office = Tbloffices::where('ofc_id', $query->TblOffice->ofc_ofc_id)->first();
+                $parentOffice = $office->ofc_acronym;
+            }
+        }
+        $message = '<p>Good day!</p><br>
+        New user access account request has been submitted, please see details below:
+        <br><br>
+        <b>Profile Details</b><br><br>';
+        $message .= '<table style="width:50%">
+            <tr>
+                <td>Name</td>
+                <td>' . $query->acc_req_title_id . ' ' . $query->acc_req_first_name . ' ' . $query->acc_req_last_name . '</td>
+            </tr>
+            <tr>
+                <td>Position/Designation</td>
+                <td>' . $query->TblPositions->pos_title . '</td>
+            </tr>
+            <tr>
+                <td>Office/Location</td>
+                <td>' . $query->TblOffice->ofc_name . ',  ' . $parentOffice . '</td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td>' . $query->acc_req_email . '</td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td>' . $query->acc_req_telephone . '</td>
+            </tr>
+            <tr>
+                <td>Mobile Number</td>
+                <td>' . $query->acc_req_mobile . '</td>
+            </tr>
+        </table>
+            <br><br> 
+            <br>
+            DISCLAIMER: If you have received this email by mistake and didn\'t initiate such request, please disregard and delete this email immediately;
+            do not use it for any purpose, nor disclose its contents to anyone. This email (including any attachment/s) is confidential  and/or may 
+            also be legally priviledged. The sender cannot guarantee that email transmissions are secure or error-free as information may be corrupted,
+            arrive late, incomplete, or contain viruses, and therefore does not accept any liability for any errors or omissions in the context of the message.
+        </p>';
+
+        $data = [
+            "from" => env("MAIL_FROM_RECUITER"),
+            "email_from" => env("MAIL_FROM_ADDRESS"),
+            "email_to" => env("MAIL_FROM_ADDRESS"),
+            "date" => Carbon::now(),
+            "message_type" => 'Account Request for iHRMIS',
+            "message" => $message,
+            "sender" => env("MAIL_FROM_ADDRESS"),
+        ];
+        Mail::to(env("MAIL_FROM_ADDRESS"))->send(new AccountRequestVeification($data));
     }
 
     public function notifyVacantPlantillaEmail(Request $request)
@@ -203,34 +298,41 @@ class MailController extends Controller
         if ($request->eml_type == 'BCK') {
             foreach (json_decode($request->appID) as $value) {
                 $query = Tblapplicants::with('tblReference', 'tblPositions')->where('app_id', $value->id)->first();
-                $pos_title = $query->tblPositions->pos_title;
-                $references = $query->tblReference;
-                $test = [];
-
-                foreach ($references as $reference) {
-                    $message = $request->eml_message;
-                    $message .= '<br><br>
-                    <a href="' . env("FRONTEND_PAGE_URL") . 'background-check/' . $reference->ref_id . '/' . $value->id . '" 
-                    style="width:100%;text-align:center">Background Check Form</a>
-                    ';
-                    $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
-                    $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
-                    $tempEmail = trim($reference->ref_app_email, "");
-                    $data = [
-                        "from" => env("MAIL_FROM_RECUITER"),
-                        "email_from" => env("MAIL_FROM_ADDRESS"),
-                        "email_to" => $tempEmail,
-                        "date" => Carbon::now(),
-                        "message_type" => $request->eml_name,
-                        "message" => $replaced_reference,
-                        "sender" => nl2br($request->sender),
-                        "file" => $arrFiles
-                    ];
-                    if (!in_array($tempEmail, $arrHolder)) {
-                        array_push($arrHolder, $tempEmail);
-                        Mail::to($tempEmail)->send(new CommonMail($data));
+                $pos_title = '';
+                if (isset($query->tblPositions->pos_title)) {
+                    $pos_title = $query->tblPositions->pos_title;
+                }
+                if (isset($query->tblReference)) {
+                    $references = $query->tblReference;
+                    
+                    foreach ($references as $reference) {
+                        $message = $request->eml_message;
+                        $message .= '<br><br>
+                        <a href="' . env("FRONTEND_PAGE_URL") . 'background-check/' . $reference->ref_id . '/' . $value->id . '" 
+                        style="width:100%;text-align:center">Background Check Form</a>
+                        ';
+                        $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
+                        $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
+                        $tempEmail = trim($reference->ref_app_email, "");
+                        $data = [
+                            "from" => env("MAIL_FROM_RECUITER"),
+                            "email_from" => env("MAIL_FROM_ADDRESS"),
+                            "email_to" => $tempEmail,
+                            "date" => Carbon::now(),
+                            "message_type" => $request->eml_name,
+                            "message" => $replaced_reference,
+                            "sender" => nl2br($request->sender),
+                            "file" => $arrFiles
+                        ];
+                        if (!in_array($tempEmail, $arrHolder)) {
+                            array_push($arrHolder, $tempEmail);
+                            Mail::to($tempEmail)->send(new CommonMail($data));
+                        }
                     }
                 }
+                $test = [];
+
+                
             }
         }
         if ($request->eml_type != 'PER' && $request->eml_type != 'BCK') {

@@ -17,6 +17,7 @@ import IconComponent from "../../../../common/icon_component/icon";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 
 const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
+	const mounted = useIsMounted();
 	const [mType, setmType] = useState([]);
 	const { renderBusy } = usePopUpHelper();
 	const [imageValue, setImageValue] = useState();
@@ -69,6 +70,8 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
 				});
 			})
 			.catch((err) => {});
+		if (!mounted.current) return;
+
 		setOptions(arrHolder2);
 		setmType(arrHolder);
 	}, [type]);
