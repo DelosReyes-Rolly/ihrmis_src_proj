@@ -397,18 +397,7 @@ class PlantillaItemsService
 	public function getAgency($id)
 	{
 		$item_query = Tblagencies::where("agn_id", $id)->first();
-		$item_query->office = $this->getOffice($item_query->agn_id);
-		return $item_query;
-	}
-
-	/**
-	 * getAgency
-	 * Todo get Office
-	 * @return array 
-	 */
-	public function getOffice($id)
-	{
-		$item_query = Tbloffices::where("ofc_agn_id", $id)->first();
+		$item_query->office = $this->cHelper->getOfficeByAgency($item_query->agn_id);
 		return $item_query;
 	}
 

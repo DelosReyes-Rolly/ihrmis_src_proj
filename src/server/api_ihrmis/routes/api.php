@@ -245,8 +245,9 @@ Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::cla
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
 Route::get('getPlantillaItemDetails/{item_state?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
-Route::get('getPlantillaItemDetails/{item_id?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
+Route::get('getPlantillaItemDetailsById/{item_id?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetailsById']);
 Route::get('getPiPositionWithCsc/{id}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemPositionWithCsc']);
+
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------
@@ -341,6 +342,3 @@ Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOn
 
 Route::get('all-new-appointed', [TblapplicantsController::class, "getAppointedApplicantsWithEmpId"]);
 // Route::post('')
-
-
-
