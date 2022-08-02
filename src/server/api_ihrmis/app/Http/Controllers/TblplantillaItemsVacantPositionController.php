@@ -116,10 +116,10 @@ class TblplantillaItemsVacantPositionController extends Controller
      * generateMemoOnPostingVPForDostAgencies
      * Todo generate PDF file
      */
-    public function generateMemoOnPostingVPForDostAgencies($selected_agency)
+    public function generateMemoOnPostingVP($selected_agency, $plantilla_items)
     {
 
-        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport($selected_agency);
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVp($selected_agency, $plantilla_items);
     }
 
     /**

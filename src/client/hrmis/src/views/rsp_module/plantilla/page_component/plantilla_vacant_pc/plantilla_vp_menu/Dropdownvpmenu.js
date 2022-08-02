@@ -115,13 +115,13 @@ const DropList = ({
 	);
 
 	const dispatch = useDispatch();
-	const confirmedMemoAction = () => {
-		dispatch(setSelectAgency());
-	};
+	// const confirmedMemoAction = () => {
+	// 	dispatch(setSelectAgency());
+	// };
 
-	const cancelMemoCallback = () => {
-		printMemoOnPostingOfVpForCsc();
-	};
+	// const cancelMemoCallback = () => {
+	// 	printMemoOnPostingOfVpForCsc();
+	// };
 
 	const linkNavigationHandler = (item) => {
 		const itemlink = item.link;
@@ -185,7 +185,19 @@ const DropList = ({
 		// 		cancelMemoCallback();
 		// 	}
 		// });
-		dispatch(setSelectAgency());
+
+		let positions = plantilla_items["positions"];
+		if (typeof positions === "undefined") {
+			let response = {
+				data: {
+					code: 500,
+					message: "No selected row to print!",
+				},
+			};
+			toastSuccessFailMessage(response.data);
+		} else {
+			dispatch(setSelectAgency());
+		}
 	};
 
 	const noticeOfVacancyAction = (itemlink) => {

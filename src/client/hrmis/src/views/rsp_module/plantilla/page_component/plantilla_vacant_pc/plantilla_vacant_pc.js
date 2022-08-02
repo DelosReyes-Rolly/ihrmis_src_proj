@@ -13,7 +13,7 @@ import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_hel
 import SelectAgencyModal from "../next_in_rank_modal/select_agency_modal";
 import PostingOnJobVacancyModal from "../posting_job_vacancy_modal/posting_job_vacancy_modal";
 import { setSelectAgency } from "../../../../../features/reducers/plantilla_item_slice";
-import { printMemoOnPostingOfVpForDost } from "../../../../../router/outside_routes";
+import { printMemoOnPostingOfVp } from "../../../../../router/outside_routes";
 import { setRefreh } from "../../../../../features/reducers/jvscrw_slice";
 import Swal from "sweetalert2";
 import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
@@ -203,6 +203,7 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					dispatch(setSelectAgency());
 				}}
 				onClickSubmit={() => {
+					console.log(selected_agency);
 					if (selected_agency.length === 0) {
 						let response = {
 							data: {
@@ -212,7 +213,8 @@ const PlantillaItemsVacantPositionComponentView = () => {
 						};
 						toastSuccessFailMessage(response.data, "top");
 					} else {
-						printMemoOnPostingOfVpForDost(selected_agency);
+						let positions = plantilla_items["positions"];
+						printMemoOnPostingOfVp(selected_agency, positions);
 					}
 				}}
 			/>

@@ -45,7 +45,7 @@ const SelectAgencyModal = ({ isDisplay, onClose, onClickSubmit }) => {
 				onClickSubmit={onClickSubmit}
 			>
 				<AddHeaderForOfficer />
-				{agencies?.map((element, index) => (
+				{agencies.reverse()?.map((element, index) => (
 					<RowDisplay key={index} element={element} />
 				))}
 			</ModalVpComponent>
