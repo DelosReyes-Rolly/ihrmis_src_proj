@@ -66,9 +66,10 @@ const MainRouter = () => {
 	useEffect(() => {
 		// if (window.sessionStorage.getItem('token') == null) navigate('/');
 		if (window.sessionStorage.getItem("user_level") === "3") {
-			// navigate('/hrmpsb');
+			if (!location.pathname.includes("/hrmpsb")) {
+				navigate("/hrmpsb");
+			}
 		}
-
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location]);
 

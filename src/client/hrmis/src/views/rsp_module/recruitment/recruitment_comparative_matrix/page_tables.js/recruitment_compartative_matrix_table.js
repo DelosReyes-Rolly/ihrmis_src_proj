@@ -19,7 +19,6 @@ import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 import IconComponent from "../../../../common/icon_component/icon";
-import { format } from "date-fns";
 import {
 	recruitmentCMHeaders,
 	recruitmentEligbilities,
@@ -27,12 +26,15 @@ import {
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import { competencyScore, competencyToMessage } from "../../static/functions";
 import ReactDatePicker from "react-datepicker";
+import moment from "moment";
+import { format, setHours, setMinutes } from "date-fns";
 
 const RecruitmentComparativeTable = ({
 	setPageType,
 	setApplicantId,
 	itm_state,
 	deadline,
+	setDeadline,
 }) => {
 	const mounted = useIsMounted();
 	const dispatch = useDispatch();
@@ -40,14 +42,14 @@ const RecruitmentComparativeTable = ({
 	const urlpath = window.location.pathname;
 	const route = urlpath.split("/");
 	const plantilla_id = route[5];
-	const [deadlineText, setDeadline] = useState();
 	const [applicants, setApplicants] = useState([]);
 	const { refresh } = useSelector((state) => state.popupResponse);
 	const closeOpenEvaluation = async (state) => {
 		const formData = new FormData();
 		formData.append("state", state);
 		formData.append("plantilla", plantilla_id);
-		formData.append("deadline", deadlineText);
+		const date = format(new Date(startDate), "yyyy-MM-dd HH:mm:ss");
+		formData.append("deadline", date);
 		let evalText = "opened";
 		if (state === 2) {
 			evalText = "closed";
@@ -152,13 +154,10 @@ const RecruitmentComparativeTable = ({
 
 		dispatch(setBusy(false));
 	}, [plantilla_id, dispatch]);
+	const [startDate, setStartDate] = useState(deadline);
 
 	useEffect(() => {
-		try {
-			setDeadline(deadline);
-		} catch {
-			setDeadline("");
-		}
+		setStartDate(deadline);
 	}, [deadline]);
 	useEffect(() => {
 		getCMData();
@@ -179,10 +178,8 @@ const RecruitmentComparativeTable = ({
 		useGlobalFilter,
 		useSortBy
 	);
-
 	return (
 		<>
-			{console.log(deadline)}
 			<div className="default-table document_table">
 				<table className="table-design comparative-matrix">
 					<thead>
@@ -266,66 +263,66 @@ const RecruitmentComparativeTable = ({
 				className="default-table"
 				style={{ display: "flex", justifyContent: "end" }}
 			>
-				<button
-					className={
-						itm_state === 2 ? "button-components" : "delete-button-color"
-					}
+				<div
 					style={{
-						cursor: "pointer",
+						width: "13rem",
 						display: "flex",
-						justifyContent: "center",
+						justifyContent: "end",
 						alignItems: "center",
-						textAlign: "center",
-					}}
-					onClick={() => {
-						closeOpenEvaluation(itm_state === 2 ? 3 : 2);
+						gap: "12px",
 					}}
 				>
-					{itm_state === 2 && (
-						<>
-							<AiFillUnlock style={{ padding: 0, margin: 0 }} size="14" />
-							<span> Open</span>
-						</>
-					)}
-					{itm_state === 3 && (
-						<>
-							<AiFillLock style={{ padding: 0, margin: 0 }} size="14" />
-							<span> Close</span>
-						</>
-					)}
-				</button>
-				{itm_state === 3 && (
-					<div
+					<button
+						className={
+							itm_state === 2 ? "button-components" : "delete-button-color"
+						}
 						style={{
-							width: "13rem",
+							cursor: "pointer",
 							display: "flex",
-							justifyContent: "end",
+							justifyContent: "center",
 							alignItems: "center",
+							textAlign: "center",
+						}}
+						onClick={() => {
+							closeOpenEvaluation(itm_state === 2 ? 3 : 2);
 						}}
 					>
-						<label
-							style={{ fontSize: "small", color: "rgba(70, 70, 70, 0.8)" }}
-						>
-							Deadline
-						</label>
-						<ReactDatePicker
-							selected={deadlineText}
-							onChange={(e) => {
-								setDeadline(e);
-							}}
-              showTimeSelect
-							inline
-						/>
-						<InputComponent
-							name="evaluationDeadline"
-							type={"datetime"}
-							value={deadlineText}
-							onChange={(e) => {
-								setDeadline(e.target.value);
-							}}
-						/>
-					</div>
-				)}
+						{itm_state === 2 && (
+							<>
+								<AiFillUnlock style={{ padding: 0, margin: 0 }} size="14" />
+								<span> Open</span>
+							</>
+						)}
+						{itm_state === 3 && (
+							<>
+								<AiFillLock style={{ padding: 0, margin: 0 }} size="14" />
+								<span> Close</span>
+							</>
+						)}
+					</button>
+					{itm_state === 3 && (
+						<>
+							<label
+								style={{ fontSize: "small", color: "rgba(70, 70, 70, 0.8)" }}
+							>
+								Deadline
+							</label>
+
+							<ReactDatePicker
+								selected={startDate}
+								onChange={(date) => setStartDate(date)}
+								showTimeSelect
+								includeTimes={[
+									setHours(setMinutes(new Date(), 0), 17),
+									setHours(setMinutes(new Date(), 30), 18),
+									setHours(setMinutes(new Date(), 30), 19),
+									setHours(setMinutes(new Date(), 30), 17),
+								]}
+								dateFormat="MMMM d, yyyy h:mm aa"
+							/>
+						</>
+					)}
+				</div>
 			</div>
 		</>
 	);
