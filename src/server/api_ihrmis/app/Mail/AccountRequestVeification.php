@@ -29,7 +29,7 @@ class AccountRequestVeification extends Mailable
     public function build()
     {
         $mail = $this->details;
-        $email = $this->from(env("MAIL_FROM_ADDRESS"))->subject($mail['message_type'])->view('mail.accountrequestverification', ['details' => $mail]);
+        $email = $this->from(env("MAIL_FROM_ADDRESS"))->subject($mail['message_type'])->view('mail.accountRequestVerification', ['details' => $mail]);
         
         return $email;
         // return $this->view('view.name');

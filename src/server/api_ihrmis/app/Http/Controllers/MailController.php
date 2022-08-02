@@ -298,34 +298,41 @@ class MailController extends Controller
         if ($request->eml_type == 'BCK') {
             foreach (json_decode($request->appID) as $value) {
                 $query = Tblapplicants::with('tblReference', 'tblPositions')->where('app_id', $value->id)->first();
-                $pos_title = $query->tblPositions->pos_title;
-                $references = $query->tblReference;
-                $test = [];
-
-                foreach ($references as $reference) {
-                    $message = $request->eml_message;
-                    $message .= '<br><br>
-                    <a href="' . env("FRONTEND_PAGE_URL") . 'background-check/' . $reference->ref_id . '/' . $value->id . '" 
-                    style="width:100%;text-align:center">Background Check Form</a>
-                    ';
-                    $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
-                    $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
-                    $tempEmail = trim($reference->ref_app_email, "");
-                    $data = [
-                        "from" => env("MAIL_FROM_RECUITER"),
-                        "email_from" => env("MAIL_FROM_ADDRESS"),
-                        "email_to" => $tempEmail,
-                        "date" => Carbon::now(),
-                        "message_type" => $request->eml_name,
-                        "message" => $replaced_reference,
-                        "sender" => nl2br($request->sender),
-                        "file" => $arrFiles
-                    ];
-                    if (!in_array($tempEmail, $arrHolder)) {
-                        array_push($arrHolder, $tempEmail);
-                        Mail::to($tempEmail)->send(new CommonMail($data));
+                $pos_title = '';
+                if (isset($query->tblPositions->pos_title)) {
+                    $pos_title = $query->tblPositions->pos_title;
+                }
+                if (isset($query->tblReference)) {
+                    $references = $query->tblReference;
+                    
+                    foreach ($references as $reference) {
+                        $message = $request->eml_message;
+                        $message .= '<br><br>
+                        <a href="' . env("FRONTEND_PAGE_URL") . 'background-check/' . $reference->ref_id . '/' . $value->id . '" 
+                        style="width:100%;text-align:center">Background Check Form</a>
+                        ';
+                        $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
+                        $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
+                        $tempEmail = trim($reference->ref_app_email, "");
+                        $data = [
+                            "from" => env("MAIL_FROM_RECUITER"),
+                            "email_from" => env("MAIL_FROM_ADDRESS"),
+                            "email_to" => $tempEmail,
+                            "date" => Carbon::now(),
+                            "message_type" => $request->eml_name,
+                            "message" => $replaced_reference,
+                            "sender" => nl2br($request->sender),
+                            "file" => $arrFiles
+                        ];
+                        if (!in_array($tempEmail, $arrHolder)) {
+                            array_push($arrHolder, $tempEmail);
+                            Mail::to($tempEmail)->send(new CommonMail($data));
+                        }
                     }
                 }
+                $test = [];
+
+                
             }
         }
         if ($request->eml_type != 'PER' && $request->eml_type != 'BCK') {
