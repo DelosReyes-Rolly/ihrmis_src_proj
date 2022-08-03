@@ -2,7 +2,7 @@
 	width: auto;
 	display: flex;
 	flex-direction: row;
-	padding: 3rem 2rem;
+	padding: 5rem 2rem;
 	.join-info {
 		width: 30%;
 		padding: 0rem 1rem;
@@ -154,7 +154,7 @@
 @media only screen and (max-width: 768px) {
 	.join-page-body {
 		flex-direction: column;
-		padding: 2rem 2rem;
+		padding: 5rem 2rem;
 		.join-info {
 			width: auto;
 			p {
