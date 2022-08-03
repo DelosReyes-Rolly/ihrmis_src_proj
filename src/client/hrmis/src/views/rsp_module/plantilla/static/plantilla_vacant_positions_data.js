@@ -77,7 +77,7 @@ export const plantillaItemsVacantPosMenuItems = [
 export const plantillaItemsReportsMenuItems = [
 	{
 		id: 1,
-		label: "Memo on Posting of Posting of Announcement of Vacancy",
+		label: "Memo on Posting of Announcement of Vacancy",
 		link: "#",
 	},
 	{

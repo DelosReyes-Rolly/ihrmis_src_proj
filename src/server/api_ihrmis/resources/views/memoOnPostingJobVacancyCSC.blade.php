@@ -48,43 +48,17 @@
             </tr>
         </thead>
         <tbody>
-          
+        
             <tr>
                 <td class="tg-8jgo">FOR</td>
                 <td class="tg-8jgo1 tg-custom">:</td>
-                
-                    {{ $i=1 }}
-                    @foreach( $selected_agencies ?? '' as $data) 
-                        @if($i === 1)
-                            <td class="tg-zv4m tg-custom">
-                                @if($data->agn_acronym === "CSC")
-                                    <b>{{ $data->agn_head_name}}</b><br>
-                                    {{$data->agn_head_position}}<br>
-                                    {{ $data->office->ofc_name}}
-                                @else
-                                    <b>{{ $data->agn_head_name .', '}}</b><br>
-                                    {{$data->agn_head_position . ", " . $data->agn_acronym}}
-                                @endif
-                            </td>
-                        @endif
-                        @if($i > 1)
-                            <tr>
-                                <td class="tg-zv4m"></td>
-                                <td class="tg-zv4m"></td>
-                                <td class="td-custom-padding1">
-                                    @if($data->agn_acronym === "CSC")
-                                        <b>{{ $data->agn_head_name}}</b><br>
-                                        {{$data->agn_head_position}}<br>
-                                          {{ $data->office->ofc_name}}
-                                    @else
-                                        <b>{{ $data->agn_head_name .', '}}</b><br>
-                                        {{$data->agn_head_position . ", " . $data->agn_acronym}}
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
-                        {{ $i++; }}
-                    @endforeach
+                @foreach( $selected_agencies ?? '' as $data) 
+                    <td class="tg-zv4m tg-custom">
+                        <b>{{ $data->agn_head_name}}</b><br>
+                        {{$data->agn_head_position}}<br>
+                        {{ $data->office->ofc_name}}
+                    </td>
+                @endforeach
             </tr>
             {{-- From DATA --}}
             <tr>
@@ -92,8 +66,6 @@
                 <td class="tg-8jgo1 tg-custom">:</td>
                 <td class="tg-zv4m1 tg-custom">
                     <b>{{$memo_from_name['memo_name']}}</b><br>
-                    {{-- {{ explode("and", $memo_from_name['memo_position'])[0] . "and" }} <br> 
-                    {{ explode("and", $memo_from_name['memo_position'])[1]}},  --}}
                     {{ $memo_from_name['memo_position'] }}, 
                     {{ $memo_from_name['memo_office'] }}
                 </td>
@@ -143,7 +115,7 @@
         <tbody>
             {{ $i=1; }}
             @foreach( $vacantpositions ?? '' as $data) 
-           
+        
             <tr>
                 <td class="tg-8jgo" style="border-right-color: #ffffff;vertical-align: top">{{ $i . '.' }}</td>
                 <td class="tg-8jgo1" style="border-left-color: white">

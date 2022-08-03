@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedAgency } from "../../../../../features/reducers/plantilla_item_slice";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import useAxiosCallHelper from "../../../../../helpers/use_hooks/axios_call_helper";
+import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_helper";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import ModalVpComponent from "../../../../common/modal_component/modal_component_vp";
 
@@ -16,7 +17,7 @@ const SelectAgencyModal = ({ isDisplay, onClose, onClickSubmit }) => {
 		axiosCall("get", API_HOST + "getAllAgencies").then(
 			(response) => {
 				// console.log(response);
-				setAgencies(response.data);
+				setAgencies(response.data.reverse());
 			},
 			(error) => {
 				console.log(error);
@@ -45,7 +46,7 @@ const SelectAgencyModal = ({ isDisplay, onClose, onClickSubmit }) => {
 				onClickSubmit={onClickSubmit}
 			>
 				<AddHeaderForOfficer />
-				{agencies?.map((element, index) => (
+				{agencies.map((element, index) => (
 					<RowDisplay key={index} element={element} />
 				))}
 			</ModalVpComponent>
@@ -60,28 +61,32 @@ const RowDisplay = ({ element }) => {
 	const [fontweight, setFontweight] = useState("Normal");
 	const dispatch = useDispatch();
 	const { selected_agency } = useSelector((state) => state.plantillaItem);
+	const { toastSuccessFailMessage } = useSweetAlertHelper();
 	let arr_sel_agency = [];
 
 	const handleChange = (e, element) => {
-		if (e.target.checked) {
-			setFontweight("Bold");
-			if (!ifExistSearch(e.target.value)) {
-				dispatch(
-					setSelectedAgency([...selected_agency, { agn_id: element.agn_id }])
+		arr_sel_agency = selected_agency;
+		if (typeof arr_sel_agency !== "undefined") {
+			if (e.target.checked) {
+				setFontweight("Bold");
+				if (!ifExistSearch(e.target.value, arr_sel_agency)) {
+					dispatch(
+						setSelectedAgency([...arr_sel_agency, { agn_id: element.agn_id }])
+					);
+				}
+			} else {
+				setFontweight("Normal");
+				arr_sel_agency.filter(
+					(sel_agency) => sel_agency.agn_id !== parseInt(e.target.value)
 				);
+				dispatch(setSelectedAgency(...arr_sel_agency));
 			}
-		} else {
-			setFontweight("Normal");
-			arr_sel_agency = selected_agency;
-			arr_sel_agency.filter(
-				(sel_agency) => sel_agency.agn_id !== parseInt(e.target.value)
-			);
-			dispatch(setSelectedAgency(...arr_sel_agency));
 		}
 	};
 
-	const ifExistSearch = (id) => {
-		return selected_agency.some(function (el) {
+	const ifExistSearch = (id, arr_sel_agency) => {
+		console.log(arr_sel_agency);
+		return arr_sel_agency?.some((el) => {
 			return el.agn_id === parseInt(id);
 		});
 	};

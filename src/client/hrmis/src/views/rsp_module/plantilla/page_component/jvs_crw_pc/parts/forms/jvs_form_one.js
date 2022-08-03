@@ -10,8 +10,6 @@ import { API_HOST } from "../../../../../../../helpers/global/global_config";
 import {
   setCompetencies,
   setDutyResponsibility,
-  setEducation,
-  setEligibility,
   setEmployeeOptions,
   setIsEmptyCompetency,
   setMinimumRequirement,
@@ -20,9 +18,7 @@ import {
   setPosition,
   setRefreh,
   setTotalWeight,
-  setTraining,
   setVersionSelected,
-  setWorkExp,
 } from "../../../../../../../features/reducers/jvscrw_slice";
 import DutiesResponsibilityTable from "../duties_responsibility_table";
 import { useParams } from "react-router-dom";
@@ -42,10 +38,10 @@ const JvsFormOne = () => {
     plantilla_item,
     position,
     office,
-    eligibility,
-    education,
-    training,
-    experience,
+    // eligibility,
+    // education,
+    // training,
+    // experience,
     competencies,
     minimum_req,
     refresh,
@@ -64,6 +60,7 @@ const JvsFormOne = () => {
     fetchCompetenciesOnLoad(jvs_id);
   };
 
+  const [cscStandard, setCSCStandard] = useState({});
   // FETCH COMPETENCY TYPES
   const fetchCscQualificationOnLoad = async () => {
     // dispatch(setBusy(true));
@@ -74,19 +71,20 @@ const JvsFormOne = () => {
         dispatch(setPosition(res.data?.data?.position));
         dispatch(setOffice(res.data?.data.office));
 
-        const cscQualification = res.data?.data.position.csc_standards;
+        setCSCStandard(res.data?.data.position);
+        // const cscQualification = res.data?.data.position.csc_standards;
 
-        cscQualification.forEach((element) => {
-          if (element.std_type === "CS") {
-            dispatch(setEligibility(element));
-          } else if (element.std_type === "ED") {
-            dispatch(setEducation(element));
-          } else if (element.std_type === "EX") {
-            dispatch(setWorkExp(element));
-          } else if (element.std_type === "TR") {
-            dispatch(setTraining(element));
-          }
-        });
+        // cscQualification.forEach((element) => {
+        //   if (element.std_type === "CS") {
+        //     dispatch(setEligibility(element));
+        //   } else if (element.std_type === "ED") {
+        //     dispatch(setEducation(element));
+        //   } else if (element.std_type === "EX") {
+        //     dispatch(setWorkExp(element));
+        //   } else if (element.std_type === "TR") {
+        //     dispatch(setTraining(element));
+        //   }
+        // });
       })
       .catch((err) => console.log(err.message));
     // dispatch(setBusy(false));
@@ -411,28 +409,28 @@ const JvsFormOne = () => {
               <th colSpan="4">ELIGIBILITY</th>
             </tr>
             <tr>
-              <td colSpan="4">{eligibility?.std_specifics}</td>
+              <td colSpan="4">{cscStandard.eligibility}</td>
             </tr>
             {/* SECOND HEADER  */}
             <tr className="row-percent-75x secondary-headers">
               <th colSpan="3">EDUCATION</th>
             </tr>
             <tr>
-              <td colSpan="3">{education?.std_specifics}</td>
+              <td colSpan="3">{cscStandard?.education}</td>
             </tr>
             {/* THIRD HEADER  */}
             <tr className="secondary-headers">
               <th colSpan="3">EXPERIENCE</th>
             </tr>
             <tr>
-              <td colSpan="3">{experience?.std_specifics}</td>
+              <td colSpan="3">{cscStandard?.experience}</td>
             </tr>
             {/* FOURTH HEADER  */}
             <tr className="secondary-headers">
               <th colSpan="3">TRAINING</th>
             </tr>
             <tr>
-              <td colSpan="3">{training?.std_specifics}</td>
+              <td colSpan="3">{cscStandard?.training}</td>
             </tr>
           </tbody>
         </table>

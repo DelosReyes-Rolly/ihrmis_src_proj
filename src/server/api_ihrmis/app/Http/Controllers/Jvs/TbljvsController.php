@@ -130,7 +130,7 @@ class TbljvsController extends Controller
     public function getEmployeeAsOption($plantillaId){
         
         $plantillaQuery = TblplantillaItems::find($plantillaId);
-        $findPlantillaWithOffice = TblplantillaItems::where('itm_ofc_id',$plantillaQuery->itm_ofc_id)->where('itm_state', 1)->with('employee')->get();
+        $findPlantillaWithOffice = TblplantillaItems::where('itm_ofc_id', $plantillaQuery->itm_ofc_id)->where('itm_state', 0)->with('employee')->get();
         $optionHolder = [];
    
         foreach ($findPlantillaWithOffice as $value) {

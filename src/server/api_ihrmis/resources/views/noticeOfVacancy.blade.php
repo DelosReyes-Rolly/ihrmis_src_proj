@@ -44,7 +44,7 @@
 						</tr>
 						<tr>
 							<td class="tg-73oq" colspan="10" style="text-align: justify">
-								The Department of Science and Technology – {{$value->tbloffices->officeAgency->agn_name}} ({{ $value->tbloffices->officeAgency->agn_acronym }}) is in need of 
+								The {{$value->tbloffices->officeAgency->agn_name}} ({{ $value->tbloffices->officeAgency->agn_acronym }}) is in need of 
 								qualified applicants to fill up the position of One (1) 
 								<span style="font-weight:bold">{{ $value->tblpositions->pos_title }} (SG-{{ $value->tblpositions->pos_salary_grade}}) 
 								Item No. {{  $value->itm_no }}</span> under the <span style="font-weight:bold">{{ $value->tbloffices->ofc_name }}</span>. Applicants must meet the following requirements of the position:</td>
@@ -100,7 +100,7 @@
 						</tr>	
 						<tr>
 							<td class="tg-73oq" colspan="10" style="text-align: justify">
-								Interested and qualified applicants may submit their requirements personally, through the mail, or online 
+								Interested and qualified applicants may submit their requirements personally, through mail, or online 
 								<span style="font-weight:bold;text-decoration:underline">on or before {{ $value->deadline_formatted }}</span>. 
 								For online applications, it is expected that original copies will be presented to the Personnel Division for verification within 10 calendar days. 
 								<span style="text-decoration:underline">Only those applications with complete requirements as enumerated below shall be entertained.</span>

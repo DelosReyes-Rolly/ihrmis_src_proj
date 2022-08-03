@@ -3,7 +3,6 @@ import dostLogo from "../../../../assets/images/logo.png";
 import sikatlogo from "../../../../assets/images/sikat.png";
 import scanmo from "../../../../assets/images/SCANMO.CO.png";
 import watch from "../../../../assets/images/watch.png";
-import wwwlogo from "../../../../assets/images/www.png";
 import ytlogo from "../../../../assets/images/ytlogo.png";
 import { IoIosSend } from "react-icons/io";
 import { HiUserGroup } from "react-icons/hi";
@@ -22,6 +21,7 @@ import {
 	YTDOSTV,
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
+import { BsGlobe } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 
 const WelcomeAboardPage = () => {
@@ -178,6 +178,7 @@ const AboardSecondPage = () => {
 						<div className="body-1-div4">
 							<div>
 								<img
+									className="zoom-effect"
 									src={sikatlogo}
 									width="50px"
 									height="50px"
@@ -186,7 +187,10 @@ const AboardSecondPage = () => {
 									onClick={() => outsiteWebHelper(SIKAT)}
 								/>
 							</div>
-							<p style={{ marginTop: "10px", textAlign: "center" }}>
+							<p
+								className="sikat-text-link"
+								onClick={() => outsiteWebHelper(SIKAT)}
+							>
 								Samahan para sa ika-uunlad nga mga Kawani ng Agham at
 								Teknolohiya (SIKAT)
 							</p>
@@ -264,13 +268,21 @@ const AboardSecondPage = () => {
 								<div className="connect-with-us">
 									<p>Connect with us:</p>
 									<div className="body-3-div2-div1-content">
-										<div>
-											<FaFacebookSquare size={"38"} cursor={"pointer"} />
+										<div className="zoom-effect">
+											<FaFacebookSquare
+												className="zoom-effect"
+												size={"38"}
+												cursor={"pointer"}
+											/>
 										</div>
-										<div>
-											<FaTwitterSquare size={"38"} cursor={"pointer"} />
+										<div className="zoom-effect">
+											<FaTwitterSquare
+												className="zoom-effect"
+												size={"38"}
+												cursor={"pointer"}
+											/>
 										</div>
-										<div>
+										<div className="zoom-effect">
 											<img
 												src={watch}
 												alt="dostv-logo"
@@ -280,18 +292,10 @@ const AboardSecondPage = () => {
 												onClick={() => outsiteWebHelper(WATCH)}
 											/>
 										</div>
-										<div>
+										<VisitICon onClick={() => outsiteWebHelper(DOSTWEBSITE)} />
+										<div className="zoom-effect">
 											<img
-												src={wwwlogo}
-												alt="dost-logo"
-												width="34px"
-												height="34px"
-												style={{ cursor: "pointer" }}
-												onClick={() => outsiteWebHelper(DOSTWEBSITE)}
-											/>
-										</div>
-										<div>
-											<img
+												className="zoom-effect"
 												src={ytlogo}
 												alt="dost-logo"
 												width="38px"
@@ -306,9 +310,12 @@ const AboardSecondPage = () => {
 							<div className="body-3-div2-div2">
 								<div>
 									<img
+										className="zoom-effect"
 										src={scanmo}
 										alt="scanmo-logo"
 										style={{ cursor: "pointer" }}
+										width={"148"}
+										height={"175"}
 										onClick={() => outsiteWebHelper(SCANMO)}
 									/>
 								</div>
@@ -353,6 +360,19 @@ const DostMapComponent = () => {
 				>
 					Take a Tour
 				</a>
+			</div>
+		</React.Fragment>
+	);
+};
+
+const VisitICon = (onClick) => {
+	return (
+		<React.Fragment>
+			<div className="www-icon" onClick={onClick}>
+				<BsGlobe className="zoom-effect" />
+				<p style={{ fontSize: "10px", textAlign: "center", marginLeft: "0px" }}>
+					www
+				</p>
 			</div>
 		</React.Fragment>
 	);

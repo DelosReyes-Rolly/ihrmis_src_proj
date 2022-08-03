@@ -13,7 +13,7 @@ import useSweetAlertHelper from "../../../../../helpers/use_hooks/sweetalert_hel
 import SelectAgencyModal from "../next_in_rank_modal/select_agency_modal";
 import PostingOnJobVacancyModal from "../posting_job_vacancy_modal/posting_job_vacancy_modal";
 import { setSelectAgency } from "../../../../../features/reducers/plantilla_item_slice";
-import { printMemoOnPostingOfVpForDost } from "../../../../../router/outside_routes";
+import { printMemoOnPostingOfVp } from "../../../../../router/outside_routes";
 import { setRefreh } from "../../../../../features/reducers/jvscrw_slice";
 import Swal from "sweetalert2";
 import DropdownVpMenu from "./plantilla_vp_menu/Dropdownvpmenu";
@@ -139,23 +139,18 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	const onClickPosting = () => {
 		console.log(selected_filter_value);
 		console.log(plantilla_items["positions"]);
-
+		let positions = plantilla_items["positions"];
 		if (
 			(selected_filter_value === 1 ||
 				typeof selected_filter_value === "undefined") &&
-			plantilla_items.hasOwnProperty("positions")
+			positions
 		) {
 			setPostingJobVancy(true);
 		} else {
 			let response = {
 				code: 500,
 				message:
-					selected_filter_value !== 1 ||
-					typeof selected_filter_value !== "undefined"
-						? "Selected plantilla items not a vacant position."
-						: plantilla_items.hasOwnProperty("positions")
-						? "No selected Vacant Position!"
-						: "Selected plantilla items not a vacant position.",
+					"No selected Vacant Position or selected plantilla items not a vacant positions.",
 			};
 			toastSuccessFailMessage(response, "top");
 		}
@@ -203,7 +198,11 @@ const PlantillaItemsVacantPositionComponentView = () => {
 					dispatch(setSelectAgency());
 				}}
 				onClickSubmit={() => {
-					if (selected_agency.length === 0) {
+					console.log(selected_agency);
+					if (
+						typeof selected_agency !== "undefined" &&
+						selected_agency.length === 0
+					) {
 						let response = {
 							data: {
 								code: 500,
@@ -212,7 +211,8 @@ const PlantillaItemsVacantPositionComponentView = () => {
 						};
 						toastSuccessFailMessage(response.data, "top");
 					} else {
-						printMemoOnPostingOfVpForDost(selected_agency);
+						let positions = plantilla_items["positions"];
+						printMemoOnPostingOfVp(selected_agency, positions);
 					}
 				}}
 			/>

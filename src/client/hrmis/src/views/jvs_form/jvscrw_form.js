@@ -14,8 +14,8 @@ const JvscrsForm = () => {
           borderRadius: "5px",
         }}
       >
-        {/* <JvsFormOne /> */}
-        <JvsCrwFormPage />
+        <JvsFormOne />
+        {/* <JvsCrwFormPage /> */}
       </div>
     </React.Fragment>
   );

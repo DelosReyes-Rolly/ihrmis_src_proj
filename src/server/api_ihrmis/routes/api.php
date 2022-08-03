@@ -115,6 +115,7 @@ Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequir
 //=======================================================================================
 // JVSCRW END POINTS
 //=======================================================================================
+Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('pos-csc-plantilla/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
@@ -248,13 +249,14 @@ Route::get('vacantpositions/{type}', [TblplantillaItemsVacantPositionController:
 Route::get('generate-VpReport', [TblplantillaItemsVacantPositionController::class, 'generateVpReport']);
 Route::get('generate-NoticeVpReport/{plantilla?}', [TblplantillaItemsVacantPositionController::class, 'generateNoticeVpReport']);
 Route::get('generateMemoOnPVPForCsc', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForCsc']);
-Route::get('generateMemoOnPVPForDost/{data}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVPForDostAgencies']);
+Route::get('generateMemoOnPVP/{data}/{plantilla_items}', [TblplantillaItemsVacantPositionController::class, 'generateMemoOnPostingVP']);
 Route::get('getAllDostAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllDostAgencies']);
 Route::get('getAllAgencies', [TblplantillaItemsVacantPositionController::class, 'getAllAgencies']);
 Route::get('getAgency/{id}', [TblplantillaItemsVacantPositionController::class, 'getAgency']);
 Route::get('getPlantillaItemDetails/{item_state?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
-Route::get('getPlantillaItemDetails/{item_id?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetails']);
+Route::get('getPlantillaItemDetailsById/{item_id?}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemDetailsById']);
 Route::get('getPiPositionWithCsc/{id}', [TblplantillaItemsVacantPositionController::class, 'getPlantillaItemPositionWithCsc']);
+
 
 //=======================================================================================
 // OFFICEC POSITION CONTROLLER ENDPOINTS <-------------------------------------
@@ -347,5 +349,11 @@ Route::get('onboarding-schedule', [OnboardingController::class, "getAllScheduleF
 Route::post('selected-appointees', [OnboardingController::class, "getSelectedAppointees"]);
 Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOnboardingSchedule"]);
 
+
+Route::get('get-onboarding-lists', [OnboardingController::class, "getOnboardingSectionsAndSectionItem"]);
+
 Route::get('all-new-appointed', [TblapplicantsController::class, "getAppointedApplicantsWithEmpId"]);
+
+
+
 // Route::post('')

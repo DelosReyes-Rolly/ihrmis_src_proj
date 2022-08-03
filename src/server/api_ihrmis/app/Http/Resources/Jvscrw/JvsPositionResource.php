@@ -22,10 +22,10 @@ class JvsPositionResource extends JsonResource
         return [
             'title' => $this->pos_title,
             'salary_grade' => $this->pos_salary_grade,
-            "education" => $csc_standard['ed'] ?? [],
-            "experience" => $csc_standard['ex'] ?? [],
-            "eligibility" => $csc_standard['cs'] ?? [],
-            "training" => $csc_standard['tr'] ?? [],
+            "education" => $csc_standard['ed'] ?? "",
+            "experience" => $csc_standard['ex'] ?? "",
+            "eligibility" => $csc_standard['cs'] ?? "",
+            "training" => $csc_standard['tr'] ?? "",
         ];
     }
 }
