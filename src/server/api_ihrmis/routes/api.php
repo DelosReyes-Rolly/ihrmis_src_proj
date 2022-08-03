@@ -115,6 +115,7 @@ Route::delete('documentary-applicant-requirement/{type_id}', [TblapplicantRequir
 //=======================================================================================
 // JVSCRW END POINTS
 //=======================================================================================
+Route::get('jvscrw/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('pos-csc-plantilla/{id}', [TbljvsController::class, "getPositionCscQualifation"]);
 Route::get('jvscrw-rating/{id}', [TbljvsController::class, "readCompenencyAndRating"]);
 Route::get('jvscrw-duty-responsibility/{id}', [TbljvsController::class, "readDutiesAndResponsibilities"]);
