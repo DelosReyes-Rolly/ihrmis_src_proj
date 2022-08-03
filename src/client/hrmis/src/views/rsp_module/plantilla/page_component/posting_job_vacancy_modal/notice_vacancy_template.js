@@ -204,7 +204,7 @@ export const noticeOfVacancyTemplate = (data) => {
 		'<td class="tg-73oq"><br><br></td>' +
 		"</tr>" +
 		"<tr>" +
-		' <td class="tg-73oq" style="text-align: justify" colspan="10">' +
+		' <td class="tg-73oq" style="text-align: justify" colspan="11">' +
 		" As an advocate of the Equal Employment Opportunity Principle (EEOP), " +
 		"the DOST-Central Office encourages and welcomes all applicants regardless of age," +
 		"religion, political affiliation including persons with disability, members of indigenous " +
@@ -214,10 +214,14 @@ export const noticeOfVacancyTemplate = (data) => {
 		"</td>" +
 		"</tr>" +
 		"<tr>" +
-		'<td class="tg-73oq" colspan="10"><br></td>' +
+		'<td class="tg-73oq" colspan="11" style="text-align:center">>>' +
+		'<a href="http://localhost:3001/ihrmis/pds-applicant/applicant/' +
+		data.itm_id +
+		'">Apply Here</a>' +
+		"<<</td>" +
 		"</tr>" +
 		"<tr>" +
-		'<td class="tg-mcqj" colspan="10" style="font-weight:bold">Date Posted: <span style="text-decoration:underline">' +
+		'<td class="tg-mcqj" colspan="11" style="font-weight:bold">Date Posted: <span style="text-decoration:underline">' +
 		data.formatted_date_submitted +
 		"</span></td>" +
 		"</tr>" +

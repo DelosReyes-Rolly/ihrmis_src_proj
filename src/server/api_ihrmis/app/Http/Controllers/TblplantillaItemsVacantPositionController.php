@@ -116,10 +116,10 @@ class TblplantillaItemsVacantPositionController extends Controller
      * generateMemoOnPostingVPForDostAgencies
      * Todo generate PDF file
      */
-    public function generateMemoOnPostingVPForDostAgencies($selected_agency)
+    public function generateMemoOnPostingVP($selected_agency, $plantilla_items)
     {
 
-        return $this->tblPantillaVacantPos->generateMemoOnPostingVpForDostReport($selected_agency);
+        return $this->tblPantillaVacantPos->generateMemoOnPostingVp($selected_agency, $plantilla_items);
     }
 
     /**
@@ -143,7 +143,7 @@ class TblplantillaItemsVacantPositionController extends Controller
 
     /**
      * getPlantillaItemDetails
-     * Todo get all Plantilla Item details
+     * Todo get all Plantilla Item details by item state
      * @return array  plantilla items
      */
     public function getPlantillaItemDetails($item_state = 1)
@@ -158,14 +158,14 @@ class TblplantillaItemsVacantPositionController extends Controller
 
     /**
      * getPlantillaItemDetailsById
-     * Todo get all Plantilla Item details
+     * Todo get all Plantilla Item details by id
      * @return array plantilla items
      */
     public function getPlantillaItemDetailsById($item_id)
     {
 
         // return GetPlantillaItemResource::collection(
-        //     $this->tblPantillaVacantPos->getPlantillaItemDetails($item_state)
+        //     $this->tblPantillaVacantPos->getPlantillaItemDetailsById($item_id)
         // );
 
         return $this->tblPantillaVacantPos->getPlantillaItemDetailsById($item_id);

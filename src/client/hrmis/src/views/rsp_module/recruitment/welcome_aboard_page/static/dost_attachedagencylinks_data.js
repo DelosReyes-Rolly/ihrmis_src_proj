@@ -193,7 +193,8 @@ export const ABODIES = [
 
 export const SIKAT = "https://sikat.dost.gov.ph";
 
-export const SCANMO = "https://helpdesk.dost.gov.ph/";
+export const SCANMO =
+	"https://docs.google.com/forms/d/e/1FAIpQLSegYpFLC05LZITTre2Pi6_Um0kDMGOs2PbDElmv3wtFVkYgbw/viewform";
 
 export const DOSTWEBSITE = "https://www.dost.ph/";
 
