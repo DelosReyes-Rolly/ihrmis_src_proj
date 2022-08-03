@@ -60,7 +60,7 @@
                                 @if($data->agn_acronym === "CSC")
                                     <b>{{ $data->agn_head_name}}</b><br>
                                     {{$data->agn_head_position}}<br>
-                                    {{ $data->tbloffices->ofc_name}}
+                                    {{ $data->office->ofc_name}}
                                 @else
                                     <b>{{ $data->agn_head_name .', '}}</b><br>
                                     {{$data->agn_head_position . ", " . $data->agn_acronym}}
@@ -75,7 +75,7 @@
                                     @if($data->agn_acronym === "CSC")
                                         <b>{{ $data->agn_head_name}}</b><br>
                                         {{$data->agn_head_position}}<br>
-                                        {{ $data->tbloffices->ofc_name}}
+                                          {{ $data->office->ofc_name}}
                                     @else
                                         <b>{{ $data->agn_head_name .', '}}</b><br>
                                         {{$data->agn_head_position . ", " . $data->agn_acronym}}

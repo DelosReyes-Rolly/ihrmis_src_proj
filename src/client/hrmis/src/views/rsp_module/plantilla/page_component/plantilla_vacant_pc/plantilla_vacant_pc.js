@@ -139,23 +139,18 @@ const PlantillaItemsVacantPositionComponentView = () => {
 	const onClickPosting = () => {
 		console.log(selected_filter_value);
 		console.log(plantilla_items["positions"]);
-
+		let positions = plantilla_items["positions"];
 		if (
 			(selected_filter_value === 1 ||
 				typeof selected_filter_value === "undefined") &&
-			plantilla_items.hasOwnProperty("positions")
+			positions
 		) {
 			setPostingJobVancy(true);
 		} else {
 			let response = {
 				code: 500,
 				message:
-					selected_filter_value !== 1 ||
-					typeof selected_filter_value !== "undefined"
-						? "Selected plantilla items not a vacant position."
-						: plantilla_items.hasOwnProperty("positions")
-						? "No selected Vacant Position!"
-						: "Selected plantilla items not a vacant position.",
+					"No selected Vacant Position or selected plantilla items not a vacant positions.",
 			};
 			toastSuccessFailMessage(response, "top");
 		}
@@ -204,7 +199,10 @@ const PlantillaItemsVacantPositionComponentView = () => {
 				}}
 				onClickSubmit={() => {
 					console.log(selected_agency);
-					if (selected_agency.length === 0) {
+					if (
+						typeof selected_agency !== "undefined" &&
+						selected_agency.length === 0
+					) {
 						let response = {
 							data: {
 								code: 500,

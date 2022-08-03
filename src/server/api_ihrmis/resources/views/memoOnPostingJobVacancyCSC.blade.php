@@ -52,11 +52,13 @@
             <tr>
                 <td class="tg-8jgo">FOR</td>
                 <td class="tg-8jgo1 tg-custom">:</td>
+                @foreach( $selected_agencies ?? '' as $data) 
                     <td class="tg-zv4m tg-custom">
                         <b>{{ $data->agn_head_name}}</b><br>
                         {{$data->agn_head_position}}<br>
-                        {{ $data->tbloffices->ofc_name}}
+                        {{ $data->office->ofc_name}}
                     </td>
+                @endforeach
             </tr>
             {{-- From DATA --}}
             <tr>

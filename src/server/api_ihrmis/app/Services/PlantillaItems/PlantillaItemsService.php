@@ -204,9 +204,7 @@ class PlantillaItemsService
 			'tbloffices.officeAgency',
 			'tblpositions',
 			'tblapplicants'
-		)
-			->where("itm_id", (int) $id)
-			->first();
+		)->where('itm_id', $id)->first();
 
 		return $item_query;
 	}
@@ -250,25 +248,25 @@ class PlantillaItemsService
 		return $pdf->output('Vacant Positions_' . $date . '.pdf', "I");
 	}
 
-	/**
-	 * generateMemoOnPostingVpReport
-	 * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
-	 * @return void
-	 */
-	public function generateMemoOnPostingVpForCscReport()
-	{
-		$this->generateMemoOnPostingFor('CSC');
-	}
+	// /**
+	//  * generateMemoOnPostingVpReport
+	//  * Todo this function will generate Memo On Posting Vacant Position For CSC report in PDF form
+	//  * @return void
+	//  */
+	// public function generateMemoOnPostingVpForCscReport()
+	// {
+	// 	$this->generateMemoOnPostingFor('CSC');
+	// }
 
-	/**
-	 * generateMemoOnPostingVpForDostReport
-	 * Todo this function will generate Memo On Posting Vacant Position For DOST Agencies report in PDF form
-	 * @return void
-	 */
-	public function generateMemoOnPostingVp($selected_agency, $plantilla_items)
-	{
-		$this->generateMemoOnPostingFor($selected_agency, $plantilla_items);
-	}
+	// /**
+	//  * generateMemoOnPostingVpForDostReport
+	//  * Todo this function will generate Memo On Posting Vacant Position For DOST Agencies report in PDF form
+	//  * @return void
+	//  */
+	// public function generateMemoOnPostingVpold($selected_agency, $plantilla_items)
+	// {
+	// 	$this->generateMemoOnPostingFor($selected_agency, $plantilla_items);
+	// }
 
 	/**
 	 * getVacantPositions
@@ -484,11 +482,11 @@ class PlantillaItemsService
 	}
 
 	/**
-	 * generateMemoOnPostingFor
+	 * generateMemoOnPostingVp
 	 * Todo generate memo on posting
 	 * @return void
 	 */
-	private function generateMemoOnPostingFor($selected_agency = "", $plantilla_items = "")
+	public function generateMemoOnPostingVp($selected_agency = "", $plantilla_items = "")
 	{
 
 		date_default_timezone_set('Asia/Manila'); //define local time
@@ -547,7 +545,7 @@ class PlantillaItemsService
 		]));
 
 		return $pdf->output('Memo On Posting Vacant Position For '
-			. ($memo == 'DOST' ? 'DOST Agencies_' : 'CSC_') . $date . '.pdf', "I");
+			. (count($decoded_selected_agency) == 1 && $new_selected_agency_data[0]['agn_acronym']  === "CSC" ? 'CSC - ' : 'DOST Agencies - ') . $date . '.pdf', "I");
 	}
 
 	/**

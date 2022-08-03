@@ -132,7 +132,7 @@ const DropList = ({
 				navigate(itemlink + "/" + item_id);
 				return;
 			}
-			case "Memo on Posting of Posting of Announcement of Vacancy": {
+			case "Memo on Posting of Announcement of Vacancy": {
 				SelectMemoForPosting();
 				return;
 			}
