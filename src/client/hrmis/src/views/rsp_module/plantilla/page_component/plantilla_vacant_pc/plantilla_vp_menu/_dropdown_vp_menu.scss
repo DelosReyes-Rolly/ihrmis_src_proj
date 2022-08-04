@@ -16,7 +16,7 @@
 	box-sizing: border-box;
 	box-shadow: 0 0px 20px #00000011;
 	text-decoration: none;
-	z-index: 1;
+	z-index: 2;
 	max-height: 200px;
 	border-radius: 1%;
 }
@@ -26,7 +26,7 @@
 	cursor: pointer;
 }
 .ul-menu-item:hover {
-  background-color: rgb(212, 230, 254)
+	background-color: rgb(212, 230, 254);
 }
 
 .ul-menu-item-arrow {
