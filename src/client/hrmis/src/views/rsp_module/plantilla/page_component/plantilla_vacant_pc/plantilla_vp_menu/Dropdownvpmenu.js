@@ -115,13 +115,13 @@ const DropList = ({
 	);
 
 	const dispatch = useDispatch();
-	const confirmedMemoAction = () => {
-		dispatch(setSelectAgency());
-	};
+	// const confirmedMemoAction = () => {
+	// 	dispatch(setSelectAgency());
+	// };
 
-	const cancelMemoCallback = () => {
-		printMemoOnPostingOfVpForCsc();
-	};
+	// const cancelMemoCallback = () => {
+	// 	printMemoOnPostingOfVpForCsc();
+	// };
 
 	const linkNavigationHandler = (item) => {
 		const itemlink = item.link;
@@ -132,7 +132,7 @@ const DropList = ({
 				navigate(itemlink + "/" + item_id);
 				return;
 			}
-			case "Memo on Posting of Posting of Announcement of Vacancy": {
+			case "Memo on Posting of Announcement of Vacancy": {
 				SelectMemoForPosting();
 				return;
 			}
@@ -165,26 +165,39 @@ const DropList = ({
 	};
 
 	const SelectMemoForPosting = async () => {
-		let confirmButtonText = "DOST Agencies",
-			cancelButtonColor = "#d33",
-			cancelButtonText = "CSC";
-		Swal.fire({
-			title: "<span>Memo on Posting of Vacancy</span>",
-			html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
-			icon: "question",
-			showCloseButton: true,
-			showCancelButton: true,
-			confirmButtonColor: "#3085d6",
-			confirmButtonText: confirmButtonText,
-			cancelButtonColor: cancelButtonColor,
-			cancelButtonText: cancelButtonText,
-		}).then((result) => {
-			if (result.isConfirmed) {
-				confirmedMemoAction();
-			} else if (result.dismiss === Swal.DismissReason.cancel) {
-				cancelMemoCallback();
-			}
-		});
+		// let confirmButtonText = "DOST Agencies",
+		// 	cancelButtonColor = "#d33",
+		// 	cancelButtonText = "CSC";
+		// Swal.fire({
+		// 	title: "<span>Memo on Posting of Vacancy</span>",
+		// 	html: "<span><i>Select DOST Agencies or CSC to generate report</i></span>",
+		// 	icon: "question",
+		// 	showCloseButton: true,
+		// 	showCancelButton: true,
+		// 	confirmButtonColor: "#3085d6",
+		// 	confirmButtonText: confirmButtonText,
+		// 	cancelButtonColor: cancelButtonColor,
+		// 	cancelButtonText: cancelButtonText,
+		// }).then((result) => {
+		// 	if (result.isConfirmed) {
+		// 		confirmedMemoAction();
+		// 	} else if (result.dismiss === Swal.DismissReason.cancel) {
+		// 		cancelMemoCallback();
+		// 	}
+		// });
+
+		let positions = plantilla_items["positions"];
+		if (typeof positions === "undefined") {
+			let response = {
+				data: {
+					code: 500,
+					message: "No selected row to print!",
+				},
+			};
+			toastSuccessFailMessage(response.data);
+		} else {
+			dispatch(setSelectAgency());
+		}
 	};
 
 	const noticeOfVacancyAction = (itemlink) => {

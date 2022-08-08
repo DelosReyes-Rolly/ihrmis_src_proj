@@ -7597,3 +7597,7 @@ l-s-2-5 {
 l-s-3-0 {
 	letter-spacing: 3em;
 }
+
+.zoom-effect:hover {
+	@include zoomInEffect();
+}

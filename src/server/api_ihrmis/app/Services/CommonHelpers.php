@@ -2,17 +2,21 @@
 
 namespace App\Services;
 
+use App\Models\Tbloffices;
+
 class CommonHelpers
 {
 
-    public function response($result, $status = 500, $message = "Unsuccessfully"){
+    public function response($result, $status = 500, $message = "Unsuccessfully")
+    {
         return response()->json([
             "message" => $message,
             "result" => $result
         ], $status);
     }
 
-    public function cscStandardFormatter($data){
+    public function cscStandardFormatter($data)
+    {
         $IligibilityHolder = $this->typeCscEligibility;
 
         $arrContainer = [];
@@ -58,6 +62,28 @@ class CommonHelpers
         }
 
         return $arrContainer;
+    }
+
+    /**
+     * getOfficeByAgency
+     * Todo get Office by agency id
+     * @return array 
+     */
+    public function getOfficeByAgency($id)
+    {
+        $item_query = Tbloffices::where("ofc_agn_id", $id)->first();
+        return $item_query;
+    }
+
+    /**
+     * getOfficeById
+     * Todo get Office by office id
+     * @return array 
+     */
+    public function getOfficeById($id)
+    {
+        $item_query = Tbloffices::where("ofc_id", $id)->first();
+        return $item_query;
     }
 
     private $typeCscEligibility = [
