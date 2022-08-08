@@ -68,7 +68,7 @@ const OnboardingItemModal = ({ isDisplay, onClose, title, data, sec_id }) => {
           dispatch(setBusy(false));
         });
 
-      // onClose();
+      onClose();
     },
   });
 

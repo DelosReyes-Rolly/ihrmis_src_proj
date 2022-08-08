@@ -192,7 +192,27 @@ class OnboardingController extends Controller{
 
     public function getSingleOnboardingSchedule($id){
         $qry = TblcalendarEvent::where('evn_id', $id)->first();
-        return new CommonResource($qry);
+        $arrayHolder = explode("|",  $qry->evn_source);
+        $appointeesArray = [];
+        foreach ($arrayHolder  as $key => $value) {
+            if($key != 0){
+                array_push($appointeesArray, $value);
+            }
+        }
+        $appointeesQry = Tblapplicants::whereIn("app_id", $appointeesArray)->with("employee", "plantillaItems.tblpositions", "plantillaItems.tbloffices")->get();
+        
+        $output = [
+            "evn_name" => $qry->evn_name,
+            "evn_date_start" => $qry->evn_date_start,
+            "evn_date_end" => $qry->evn_date_end,
+            "evn_time_start" => $qry->evn_time_start,
+            "evn_time_end" => $qry->evn_time_end,
+            "evn_remarks" => $qry->evn_remarks,
+            "evn_app_array" => $appointeesArray,
+            "evn_appointees" => NewAppointeesResource::collection($appointeesQry),
+        ];
+
+        return response()->json($output, 200);
     }
 
     public function getOnboardingSectionsAndSectionItem(){

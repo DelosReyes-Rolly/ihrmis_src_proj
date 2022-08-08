@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import InputComponent from "../../../../common/input_component/input_component/input_component";
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
 import ModalComponent from "../../../../common/modal_component/modal_component";
@@ -9,11 +9,10 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setSCheduleInformation,
-  setSelectedAppointeesArray,
-} from "../../../../../features/reducers/onboarding_slice";
 import { MdClose } from "react-icons/md";
+import { useTable } from "react-table";
+import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_helper";
+import { setSelectedApplicantIdArray } from "../../../../../features/reducers/onboarding_slice";
 
 const displayFlex = (
   direction = "row",
@@ -30,21 +29,16 @@ const displayFlex = (
 };
 
 const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
-  /**
-   * TODO: get schedule id in splice then create an axios get request to get information of schedule
-   */
-
+  // When  schedule is selected infor,ation is set in scheduleData state
   const [scheduleData, setScheduleData] = useState([]);
+  const [appointess, setAppointees] = useState([]);
+  const data = useMemo(() => appointess, [appointess]);
+  /**
+   * Redux Toolkit functionality and states
+   */
+  const { selectedApplicantIdArray, selectedScheduleId, currentTable } =
+    useSelector((state) => state.onboarding);
   const dispatch = useDispatch();
-
-  const {
-    selectedAppointees,
-    selectedSched,
-    currentTable,
-    scheduleInformation,
-  } = useSelector((state) => state.onboarding);
-
-  const data = useMemo(() => scheduleInformation, [scheduleInformation]);
 
   /**
    * Form Handler Section
@@ -72,7 +66,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
       evn_time_start: scheduleData.evn_time_start ?? "00:00",
       evn_time_end: scheduleData.evn_time_end ?? "00:00",
       evn_remarks: scheduleData?.evn_remarks ?? "",
-      appointees: selectedAppointees,
+      appointees: selectedApplicantIdArray,
     },
     onSubmit: async (values) => {
       console.log(values);
@@ -88,16 +82,12 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
     /**
      * This is only for get purposes submitting an array of data
      */
+    console.log("asdfasdfasdf");
     await axios
       .post(API_HOST + "selected-appointees", {
-        appointees: selectedAppointees,
+        appointees: selectedApplicantIdArray,
       })
-      .then((res) => {
-        // setAppointees(res.data.data);
-        console.log(res.data.data);
-        dispatch(setSCheduleInformation(res.data.data));
-        // form.setFieldValue("appointees", selectedAppointees); // Create an external function setter for handing selected employees
-      })
+      .then((res) => setAppointees(res.data.data))
       .catch((err) => console.log(err.message));
   };
 
@@ -106,29 +96,42 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
      * This is only for get purposes submitting an array of data
      */
     await axios
-      .get(API_HOST + "selected-schedules/" + selectedSched, {
-        appointees: selectedAppointees,
-      })
+      .get(API_HOST + "selected-schedules/" + selectedScheduleId)
       .then((res) => {
-        dispatch(setSelectedAppointeesArray(res?.data?.data?.evn_source));
-        // console.log(selectedAppointees);
-        setScheduleData(res.data.data);
-        // console.log(scheduleData.evn_source);
-        // console.log(res.data.data.evn_name);
-        // form.setFieldValue("appointees", selectedAppointees); // Create an external function setter for handing selected employees
+        console.log(res.data.evn_app_array);
+        setScheduleData(res.data);
+        setAppointees(res.data?.evn_appointees);
+
+        dispatch(setSelectedApplicantIdArray(res.data.evn_app_array));
       })
       .catch((err) => console.log(err.message));
   };
 
-  useEffect(() => {
-    if (currentTable !== null) fetchOnboardingAppointees();
-  }, [selectedAppointees]);
+  const removeData = useCallback(
+    (id) => {
+      // setSTateBool(!stateBool);
+      // console.log(appointess);
+      // console.log(newApparray);
+      // setAppointees(
+      //   appointess.filter((item) => {
+      //     return parseInt(item.app_id) !== parseInt(id);
+      //   })
+      // );
+      // const index = appointess.findIndex((item) => {
+      //   return parseInt(item.app_id) === parseInt(id);
+      // });
+      // // console.log(newApparray);
+      // console.log(index);
+      // if (index !== -1) {
+      //   console.log(index);
+      //   appointess.splice(index, 1);
+      // }
+      // setAppointees(appointess);
+    },
+    [appointess]
+  );
 
-  useEffect(() => {
-    if (currentTable === 0) fetchDataFromSchedule();
-    if (currentTable === 1) setScheduleData([]);
-  }, [selectedSched]);
-
+  // const [stateBool, setSTateBool] = useState(true);
   const columns = useMemo(
     () => [
       {
@@ -189,14 +192,8 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
                   <div className="onboarding-sched-on-delete-appointees">
                     <div
                       onClick={() => {
-                        console.log(scheduleInformation);
-                        const index = scheduleInformation.findIndex(
-                          (item) => item.app_id === cell.row.values.app_id
-                        );
-
-                        // console.log(index);
-
-                        // dispatch(setSCheduleInformation(scheduleInformation));
+                        removeData(cell.row.values.app_id);
+                        // dispatch(setSelectedApplicantIdArray(newAppIdArray));
                       }}
                     >
                       <MdClose size={25} />
@@ -212,6 +209,18 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
     []
   );
 
+  useEffect(() => {
+    if (currentTable === 2) {
+      setScheduleData({});
+      fetchOnboardingAppointees();
+    }
+    if (currentTable === 1) fetchDataFromSchedule();
+  }, [isDisplay]);
+
+  // useEffect(() => {
+  //   removeData();
+  // }, [stateBool]);
+
   return (
     <React.Fragment>
       <ModalComponent
@@ -219,6 +228,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
         isDisplay={isDisplay}
         onClose={onClose}
         onSubmitType="submit"
+        onSubmitName={currentTable === 2 ? "Submit" : "Save"}
         onSubmit={form.handleSubmit}
       >
         <div style={{ ...displayFlex("column", null, "start") }}>
@@ -300,11 +310,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
           </div>
 
           <div style={{ width: "100%" }}>
-            <AppointeesTable
-              data={data}
-              columns={columns}
-              removableAppointees={true}
-            />
+            <AppointeesTableList data={data} columns={columns} />
           </div>
         </div>
       </ModalComponent>
@@ -313,3 +319,89 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
 };
 
 export default OnboardingSchedulModal;
+
+const AppointeesTableList = ({ data, columns }) => {
+  const initialState = {
+    hiddenColumns: ["position", "office", "app_id", "emp_id", "itm_id"],
+  };
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({
+      initialState,
+      columns,
+      data,
+    });
+
+  // Hook for Focus divs
+  const [refTopic, , removeFocus, selectableFocus] = useMapFocusHelper(
+    "onboarding-tr-hover",
+    "onboarding-tr-hover-focus"
+  );
+
+  return (
+    <React.Fragment>
+      <table
+        cellSpacing="0"
+        cellPadding="0"
+        {...getTableProps()}
+        style={{ width: "100%" }}
+      >
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr
+              style={{ textAlign: "left" }}
+              {...headerGroup.getHeaderGroupProps()}
+            >
+              {headerGroup.headers.map((column) => (
+                <th
+                  style={{
+                    padding: "0px 0px",
+                    color: "#004e87",
+                    fontSize: "medium",
+                  }}
+                  {...column.getHeaderProps()}
+                >
+                  {column.render("Header")}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i, arr) => {
+            prepareRow(row);
+            return (
+              <tr
+                style={{ cursor: "pointer" }}
+                ref={(el) => (refTopic.current[i] = el)}
+                onClick={() => selectableFocus(i)}
+                className="onboarding-tr-hover"
+                {...row.getRowProps()}
+                tabIndex={i}
+              >
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      style={{
+                        padding:
+                          cell.column.id === "name"
+                            ? "5px 0px 5px 5px"
+                            : "5px 5px",
+                        width: cell.column.id === "photo" ? "50px" : null,
+                        color: "black",
+                        fontSize: cell.column.id !== "photo" ? "medium" : null,
+                      }}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render("Cell")}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </React.Fragment>
+  );
+};

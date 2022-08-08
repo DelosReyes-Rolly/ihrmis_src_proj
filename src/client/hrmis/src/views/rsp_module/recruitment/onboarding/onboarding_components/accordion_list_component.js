@@ -11,7 +11,6 @@ import { GrDrag } from "react-icons/gr";
 import { setBusy } from "../../../../../features/reducers/popup_response";
 import OnboardingItemModal from "./onboarding_item_modal";
 import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_helper";
-import { array } from "yup";
 
 const AccordionListComponent = ({ list = [] }) => {
   const [dataState, setDataState] = useState(list);

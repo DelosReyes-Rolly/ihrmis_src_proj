@@ -3,15 +3,18 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGlobalFilter, useTable } from "react-table";
 import {
-  setSelectedAppointees,
-  setSelectedSched,
+  setCurrentTable,
+  setSelectedApplicantIdArray,
+  setSelectedScheduleId,
 } from "../../../../../features/reducers/onboarding_slice";
+
 import { generateColor } from "../../../../../helpers/color_generator";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_helper";
 
 export const OnboardingNewAppointeesTableContainer = () => {
   const [newAppointees, setNewAppointees] = useState([]);
+
   const columns = useMemo(
     () => [
       {
@@ -85,6 +88,7 @@ export const OnboardingNewAppointeesTableContainer = () => {
   );
 
   const data = useMemo(() => newAppointees, [newAppointees]);
+
   const fetchNewAppointees = async () => {
     await axios
       .get(API_HOST + "all-new-appointed")
@@ -101,17 +105,14 @@ export const OnboardingNewAppointeesTableContainer = () => {
   );
 };
 
-export const AppointeesTable = ({
-  data,
-  columns,
-  searchable = true,
-  removableAppointees = false,
-}) => {
-  const { searchField, currentTable } = useSelector(
+const AppointeesTable = ({ data, columns, searchable = true }) => {
+  const dispatch = useDispatch();
+
+  const { searchField, currentTable, selectedApplicantIdArray } = useSelector(
     (state) => state.onboarding
   );
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const initialState = {
     hiddenColumns: ["position", "office", "app_id", "emp_id", "itm_id"],
@@ -134,24 +135,33 @@ export const AppointeesTable = ({
   );
 
   // Hook for Focus divs
-  const [refTopic, focus, removeFocus, selectableFocus] = useMapFocusHelper(
+  const [refTopic, , removeFocus, selectableFocus] = useMapFocusHelper(
     "onboarding-tr-hover",
     "onboarding-tr-hover-focus"
   );
 
-  // Collecting values and idisplaying highlighted option
-  const collectingSelectedItem = (i, value, length) => {
-    if (removableAppointees === false) {
-      selectableFocus(i);
-      dispatch(setSelectedAppointees(value));
+  const selectedItemHandler = (index, appplicantId) => {
+    let arrayHolder = [];
+    if (currentTable === 1) {
+      dispatch(setCurrentTable(2));
     }
-    if (removableAppointees === true) {
-      focus(i, length);
-    }
-  };
 
-  const removableOnFocus = (length) => {
-    if (removableAppointees === true) removeFocus(length);
+    if (currentTable === 2) {
+      arrayHolder = [...selectedApplicantIdArray];
+    }
+
+    if (!arrayHolder.includes(appplicantId)) {
+      arrayHolder.push(appplicantId);
+      dispatch(setSelectedApplicantIdArray([...arrayHolder]));
+    } else {
+      const i = arrayHolder.indexOf(appplicantId);
+      if (i !== -1) {
+        arrayHolder.splice(i, 1);
+      }
+      dispatch(setSelectedApplicantIdArray([...arrayHolder]));
+    }
+    dispatch(setCurrentTable(2));
+    selectableFocus(index);
   };
 
   useEffect(() => {
@@ -159,9 +169,8 @@ export const AppointeesTable = ({
   }, [searchField]);
 
   useEffect(() => {
-    if (currentTable === 0)
-      if (removableAppointees === false) removeFocus(data?.length);
-  }, [currentTable, data]);
+    if (currentTable == 1) removeFocus(data?.length);
+  }, [currentTable]);
 
   return (
     <React.Fragment>
@@ -199,14 +208,9 @@ export const AppointeesTable = ({
               <tr
                 style={{ cursor: "pointer" }}
                 ref={(el) => (refTopic.current[i] = el)}
+                onClick={() => selectedItemHandler(i, row.values.app_id)}
                 className="onboarding-tr-hover"
                 {...row.getRowProps()}
-                onClick={() => {
-                  collectingSelectedItem(i, row.values.app_id, arr.length);
-                  // selectableFocus(i);
-                  // dispatch(setSelectedAppointees(row.values.app_id));
-                }}
-                onBlur={() => removableOnFocus(arr.length)}
                 tabIndex={i}
               >
                 {row.cells.map((cell) => {
@@ -289,11 +293,25 @@ export const OnboardingNewScheduleTableContainer = () => {
 };
 
 const ScheduleTable = ({ data, columns }) => {
-  const initialState = { hiddenColumns: ["evn_id"] };
+  /**
+   * Redux Toolkit
+   */
   const { searchField, currentTable } = useSelector(
     (state) => state.onboarding
   );
+
   const dispatch = useDispatch();
+
+  /**
+   * Table
+   */
+  const initialState = { hiddenColumns: ["evn_id"] };
+
+  // Hook for Focus divs
+  const [refSchedule, focus, removeFocus] = useMapFocusHelper(
+    "onboarding-tr-hover",
+    "onboarding-tr-hover-focus"
+  );
 
   const {
     getTableProps,
@@ -311,21 +329,17 @@ const ScheduleTable = ({ data, columns }) => {
     useGlobalFilter
   );
 
-  useEffect(() => setGlobalFilter(searchField), [searchField]);
-
-  const [refSchedule, focus, removeFocus] = useMapFocusHelper(
-    "onboarding-tr-hover",
-    "onboarding-tr-hover-focus"
-  );
-
-  const collectingSelectedItem = (i, value, length) => {
+  const selectedScheduleHandler = (i, length, scheduleId) => {
     focus(i, length);
-    dispatch(setSelectedSched(value));
+    dispatch(setSelectedScheduleId(scheduleId));
+    dispatch(setCurrentTable(1));
   };
 
+  useEffect(() => setGlobalFilter(searchField), [searchField]);
+
   useEffect(() => {
-    if (currentTable === 1) removeFocus(data?.length);
-  }, [currentTable, data]);
+    if (currentTable === 2) removeFocus(data?.length);
+  }, [currentTable]);
 
   return (
     <React.Fragment>
@@ -361,10 +375,9 @@ const ScheduleTable = ({ data, columns }) => {
                 ref={(el) => (refSchedule.current[i] = el)}
                 className="onboarding-tr-hover"
                 {...row.getRowProps()}
-                onClick={() => {
-                  collectingSelectedItem(i, row.values.evn_id, arr.length);
-                  // console.log(row.values.evn_id);
-                }}
+                onClick={() =>
+                  selectedScheduleHandler(i, arr.length, row.values.evn_id)
+                }
                 tabIndex={i}
               >
                 {row.cells.map((cell) => {
