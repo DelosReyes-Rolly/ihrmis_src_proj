@@ -40,7 +40,7 @@ const JoinPageFormOne = () => {
 		},
 		validationSchema: Yup.object({
 			acc_req_title_id: Yup.string().required("This field is required"),
-			acc_req_last_name: Yup.string().required("This field is required"),
+			acc_req_last_name: Yup.string().max(50).required("This field is required"),
 			acc_req_first_name: Yup.string().required("This field is required"),
 			acc_req_middle_name: Yup.string().required("This field is required"),
 			acc_req_position: Yup.number().required("This field is required"),
@@ -169,7 +169,7 @@ const JoinPageFormOne = () => {
 							className="no-outline-input"
 							value={form.values.acc_req_last_name}
 							onChange={form.handleChange}
-							maxLength="30"
+							maxLength="50"
 						/>
 					</div>
 					<div className="join-inputs w100">
@@ -179,7 +179,7 @@ const JoinPageFormOne = () => {
 							className="no-outline-input"
 							value={form.values.acc_req_first_name}
 							onChange={form.handleChange}
-							maxLength="30"
+							maxLength="50"
 						/>
 					</div>
 					<div className="join-inputs w100">
@@ -189,7 +189,7 @@ const JoinPageFormOne = () => {
 							className="no-outline-input"
 							value={form.values.acc_req_middle_name}
 							onChange={form.handleChange}
-							maxLength="30"
+							maxLength="50"
 						/>
 					</div>
 				</div>
