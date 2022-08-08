@@ -23,6 +23,7 @@ import {
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { BsGlobe } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import { BiBorderRadius } from "react-icons/bi";
 
 const WelcomeAboardPage = () => {
 	return (
@@ -266,43 +267,91 @@ const AboardSecondPage = () => {
 							<div className="body-3-div2-div1">
 								<div className="no-content"></div>
 								<div className="connect-with-us">
-									<p>Connect with us:</p>
+									<div>Connect with us:</div>
+
 									<div className="body-3-div2-div1-content">
-										<div className="zoom-effect">
-											<FaFacebookSquare
-												className="zoom-effect"
-												size={"38"}
-												cursor={"pointer"}
-											/>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												gap: "2px",
+											}}
+										>
+											<div className="zoom-effect">
+												<FaFacebookSquare
+													className="zoom-effect"
+													size={"38"}
+													cursor={"pointer"}
+												/>
+											</div>
+											<p style={{ textAlign: "center" }}>Like</p>
 										</div>
-										<div className="zoom-effect">
-											<FaTwitterSquare
-												className="zoom-effect"
-												size={"38"}
-												cursor={"pointer"}
-											/>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												gap: "2px",
+											}}
+										>
+											<div className="zoom-effect">
+												<FaTwitterSquare
+													className="zoom-effect"
+													size={"38"}
+													cursor={"pointer"}
+												/>
+											</div>
+											<p style={{ textAlign: "center" }}>Follow</p>
 										</div>
-										<div className="zoom-effect">
-											<img
-												src={watch}
-												alt="dostv-logo"
-												width="34px"
-												height="34px"
-												style={{ cursor: "pointer" }}
-												onClick={() => outsiteWebHelper(WATCH)}
-											/>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												gap: "6px",
+											}}
+										>
+											<div className="zoom-effect">
+												<img
+													src={watch}
+													alt="dostv-logo"
+													width="34px"
+													height="34px"
+													style={{ cursor: "pointer", borderRadius: "4px" }}
+													onClick={() => outsiteWebHelper(WATCH)}
+												/>
+											</div>
+											<p style={{ textAlign: "center" }}>Watch</p>
 										</div>
-										<VisitICon onClick={() => outsiteWebHelper(DOSTWEBSITE)} />
-										<div className="zoom-effect">
-											<img
-												className="zoom-effect"
-												src={ytlogo}
-												alt="dost-logo"
-												width="38px"
-												height="38px"
-												style={{ cursor: "pointer" }}
-												onClick={() => outsiteWebHelper(YTDOSTV)}
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												gap: "9px",
+											}}
+										>
+											<VisitICon
+												onClick={() => outsiteWebHelper(DOSTWEBSITE)}
 											/>
+											<p style={{ textAlign: "center" }}>Visit</p>
+										</div>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												gap: "2px",
+											}}
+										>
+											<div className="zoom-effect">
+												<img
+													className="zoom-effect"
+													src={ytlogo}
+													alt="dost-logo"
+													width="38px"
+													height="38px"
+													style={{ cursor: "pointer" }}
+													onClick={() => outsiteWebHelper(YTDOSTV)}
+												/>
+											</div>
+											<p style={{ textAlign: "center" }}>Subscribe</p>
 										</div>
 									</div>
 								</div>
