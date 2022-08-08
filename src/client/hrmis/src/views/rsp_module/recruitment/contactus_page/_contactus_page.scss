@@ -1,0 +1,161 @@
+$primary: #408fd6;
+$secondary: #13a9f5;
+$white: #fff;
+$gray: #9b9b9b;
+
+.div-body {
+	display: flex;
+	width: 100%;
+	padding: 80px;
+	align-content: space-between;
+	align-items: start;
+	flex-direction: row;
+
+	.div-body-1 {
+		width: 65%;
+
+		.line-border {
+			height: 3px;
+			background-color: $primary;
+			border: none;
+			width: 300px;
+		}
+
+		div {
+			.form__group {
+				position: relative;
+				padding: 15px 0 0;
+				margin-top: 10px;
+				width: 100%;
+			}
+
+			.form__field {
+				font-family: inherit;
+				width: 60%;
+				border: 0;
+				border-bottom: 0.5px solid $gray;
+				outline: 0;
+				font-size: 12px;
+				color: darkslategray;
+				padding: 7px 0;
+				background: transparent;
+				transition: border-color 0.2s;
+
+				&::placeholder {
+					color: transparent;
+				}
+
+				&:placeholder-shown ~ .form__label {
+					font-size: 12px;
+					cursor: text;
+					top: 20px;
+				}
+			}
+
+			.form__label {
+				position: absolute;
+				top: 0;
+				display: block;
+				transition: 0.2s;
+				font-size: 1rem;
+				color: $gray;
+			}
+
+			.form__field:focus {
+				~ .form__label {
+					position: absolute;
+					top: 0;
+					display: block;
+					transition: 0.2s;
+					font-size: 1rem;
+					color: $primary;
+					font-weight: 700;
+				}
+				padding-bottom: 6px;
+				font-weight: 700;
+				border-width: 3px;
+				border-image: linear-gradient(to right, $primary, $secondary);
+				border-image-slice: 1;
+			}
+			/* reset input */
+			.form__field {
+				&:required,
+				&:invalid {
+					box-shadow: none;
+				}
+			}
+		}
+	}
+
+	.div-body-2 {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: 35%;
+		padding: 60px 0px;
+
+		.div-body2-content {
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+			padding: 40px 20px;
+		}
+	}
+	h2 {
+		color: $fontSecondaryColor;
+		font-weight: 400;
+	}
+}
+
+.primary-color {
+	color: #408fd6;
+}
+
+.secondary {
+	color: #13a9f5;
+}
+
+.font-secondary-color {
+	color: $fontSecondaryColor;
+}
+
+.black-color {
+	color: map-get($blackColor, regular);
+}
+
+.contact-us-circle {
+	height: 30px;
+	width: 30px;
+	background-color: rgb(255, 255, 255);
+	border-radius: 50%;
+	display: inline-block;
+	box-shadow: 2px 2px $gray;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.contact-us-footer {
+	display: flex;
+	justify-content: center;
+	background-color: rgb(30, 30, 30);
+}
+
+/* USER DROPDOWN DISPAY ENDS HERE  */
+
+@media only screen and (max-width: 800px) {
+	.div-body {
+		flex-direction: column;
+		width: 100%;
+		padding: 50px;
+
+		.div-body-1 {
+			width: 100%;
+		}
+
+		.div-body-2 {
+			width: 100%;
+			padding: 0px 0px;
+		}
+	}
+}

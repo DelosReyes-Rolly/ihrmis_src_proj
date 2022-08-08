@@ -47,7 +47,7 @@ const PlantillaVpEmailModal = ({
 
 	const getMessageType = async () => {
 		await axios
-			.get(API_HOST + "mail-template")
+			.get(API_HOST + "mail-template/USR")
 			.then((res) => {
 				let arrHolder = [];
 				const dataMType = res?.data?.data;
