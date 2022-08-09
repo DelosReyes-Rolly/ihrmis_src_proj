@@ -19,319 +19,330 @@ import { useToggleHelper } from "../../../../../helpers/use_hooks/toggle_helper"
 import ReactTooltip from "react-tooltip";
 
 const PlantillaItemPageComponentView = () => {
-	const [toggleState, setToggleState] = useState(1);
-	const toggleTab = (index) => {
-		setToggleState(index);
-	};
-	const [number, setNumber] = useState(0);
+  const [toggleState, setToggleState] = useState(1);
+  const toggleTab = (index) => {
+    setToggleState(index);
+  };
+  const [number, setNumber] = useState(0);
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const getTotalVacantPosition = async () => {
-		await axios
-			.get(API_HOST + "get-vacant-plantilla")
-			.then((res) => {
-				setNumber(res.data.total_vacant);
-			})
-			.catch((err) => console.log(err.message));
-	};
+  const getTotalVacantPosition = async () => {
+    await axios
+      .get(API_HOST + "get-vacant-plantilla")
+      .then((res) => {
+        setNumber(res.data.total_vacant);
+      })
+      .catch((err) => console.log(err.message));
+  };
 
-	useEffect(() => {
-		getTotalVacantPosition();
-	}, []);
+  useEffect(() => {
+    getTotalVacantPosition();
+  }, []);
 
-	return (
-		<React.Fragment>
-			<ReactTooltip id="regular-tab-btn" effect="solid">
-				{"View all regular plantilla items"}
-			</ReactTooltip>
-			<ReactTooltip id="non-regular-tab-btn" effect="solid">
-				{"View all non-regular plantilla items"}
-			</ReactTooltip>
+  return (
+    <React.Fragment>
+      <ReactTooltip id="regular-tab-btn" effect="solid">
+        {"View all regular plantilla items"}
+      </ReactTooltip>
+      <ReactTooltip id="non-regular-tab-btn" effect="solid">
+        {"View all non-regular plantilla items"}
+      </ReactTooltip>
 
-			<div className="plantilla-view">
-				<div className="container-plantilla">
-					<BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
-				</div>
-				<div className="container-vacant-position">
-					<div className="button-vacant">
-						<ButtonComponent
-							toolTipId="button-vacant"
-							tips="View all vacant plantillas"
-							tipPosition="left"
-							buttonLogoStart={<IoIosPaperPlane />}
-							buttonName="Vacant"
-							buttonLogoEnd={<SquareNotification number={number} />}
-							onClick={() => navigate("vacantpositions")}
-						/>
-					</div>
-					<div className="regular-tab-component">
-						<div className="reg-tab-container">
-							<button
-								data-tip
-								data-for="regular-tab-btn"
-								onClick={() => toggleTab(1)}
-								className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
-							>
-								Regular
-							</button>
+      <div className="plantilla-view">
+        <div className="container-plantilla">
+          <BreadcrumbComponent list={plantillaItemsBreadCramp} className="" />
+        </div>
+        <div className="container-vacant-position">
+          <div className="button-vacant">
+            <ButtonComponent
+              toolTipId="button-vacant"
+              tips="View all vacant plantillas"
+              tipPosition="left"
+              buttonLogoStart={<IoIosPaperPlane />}
+              buttonName="Vacant"
+              buttonLogoEnd={<SquareNotification number={number} />}
+              onClick={() => navigate("vacantpositions")}
+            />
+          </div>
+          <div className="regular-tab-component">
+            <div className="reg-tab-container">
+              <button
+                data-tip
+                data-for="regular-tab-btn"
+                onClick={() => toggleTab(1)}
+                className={toggleState === 1 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Regular
+              </button>
 
-							<button
-								data-tip
-								data-for="non-regular-tab-btn"
-								onClick={() => toggleTab(2)}
-								className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
-							>
-								Non-Regular
-							</button>
-						</div>
+              <button
+                data-tip
+                data-for="non-regular-tab-btn"
+                onClick={() => toggleTab(2)}
+                className={toggleState === 2 ? "reg-tab-activate" : "reg-tab"}
+              >
+                Non-Regular
+              </button>
+            </div>
 
-						<hr className="solid" />
-					</div>
-				</div>
-				<div className={toggleState === 1 ? "current-tab" : "show-none"}>
-					<PlantillaDataTableDisplay type={1} />
-				</div>
-				{/* TAB SECOND NON REGULAR */}
-				<div className={toggleState === 2 ? "current-tab" : "show-none"}>
-					<PlantillaDataTableDisplay type={0} />
-				</div>
-			</div>
-		</React.Fragment>
-	);
+            <hr className="solid" />
+          </div>
+        </div>
+        <div className={toggleState === 1 ? "current-tab" : "show-none"}>
+          <PlantillaDataTableDisplay type={1} />
+        </div>
+        {/* TAB SECOND NON REGULAR */}
+        <div className={toggleState === 2 ? "current-tab" : "show-none"}>
+          <PlantillaDataTableDisplay type={0} />
+        </div>
+      </div>
+    </React.Fragment>
+  );
 };
 
 export default PlantillaItemPageComponentView;
 
 export const PlantillaDataTableDisplay = ({ type }) => {
-	const refresh = useSelector((state) => state.popupResponse.refresh);
-	const [plotData, setPlotData] = useState([]);
+  const refresh = useSelector((state) => state.popupResponse.refresh);
+  const [plotData, setPlotData] = useState([]);
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const plantillaItemApi = async () => {
-		await axios
-			.get(API_HOST + "plantilla-items/" + type)
-			.then((response) => {
-				const data = response.data.data ?? [];
-				let dataPlot = [];
-				console.log(data);
-				data.forEach((element) => {
-					dataPlot.push({
-						itm_no: element.itm_no,
-						pos_short_name: element?.position.pos_short_name,
-						ofc_acronym: element?.office.ofc_acronym,
-						itm_status: itemState[element?.itm_state],
-						pos_category: element.position.pos_category,
-						itm_plantilla: element,
-					});
-				});
+  const plantillaItemApi = async () => {
+    await axios
+      .get(API_HOST + "plantilla-items/" + type)
+      .then((response) => {
+        const data = response.data.data ?? [];
+        let dataPlot = [];
+        console.log(data);
+        data.forEach((element) => {
+          const emp_name = element.employee
+            ? " (" +
+              element?.employee?.emp_nm_last +
+              ", " +
+              element?.employee?.emp_nm_first +
+              " " +
+              element?.employee?.emp_nm_mid +
+              " " +
+              element?.employee?.emp_nm_extn +
+              ")"
+            : "";
+          dataPlot.push({
+            itm_no: element.itm_no,
+            pos_short_name: element?.position.pos_title,
+            ofc_acronym: element?.office.ofc_acronym,
+            itm_status: statusDisplay[element?.itm_status] + emp_name,
+            pos_category: element.position.pos_category,
+            itm_plantilla: element,
+          });
+        });
 
-				setPlotData(dataPlot);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
+        setPlotData(dataPlot);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-	useLayoutEffect(() => {
-		plantillaItemApi();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [refresh]);
+  useLayoutEffect(() => {
+    plantillaItemApi();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh]);
 
-	let data = useMemo(() => plotData, [plotData]);
+  let data = useMemo(() => plotData, [plotData]);
 
-	const columns = useMemo(
-		() => [
-			{
-				Header: "Item No.",
-				accessor: "itm_no",
-			},
-			{
-				Header: "Position",
-				accessor: "pos_short_name",
-			},
-			{
-				Header: "Office",
-				accessor: "ofc_acronym",
-			},
-			{
-				Header: "Status",
-				accessor: "itm_status",
-			},
-			{
-				Header: "Category",
-				accessor: "pos_category",
-			},
-			{
-				Header: "Plantilla",
-				accessor: "itm_plantilla",
-			},
-		],
-		[]
-	);
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Item No.",
+        accessor: "itm_no",
+      },
+      {
+        Header: "Position",
+        accessor: "pos_short_name",
+      },
+      {
+        Header: "Office",
+        accessor: "ofc_acronym",
+      },
+      {
+        Header: "Status",
+        accessor: "itm_status",
+      },
+      {
+        Header: "Category",
+        accessor: "pos_category",
+      },
+      {
+        Header: "Plantilla",
+        accessor: "itm_plantilla",
+      },
+    ],
+    []
+  );
 
-	const initialState = { hiddenColumns: ["pos_category", "itm_plantilla"] };
+  const initialState = { hiddenColumns: ["pos_category", "itm_plantilla"] };
 
-	const {
-		getTableProps,
-		getTableBodyProps,
-		headerGroups,
-		rows,
-		prepareRow,
-		state,
-		setGlobalFilter,
-		setFilter,
-	} = useTable(
-		{
-			initialState,
-			columns,
-			data,
-		},
-		useFilters,
-		useGlobalFilter,
-		useSortBy
-	);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter,
+    setFilter,
+  } = useTable(
+    {
+      initialState,
+      columns,
+      data,
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy
+  );
 
-	const { globalFilter } = state;
+  const { globalFilter } = state;
 
-	return (
-		<React.Fragment>
-			<br />
-			<AddPlantillaItems
-				type={type}
-				search={globalFilter}
-				setSearch={setGlobalFilter}
-				statusFilter={setFilter}
-			/>
-			{/* <ReactTooltip id="table-row-btn" effect="solid">
+  return (
+    <React.Fragment>
+      <br />
+      <AddPlantillaItems
+        type={type}
+        search={globalFilter}
+        setSearch={setGlobalFilter}
+        statusFilter={setFilter}
+      />
+      {/* <ReactTooltip id="table-row-btn" effect="solid">
         {"Click to view plantilla info"}
       </ReactTooltip> */}
 
-			<div className="default-table">
-				<table className="table-design" {...getTableProps()}>
-					<thead>
-						{headerGroups.map((headerGroup) => (
-							<tr
-								className="main-header"
-								{...headerGroup.getHeaderGroupProps()}
-							>
-								{headerGroup.headers.map((column) => (
-									<th {...column.getHeaderProps(column.getSortByToggleProps())}>
-										<span>
-											{column.isSorted ? (
-												column.isSortedDesc ? (
-													<BsArrowDown />
-												) : (
-													<BsArrowUp />
-												)
-											) : (
-												""
-											)}
-										</span>
-										{column.render("Header")}
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
+      <div className="default-table">
+        <table className="hybrid-table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr
+                className="main-header"
+                {...headerGroup.getHeaderGroupProps()}
+              >
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    <span>
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <BsArrowDown />
+                        ) : (
+                          <BsArrowUp />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </span>
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
 
-					<tbody {...getTableBodyProps()}>
-						{rows.map((row) => {
-							prepareRow(row);
-							return (
-								<tr
-									onClick={() => {
-										navigate(
-											"/rsp/plantilla/plantilla-items/info/" +
-												row.values.itm_plantilla.itm_id
-										);
-									}}
-									className="trHoverBody"
-									{...row.getRowProps()}
-								>
-									{row.cells.map((cell) => {
-										return (
-											<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-										);
-									})}
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
-				<p
-					style={{
-						fontSize: "small",
-						color: "rgba(70, 70, 70, 0.6)",
-						marginTop: "10px",
-					}}
-				>
-					Total of {rows.length} entries
-				</p>
-			</div>
-		</React.Fragment>
-	);
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr
+                  onClick={() => {
+                    navigate(
+                      "/rsp/plantilla/plantilla-items/info/" +
+                        row.values.itm_plantilla.itm_id
+                    );
+                  }}
+                  className="trHoverBody"
+                  {...row.getRowProps()}
+                >
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p
+          style={{
+            fontSize: "small",
+            color: "rgba(70, 70, 70, 0.6)",
+            marginTop: "10px",
+          }}
+        >
+          Total of {rows.length} entries
+        </p>
+      </div>
+    </React.Fragment>
+  );
 };
 
 const AddPlantillaItems = ({ type, search, setSearch, statusFilter }) => {
-	let [toggleAddPlantillaItem, setTogglePlantillaItem] = useToggleHelper(false);
+  let [toggleAddPlantillaItem, setTogglePlantillaItem] = useToggleHelper(false);
 
-	return (
-		<React.Fragment>
-			<ReactTooltip id="plantilla-add-btn" effect="solid">
-				{"Create/Add new plantilla item"}
-			</ReactTooltip>
+  return (
+    <React.Fragment>
+      <ReactTooltip id="plantilla-add-btn" effect="solid">
+        {"Create/Add new plantilla item"}
+      </ReactTooltip>
 
-			<AddPlantillaItemModal
-				isDisplay={toggleAddPlantillaItem}
-				onClose={() => setTogglePlantillaItem()}
-				type={type}
-			/>
+      <AddPlantillaItemModal
+        isDisplay={toggleAddPlantillaItem}
+        onClose={() => setTogglePlantillaItem()}
+        type={type}
+      />
 
-			<div className="selector-buttons">
-				<div className="selector-container">
-					<span className="selector-span-1">
-						<button
-							data-tip
-							data-for="plantilla-add-btn"
-							className="btn-primary"
-							onClick={() => setTogglePlantillaItem()}
-						>
-							<MdAdd style={{ padding: 0, margin: 0 }} size="14" />
-							<span>Plantilla Item</span>
-						</button>
-					</span>
+      <div className="selector-buttons">
+        <div className="selector-container">
+          <span className="selector-span-1">
+            <button
+              data-tip
+              data-for="plantilla-add-btn"
+              className="btn-primary"
+              onClick={() => setTogglePlantillaItem()}
+            >
+              <MdAdd style={{ padding: 0, margin: 0 }} size="14" />
+              <span>Plantilla Item</span>
+            </button>
+          </span>
 
-					<span className="margin-left-1 selector-span-1">
-						<select
-							onChange={(e) => statusFilter("pos_category", e.target.value)}
-						>
-							{plantillaItemSelectFilter.map((item) => {
-								return (
-									<option
-										className="options"
-										key={item.value}
-										value={item.value}
-									>
-										{item.title}
-									</option>
-								);
-							})}
-						</select>
-					</span>
-				</div>
-				<div className="width-300">
-					<SearchComponent
-						value={search || ""}
-						onChange={(e) => setSearch(e.target.value)}
-					/>
-				</div>
-			</div>
-		</React.Fragment>
-	);
+          <span className="margin-left-1 selector-span-1">
+            <select
+              onChange={(e) => statusFilter("pos_category", e.target.value)}
+            >
+              {plantillaItemSelectFilter.map((item) => {
+                return (
+                  <option
+                    className="options"
+                    key={item.value}
+                    value={item.value}
+                  >
+                    {item.title}
+                  </option>
+                );
+              })}
+            </select>
+          </span>
+        </div>
+        <div className="width-300">
+          <SearchComponent
+            value={search || ""}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+    </React.Fragment>
+  );
 };
 
 const SquareNotification = ({ number = 0 }) => (
-	<div className="square-notification">{number}</div>
+  <div className="square-notification">{number}</div>
 );

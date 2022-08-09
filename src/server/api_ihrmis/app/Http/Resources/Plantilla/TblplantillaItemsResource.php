@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Plantilla;
 
+use App\Http\Resources\CommonResource;
 use App\Http\Resources\TblofficesResource;
 use App\Http\Resources\TblpositionsResource;
 use App\Models\TblplantillaItems;
@@ -48,6 +49,7 @@ class TblplantillaItemsResource extends JsonResource
             //RELATIONSHIP
             'position' => new TblpositionsResource($this->tblpositions),
             'office' => new TblofficesResource($this->tbloffices),
+            'employee' => new CommonResource($this->employee)
         ];
     }
 }

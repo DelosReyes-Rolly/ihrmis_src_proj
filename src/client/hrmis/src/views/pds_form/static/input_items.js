@@ -30,15 +30,19 @@ export const educationInputItem = [
   },
   {
     id: "3",
-    title: "Vocational/Trade",
+    title: "Vocational",
   },
   {
     id: "4",
-    title: "College",
+    title: "Bachelor's",
   },
   {
     id: "5",
-    title: "Graduate Studies",
+    title: "Master's",
+  },
+  {
+    id: "6",
+    title: "PhD's",
   },
 ];
 
@@ -171,11 +175,15 @@ export const formThreeInput = {
     },
     {
       id: "3",
-      title: "College",
+      title: "Bachelor's",
     },
     {
       id: "4",
-      title: "Graduate Studies",
+      title: "Master's",
+    },
+    {
+      id: "5",
+      title: "PhD's",
     },
   ],
   educationInputItem: [
