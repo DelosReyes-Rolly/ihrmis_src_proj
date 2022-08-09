@@ -10,13 +10,13 @@
 
 <body>
     <div style="width:80%;margin:auto;">
-      <p>
-          From: {{ $details['from'] }} < {{ $details['email_from'] }} > <br />
-              Date: {{ date("D M j, Y \a\t g:i a") }} <br />
-              Subject: {{ $details['message_type'] }}<br />
-              To: {{ $details['email_to'] }}
-      </p><br />
-      {!! $details['message'] !!}<br />
+        <p>
+            From: < {{ $details['email_from'] }}> <br />
+                Date: {{ date("D M j, Y \a\t g:i a") }} <br />
+                Subject: {{ $details['message_type'] }}<br />
+                To: {{ $details['from'] }} < {{ $details['email_to'] }} >
+        </p><br />
+        {!! $details['message'] !!}<br />
     </div>
 </body>
 

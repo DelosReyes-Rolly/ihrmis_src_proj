@@ -54,8 +54,10 @@ const JoinPageFormOne = () => {
 			await axios
 				.post(API_HOST + "account-request", value)
 				.then((response) => {
-					console.log(response.data.data.acc_req_id);
-					console.log(item);
+					popupAlert({
+						message: 'General information saved successfully',
+						type: ALERT_ENUM.success,
+					});
 					if (item !== undefined) {
 						navigate("/join-page/two/" + item);
 					} else {

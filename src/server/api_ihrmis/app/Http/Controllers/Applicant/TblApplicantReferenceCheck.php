@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Applicant;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblApplicantReferenceCheckModel;
+use App\Models\Applicants\Tblapplicants;
 use App\Models\Applicants\TblapplicantsProfile;
+use App\Models\Tbloffices;
 use Illuminate\Http\Request;
 
 class TblApplicantReferenceCheck extends Controller
@@ -15,8 +17,22 @@ class TblApplicantReferenceCheck extends Controller
         return new CommonResource(
             TblapplicantsProfile::whereHas('tblReferenceChecks', function ($query) use ($reference) {
                 return $query->where('tblapplicants_reference_check.chk_ref_id', $reference);
-            })->with('tblReferenceChecks')->first()
+            })->with(['tblReferenceChecks',])->first()
         );
+    }
+
+    public function getPositionOffice($app_id)
+    {
+        $query = Tblapplicants::with(['TblPositions', 'TblOffices', 'TblapplicantsProfile'])->where('app_id', $app_id)->first();
+        $position = $query->TblPositions->pos_title;
+        $parentOffice = Tbloffices::where('ofc_ofc_id', $query->TblOffices->ofc_ofc_id)->first();
+        $office = $query->TblOffices->ofc_name . '-' . $parentOffice->ofc_name;
+        $arr = [
+            'position' => $position,
+            'office' => $office,
+            'applicant' => $query->TblapplicantsProfile,
+        ];
+        return new CommonResource($arr);
     }
 
 
