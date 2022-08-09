@@ -17,8 +17,7 @@ import {
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { BsGlobe } from "react-icons/bs";
-import { Navigate, useNavigate } from "react-router-dom";
-import { BiBorderRadius } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import {
 	DOSTMAPLINK,
 	DOSTWEBSITE,
