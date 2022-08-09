@@ -3,14 +3,13 @@ import { BsCheck } from "react-icons/bs";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import NavbarGetStartedPage from "../../../common/get_started_navbar/get_started_navbar";
 import IconComponent from "../../../common/icon_component/icon";
-import JoinPageFormOne from "./join_page_form_one";
 
 const JoinPageMainComponent = () => {
 	const [part, setFormPart] = useState(0);
 	const { item } = useParams();
 	const titles = [
 		{
-			title: "General Info",
+			title: "General Information",
 			url: "/join-page/one/" + item ?? "/join-page",
 		},
 		{

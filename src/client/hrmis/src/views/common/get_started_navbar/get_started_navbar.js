@@ -1,8 +1,10 @@
 import React from "react";
 import { MdHome } from "react-icons/md";
 import dostLogo from "../../../assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const NavbarGetStartedPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="get-started-page-container">
       <div style={{ padding: "5px 0px" }}>
@@ -24,7 +26,11 @@ const NavbarGetStartedPage = () => {
             </div>
           </div>
           {/* NAVIGATE HOME */}
-          <div style={{ display: "flex", alignItems: "center" }}>
+          <div
+            style={{ display: "flex", alignItems: "center" }}
+            className={"pointer"}
+            onClick={() => navigate("/welcome_aboard")}
+          >
             <MdHome color="white" size={25} />
           </div>
         </div>

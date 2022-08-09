@@ -26,7 +26,7 @@ class TblapplicantDocumentRequirements extends Controller
         $cat = CategoryGroupModel::where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->first();
 
         $requirements = TblapplicantDocumentRequirementsModel::with([
-            'TblApplicantRequirements'
+            'tbldocumentaryAttachments'
         ])->where('doc_group', $cat->grp_id)->get();
         // $requirements = TblapplicantDocumentRequirementsModel::with(['tblCategory' => function ($query) use ($grpLevel, $grpCluster) {
         //     $query->where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->get();
@@ -38,8 +38,8 @@ class TblapplicantDocumentRequirements extends Controller
     {
         $cat = CategoryGroupModel::where('grp_level', $grpLevel)->where('grp_cluster', $grpCluster)->first();
 
-        $requirements = TblapplicantDocumentRequirementsModel::with(['TblApplicantRequirements' => function ($query) use ($app_id) {
-            $query->where('req_app_id', $app_id)->get();
+        $requirements = TblapplicantDocumentRequirementsModel::with(['tbldocumentaryAttachments' => function ($query) use ($app_id) {
+            $query->where('att_app_id', $app_id)->get();
         }])->where('doc_group', $cat->grp_id)->get();
         return CommonResource::collection($requirements);
     }
@@ -53,7 +53,7 @@ class TblapplicantDocumentRequirements extends Controller
 
     public function deleteApplicantDocument($att_id)
     {
-        $query = TblapplicantRequirements::where('id', $att_id)->first();
+        $query = TblapplicantAttachmentsModel::where('att_id', $att_id)->first();
         if ($query !== null) {
             $stringName = $query->req_app_file;
             $storedFile = explode(",", $stringName);
@@ -62,7 +62,7 @@ class TblapplicantDocumentRequirements extends Controller
                     unlink(public_path("storage/applicant/applicant-docs/" . $file));
                 }
             }
-            TblapplicantRequirements::where('id', $att_id)->delete();
+            TblapplicantAttachmentsModel::where('att_id', $att_id)->delete();
             return ($query->req_app_file);
         }
     }
