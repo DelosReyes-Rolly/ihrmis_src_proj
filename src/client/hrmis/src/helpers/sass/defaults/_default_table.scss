@@ -109,6 +109,27 @@
     width: 100%;
     border-collapse: collapse;
   }
+
+  .hybrid-table > tbody > tr:nth-of-type(odd) {
+    background-color: white;
+  }
+
+  .hybrid-table > tbody > tr:nth-of-type(even) {
+    background-color: rgba(48, 48, 48, 0.01);
+  }
+
+  .hybrid-table > tbody > tr:hover {
+    cursor: default;
+    transition: 200ms;
+    background-color: map-get($blackColor, 100);
+  }
+
+  .trHoverBody:hover {
+    cursor: default;
+    transition: 200ms;
+    background-color: map-get($blackColor, 100);
+  }
+
   .main-header {
     color: map-get($primaryColor, regular);
     user-select: none;
@@ -142,12 +163,6 @@
   .td-with-dropdown {
     display: flex;
     justify-content: space-between;
-  }
-
-  .trHoverBody:hover {
-    cursor: default;
-    transition: 200ms;
-    background-color: map-get($blackColor, 100);
   }
 
   .cell-color-one {

@@ -15,7 +15,7 @@ class TblplantillaItemsController extends Controller
     //
     public function getPlantillaItem($type)
     {
-        $item_query = TblplantillaItems::with('tbloffices', 'tblpositions')->where('itm_regular', $type)->get();
+        $item_query = TblplantillaItems::with('tbloffices', 'tblpositions', 'employee')->where('itm_regular', $type)->get();
         return TblplantillaItemsResource::collection($item_query);
     }
 

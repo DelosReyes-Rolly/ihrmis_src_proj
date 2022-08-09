@@ -12,6 +12,7 @@ import { API_HOST } from "../../../../helpers/global/global_config";
 import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setModal,
   setSearchField,
   setSection,
 } from "../../../../features/reducers/onboarding_slice";
@@ -30,7 +31,7 @@ import OnboardingSchedulModal from "./onboarding_components/onboarding_schedule_
 const OnboardingMain = () => {
   const { renderBusy } = usePopUpHelper();
   // const [sections, setSections] = useState([]);
-  const { section } = useSelector((state) => state.onboarding);
+  const { section, modal } = useSelector((state) => state.onboarding);
   const dispatch = useDispatch();
 
   const form = useFormik({
@@ -138,8 +139,8 @@ const OnboardingMain = () => {
               >
                 <div>
                   <OnboardingSchedulModal
-                    isDisplay={openModal}
-                    onClose={() => setOpenModal(false)}
+                    isDisplay={modal}
+                    onClose={() => dispatch(setModal(false))}
                   />
                 </div>
 
@@ -153,7 +154,7 @@ const OnboardingMain = () => {
                   toolTipId="calendar"
                   textHelper="Open a modal box (RC-201 #2) to schedule the onboarding/orientation of selected appointees. When schedule is selected, open the modal box (RC-201 #2) to edit the schedule."
                   icon={<BsCalendar3RangeFill size={20} />}
-                  onClick={() => setOpenModal(true)}
+                  onClick={() => dispatch(setModal(true))}
                 />
 
                 <IconComponent
@@ -170,9 +171,9 @@ const OnboardingMain = () => {
                 />
               </div>
               <div>
-                <OnboardingNewScheduleTableContainer />
+                <OnboardingNewScheduleTableContainer modal={openModal} />
                 <br />
-                <OnboardingNewAppointeesTableContainer />
+                <OnboardingNewAppointeesTableContainer modal={openModal} />
               </div>
             </div>
           </div>
