@@ -73,10 +73,10 @@
 		background-color: rgba(0, 110, 255, 0.1);
 	}
 	.td-file-list {
-		margin: 5px 0px;
 		display: flex;
 		flex-direction: row;
 		cursor: pointer;
+		width: 100%;
 	}
 	tr {
 		display: flex;

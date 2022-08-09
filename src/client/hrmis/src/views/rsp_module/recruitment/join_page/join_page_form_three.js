@@ -6,18 +6,9 @@ import { API_HOST } from "../../../../helpers/global/global_config";
 import { useIsMounted } from "../../../../helpers/use_hooks/isMounted";
 import { usePopUpHelper } from "../../../../helpers/use_hooks/popup_helper";
 import InputComponent from "../../../common/input_component/input_component/input_component";
-import * as Yup from "yup";
-import { useFormik } from "formik";
 import { setRefresh } from "../../../../features/reducers/popup_response";
 import IconComponent from "../../../common/icon_component/icon";
-import {
-	IoLocationSharp,
-	IoMailOutline,
-	IoMailSharp,
-	IoPerson,
-} from "react-icons/io5";
 import ButtonComponent from "../../../common/button_component/button_component";
-import { BsFillPhoneFill, BsFillTelephoneFill } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiFillCheckCircle } from "react-icons/ai";
 
@@ -40,7 +31,7 @@ const JoinPageFormThree = () => {
 			.get(API_HOST + "verify-account/" + item)
 			.then((response) => {
 				const data = response.data.data;
-				console.log(data);
+				console.log(item);
 				if (!mounted.current) return;
 			})
 			.catch((error) => {});
@@ -112,6 +103,7 @@ const JoinPageFormThree = () => {
 
 	useEffect(() => {
 		getAccountRequest();
+		resendEmail();
 	}, []);
 	useEffect(() => {
 		let codeChecker = code.join("");

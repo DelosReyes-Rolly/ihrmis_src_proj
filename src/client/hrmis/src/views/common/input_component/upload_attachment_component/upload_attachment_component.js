@@ -8,6 +8,7 @@ const UploadAttachmentComponent = ({
 	accept,
 	value,
 	onChange,
+	onClick
 }) => {
 	const [files, setFiles] = useState([]);
 	const fileRef = useRef();
@@ -39,7 +40,7 @@ const UploadAttachmentComponent = ({
 						</div>
 					)}
 				</div>
-				<label htmlFor="upload-attachment">Upload</label>
+				<label onClick={onClick}>Upload</label>
 			</div>
 
 			<input

@@ -26,7 +26,7 @@ class TblapplicantDocumentRequirementsModel extends Model
 
     public function tbldocumentaryAttachments()
     {
-        return $this->belongsToMany(TblapplicantAttachmentsModel::class, 'tbldocumentary_requirements', 'doc_id', 'doc_id', '', 'att_app_doc_id');
+        return $this->hasMany(TblapplicantAttachmentsModel::class, 'att_app_doc_id', 'doc_id');
     }
 
     public function tblCategory()
