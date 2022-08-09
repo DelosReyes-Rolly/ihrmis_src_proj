@@ -10,20 +10,22 @@ import { TiMessages } from "react-icons/ti";
 import { outsiteWebHelper } from "../../../../router/outside_routes";
 import {
   ABODIES,
-  DOSTWEBSITE,
+  // DOSTWEBSITE,
   RDINSTITUTES,
   REGIONALOFFICES,
-  SCANMO,
-  SIKAT,
   SPCOUNCILS,
   STSINSTITUTE,
-  WATCH,
-  YTDOSTV,
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { BsGlobe } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { BiBorderRadius } from "react-icons/bi";
+import {
+  DOSTWEBSITE,
+  SCANMO,
+  SIKAT,
+  WATCH,
+  YTDOSTV,
+} from "./static/other_dost_relatedlinks_data";
 
 const WelcomeAboardPage = () => {
   return (
@@ -91,12 +93,7 @@ const AboardFirstPage = () => {
               </p>
             </div>
             <div className="on-click-containers">
-              <div
-                className="div-click-container"
-                onClick={() => {
-                  navigate("/get-start-page");
-                }}
-              >
+              <div className="div-click-container">
                 <IoIosSend size={30} color={"#004e87"} />
                 <div>
                   <p className="container-title">Get started</p>
@@ -121,7 +118,12 @@ const AboardFirstPage = () => {
                   </p>
                 </div>
               </div>
-              <div className="div-click-container">
+              <div
+                className="div-click-container"
+                onClick={() => {
+                  navigate("/contact_us");
+                }}
+              >
                 <TiMessages size={28} color={"#004e87"} />
                 <div>
                   <p className="container-title">Start a converstion</p>
@@ -257,7 +259,7 @@ const AboardSecondPage = () => {
             </div>
           </div>
           <div className="body-3">
-            <div style={{ width: "100%", height: "50%" }}>
+            <div className="map-div">
               <DostMapComponent />
             </div>
             <div className="body-3-div2">

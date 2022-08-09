@@ -97,6 +97,7 @@ Route::delete('new-reference/{id}', [TblapplicantReferencesController::class, "r
 
 //crud-ref-check
 Route::get('get-reference-check/{reference}', [TblApplicantReferenceCheck::class, "getReferenceCheck"]);
+Route::get('get-reference-position-office/{reference}', [TblApplicantReferenceCheck::class, "getPositionOffice"]);
 Route::post('new-reference-check', [TblApplicantReferenceCheck::class, "addReferenceCheckAnswer"]);
 
 //Info

@@ -71,7 +71,7 @@ class RecruitmentController extends Controller
                 $civil_status = $civil_statuses[$data->TblapplicantsProfile->app_civil_status];
                 $email = $data->TblapplicantsProfile->app_email_addr;
                 $number = $data->TblapplicantsProfile->app_mobile_no;
-                $profile_message = $age . " years Old; " . $civil_status . ";\n" . $email . ";\n" . $number;
+                $profile_message = $age . " years old; " . $civil_status . ";\n" . $email . ";\n" . $number;
                 $status_message = null;
                 $statusID = null;
                 if (count($data->tblapplicantsStatus) != 0) {
@@ -150,10 +150,10 @@ class RecruitmentController extends Controller
                 $name = $data->TblapplicantsProfile->app_nm_last . ", " . $data->TblapplicantsProfile->app_nm_first . ' ' . substr($data->TblapplicantsProfile->app_nm_mid, 0, 1) . '.';
                 $email = $data->TblapplicantsProfile->app_email_addr;
                 $parent_office = Tbloffices::where('ofc_id', $data->TblOffices->ofc_ofc_id)->first();
-                $position_message = $data->TblPositions->pos_title . ";\n" . $parent_office->ofc_acronym . '-' . $data->TblOffices->ofc_acronym;
+                $position_message = $data->TblPositions->pos_title . "\n" . $parent_office->ofc_acronym . '-' . $data->TblOffices->ofc_acronym;
                 $qualification_message = $highest['education_text'] . " in " . $highest['education'] . ";\n" .
-                    $highest['experience_years'] . $year_text . "\n" . $highest['training_hours'] . " hours training in " .
-                    $highest['training'] . "; " . $highest['eligibility'] . "";
+                    $highest['experience_years'] . $year_text . ";\n" . $highest['training_hours'] . " hours training in " .
+                    $highest['training'] . "; " . $highest['eligibility'] . ";";
 
                 $arrayToPush = [
                     'app_id' => $data->app_id,

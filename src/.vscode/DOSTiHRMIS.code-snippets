@@ -47,5 +47,13 @@
 			"$0",
 			"},[])"
 		]
+	},
+
+	"consoleLog" : {
+		"scope" : "javascript",
+		"prefix": "conlog",
+		"body": [
+			"console.log($0)"
+		]
 	}
 }

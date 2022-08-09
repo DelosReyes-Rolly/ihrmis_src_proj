@@ -3,107 +3,140 @@ $secondary: #13a9f5;
 $white: #fff;
 $gray: #9b9b9b;
 
-.div-body {
+.onboarding_home {
+	cursor: pointer;
+}
+
+.contact-us-body {
 	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	width: 100%;
-	padding: 80px;
-	align-content: space-between;
-	align-items: start;
-	flex-direction: row;
+	margin-bottom: 25px;
 
-	.div-body-1 {
-		width: 65%;
+	.div-body {
+		display: flex;
+		width: 100%;
+		padding: 80px 80px 20px 80px;
+		align-content: space-between;
+		align-items: start;
+		flex-direction: row;
 
-		.line-border {
-			height: 3px;
-			background-color: $primary;
-			border: none;
-			width: 300px;
-		}
+		.div-body-1 {
+			width: 65%;
 
-		div {
-			.form__group {
-				position: relative;
-				padding: 15px 0 0;
-				margin-top: 10px;
-				width: 100%;
+			.line-border {
+				height: 3px;
+				background-color: $primary;
+				border: none;
+				width: 300px;
 			}
 
-			.form__field {
-				font-family: inherit;
-				width: 60%;
-				border: 0;
-				border-bottom: 0.5px solid $gray;
-				outline: 0;
-				font-size: 12px;
-				color: darkslategray;
-				padding: 7px 0;
-				background: transparent;
-				transition: border-color 0.2s;
-
-				&::placeholder {
-					color: transparent;
+			div {
+				.form__group {
+					position: relative;
+					padding: 15px 0 0;
+					margin-top: 10px;
+					width: 100%;
 				}
 
-				&:placeholder-shown ~ .form__label {
+				.form__field {
+					font-family: inherit;
+					width: 60%;
+					border: 0;
+					border-bottom: 0.5px solid $gray;
+					outline: 0;
 					font-size: 12px;
-					cursor: text;
-					top: 20px;
+					color: darkslategray;
+					padding: 7px 0;
+					background: transparent;
+					transition: border-color 0.2s;
+
+					&::placeholder {
+						color: transparent;
+					}
+
+					&:placeholder-shown ~ .form__label {
+						font-size: 12px;
+						cursor: text;
+						top: 20px;
+					}
 				}
-			}
 
-			.form__label {
-				position: absolute;
-				top: 0;
-				display: block;
-				transition: 0.2s;
-				font-size: 1rem;
-				color: $gray;
-			}
-
-			.form__field:focus {
-				~ .form__label {
+				.form__label {
 					position: absolute;
 					top: 0;
 					display: block;
 					transition: 0.2s;
 					font-size: 1rem;
-					color: $primary;
+					color: $gray;
+				}
+
+				.form__field:focus {
+					~ .form__label {
+						position: absolute;
+						top: 0;
+						display: block;
+						transition: 0.2s;
+						font-size: 1rem;
+						color: $primary;
+						font-weight: 700;
+					}
+					padding-bottom: 6px;
 					font-weight: 700;
+					border-width: 3px;
+					border-image: linear-gradient(to right, $primary, $secondary);
+					border-image-slice: 1;
 				}
-				padding-bottom: 6px;
-				font-weight: 700;
-				border-width: 3px;
-				border-image: linear-gradient(to right, $primary, $secondary);
-				border-image-slice: 1;
+				/* reset input */
+				.form__field {
+					&:required,
+					&:invalid {
+						box-shadow: none;
+					}
+				}
 			}
-			/* reset input */
-			.form__field {
-				&:required,
-				&:invalid {
-					box-shadow: none;
-				}
+
+			.send-button {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				width: 58%;
+				padding-top: 20px;
 			}
 		}
-	}
 
-	.div-body-2 {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		width: 35%;
-		padding: 60px 0px;
-
-		.div-body2-content {
+		.div-body-2 {
 			display: flex;
 			flex-direction: column;
-			gap: 30px;
-			padding: 40px 20px;
+			align-items: flex-start;
+			width: 35%;
+			padding: 60px 0px;
+
+			.div-body2-content {
+				display: flex;
+				flex-direction: column;
+				gap: 30px;
+				padding: 40px 20px;
+			}
+		}
+		h2 {
+			color: $fontSecondaryColor;
+			font-weight: 400;
 		}
 	}
-	h2 {
-		color: $fontSecondaryColor;
-		font-weight: 400;
+
+	.contact-us-footer {
+		display: flex;
+		justify-content: center;
+		background-color: rgb(30, 30, 30);
+		width: 100%;
+		position: fixed;
+		bottom: 0px;
+		box-sizing: border-box;
+		color: white;
+		font-size: 11px;
+		padding: 10px;
 	}
 }
 
@@ -135,27 +168,34 @@ $gray: #9b9b9b;
 	align-items: center;
 }
 
-.contact-us-footer {
-	display: flex;
-	justify-content: center;
-	background-color: rgb(30, 30, 30);
-}
-
 /* USER DROPDOWN DISPAY ENDS HERE  */
 
 @media only screen and (max-width: 800px) {
-	.div-body {
-		flex-direction: column;
-		width: 100%;
-		padding: 50px;
-
-		.div-body-1 {
+	.contact-us-body {
+		.div-body {
+			flex-direction: column;
 			width: 100%;
-		}
+			padding: 50px;
 
-		.div-body-2 {
-			width: 100%;
-			padding: 0px 0px;
+			.div-body-1 {
+				width: 100%;
+				padding: 0px;
+
+				div {
+					.form__field {
+						width: 80%;
+					}
+				}
+
+				.send-button {
+					width: 80%;
+				}
+			}
+
+			.div-body-2 {
+				width: 100%;
+				padding-top: 20px;
+			}
 		}
 	}
 }

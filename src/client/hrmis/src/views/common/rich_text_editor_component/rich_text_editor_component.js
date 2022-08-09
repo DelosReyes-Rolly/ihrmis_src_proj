@@ -8,7 +8,17 @@ import draftToHtml from "draftjs-to-html";
 const RichTextEditorComponent = ({
   value = "",
   setFieldValue,
-  toolbar = {},
+  toolbar = {
+    options: [
+      "fontSize",
+      "fontFamily",
+      "list",
+      "textAlign",
+      "link",
+      // "image",
+      // "history",
+    ],
+  },
   isRemove = false,
   height = "100px",
 }) => {

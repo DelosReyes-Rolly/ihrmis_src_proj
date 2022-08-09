@@ -2,6 +2,7 @@
 
 namespace App\Services\Applicant;
 
+use App\Models\Applicants\TblapplicantAttachmentsModel;
 use Illuminate\Http\Request;
 
 use App\Models\Applicants\TblapplicantRequirements;
@@ -148,14 +149,12 @@ class ApplicantRequirementService
     public function deleteFiles($type)
     {
 
-        $query = TblapplicantRequirements::where('req_app_doc_id', $type)->first();
-        $stringFileName = explode(",", $query->req_app_file);
-        foreach ($stringFileName as $file) {
-            if (is_file(public_path("storage/applicant/applicant-docs/" . $file))) {
-                unlink(public_path("storage/applicant/applicant-docs/" . $file));
-            }
+        $query = TblapplicantAttachmentsModel::where('att_id', $type)->first();
+        $file = $query->att_app_file;
+        if (is_file(public_path("storage/applicant/applicant-docs/" . $file))) {
+            unlink(public_path("storage/applicant/applicant-docs/" . $file));
         }
-        TblapplicantRequirements::where('req_app_doc_id', $type)->delete();
+        TblapplicantAttachmentsModel::where('att_id', $type)->delete();
         return $query;
     }
 }

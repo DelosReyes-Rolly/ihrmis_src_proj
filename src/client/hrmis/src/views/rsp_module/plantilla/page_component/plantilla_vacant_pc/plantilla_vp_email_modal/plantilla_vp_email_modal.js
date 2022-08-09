@@ -244,7 +244,7 @@ const PlantillaVpEmailModal = ({
 					<TextAreaComponent
 						style={{ whiteSpace: "pre-line" }}
 						name="sender"
-						value={emailFormik.values.sender}
+						value={emailFormik.values.message}
 						onChange={emailFormik.handleChange}
 					/>
 					{emailFormik.touched.sender && emailFormik.errors.sender ? (

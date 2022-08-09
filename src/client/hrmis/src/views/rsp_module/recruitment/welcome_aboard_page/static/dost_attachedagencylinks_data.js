@@ -190,15 +190,3 @@ export const ABODIES = [
     label: "National Research Council of the Philippines (NRCP)",
   },
 ];
-
-export const SIKAT = "https://sikat.dost.gov.ph";
-
-export const SCANMO =
-	"https://docs.google.com/forms/d/e/1FAIpQLSegYpFLC05LZITTre2Pi6_Um0kDMGOs2PbDElmv3wtFVkYgbw/viewform";
-
-export const DOSTWEBSITE = "https://www.dost.ph/";
-
-export const WATCH = "https://www.dostv.ph/";
-
-export const YTDOSTV =
-  "https://www.youtube.com/channel/UCWTcZ5Sqti7zNnEZT42KbtQ";
