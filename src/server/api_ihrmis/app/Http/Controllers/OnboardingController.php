@@ -145,40 +145,100 @@ class OnboardingController extends Controller{
         }
     }
 
-    public function createScheduleForOnboarding(Request $request){
+    public function createScheduleForOnboarding(Request $request, $submit_type){
 
-        return $request->appointees;
-        $qryEvent = new TblcalendarEvent();
-        $qryEvent->evn_source = "Hello"; // Define
-        $qryEvent->evn_typ_id = 2;
-        $qryEvent->evn_name = $request->evn_name;
-        $qryEvent->evn_url = "google.com";
-        $qryEvent->evn_date_start = Carbon::parse($request->evn_date_start);
-        $qryEvent->evn_date_end = Carbon::parse($request->evn_date_end);
-        $qryEvent->evn_time_start = $request->evn_time_start;	
-        $qryEvent->evn_time_end = $request->evn_time_end;
-        $qryEvent->evn_frequency = 0;
-        $qryEvent->evn_interval = 1;
-        $qryEvent->evn_month = Carbon::parse($request->evn_date_start)->format('m');
-        $qryEvent->evn_week = 0;
-        $qryEvent->evn_day = 0;
-        $qryEvent->evn_weekday = 1;
-        $qryEvent->evn_remarks = $request->evn_remarks;
-        $qryEvent->evn_system = 1;
-        $qryEvent->save();
+        try {
+            if($submit_type == "edit"){
 
-        return response()->json([
-            'message' => "Event Successfully added."
-        ], 200);
+                if($request->evn_id != null){
+                    $getQryEvent = TblcalendarEvent::where("evn_id", $request->evn_id)->first();
+                    $sourceHolder = explode("|", $getQryEvent->evn_source);
+                    $appointessHolder = [];
+                    
+                    foreach ($sourceHolder as $key => $value) {
+                        if($key > 0){
+                            if(!in_array($value, $request->appointees)){
+                                array_push($appointessHolder, $value);
+                            }
+                        }
+                    }
+                   
+                    if(!empty($appointessHolder)){
+                        foreach ($appointessHolder as $value) {
+                            $qryApp = Tblapplicants::where("app_id", $value)->first();
+                            $qryApp->app_onboarding_process = 0;
+                            $qryApp->save();
+                        }
+                    }
+                 
+                    $getQryEvent->evn_source = "tblapplicant|". implode("|",$request->appointees); 
+                    $getQryEvent->evn_date_start = Carbon::parse($request->evn_date_start);
+                    $getQryEvent->evn_date_end = Carbon::parse($request->evn_date_end);
+                    $getQryEvent->evn_time_start = $request->evn_time_start;	
+                    $getQryEvent->evn_time_end = $request->evn_time_end;
+                    $getQryEvent->evn_month = Carbon::parse($request->evn_date_start)->format('m');
+
+                    $getQryEvent->save();
+
+                    return response()->json([
+                        'message' => "Onboarding schedule was updated successfully."
+                    ], 200);
+                }
+               
+            }
+            
+            if($submit_type == "add"){
+                $qryEvent = new TblcalendarEvent();
+                $qryEvent->evn_source = "tblapplicant|". implode("|",$request->appointees); // Define
+                $qryEvent->evn_typ_id = 2;
+                $qryEvent->evn_name = $request->evn_name;
+                $qryEvent->evn_url = $request->evn_url ?? "No link";
+                $qryEvent->evn_date_start = Carbon::parse($request->evn_date_start);
+                $qryEvent->evn_date_end = Carbon::parse($request->evn_date_end);
+                $qryEvent->evn_time_start = $request->evn_time_start;	
+                $qryEvent->evn_time_end = $request->evn_time_end;
+                $qryEvent->evn_frequency = 0;
+                $qryEvent->evn_interval = 1;
+                $qryEvent->evn_month = Carbon::parse($request->evn_date_start)->format('m');
+                $qryEvent->evn_week = 0;
+                $qryEvent->evn_day = 0;
+                $qryEvent->evn_weekday = 1;
+                $qryEvent->evn_remarks = $request->evn_remarks;
+                $qryEvent->evn_system = 1;
+               
+                
+                if(!empty($request->appointees)){
+                    foreach ($request->appointees as $value) {
+                        $qryApp = Tblapplicants::where("app_id", $value)->first();
+                        $qryApp->app_onboarding_process = 1;
+                        $qryApp->save();
+                    }
+                }
+
+                $qryEvent->save();
+
+                return response()->json([
+                    'message' => "New onboarding schedule was created successfully."
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => json_encode($th) 
+            ], 400);
+        }
+        
+        
+       
     }
 
     public function getAllScheduleForOnboarding(){
         $qryArray = TblcalendarEvent::where('evn_typ_id', 2)->get();
         $arrHolder = [];
         foreach ($qryArray as $value) {
+            $myDate = date_create($value->evn_date_start." ". $value->evn_time_start);
             array_push($arrHolder, [
                 "evn_id" => $value->evn_id, 
-                "schedule" => "",
+                "schedule" => date_format($myDate ,"d M Y, h:i: A"),
                 "appointees" => json_encode(NewAppointeesResource::collection($this->service->eventTableSelectorQry($value->evn_source)))
             ]);
         }
@@ -191,8 +251,13 @@ class OnboardingController extends Controller{
     }
 
     public function getSingleOnboardingSchedule($id){
+       
+        if($id == null){
+            return response()->json(["message" => "No Scedule"], 200);
+        }
+        
         $qry = TblcalendarEvent::where('evn_id', $id)->first();
-        $arrayHolder = explode("|",  $qry->evn_source);
+        $arrayHolder = explode("|",  $qry->evn_source ?? "");
         $appointeesArray = [];
         foreach ($arrayHolder  as $key => $value) {
             if($key != 0){
@@ -213,6 +278,7 @@ class OnboardingController extends Controller{
         ];
 
         return response()->json($output, 200);
+        
     }
 
     public function getOnboardingSectionsAndSectionItem(){
@@ -222,7 +288,7 @@ class OnboardingController extends Controller{
             $arrayContentHolder = [];
             foreach ($value->sectionitem as $item) {
                 $arrayAttachmentHolder = [];
-                $qryAttach = Tblattachments::where('att_source','Tblattachments|'.$item->itm_onb_id)->get();
+                $qryAttach = Tblattachments::where('att_source','Tblonboarding|'.$item->itm_onb_id)->get();
                 foreach ($qryAttach as $key => $links) {
                     array_push($arrayAttachmentHolder, $links->att_file.$links->att_name);
                 }
@@ -248,6 +314,25 @@ class OnboardingController extends Controller{
         
 
         return response()->json($arrayHolder, 200);
+    }
+
+    public function selectedAppointeesMarkAsFinished(Request $request) {
+
+        try {
+            if(!empty($request->appointees)){
+                foreach ($request->appointees as $value) {
+                    $qry = Tblapplicants::where("app_id", $value)->fisrt();
+                    $qry->app_onboarding_process = 2;
+                    $qry->save();
+                }
+            }
+            return response()->json(["message" => "Appointees is now onboarded!"], 200);
+        } catch (\Throwable $th) {
+            return response()->json(["message" => "Failed to update the employees, try again later."], 400);
+        }
+        
+
+
     }
     
 }

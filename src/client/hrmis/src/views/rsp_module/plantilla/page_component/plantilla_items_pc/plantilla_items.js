@@ -118,7 +118,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
         console.log(data);
         data.forEach((element) => {
           const emp_name = element.employee
-            ? "(" +
+            ? " (" +
               element?.employee?.emp_nm_last +
               ", " +
               element?.employee?.emp_nm_first +
@@ -220,7 +220,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
       </ReactTooltip> */}
 
       <div className="default-table">
-        <table className="table-design" {...getTableProps()}>
+        <table className="hybrid-table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr

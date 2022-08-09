@@ -14,6 +14,7 @@ import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_hel
 
 export const OnboardingNewAppointeesTableContainer = () => {
   const [newAppointees, setNewAppointees] = useState([]);
+  const { refreshApi } = useSelector((state) => state.onboarding);
 
   const columns = useMemo(
     () => [
@@ -96,7 +97,7 @@ export const OnboardingNewAppointeesTableContainer = () => {
       .catch((err) => console.log(err.message));
   };
 
-  useEffect(() => fetchNewAppointees(), []);
+  useEffect(() => fetchNewAppointees(), [refreshApi]);
 
   return (
     <React.Fragment>
@@ -108,9 +109,8 @@ export const OnboardingNewAppointeesTableContainer = () => {
 const AppointeesTable = ({ data, columns, searchable = true }) => {
   const dispatch = useDispatch();
 
-  const { searchField, currentTable, selectedApplicantIdArray } = useSelector(
-    (state) => state.onboarding
-  );
+  const { searchField, currentTable, selectedApplicantIdArray, modal } =
+    useSelector((state) => state.onboarding);
 
   // const dispatch = useDispatch();
 
@@ -171,6 +171,11 @@ const AppointeesTable = ({ data, columns, searchable = true }) => {
   useEffect(() => {
     if (currentTable == 1) removeFocus(data?.length);
   }, [currentTable]);
+
+  useEffect(() => {
+    if (modal === true) removeFocus(data?.length);
+    if (modal === false) dispatch(setSelectedApplicantIdArray([]));
+  }, [modal]);
 
   return (
     <React.Fragment>
@@ -242,7 +247,7 @@ const AppointeesTable = ({ data, columns, searchable = true }) => {
 
 export const OnboardingNewScheduleTableContainer = () => {
   const [schedules, setSchedules] = useState([]);
-
+  const { refreshApi } = useSelector((state) => state.onboarding);
   const fetchOnboardingSchedule = async () => {
     await axios
       .get(API_HOST + "onboarding-schedule")
@@ -282,7 +287,7 @@ export const OnboardingNewScheduleTableContainer = () => {
     []
   );
 
-  useEffect(() => fetchOnboardingSchedule(), []);
+  useEffect(() => fetchOnboardingSchedule(), [refreshApi]);
 
   const data = useMemo(() => schedules, [schedules]);
   return (
@@ -296,7 +301,7 @@ const ScheduleTable = ({ data, columns }) => {
   /**
    * Redux Toolkit
    */
-  const { searchField, currentTable } = useSelector(
+  const { searchField, currentTable, modal } = useSelector(
     (state) => state.onboarding
   );
 
@@ -340,6 +345,14 @@ const ScheduleTable = ({ data, columns }) => {
   useEffect(() => {
     if (currentTable === 2) removeFocus(data?.length);
   }, [currentTable]);
+
+  useEffect(() => {
+    if (modal === true) removeFocus(data?.length);
+    if (modal === false) {
+      removeFocus(data?.length);
+      dispatch(setSelectedScheduleId(null));
+    }
+  }, [modal]);
 
   return (
     <React.Fragment>

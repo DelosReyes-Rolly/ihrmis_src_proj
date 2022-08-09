@@ -344,10 +344,12 @@ Route::delete('delete-onboarding-section/{secId}', [OnboardingController::class,
 Route::get('get-section-item-by-id/{secId}', [OnboardingController::class, "getSectionItemBySectionId"]);
 Route::post('add-onboarding-section-item', [OnboardingController::class, "addSectionItemBySectionId"]);
 Route::post('modify-onboarding-section-item', [OnboardingController::class, "updateOnboardingSectionsItemOrder"]);
-Route::post('new-onboarding-schedule', [OnboardingController::class, "createScheduleForOnboarding"]);
+Route::post('new-onboarding-schedule/{submit_type}', [OnboardingController::class, "createScheduleForOnboarding"]);
 Route::get('onboarding-schedule', [OnboardingController::class, "getAllScheduleForOnboarding"]);
 Route::post('selected-appointees', [OnboardingController::class, "getSelectedAppointees"]);
 Route::get('selected-schedules/{id}', [OnboardingController::class, "getSingleOnboardingSchedule"]);
+Route::post('appointees-mark-done', [OnboardingController::class, "selectedAppointeesMarkAsFinished"]);
+
 
 
 Route::get('get-onboarding-lists', [OnboardingController::class, "getOnboardingSectionsAndSectionItem"]);

@@ -3,7 +3,7 @@ import InputComponent from "../../../../common/input_component/input_component/i
 import TextAreaComponent from "../../../../common/input_component/textarea_input_component/textarea_input_component";
 import ModalComponent from "../../../../common/modal_component/modal_component";
 import CheckboxInputComponent from "../../../../common/input_component/checkbox_input_component/checkbox_input_component";
-import { AppointeesImageDisplay, AppointeesTable } from "./onboarding_tables";
+import { AppointeesImageDisplay } from "./onboarding_tables";
 import ReactDatePicker from "react-datepicker";
 import { useFormik } from "formik";
 import axios from "axios";
@@ -12,7 +12,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdClose } from "react-icons/md";
 import { useTable } from "react-table";
 import { useMapFocusHelper } from "../../../../../helpers/use_hooks/on_focus_helper";
-import { setSelectedApplicantIdArray } from "../../../../../features/reducers/onboarding_slice";
+import {
+  setRefreshApi,
+  setSelectedApplicantIdArray,
+} from "../../../../../features/reducers/onboarding_slice";
+import * as Yup from "yup";
+import { ALERT_ENUM, popupAlert } from "../../../../../helpers/alert_response";
+import { setBusy } from "../../../../../features/reducers/popup_response";
 
 const displayFlex = (
   direction = "row",
@@ -32,6 +38,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
   // When  schedule is selected infor,ation is set in scheduleData state
   const [scheduleData, setScheduleData] = useState([]);
   const [appointess, setAppointees] = useState([]);
+  const [idForDelete, setIdForDelete] = useState(null);
   const data = useMemo(() => appointess, [appointess]);
   /**
    * Redux Toolkit functionality and states
@@ -60,6 +67,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
   const form = useFormik({
     enableReinitialize: true,
     initialValues: {
+      evn_id: selectedScheduleId,
       evn_name: scheduleData.evn_name ?? "",
       evn_date_start: Date.parse(scheduleData.evn_date_start) ?? "",
       evn_date_end: Date.parse(scheduleData.evn_date_end) ?? "",
@@ -68,12 +76,45 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
       evn_remarks: scheduleData?.evn_remarks ?? "",
       appointees: selectedApplicantIdArray,
     },
-    onSubmit: async (values) => {
+    validationSchema: Yup.object({
+      evn_name: Yup.string().required("This field is required"),
+      // evn_date_start: Yup.string().required("This field is required"),
+      // evn_date_end: Yup.string().required("This field is required"),
+      // evn_time_start: Yup.string().required("This field is required"),
+      // evn_time_end: Yup.string().required("This field is required"),
+      evn_remarks: Yup.string().required("This field is required"),
+      appointees: Yup.array()
+        .typeError("Invalid input")
+        .required("This field is required"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
       console.log(values);
+      const API_REDIRECT =
+        currentTable === 2
+          ? "new-onboarding-schedule/add"
+          : "new-onboarding-schedule/edit";
+
+      const MESSAGE =
+        currentTable === 2
+          ? "New onboarding schedule was created successfully"
+          : "Onboarding schedule was updated successfully";
+      // appointees-mark-done
+      dispatch(setBusy(true));
       await axios
-        .post(API_HOST + "new-onboarding-schedule", values)
-        .then((res) => {})
-        .catch((err) => {});
+        .post(API_HOST + API_REDIRECT, values)
+        .then(() => {
+          popupAlert({ message: MESSAGE, type: ALERT_ENUM.success });
+          setAllDay(false);
+          resetForm();
+          dispatch(setRefreshApi());
+          dispatch(setBusy(false));
+          onClose();
+        })
+        .catch((err) => {
+          dispatch(setBusy(false));
+          popupAlert({ message: err?.message, type: ALERT_ENUM.fail });
+        });
+      dispatch(setBusy(false));
     },
   });
 
@@ -82,7 +123,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
     /**
      * This is only for get purposes submitting an array of data
      */
-    console.log("asdfasdfasdf");
+
     await axios
       .post(API_HOST + "selected-appointees", {
         appointees: selectedApplicantIdArray,
@@ -107,31 +148,33 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
       .catch((err) => console.log(err.message));
   };
 
-  const removeData = useCallback(
-    (id) => {
-      // setSTateBool(!stateBool);
-      // console.log(appointess);
-      // console.log(newApparray);
-      // setAppointees(
-      //   appointess.filter((item) => {
-      //     return parseInt(item.app_id) !== parseInt(id);
-      //   })
-      // );
-      // const index = appointess.findIndex((item) => {
-      //   return parseInt(item.app_id) === parseInt(id);
-      // });
-      // // console.log(newApparray);
-      // console.log(index);
-      // if (index !== -1) {
-      //   console.log(index);
-      //   appointess.splice(index, 1);
-      // }
-      // setAppointees(appointess);
-    },
-    [appointess]
-  );
+  const removeData = (id, employee) => {
+    const list = employee;
 
-  // const [stateBool, setSTateBool] = useState(true);
+    if ([...list].length === 1) {
+      setAppointees([]);
+      dispatch(setSelectedApplicantIdArray([]));
+      return null;
+    }
+
+    const index = list.findIndex((item) => {
+      return parseInt(item.app_id) === parseInt(id);
+    });
+    if (index !== -1) {
+      list.splice(index, 1);
+    }
+
+    setAppointees([...list]);
+    const arrayHolder = [];
+
+    list.forEach((element) => {
+      console.log(element);
+      arrayHolder.push(element?.app_id);
+    });
+
+    dispatch(setSelectedApplicantIdArray([...arrayHolder]));
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -192,8 +235,7 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
                   <div className="onboarding-sched-on-delete-appointees">
                     <div
                       onClick={() => {
-                        removeData(cell.row.values.app_id);
-                        // dispatch(setSelectedApplicantIdArray(newAppIdArray));
+                        setIdForDelete(cell.row.values.app_id);
                       }}
                     >
                       <MdClose size={25} />
@@ -212,14 +254,29 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
   useEffect(() => {
     if (currentTable === 2) {
       setScheduleData({});
-      fetchOnboardingAppointees();
+      if (isDisplay === true) {
+        fetchOnboardingAppointees();
+      }
     }
-    if (currentTable === 1) fetchDataFromSchedule();
+
+    if (currentTable === 1) {
+      if (isDisplay === true) {
+        fetchDataFromSchedule();
+      }
+    }
+
+    if (selectedScheduleId === null) {
+      setAppointees([]);
+      setScheduleData({});
+      dispatch(setSelectedApplicantIdArray([]));
+    }
   }, [isDisplay]);
 
-  // useEffect(() => {
-  //   removeData();
-  // }, [stateBool]);
+  useEffect(() => {
+    if (idForDelete !== null) {
+      removeData(idForDelete, appointess);
+    }
+  }, [idForDelete]);
 
   return (
     <React.Fragment>
@@ -239,6 +296,9 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
               name="evn_name"
               onChange={form.handleChange}
             />
+            {form.touched.evn_name && form.errors.evn_name ? (
+              <p className="error-validation-styles">{form.errors.evn_name}</p>
+            ) : null}
           </div>
 
           <div style={{ ...displayFlex("row", null, "start") }}>
@@ -256,6 +316,16 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
                 />
                 <InputComponent className="hidden-input-flag" />
               </div>
+              {form.touched.evn_date_start && form.errors.evn_date_start ? (
+                <p className="error-validation-styles">
+                  {form.errors.evn_date_start}
+                </p>
+              ) : null}
+              {form.touched.evn_date_end && form.errors.evn_date_end ? (
+                <p className="error-validation-styles">
+                  {form.errors.evn_date_end}
+                </p>
+              ) : null}
             </div>
 
             <div style={{ width: "40%" }}>
@@ -283,6 +353,16 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
                   />
                 </div>
               </div>
+              {form.touched.evn_time_start && form.errors.evn_time_start ? (
+                <p className="error-validation-styles">
+                  {form.errors.evn_time_start}
+                </p>
+              ) : null}
+              {form.touched.evn_time_end && form.errors.evn_time_end ? (
+                <p className="error-validation-styles">
+                  {form.errors.evn_time_end}
+                </p>
+              ) : null}
             </div>
 
             <div style={{ width: "10%" }}>
@@ -307,6 +387,11 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
               value={form.values.evn_remarks}
               onChange={form.handleChange}
             />
+            {form.touched.evn_remarks && form.errors.evn_remarks ? (
+              <p className="error-validation-styles">
+                {form.errors.evn_remarks}
+              </p>
+            ) : null}
           </div>
 
           <div style={{ width: "100%" }}>
@@ -333,13 +418,14 @@ const AppointeesTableList = ({ data, columns }) => {
     });
 
   // Hook for Focus divs
-  const [refTopic, , removeFocus, selectableFocus] = useMapFocusHelper(
+  const [refTopic, , , selectableFocus] = useMapFocusHelper(
     "onboarding-tr-hover",
     "onboarding-tr-hover-focus"
   );
 
   return (
     <React.Fragment>
+      {console.log(data)}
       <table
         cellSpacing="0"
         cellPadding="0"
@@ -347,7 +433,7 @@ const AppointeesTableList = ({ data, columns }) => {
         style={{ width: "100%" }}
       >
         <thead>
-          {headerGroups.map((headerGroup) => (
+          {headerGroups?.map((headerGroup) => (
             <tr
               style={{ textAlign: "left" }}
               {...headerGroup.getHeaderGroupProps()}
@@ -368,7 +454,7 @@ const AppointeesTableList = ({ data, columns }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, i, arr) => {
+          {rows.map((row, i) => {
             prepareRow(row);
             return (
               <tr

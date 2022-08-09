@@ -10,7 +10,8 @@ const onboardingSlice = createSlice({
     selectedApplicantIdArray: [],
     selectedApplicantIDschedArray: [],
     selectedScheduleId: null,
-    // applicantNames,
+    modal: false,
+    refreshApi: false,
   },
   reducers: {
     setSection: (state, action) => {
@@ -34,9 +35,14 @@ const onboardingSlice = createSlice({
     setSelectedApplicantIDschedArray: (state, action) => {
       state.selectedApplicantIDschedArray = action.payload;
     },
-
     setApplicantNames: (state, action) => {
       state.applicantNames = action.payload;
+    },
+    setModal: (state, action) => {
+      state.modal = action.payload;
+    },
+    setRefreshApi: (state) => {
+      state.refreshApi = !state.refreshApi;
     },
   },
 });
@@ -48,6 +54,8 @@ export const {
   setCurrentTable,
   setSelectedApplicantIdArray,
   setSelectedScheduleId,
+  setModal,
+  setRefreshApi,
   // setApplicantNames,
 } = onboardingSlice.actions;
 export default onboardingSlice.reducer;
