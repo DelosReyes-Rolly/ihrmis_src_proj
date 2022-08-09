@@ -10,20 +10,23 @@ import { TiMessages } from "react-icons/ti";
 import { outsiteWebHelper } from "../../../../router/outside_routes";
 import {
 	ABODIES,
-	DOSTWEBSITE,
 	RDINSTITUTES,
 	REGIONALOFFICES,
-	SCANMO,
-	SIKAT,
 	SPCOUNCILS,
 	STSINSTITUTE,
-	WATCH,
-	YTDOSTV,
 } from "./static/dost_attachedagencylinks_data";
 import { FaFacebookSquare, FaTwitterSquare } from "react-icons/fa";
 import { BsGlobe } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { BiBorderRadius } from "react-icons/bi";
+import {
+	DOSTMAPLINK,
+	DOSTWEBSITE,
+	SCANMO,
+	SIKAT,
+	WATCH,
+	YTDOSTV,
+} from "./static/other_dost_relatedlinks_data";
 
 const WelcomeAboardPage = () => {
 	return (
@@ -91,7 +94,12 @@ const AboardFirstPage = () => {
 							</p>
 						</div>
 						<div className="on-click-containers">
-							<div className="div-click-container">
+							<div
+								className="div-click-container"
+								onClick={() => {
+									navigate("/get-start-page");
+								}}
+							>
 								<IoIosSend size={30} color={"#004e87"} />
 								<div>
 									<p className="container-title">Get started</p>
@@ -116,7 +124,12 @@ const AboardFirstPage = () => {
 									</p>
 								</div>
 							</div>
-							<div className="div-click-container">
+							<div
+								className="div-click-container"
+								onClick={() => {
+									navigate("/contact_us");
+								}}
+							>
 								<TiMessages size={28} color={"#004e87"} />
 								<div>
 									<p className="container-title">Start a converstion</p>
@@ -146,14 +159,6 @@ const AboardFirstPage = () => {
 	);
 };
 const AboardSecondPage = () => {
-	const defaultProps = {
-		center: {
-			lat: 14.490234780697362,
-			lng: 121.0490488570856,
-		},
-		zoom: 15,
-	};
-
 	return (
 		<React.Fragment>
 			<div className="aboard-page-2">
@@ -260,7 +265,7 @@ const AboardSecondPage = () => {
 						</div>
 					</div>
 					<div className="body-3">
-						<div style={{ width: "100%", height: "50%" }}>
+						<div className="map-div">
 							<DostMapComponent />
 						</div>
 						<div className="body-3-div2">
@@ -328,9 +333,7 @@ const AboardSecondPage = () => {
 												gap: "9px",
 											}}
 										>
-											<VisitICon
-												onClick={() => outsiteWebHelper(DOSTWEBSITE)}
-											/>
+											<VisitICon />
 											<p style={{ textAlign: "center" }}>Visit</p>
 										</div>
 										<div
@@ -388,25 +391,21 @@ const AboardSecondPage = () => {
 const DostMapComponent = () => {
 	return (
 		<React.Fragment>
-			<div class="mapouter">
-				<div class="gmap_canvas">
+			<div className="mapouter">
+				<div className="gmap_canvas">
 					<iframe
 						width="700"
 						height="400"
 						id="gmap_canvas"
-						src="https://maps.google.com/maps?q=National%20Academy%20of%20Science%20and%20Technology&t=&z=17&ie=UTF8&iwloc=&output=embed"
-						frameborder="0"
+						src={DOSTMAPLINK}
 						scrolling="no"
-						marginheight="0"
-						marginwidth="0"
+						marginHeight="0"
+						marginWidth="0"
 					></iframe>
 				</div>
 			</div>
 			<div className="take-a-tour">
-				<a
-					target={"_blank"}
-					href="https://maps.google.com/maps?ll=14.490599,121.050117&z=17&t=m&hl=en-US&gl=US&mapclient=embed&cid=4615072221923205496"
-				>
+				<a target={"_blank"} href={DOSTMAPLINK}>
 					Take a Tour
 				</a>
 			</div>
@@ -417,7 +416,12 @@ const DostMapComponent = () => {
 const VisitICon = (onClick) => {
 	return (
 		<React.Fragment>
-			<div className="www-icon" onClick={onClick}>
+			<div
+				className="www-icon"
+				onClick={() => {
+					outsiteWebHelper(DOSTWEBSITE);
+				}}
+			>
 				<BsGlobe className="zoom-effect" />
 				<p style={{ fontSize: "10px", textAlign: "center", marginLeft: "0px" }}>
 					www
