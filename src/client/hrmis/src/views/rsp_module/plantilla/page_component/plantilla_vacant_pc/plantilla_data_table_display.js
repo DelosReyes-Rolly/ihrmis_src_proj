@@ -34,6 +34,7 @@ import {
 	setIsNotifyOffice,
 } from "../../../../../features/reducers/plantilla_item_slice";
 import PlantillaVpEmailModal from "./plantilla_vp_email_modal/plantilla_vp_email_modal";
+import { usePopUpHelper } from "../../../../../helpers/use_hooks/popup_helper";
 
 /**
  * PlantillaDataTableDisplay
@@ -45,6 +46,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 	const [plotData, setPlotData] = useState([]);
 	const dispatch = useDispatch();
 	const { is_notify } = useSelector((state) => state.plantillaItem);
+	const { renderBusy } = usePopUpHelper();
 
 	const getVcEmailTemplateData = async (item_id) => {
 		await axios
@@ -58,6 +60,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 	};
 
 	const plantillaItemApi = async () => {
+		renderBusy(true);
 		await axios
 			.get(API_HOST + "getAllPositions")
 			.then((response) => {
@@ -77,6 +80,7 @@ export const PlantillaDataTableDisplay = ({ type }) => {
 			.catch((error) => {
 				console.log(error);
 			});
+		renderBusy(false);
 	};
 
 	const onCLickRow = (rowData) => {
