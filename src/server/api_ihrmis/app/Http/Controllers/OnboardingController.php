@@ -232,16 +232,21 @@ class OnboardingController extends Controller{
     }
 
     public function getAllScheduleForOnboarding(){
-        $qryArray = TblcalendarEvent::where('evn_typ_id', 2)->get();
+        $qryArray = TblcalendarEvent::where('evn_typ_id', 2)->where('evn_is_done', 0)->orderBy("evn_date_start", "DESC")->get();
         $arrHolder = [];
         foreach ($qryArray as $value) {
             $myDate = date_create($value->evn_date_start." ". $value->evn_time_start);
-            array_push($arrHolder, [
-                "evn_id" => $value->evn_id, 
-                "schedule" => date_format($myDate ,"d M Y, h:i: A"),
-                "appointees" => json_encode(NewAppointeesResource::collection($this->service->eventTableSelectorQry($value->evn_source)))
-            ]);
+            $applicants = $this->service->eventTableSelectorQry($value->evn_source);
+            if(count($applicants) > 0){
+                array_push($arrHolder, [
+                    "evn_id" => $value->evn_id, 
+                    "schedule" => date_format($myDate ,"d M Y, h:i A"),
+                    "appointees" => json_encode(NewAppointeesResource::collection($applicants))
+                ]);
+            }
+            
         }
+      
         return response()->json($arrHolder, 200);
     }
 
@@ -317,22 +322,14 @@ class OnboardingController extends Controller{
     }
 
     public function selectedAppointeesMarkAsFinished(Request $request) {
-
         try {
-            if(!empty($request->appointees)){
-                foreach ($request->appointees as $value) {
-                    $qry = Tblapplicants::where("app_id", $value)->fisrt();
-                    $qry->app_onboarding_process = 2;
-                    $qry->save();
-                }
-            }
-            return response()->json(["message" => "Appointees is now onboarded!"], 200);
+            $message = $this->service->selectedAppointeesMarkAsFinished($request);
+            return response()->json(["message" => $message], 200);
         } catch (\Throwable $th) {
+            throw $th;
             return response()->json(["message" => "Failed to update the employees, try again later."], 400);
         }
         
-
-
     }
     
 }

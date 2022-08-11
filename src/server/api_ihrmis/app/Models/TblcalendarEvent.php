@@ -28,7 +28,8 @@ class TblcalendarEvent extends Model
         'evn_day',
         'evn_weekday',
         'evn_remarks',
-        'evn_system' 
+        'evn_system',
+        'evn_is_done'
     ];
 
     public $timestamps = false;
