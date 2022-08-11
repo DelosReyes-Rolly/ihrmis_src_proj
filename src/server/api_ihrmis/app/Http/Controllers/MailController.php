@@ -9,10 +9,13 @@ use App\Mail\NotifyNextInRankMail;
 use App\Mail\NotifyVacantPlantillaEmail;
 use App\Models\AccountRequestModel;
 use App\Models\Applicants\Tblapplicants;
+use App\Models\Applicants\TblapplicantsStatus;
 use App\Models\ExamScoreModel;
 use App\Models\TblemailTemplate;
 use App\Models\Tbloffices;
 use App\Models\TblplantillaItems;
+use App\Models\TblTransactionStages;
+use App\Services\CommonHelpers;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -247,6 +250,10 @@ class MailController extends Controller
 
     public function recruitmentEmail(Request $request)
     {
+        $applicantIDs = [];
+        foreach (json_decode($request->appID) as $value) {
+            array_push($applicantIDs, $value->id);
+        }
         if (is_string($request->eml_id)) {
             $this->addEmailTemplate($request);
         } else {
@@ -259,10 +266,15 @@ class MailController extends Controller
                 array_push($arrFiles, $value);
             }
         }
+        
 
         $rawRecepient = explode(",", $request->recepient);
         $arrHolder = [];
-
+        $stageId = 0;
+        if ($request->eml_type == 'PEE') $stageId = $this->getStageId(5);
+        if ($request->eml_type == 'INT') $stageId = $this->getStageId(9);
+        if ($request->eml_type == 'ASS') $stageId = $this->getStageId(7);
+        if ($request->eml_type == 'PSY') $stageId = $this->getStageId(11);
         if ($request->eml_type == 'PER') {
             foreach (json_decode($request->appID) as $value) {
                 $message = $request->eml_message;
@@ -277,22 +289,11 @@ class MailController extends Controller
                     <td>' . $bat->exam_score . '</td>
                     </tr>';
                 }
-
                 $message .= '</table>';
 
                 $tempEmail = trim($value->email, " ");
                 array_push($arrHolder, $tempEmail);
-                $data = [
-                    "from" => env("MAIL_FROM_RECUITER"),
-                    "email_from" => env("MAIL_FROM_ADDRESS"),
-                    "email_to" => $value->email,
-                    "date" => Carbon::now(),
-                    "message_type" => $request->eml_name,
-                    "message" => $message,
-                    "sender" => nl2br($request->sender),
-                    "file" => $arrFiles
-                ];
-                Mail::to($value->email)->send(new CommonMail($data));
+                $this->recruitmentSendMail($tempEmail, $request->eml_name, $message, nl2br($request->sender), $arrFiles);
             }
         }
         if ($request->eml_type == 'BCK') {
@@ -304,7 +305,7 @@ class MailController extends Controller
                 }
                 if (isset($query->tblReference)) {
                     $references = $query->tblReference;
-                    
+
                     foreach ($references as $reference) {
                         $message = $request->eml_message;
                         $message .= '<br><br>
@@ -314,47 +315,66 @@ class MailController extends Controller
                         $replaced_position = str_ireplace("[position-title]", $pos_title, $message);
                         $replaced_reference = str_ireplace("[reference-name]", $reference->ref_app_name, $replaced_position);
                         $tempEmail = trim($reference->ref_app_email, "");
-                        $data = [
-                            "from" => env("MAIL_FROM_RECUITER"),
-                            "email_from" => env("MAIL_FROM_ADDRESS"),
-                            "email_to" => $tempEmail,
-                            "date" => Carbon::now(),
-                            "message_type" => $request->eml_name,
-                            "message" => $replaced_reference,
-                            "sender" => nl2br($request->sender),
-                            "file" => $arrFiles
-                        ];
                         if (!in_array($tempEmail, $arrHolder)) {
                             array_push($arrHolder, $tempEmail);
-                            Mail::to($tempEmail)->send(new CommonMail($data));
+                            $this->recruitmentSendMail($tempEmail, $request->eml_name, $replaced_reference, nl2br($request->sender), $arrFiles);
                         }
                     }
                 }
                 $test = [];
-
-                
             }
         }
         if ($request->eml_type != 'PER' && $request->eml_type != 'BCK') {
             foreach ($rawRecepient as $value) {
                 $tempEmail = trim($value, " ");
                 array_push($arrHolder, $tempEmail);
-                $data = [
-                    "from" => env("MAIL_FROM_RECUITER"),
-                    "email_from" => env("MAIL_FROM_ADDRESS"),
-                    "email_to" => $tempEmail,
-                    "date" => Carbon::now(),
-                    "message_type" => $request->eml_name,
-                    "message" => $request->eml_message,
-                    "sender" => nl2br($request->sender),
-                    "file" => $arrFiles
-                ];
-                Mail::to($tempEmail)->send(new CommonMail($data));
+                
+                $this->recruitmentSendMail($tempEmail, $request->eml_name, $request->eml_message, nl2br($request->sender), $arrFiles);
+            }
+
+            foreach ($applicantIDs as $applicantID) {
+                $this->updateApplicantStatus($applicantID, $stageId);
             }
         }
 
-
         return response()->json(["message" => "Mail Sent to" . implode(", ", $arrHolder)]);
+    }
+    /**
+     * Email function to reduce usage of the email code
+     *
+     * @param [string] $recipient
+     * @param [string] $message_type
+     * @param [string] $message
+     * @param [string] $sender
+     * @param [array] $file
+     * @return void
+     */
+    function recruitmentSendMail($recipient, $message_type, $message, $sender, $file)
+    {
+        $data = [
+            "from" => env("MAIL_FROM_RECUITER"),
+            "email_from" => env("MAIL_FROM_ADDRESS"),
+            "email_to" => $recipient,
+            "date" => Carbon::now(),
+            "message_type" => $message_type,
+            "message" => $message,
+            "sender" => nl2br($sender),
+            "file" => $file
+        ];
+        Mail::to($recipient)->send(new CommonMail($data));
+    }
+
+    public function getStageId($order)
+    {
+        return TblTransactionStages::where('stg_order', $order)->first()->stg_id;
+    }
+
+    public function updateApplicantStatus($applicant, $status)
+    {
+        $query = new TblapplicantsStatus();
+        $query->sts_app_stg_id = $status;
+        $query->sts_app_id  = $applicant;
+        $query->save();
     }
 
     /**
