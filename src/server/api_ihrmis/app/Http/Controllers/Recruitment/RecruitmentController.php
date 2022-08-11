@@ -7,6 +7,7 @@ use App\Http\Resources\Applicant\QualifiedApplicantsResource;
 use App\Http\Resources\CommonResource;
 use App\Models\Applicants\TblapplicantsAssessments;
 use App\Models\Tbloffices;
+use App\Models\TblTransactionStages;
 use App\Services\Recruitment\RecruitmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -55,14 +56,11 @@ class RecruitmentController extends Controller
             4 => "Bachelor's",
             5 => "Doctorate",
         ];
-        $statuses = [
-            1 => "Completed",
-            2 => "Qualified",
-            3 => "Disqualified",
-            4 => "Incomplete",
-            5 => "Appointed",
-            6 => "Deferred",
-        ];
+        $statuses = [];
+        $stages = TblTransactionStages::get();
+        foreach ($stages as $stage) {
+            $statuses[$stage->stg_id] = $stage->stg_desc;
+        }
         $applicants = [];
         if (isset($qualified_applicants[0])) {
             foreach ($qualified_applicants as $applicant) {
@@ -81,6 +79,9 @@ class RecruitmentController extends Controller
                         $status_message .= ' ' . $status->sts_app_remarks;
                     }
                     $statusID = $status->sts_app_stg_id;
+                } else {
+                    $status_message = ($type == 1) ? 'New (Qualified)' : 'New (Unqualified)';
+                    $statusID = ($type == 1) ? 4 : 2;
                 }
                 /**
                  * Loop through  and Trainings to get Highest

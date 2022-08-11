@@ -94,7 +94,7 @@ const JoinPageFormTwo = () => {
 		<>
 			<form onSubmit={form.handleSubmit} onClick={(e) => e.stopPropagation()}>
 				<div className="form-inputs">
-					<div className="join-inputs w100">
+					<div className="join-inputs w60">
 						<IconComponent icon={<IoMailSharp size={25} />} />
 						<InputComponent
 							placeholder="Email"
@@ -110,10 +110,10 @@ const JoinPageFormTwo = () => {
 							</span>
 						) : null}
 					</div>
-					<div className="w100"></div>
+					<div className="w40"></div>
 				</div>
 				<div className="form-inputs">
-					<div className="join-inputs w100">
+					<div className="join-inputs w60">
 						<IconComponent icon={<IoMailOutline size={25} />} />
 						<InputComponent
 							placeholder="Re-enter Email"
@@ -127,10 +127,10 @@ const JoinPageFormTwo = () => {
 							<span className="invalid-response">{form.errors.reEmail}</span>
 						) : null}
 					</div>
-					<div className="w100"></div>
+					<div className="w40"></div>
 				</div>
 				<div className="form-inputs">
-					<div className="join-inputs w100">
+					<div className="join-inputs w60">
 						<IconComponent icon={<BsFillTelephoneFill size={25} />} />
 						<InputComponent
 							placeholder="Phone Number"
@@ -146,10 +146,10 @@ const JoinPageFormTwo = () => {
 							</span>
 						) : null}
 					</div>
-					<div className="w100"></div>
+					<div className="w40"></div>
 				</div>
 				<div className="form-inputs">
-					<div className="join-inputs w100">
+					<div className="join-inputs w60">
 						<IconComponent icon={<BsFillPhoneFill size={25} />} />
 						<InputComponent
 							placeholder="Mobile Number"
@@ -165,7 +165,7 @@ const JoinPageFormTwo = () => {
 							</span>
 						) : null}
 					</div>
-					<div className="w100"></div>
+					<div className="w40"></div>
 				</div>
 			</form>
 			<div

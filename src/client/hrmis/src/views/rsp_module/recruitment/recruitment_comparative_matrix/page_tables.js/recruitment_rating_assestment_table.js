@@ -283,7 +283,7 @@ const RecruitmentRatingAssessment = ({
 									<div>
 										<ButtonComponent
 											buttonLogoStart={<FiPaperclip />}
-											onClick={() => setAttachmentModalDetails(3)}
+											onClick={() => setAttachmentModalDetails(4)}
 											buttonName="Attach"
 										/>
 									</div>
