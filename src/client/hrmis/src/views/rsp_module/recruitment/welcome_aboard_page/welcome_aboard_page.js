@@ -93,7 +93,12 @@ const AboardFirstPage = () => {
               </p>
             </div>
             <div className="on-click-containers">
-              <div className="div-click-container">
+              <div
+                className="div-click-container"
+                onClick={() => {
+                  navigate("/get-start-page");
+                }}
+              >
                 <IoIosSend size={30} color={"#004e87"} />
                 <div>
                   <p className="container-title">Get started</p>
@@ -328,7 +333,9 @@ const AboardSecondPage = () => {
                       }}
                     >
                       <VisitICon
-                        onClick={() => outsiteWebHelper(DOSTWEBSITE)}
+                        onClick={() => {
+                          outsiteWebHelper(DOSTWEBSITE);
+                        }}
                       />
                       <p style={{ textAlign: "center" }}>Visit</p>
                     </div>
@@ -386,17 +393,17 @@ const AboardSecondPage = () => {
 const DostMapComponent = () => {
   return (
     <React.Fragment>
-      <div class="mapouter">
-        <div class="gmap_canvas">
+      <div className="mapouter">
+        <div className="gmap_canvas">
           <iframe
             width="700"
             height="400"
             id="gmap_canvas"
             src="https://maps.google.com/maps?q=National%20Academy%20of%20Science%20and%20Technology&t=&z=17&ie=UTF8&iwloc=&output=embed"
-            frameborder="0"
+            frameBorder="0"
             scrolling="no"
-            marginheight="0"
-            marginwidth="0"
+            marginHeight="0"
+            marginWidth="0"
           ></iframe>
         </div>
       </div>
@@ -412,10 +419,10 @@ const DostMapComponent = () => {
   );
 };
 
-const VisitICon = (onClick) => {
+const VisitICon = (onClick = () => {}) => {
   return (
     <React.Fragment>
-      <div className="www-icon" onClick={onClick}>
+      <div className="www-icon" onClick={() => onClick()}>
         <BsGlobe className="zoom-effect" />
         <p style={{ fontSize: "10px", textAlign: "center", marginLeft: "0px" }}>
           www

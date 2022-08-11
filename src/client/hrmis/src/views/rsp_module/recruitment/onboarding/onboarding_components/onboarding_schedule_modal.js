@@ -150,13 +150,6 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
 
   const removeData = (id, employee) => {
     const list = employee;
-
-    if ([...list].length === 1) {
-      setAppointees([]);
-      dispatch(setSelectedApplicantIdArray([]));
-      return null;
-    }
-
     const index = list.findIndex((item) => {
       return parseInt(item.app_id) === parseInt(id);
     });
@@ -266,10 +259,14 @@ const OnboardingSchedulModal = ({ isDisplay, onClose }) => {
     }
 
     if (selectedScheduleId === null) {
-      setAppointees([]);
-      setScheduleData({});
-      dispatch(setSelectedApplicantIdArray([]));
+      if (isDisplay === false) {
+        setAppointees([]);
+        setScheduleData({});
+        dispatch(setSelectedApplicantIdArray([]));
+      }
     }
+
+    if (isDisplay === false) setIdForDelete(null);
   }, [isDisplay]);
 
   useEffect(() => {
@@ -425,7 +422,6 @@ const AppointeesTableList = ({ data, columns }) => {
 
   return (
     <React.Fragment>
-      {console.log(data)}
       <table
         cellSpacing="0"
         cellPadding="0"
@@ -453,6 +449,7 @@ const AppointeesTableList = ({ data, columns }) => {
             </tr>
           ))}
         </thead>
+
         <tbody {...getTableBodyProps()}>
           {rows.map((row, i) => {
             prepareRow(row);

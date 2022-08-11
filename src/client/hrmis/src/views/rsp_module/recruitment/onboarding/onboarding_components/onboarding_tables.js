@@ -1,7 +1,10 @@
 import axios from "axios";
+import { format } from "date-fns";
+import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGlobalFilter, useTable } from "react-table";
+import ReactTooltip from "react-tooltip";
 import {
   setCurrentTable,
   setSelectedApplicantIdArray,
@@ -27,7 +30,7 @@ export const OnboardingNewAppointeesTableContainer = () => {
             Cell: ({ cell }) => {
               return (
                 <React.Fragment>
-                  <div className="image-zoom-effect-user">
+                  <div>
                     <AppointeesImageDisplay
                       photo={cell.row.values.photo}
                       name={cell.row.values.name}
@@ -144,6 +147,7 @@ const AppointeesTable = ({ data, columns, searchable = true }) => {
     let arrayHolder = [];
     if (currentTable === 1) {
       dispatch(setCurrentTable(2));
+      dispatch(setSelectedScheduleId(null));
     }
 
     if (currentTable === 2) {
@@ -160,6 +164,7 @@ const AppointeesTable = ({ data, columns, searchable = true }) => {
       }
       dispatch(setSelectedApplicantIdArray([...arrayHolder]));
     }
+
     dispatch(setCurrentTable(2));
     selectableFocus(index);
   };
@@ -176,6 +181,40 @@ const AppointeesTable = ({ data, columns, searchable = true }) => {
     if (modal === true) removeFocus(data?.length);
     if (modal === false) dispatch(setSelectedApplicantIdArray([]));
   }, [modal]);
+
+  if (data.length < 1) {
+    return (
+      <React.Fragment>
+        <table style={{ width: "100%" }}>
+          <thead>
+            <tr
+              style={{
+                color: "#004e87",
+                textAlign: "left",
+              }}
+            >
+              <th>NEW APPOINTEES</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="onboarding-tr-hover">
+              <td
+                style={{
+                  textAlign: "center",
+                  padding: "10px",
+                  color: "#00000070",
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+              >
+                No appointee to display
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </React.Fragment>
+    );
+  }
 
   return (
     <React.Fragment>
@@ -276,6 +315,28 @@ export const OnboardingNewScheduleTableContainer = () => {
           {
             Header: "",
             accessor: "schedule",
+            Cell: ({ cell }) => {
+              // const objectOfContent = JSON.parse(cell.row.values.appointees);
+
+              const holder = cell.row.values.schedule;
+              const dateHolder = format(new Date(holder), "dd/MM/yyyy");
+              const dateNow = format(new Date(), "dd/MM/yyyy");
+              const isBold = dateHolder === dateNow;
+              const isPending = dateHolder < dateNow;
+
+              return (
+                <React.Fragment>
+                  <p
+                    style={{
+                      color: isPending ? "red" : "black",
+                      fontWeight: isBold ? "bold" : "normal",
+                    }}
+                  >
+                    {holder}
+                  </p>
+                </React.Fragment>
+              );
+            },
           },
           {
             Header: "",
@@ -354,6 +415,39 @@ const ScheduleTable = ({ data, columns }) => {
     }
   }, [modal]);
 
+  if (data.length < 1) {
+    return (
+      <React.Fragment>
+        <table style={{ width: "100%" }}>
+          <thead>
+            <tr
+              style={{
+                color: "#004e87",
+                textAlign: "left",
+              }}
+            >
+              <th>SCHEDULE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="onboarding-tr-hover">
+              <td
+                style={{
+                  textAlign: "center",
+                  padding: "10px",
+                  color: "#00000070",
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+              >
+                No schedule to display
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
       <table
@@ -449,7 +543,6 @@ const ScheduleAppointeesImages = ({ objectOfContent }) => {
           if (key > 5) return null;
           return (
             <div
-              className="image-zoom-effect-user"
               key={key}
               style={{
                 borderRadius: "50px",
@@ -476,34 +569,47 @@ export const AppointeesImageDisplay = ({ photo = null, name = null }) => {
   const firstLetterName = name[0].toUpperCase();
   if (photo === null) {
     return (
-      <div
-        style={{
-          width: "50px",
-          height: "50px",
-          borderRadius: "50px",
-          backgroundColor: `${rng}`,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          color: "white",
-        }}
-      >
-        {firstLetterName}
-      </div>
+      <React.Fragment>
+        <ReactTooltip id="sadfasdf" effect="solid" html={true} />
+        <div
+          data-for="sadfasdf"
+          data-tip={name}
+          style={{
+            width: "50px",
+            height: "50px",
+            borderRadius: "50px",
+            backgroundColor: `${rng}`,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "white",
+          }}
+        >
+          {firstLetterName}
+        </div>
+      </React.Fragment>
     );
   }
   return (
-    <div style={{ width: "50px", height: "50px", borderRadius: "50px" }}>
-      <img
-        style={{
-          objectFit: "cover",
-          width: "50px",
-          height: "50px",
-          borderRadius: "50px",
-        }}
-        src={photo}
-        alt="sadfaxcfsddsf"
+    <React.Fragment>
+      <ReactTooltip
+        id="sadfasdf"
+        // place={position}
+        effect="solid"
+        html={true}
       />
-    </div>
+      <div style={{ width: "50px", height: "50px", borderRadius: "50px" }}>
+        <img
+          style={{
+            objectFit: "cover",
+            width: "50px",
+            height: "50px",
+            borderRadius: "50px",
+          }}
+          src={photo}
+          alt="sadfaxcfsddsf"
+        />
+      </div>
+    </React.Fragment>
   );
 };

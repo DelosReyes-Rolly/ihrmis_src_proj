@@ -13,6 +13,7 @@ import { ALERT_ENUM, popupAlert } from "../../../../helpers/alert_response";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setModal,
+  setRefreshApi,
   setSearchField,
   setSection,
 } from "../../../../features/reducers/onboarding_slice";
@@ -27,11 +28,13 @@ import {
   OnboardingNewScheduleTableContainer,
 } from "./onboarding_components/onboarding_tables";
 import OnboardingSchedulModal from "./onboarding_components/onboarding_schedule_modal";
+import { setBusy } from "../../../../features/reducers/popup_response";
 
 const OnboardingMain = () => {
   const { renderBusy } = usePopUpHelper();
   // const [sections, setSections] = useState([]);
-  const { section, modal } = useSelector((state) => state.onboarding);
+  const { section, modal, selectedScheduleId, selectedApplicantIdArray } =
+    useSelector((state) => state.onboarding);
   const dispatch = useDispatch();
 
   const form = useFormik({
@@ -77,11 +80,49 @@ const OnboardingMain = () => {
     navigateResourceOnbording();
   };
 
-  const [openModal, setOpenModal] = useState(false);
-
   useEffect(() => {
     fetchOnBoarding();
   }, []);
+
+  const markAsDoneAppointees = async () => {
+    let formObjValues = {};
+    if (selectedScheduleId === null && selectedApplicantIdArray.length < 1) {
+      return popupAlert({
+        message: "Please Select Schedule or Appointees to onboard",
+        type: ALERT_ENUM.fail,
+      });
+    }
+    if (selectedScheduleId !== null) {
+      formObjValues = { schedule: selectedScheduleId, appointees: [] };
+    }
+    if (selectedApplicantIdArray.length > 0) {
+      formObjValues = {
+        appointees: selectedApplicantIdArray,
+        schedule: null,
+      };
+    }
+    dispatch(setBusy(true));
+    await axios
+      .post(API_HOST + "appointees-mark-done", formObjValues)
+      .then((res) => {
+        dispatch(setBusy(false));
+
+        popupAlert({
+          message: res.data?.message,
+          type: ALERT_ENUM.success,
+        });
+        dispatch(setRefreshApi());
+      })
+      .catch((err) => {
+        dispatch(setBusy(false));
+        popupAlert({
+          message: err.message ?? "Please try again later",
+          type: ALERT_ENUM.fail,
+        });
+      });
+
+    dispatch(setBusy(false));
+  };
 
   return (
     <React.Fragment>
@@ -161,6 +202,9 @@ const OnboardingMain = () => {
                   toolTipId="check"
                   textHelper="Mark onboarding of selected appointees as finished. Appointees who have already been onboarded are remove from the list. Also applicable to appointees collected in schedule list."
                   icon={<BsCheckCircleFill size={20} />}
+                  onClick={() => {
+                    markAsDoneAppointees();
+                  }}
                 />
               </div>
               <div>
@@ -171,9 +215,9 @@ const OnboardingMain = () => {
                 />
               </div>
               <div>
-                <OnboardingNewScheduleTableContainer modal={openModal} />
+                <OnboardingNewScheduleTableContainer />
                 <br />
-                <OnboardingNewAppointeesTableContainer modal={openModal} />
+                <OnboardingNewAppointeesTableContainer />
               </div>
             </div>
           </div>

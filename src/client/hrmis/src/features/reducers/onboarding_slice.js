@@ -8,7 +8,7 @@ const onboardingSlice = createSlice({
     searchField: "",
     currentTable: null, // 1 - schedule, 2 - appointees
     selectedApplicantIdArray: [],
-    selectedApplicantIDschedArray: [],
+
     selectedScheduleId: null,
     modal: false,
     refreshApi: false,
@@ -31,9 +31,6 @@ const onboardingSlice = createSlice({
     },
     setSelectedScheduleId: (state, action) => {
       state.selectedScheduleId = action.payload;
-    },
-    setSelectedApplicantIDschedArray: (state, action) => {
-      state.selectedApplicantIDschedArray = action.payload;
     },
     setApplicantNames: (state, action) => {
       state.applicantNames = action.payload;
