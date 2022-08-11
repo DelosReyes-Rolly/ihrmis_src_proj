@@ -117,10 +117,10 @@ class RecruitmentService
             $requirements = 0;
 
             if (count($applicant->tblapplicantsStatus) != 0) {
-                $status = $applicant->tblapplicantsStatus[count($applicant->tblapplicantsStatus) - 1];
-                if ($status->sts_app_stg_id == 2) {
+                $status = $applicant->tbltransactionStages[count($applicant->tbltransactionStages)-1];
+                if ($status->stg_pass == 1) {
                     $requirements = $requirements + 4;
-                } else if ($status->sts_app_stg_id == 3) {
+                } else {
                     $requirements = $requirements - 4;
                 }
             }
