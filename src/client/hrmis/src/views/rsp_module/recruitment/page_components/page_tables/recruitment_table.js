@@ -12,13 +12,7 @@ import {
   recruitmentDisqualifiedMenuItem,
   recruitmentMenuItem,
 } from "../../static/menu_items";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { API_HOST } from "../../../../../helpers/global/global_config";
 import DropdownViewComponent from "../../../../common/dropdown_menu_custom_component/Dropdown_view.js";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +25,13 @@ import {
   popupAlert,
 } from "../../../../../helpers/alert_response.js";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
-const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
+const RecruitmentTable = ({
+  type,
+  setSelectedApplicants,
+  setPosition,
+  transactionFilterOptions,
+  transactionStatusOptions,
+}) => {
   const mounted = useIsMounted();
   const { refresh } = useSelector((state) => state.popupResponse);
   const [positionsFilter, setPositionsFilter] = useState([]);
@@ -64,33 +64,6 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
       setPositionsFilter(positions);
     });
   };
-
-  const statusFilters = [
-    {
-      id: 1,
-      title: "Completed",
-    },
-    {
-      id: 2,
-      title: "Qualified",
-    },
-    {
-      id: 3,
-      title: "Disqualified",
-    },
-    {
-      id: 4,
-      title: "Incomplete",
-    },
-    {
-      id: 5,
-      title: "Appointed",
-    },
-    {
-      id: 6,
-      title: "Deferred",
-    },
-  ];
 
   const applicantDataApi = useCallback(async () => {
     await axios
@@ -136,12 +109,15 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
       })
       .catch((error) => {});
   }, [type]);
+
   useEffect(() => {
     openPositionApi();
   }, [refresh]);
+
   useEffect(() => {
     applicantDataApi();
   }, [applicantDataApi, refresh]);
+
   const columns = useMemo(
     () => [
       {
@@ -239,11 +215,13 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
       ]);
     }
   );
+
   const openPDS = (data, index, length) => {
     if (index !== length && index !== 0) {
       navigate("/pds-applicant/form-page-one/" + data.app_id);
     }
   };
+
   useEffect(() => {
     let selectedFlatRowsData = selectedFlatRows.map((d) => d.original);
     let temp_selected = [];
@@ -256,6 +234,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
     });
     setSelectedApplicants(temp_selected);
   }, [selectedFlatRows, setSelectedApplicants]);
+
   useEffect(() => {
     if (value === 1) {
       navigate(
@@ -308,7 +287,6 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
                 defaultValue={"DEFAULT"}
                 onChange={(e) => {
                   setFilter("position", e.target.value);
-                  console.log(e.target.value);
                   setPositions(e.target.value);
                   setPosition(e.target.value);
                 }}
@@ -336,15 +314,15 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
                 }}
               >
                 <option value="">All</option>
-                {statusFilters.map((item, key) => {
+                {transactionStatusOptions?.map((item, key) => {
                   return (
                     <option
                       className="options"
                       key={key}
-                      defaultValue={item.id}
-                      value={item.id}
+                      defaultValue={item.value}
+                      value={item.value}
                     >
-                      {item.title}
+                      {item.label}
                     </option>
                   );
                 })}
@@ -371,18 +349,18 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
               >
                 {headerGroup.headers.map((column, index) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                      {column.isSorted ? (
-                        column.isSortedDesc ? (
-                          <BsArrowDown />
-                        ) : (
-                          <BsArrowUp />
-                        )
+                    {column.isSorted ? (
+                      column.isSortedDesc ? (
+                        <BsArrowDown />
                       ) : (
-                        index !== 0 && (
-                          <BsArrowDownUp style={{ opacity: "60%" }} />
-                        )
-                      )}
-                     {column.render("Header")}
+                        <BsArrowUp />
+                      )
+                    ) : (
+                      index !== 0 && (
+                        <BsArrowDownUp style={{ opacity: "60%" }} />
+                      )
+                    )}
+                    {column.render("Header")}
                   </th>
                 ))}
               </tr>
@@ -482,6 +460,7 @@ const RecruitmentTable = ({ type, setSelectedApplicants, setPosition }) => {
           setValue(0);
         }}
         rowData={modalData}
+        statusSelect={transactionFilterOptions}
       />
     </React.Fragment>
   );
