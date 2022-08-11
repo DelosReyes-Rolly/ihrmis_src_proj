@@ -16,9 +16,12 @@ import { BsXCircle, BsPlusCircle, BsCheckCircle } from "react-icons/bs";
 import IconComponent from "../../../../common/icon_component/icon";
 import { useIsMounted } from "../../../../../helpers/use_hooks/isMounted";
 import { BiLink } from "react-icons/bi";
+import { useDispatch } from "react-redux";
+import { setRefresh } from "../../../../../features/reducers/popup_response";
 
 const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
   const mounted = useIsMounted();
+  const dispatch = useDispatch();
   const [mType, setmType] = useState([]);
   const { renderBusy } = usePopUpHelper();
   const [imageValue, setImageValue] = useState();
@@ -112,9 +115,10 @@ const RecruitmentEmail = ({ isDisplay, onClose, data, type, endpoint }) => {
           setSelectedMsg("");
           resetForm();
           popupAlert({
-            message: "Email was sent successfully",
+            message: "Notification was sent successfully",
           });
-          onClose();
+        dispatch(setRefresh());
+        onClose();
         })
         .catch((err) => {
           popupAlert({

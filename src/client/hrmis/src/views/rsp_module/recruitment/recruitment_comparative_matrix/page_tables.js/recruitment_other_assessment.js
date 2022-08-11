@@ -135,7 +135,7 @@ const RecruitmentOtherAssessment = ({
 								<div>
 									<ButtonComponent
 										buttonLogoStart={<FiPaperclip />}
-										onClick={() => setAttachmentModalDetails(4)}
+										onClick={() => setAttachmentModalDetails(3)}
 										buttonName="Attach"
 									/>
 								</div>
@@ -163,7 +163,7 @@ const RecruitmentOtherAssessment = ({
 								<div className="center">
 									<ButtonComponent
 										buttonLogoStart={<FiPaperclip />}
-										onClick={() => setAttachmentModalDetails(5)}
+										onClick={() => setAttachmentModalDetails(6)}
 										buttonName="Attach"
 									/>
 								</div>
