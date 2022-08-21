@@ -30,7 +30,7 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 
 - Clone the project
 - Go to the src/client/hrmis
-- Type "npm install" to install all js dependencies
+- Type "npm install --legacy-peer-deps" to install all js dependencies
 - Type "npm start" to run the frontend
 - Go to the src/server/api_ihrmis
 - Type "composer install" to install all php dependencies
