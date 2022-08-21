@@ -34,10 +34,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-        Tblemployees::observe(EmployeeObserver::class);
-        TbljvsCompetencies::observe(JvsCompetenciesObserver::class);
-        TblapplicantsProfile::observe(ApplicantProfileObserver::class);   
-        TblplantillaItems::observe(PlantillaObserver::class);
+    
     }
 }

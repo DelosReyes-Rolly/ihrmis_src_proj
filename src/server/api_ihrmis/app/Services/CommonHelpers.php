@@ -94,7 +94,7 @@ class CommonHelpers
         "Barangay Health Worker",
         "Barangay Official",
         "Barangay Nutrition Scholar",
-        "Electronic Data Processing Specialist (EDPS)",
+        "Electronic Data Processing Specialist (EDPS)", 
         "Honor Graduate",
         "Foreign School Honor Graduate",
         "Scientific and Technological Specialist",

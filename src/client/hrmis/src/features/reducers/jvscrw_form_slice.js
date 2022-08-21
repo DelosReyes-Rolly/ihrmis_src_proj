@@ -28,6 +28,10 @@ const jvscrwFormSlice = createSlice({
        */
       const { type, data } = actions.payload;
       if (type === 2) {
+        state.education = {
+          ...state.education,
+          competencies: [...data],
+        };
       }
       if (type === 1) {
         state.education = {
@@ -67,14 +71,21 @@ const jvscrwFormSlice = createSlice({
        * IF TYPE IS 0 REBASE ELSE ADD ONE IN ARRAY
        */
       const { type, data } = actions.payload;
+      ///Edit
       if (type === 2) {
+        state.experience = {
+          ...state.experience,
+          competencies: [...data],
+        };
       }
+      /// ADD
       if (type === 1) {
         state.experience = {
           ...state.experience,
           competencies: [...state.experience.competencies, data],
         };
       }
+
       if (type === 0) {
         state.experience = [...data];
       }

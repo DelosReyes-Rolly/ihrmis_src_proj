@@ -1,4 +1,3 @@
-import { functions } from "../views/rsp_module/recruitment/static/functions";
 import { ALERT } from "./global/global_config";
 
 export const ALERT_ENUM = { fail: "error", success: "success" };
