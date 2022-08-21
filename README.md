@@ -13,7 +13,7 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 - Install [git](https://git-scm.com/download/win)
 - Install [Xampp](https://www.apachefriends.org/download.html)
 - Install [VS Code](https://code.visualstudio.com/Download)
-- Install [Composer](https://code.visualstudio.com/Download)
+- Install [Composer](https://getcomposer.org/download/)
 - Install [Node](https://nodejs.org/en/)
 - Install [Postman](https://www.postman.com/downloads/)
 
@@ -34,7 +34,11 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 - Type "npm start" to run the frontend
 - Go to the src/server/api_ihrmis
 - Type "composer install" to install all php dependencies
+- Create a new database in phpyadmin panel
+- Modify env file
+- Type "php artisan migrate" in the terminal
 - Type "php artisan serve" to run the Laravel
+- Open postman and create a register post request
 
 ## Contributors
 
