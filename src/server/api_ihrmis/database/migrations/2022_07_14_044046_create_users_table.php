@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique('user')->comment('User\'s username');
             $table->string('email')->unique()->comment('User\'s Email Address');
             $table->string('name')->comment('User\'s full name');
+            $table->string('user_level')->comment('Level of user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
