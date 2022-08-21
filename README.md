@@ -15,6 +15,7 @@ This project is a HR project for DOST to manage all the employees in the dost. T
 - Install [VS Code](https://code.visualstudio.com/Download)
 - Install [Composer](https://code.visualstudio.com/Download)
 - Install [Node](https://nodejs.org/en/)
+- Install [Postman](https://www.postman.com/downloads/)
 
 ## Setup Visual Studio code
 
