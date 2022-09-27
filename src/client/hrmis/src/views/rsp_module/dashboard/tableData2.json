@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "performace_gap": "Lack in Leadership",
+      "development_activity": "On-the-Job-Training: Coaching on the job from supervisor",
+      "completion_and_support": "EO 2021: Time and assistance",
+      "employee": "Marianne Nguyen"
+    },
+    {
+      "id": 2,
+      "performace_gap": "Insufficient knowledge in Budgeting",
+      "development_activity": "Formal Classroom Training: External training on Budgeting",
+      "completion_and_support": "11-20-2021: Scholarship",
+      "employee": "Casey Chambers"
+    },
+    {
+      "id": 3,
+      "performace_gap": "Improve Management Skills",
+      "development_activity": "Developmental Activities/Interventions: Added responsibilities on managing ABC project",
+      "completion_and_support": "4th Quarter 2021: Official communication",
+      "employee": "Leanna Stevens"
+    },
+    {
+      "id": 4,
+      "performace_gap": "No knowledge about AI",
+      "development_activity": "Formal Classroom Training: Internal training on Introduction to Artificial Intelligence",
+      "completion_and_support": "2nd Quarter 2021: Time and budget",
+      "employee": "Justin Case; Leanna Stevens; Sebastian Philip Cloud"
+    }
+  ]

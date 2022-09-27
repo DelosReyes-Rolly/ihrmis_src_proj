@@ -6,7 +6,11 @@ import {
   AiOutlineWallet,
   AiOutlineFileSearch,
   AiOutlineCalendar,
+  AiFillMessage,
 } from "react-icons/ai";
+import{
+  BiBookOpen,
+}from "react-icons/bi"
 import { IoAlbumsOutline } from "react-icons/io5";
 
 export const SidebarOption = [
@@ -16,6 +20,37 @@ export const SidebarOption = [
     icon: <AiOutlineHome size="20" />,
     more: null,
     link: "/rsp/dashboard",
+  },
+  {
+    title: "Meeting One",
+    id: 2,
+    icon: <AiFillMessage size="20" />,
+    more: null,
+    link: "/meeting-local/meeting-one",
+  },
+  {
+    title: "Learning",
+    id: 3,
+    icon: <BiBookOpen size="20" />,
+    more: null,
+    more: [
+      {
+        id: 1,
+        title: "Developement Plan",
+        link: "/learning/development/submissions",
+      },
+      {
+        id: 2,
+        title: "Training",
+        link: "/learning/development/submissions",
+      },
+      {
+        id: 3,
+        title: "Service Provider",
+        link: "/learning/development/submissions",
+      },
+    ],
+    link: "/learning/development/submissions",
   },
   // {
   // 	title: "Request",

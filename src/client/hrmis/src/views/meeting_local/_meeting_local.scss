@@ -1,0 +1,17 @@
+.container-hello{
+    display:flex;
+    // gap: 20px;
+    // justify-content: center;
+    // justify-content: space-between;
+    justify-content: space-around;
+        .hello-1{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+        .hello-2{
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+}

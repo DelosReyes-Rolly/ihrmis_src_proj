@@ -1,0 +1,26 @@
+[
+    {
+      "id": 1,
+      "name_of_office": "Office of the Secretary (OSEC)",
+      "date": "01-15-2021",
+      "status": "In-Preparation"
+    },
+    {
+      "id": 2,
+      "name_of_office": "Office of the Undersecretary for Scientific and Technical Services (OUSEC - STS)",
+      "date": "11-20-2021",
+      "status": "For Revision"
+    },
+    {
+      "id": 3,
+      "name_of_office": "Office of the Director for Planning and Evaluation Service (PES)",
+      "date": "10-05-2021",
+      "status": "Approved (Received)"
+    },
+    {
+      "id": 4,
+      "name_of_office": "Policy Developement and Planning Division (PDPD)",
+      "date": null,
+      "status": null
+    }
+  ]
