@@ -15,6 +15,8 @@ import MainPageLayout from "../views/app";
 import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
+import PageOne from "../views/module_name/pages/page_one";
+import MeetingOne from "../views/meeting_local/pages/meeting_one";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -40,15 +42,15 @@ const MainRouter = () => {
 
       <Routes>
         {/* ===========================================
-				AUTHENTICATION ROUTE IS DEFINED HERE
-				===========================================
+				    AUTHENTICATION ROUTE IS DEFINED HERE
+				    ===========================================
 				*/}
 
         <Route exact path="/" element={<LoginView />} />
 
         {/* ===========================================
-					RSP MODULE ROUTES ARE DEFINED HERE
-					===========================================
+					  RSP MODULE ROUTES ARE DEFINED HERE
+					  ===========================================
 				*/}
 
         <Route exact path="/rsp" element={<MainPageLayout />}>
@@ -56,13 +58,23 @@ const MainRouter = () => {
           <Route index element={<Navigate to="/rsp/dashboard" />} />
           <Route path="/rsp/dashboard" element={<DashboardView />} />
         </Route>
-        {/* 	===========================================
-					PDS ROUTES ARE DEFINED HERE																																																																																																																																																																																																																													===========================================
-				*/}
 
         {/* ===========================================
-             		404 PAGE: WHEN ROUTES AREN'T DEFINE
-            		===========================================
+					  MODULE NAME ROUTES ARE DEFINED HERE
+					  ===========================================
+				*/}
+
+        <Route exact path="/meeting-local" element={<MainPageLayout />}>
+          <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
+        </Route>
+
+        {/* <Route exact path="/module-name" element={<MainPageLayout />}>
+          <Route path="/module-name/page-one" element={<PageOne />} />
+        </Route> */}
+
+        {/* ===========================================
+            404 PAGE: WHEN ROUTES AREN'T DEFINE
+            ===========================================
 				*/}
         <Route
           path="*"

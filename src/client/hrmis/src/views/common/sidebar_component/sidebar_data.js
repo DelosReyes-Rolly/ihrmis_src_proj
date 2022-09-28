@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  AiOutlineHome,
-  AiOutlineEdit,
-  AiOutlineUser,
-  AiOutlineWallet,
-  AiOutlineFileSearch,
-  AiOutlineCalendar,
-} from "react-icons/ai";
-import { IoAlbumsOutline } from "react-icons/io5";
+import { AiFillMessage, AiOutlineHome } from "react-icons/ai";
+import { MdContactPage } from "react-icons/md";
 
 export const SidebarOption = [
   {
@@ -17,6 +10,21 @@ export const SidebarOption = [
     more: null,
     link: "/rsp/dashboard",
   },
+  {
+    title: "Meeting One",
+    id: 2,
+    icon: <AiFillMessage size="20" />,
+    more: null,
+    link: "/meeting-local/meeting-one",
+  },
+
+  // {
+  //   title: "Page One",
+  //   id: 2,
+  //   icon: <MdContactPage size="20" />,
+  //   more: null,
+  //   link: "/module-name/page-one",
+  // },
   // {
   // 	title: "Request",
   // 	id: 2,
