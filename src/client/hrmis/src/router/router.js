@@ -17,6 +17,7 @@ import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
 import PageOne from "../views/module_name/pages/page_one";
 import MeetingOne from "../views/meeting_local/pages/meeting_one";
+import IpcrPage from "../views/pm_module/pages/ipc_page";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -67,6 +68,12 @@ const MainRouter = () => {
         <Route exact path="/meeting-local" element={<MainPageLayout />}>
           <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
         </Route>
+
+        <Route exact path="/pm" element={<MainPageLayout />}>
+          <Route path="/pm/ipcr-page" element={<IpcrPage />} />
+        </Route>
+
+
 
         {/* <Route exact path="/module-name" element={<MainPageLayout />}>
           <Route path="/module-name/page-one" element={<PageOne />} />

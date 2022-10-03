@@ -1,6 +1,7 @@
 import React from "react";
 import { AiFillMessage, AiOutlineHome } from "react-icons/ai";
 import { MdContactPage } from "react-icons/md";
+import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
 
 export const SidebarOption = [
   {
@@ -17,7 +18,13 @@ export const SidebarOption = [
     more: null,
     link: "/meeting-local/meeting-one",
   },
-
+  {
+    title: "IPCR",
+    id: 3,
+    icon: <BsFillFileEarmarkPersonFill size="20" />,
+    more: null,
+    link: "/pm/ipcr-page",
+  },
   // {
   //   title: "Page One",
   //   id: 2,

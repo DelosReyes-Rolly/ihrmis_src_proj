@@ -12,7 +12,7 @@ const MeetingOne = () => {
       <MeetingOneModal isDisplay={modal} onClose={() => setModal(false)} />
 
       <div className="container-hello">
-        <ButtonComponent buttonName="Open Me" onClick={() => setModal(true)} />
+        <ButtonComponent buttonName="MO-130" onClick={() => setModal(true)} />
       </div>
       <br />
       <div>
