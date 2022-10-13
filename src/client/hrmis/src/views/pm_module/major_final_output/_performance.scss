@@ -1,0 +1,201 @@
+.content-container {
+  margin-top: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.breadcrumb-design {
+  color: yellow;
+}
+
+.modals {
+  display: flex;
+  margin-left: 30px;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.title-text {
+  color: gray;
+  font-weight: bold;
+}
+
+.page-title {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  padding-bottom: 5px;
+  border-bottom: 1px solid gray;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-icon {
+  display: flex;
+  margin-left: auto;
+  margin-right: 10px;
+  padding-top: 10px;
+}
+
+.icon {
+  margin-left: 10px;
+  font-size: 1.5em;
+}
+
+table {
+  margin-top: 10px;
+  text-align: left;
+  border-spacing: 0;
+  border-left: 1.5px solid #ABB2B9;
+  border-top: 1.5px solid #ABB2B9;
+  font-size: 14px;
+  color: black;
+  width: 100%;
+
+  tr {
+    :last-child {
+      td {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  th,
+  td {
+    margin: 0;
+    padding: 0.5rem;
+    border-bottom: 1.5px solid #ABB2B9;
+    border-right: 1.5px solid #ABB2B9;
+
+    :last-child {
+      border-right: 0;
+    }
+  }
+}
+
+.th-design {
+  color: #2E86C1;
+}
+
+.arrow-icon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+.dropdown-group {
+  display: flex;
+  gap: 10px;
+}
+
+.dropdown-design {
+  padding: 5px 12px 5px 12px;
+  border-radius: 5px;
+  border: 2px solid #2E86C1;
+  color: #2E86C1;
+  font-size: 14px;
+}
+
+
+// ====================================================================
+.remarks-textarea {
+  width: 95%;
+  border-radius: 3px;
+  color: gray;
+  border: 2px solid #ABB2B9;
+}
+
+.remarks-body {
+  display: flex;
+  justify-content: center;
+}
+
+.comment-details {
+  display: flex;
+}
+
+.user-profile {
+  font-size: 2.5em;
+  margin-right: 10px;
+}
+
+.username, .date-posted {
+  color: #2E86C1;
+  font-size: 14px;
+}
+
+.username {
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.comment {
+  margin-left: 40px;
+}
+
+.action-group {
+  margin-top: 5px;
+}
+
+.action {
+  border: none;
+  background: none;
+  margin-right: 10px;
+  color: #2E86C1;
+}
+
+.new-comment {
+  margin-top: 15px;
+  display: flex;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  margin-right: 25px;
+}
+
+.submit-comment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border: none;
+  background: none;
+  margin-right: 5px;
+}
+
+.input-comment {
+  padding: 7px;
+  width: 100%;
+  border: 1px solid gray;
+  border-radius: 3px;
+}
+
+.reply {
+  margin: 30px 0 30px 40px;
+}
+
+.send-reply {
+  border: none;
+  background: none;
+  font-size: 25px;
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+// ================================
+.hr-references {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.signature-switch {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.signature-checkbox {
+  display: flex;
+  vertical-align: middle;
+}

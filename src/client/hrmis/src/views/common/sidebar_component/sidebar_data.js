@@ -7,7 +7,7 @@ import {
   AiOutlineFileSearch,
   AiOutlineCalendar,
 } from "react-icons/ai";
-import { IoAlbumsOutline } from "react-icons/io5";
+import { IoAlbumsOutline, IoTimerOutline } from "react-icons/io5";
 
 export const SidebarOption = [
   {
@@ -17,6 +17,39 @@ export const SidebarOption = [
     more: null,
     link: "/rsp/dashboard",
   },
+
+  {
+    title: "Meeting",
+    id: 2,
+    icon: <AiOutlineHome size="20" />,
+    more: null,
+    link: "/meeting-local/meeting-one",
+  },
+
+  {
+    title: "Performance",
+    id: 3,
+    icon: <IoTimerOutline size="20" />,
+    more: [
+      {
+        id: 1,
+        title: "Perfomance Report",
+        link: "#",
+      },
+      {
+        id: 2,
+        title: "Major Final Output",
+        link: "/performance/mfo/status-monitoring",
+      },
+      {
+        id: 3,
+        title: "Weekly Monitoring",
+        link: "#",
+      },
+    ],
+    link: "#",
+  },
+
   // {
   // 	title: "Request",
   // 	id: 2,
