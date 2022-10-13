@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\DevPlanPeriodsController;
+use App\Http\Controllers\PersonController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,3 +25,7 @@ Route::post('register', [AuthController::class, "register"]);
 Route::get('user-accounts', [AuthController::class, "getUsers"]);
 Route::post('update-user', [AuthController::class, "updateUser"]);
 
+Route::get('get-person', [PersonController::class, "getPerson"]);
+Route::post('add-person', [PersonController::class, "addPerson"]);
+
+Route::post('add-period', [DevPlanPeriodsController::class, "addPeriod"]);

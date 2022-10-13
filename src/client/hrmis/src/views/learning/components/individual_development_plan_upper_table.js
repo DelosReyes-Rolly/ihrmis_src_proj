@@ -1,9 +1,6 @@
 import React from 'react';
 import { useTable, useSortBy, useRowSelect } from 'react-table';
 import { TbArrowsDownUp } from 'react-icons/tb'; 
-import CheckboxComponent from '../../common/input_component/checkbox_input_component/checkbox_input_component';
-
-
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef()
@@ -21,29 +18,12 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function SubmissionTable() {
+function IndividualDevelopmentPlanUpperTable() {
   let iconStyles = { fontSize: "0.8em", color: "#084c84"};
  const data = React.useMemo(
      () => [
        {
-        col1: "Office of the Secretary (OSEC)",
-        col2: "01-15-2021",
-        col3: "In-Preparation"
-       },
-       {
-        col1: "Office of the Undersecretary for Scientific and Technical Services (OUSEC - STS)",
-        col2: "11-20-2021",
-        col3: "For Revision"
-       },
-       {
-        col1: "Office of the Director for Planning and Evaluation Service (PES)",
-        col2: "10-05-2021",
-        col3: "Approved (Received)"
-       },
-       {
-        col1: "Policy Developement and Planning Division (PDPD)",
-        col2: null,
-        col3: null
+       
        },
      ],
      []
@@ -52,16 +32,12 @@ function SubmissionTable() {
  const columns = React.useMemo(
      () => [
        {
-         Header: 'Name of Office',
+         Header: '',
          accessor: 'col1',
        },
        {
-         Header: 'Date',
+         Header: '',
          accessor: 'col2',
-       },
-       {
-         Header: 'Status',
-         accessor: 'col3',
        },
      ],
      []
@@ -73,25 +49,7 @@ function SubmissionTable() {
   headerGroups,
   rows,
   prepareRow,
- } = useTable({ columns, data }, useSortBy, useRowSelect,hooks => {
-  hooks.visibleColumns.push(columns => [
-    // Let's make a column for selection
-    ...columns,
-    {
-      id: 'selection',
-      // The cell can use the individual row's getToggleRowSelectedProps method
-      // to the render a checkbox
-      Cell: ({ row }) => (
-        <div>
-          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        </div>
-      ),
-    },
-  
-  ])
-}
-);
-
+} = useTable({ columns, data }, useSortBy);
  return (
      <div>
        <table {...getTableProps()}>
@@ -108,15 +66,6 @@ function SubmissionTable() {
                          borderRight: '1px solid #ddd',
                        }}
                    >
-                    <TbArrowsDownUp style={iconStyles}/> 
-                     {column.render('Header')}
-                     <span>
-                       {column.isSorted
-                           ? column.isSortedDesc
-                               ? ''
-                               : ''
-                           : ''}
-                    </span>
                    </th>
                ))}
              </tr>
@@ -139,7 +88,6 @@ function SubmissionTable() {
                        </td>
                    )
                  })}
-                 {/* <div><CheckboxComponent/></div> */}
                </tr>
            )
          })}
@@ -149,4 +97,4 @@ function SubmissionTable() {
  );
 }
 
-export default SubmissionTable;
+export default IndividualDevelopmentPlanUpperTable;

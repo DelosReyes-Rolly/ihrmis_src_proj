@@ -20,11 +20,11 @@ const TeamDevelopmentPlan = () => {
           <div className='choices'>
             Team Developement Plan
           </div>
-          <span className="logos" style={{marginTop: -30}}><a href="#" target="_blank" rel="noreferrer"><AiFillCheckCircle style={iconStyles}/></a></span>
-          <span className="logos" style={{marginTop: -30}}><a href="#" target="_blank" rel="noreferrer"><IoArrowUndoSharp style={iconStyles}/></a></span>
-          <span className="logos" style={{marginTop: -30}}><a href="#" target="_blank" rel="noreferrer"><GiTrashCan style={iconStyles}/></a></span>
-          <span className="logos" style={{marginTop: -30}}><a href="#" target="_blank" rel="noreferrer"><IoDocumentsSharp style={iconStyles}/></a></span>
-          <span className="logos" style={{marginTop: -30}}><a href="#" target="_blank" rel="noreferrer"><RiPrinterFill style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop: -30}}><a href="#"><AiFillCheckCircle style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop: -30}}><a href="#"><IoArrowUndoSharp style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop: -30}}><a href="#"><GiTrashCan style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop: -30}}><a href="#"><IoDocumentsSharp style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop: -30}}><a href="#"><RiPrinterFill style={iconStyles}/></a></span>
         </div>   
         <div style={{textAlign: 'right', paddingBottom: '12px',  marginLeft: 40, marginRight: 40, paddingTop: 10}}>
           2021-2023 : For Revision    

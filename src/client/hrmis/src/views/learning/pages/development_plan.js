@@ -6,8 +6,11 @@ import BreadcrumbConfig, {
 } from "../../../router/breadcrumb_config";
 import { RiPrinterFill, RiEditBoxFill } from 'react-icons/ri';
 import { IoIosMail } from 'react-icons/io'; 
+import RemarksModal from '../modal/remarks_modal';
+import ButtonComponent from '../../common/button_component/button_component';
 
 const DevelopmentPlan = () => {
+  const [openRemarksModal, setOpenRemarksModal] = useState(false);
   const { getThirdLevel } = crumbThirdLevel();
   const [username] = useState(window.sessionStorage.getItem("user"));
   let iconStyles = { fontSize: "2em", color: "#084c84"};
@@ -26,9 +29,10 @@ const DevelopmentPlan = () => {
             paddingBottom: isActive ? '16px' : ''}) }>
             <span><a className='hover'>Consolidated</a></span>
           </NavLink> 
-          <span className="logos"><a href="#" target="_blank" rel="noreferrer"><RiEditBoxFill style={iconStyles}/></a></span>
-          <span className="logos"><a href="#" target="_blank" rel="noreferrer"><IoIosMail style={iconStyles}/></a></span>
-          <span className="logos"><a href="#" target="_blank" rel="noreferrer"><RiPrinterFill style={iconStyles}/></a></span>
+          <RemarksModal onClose={() => setOpenRemarksModal(false)} isDisplay={openRemarksModal}/>
+          <button className="logos" onClick={() => setOpenRemarksModal(true)} style={{borderStyle: "hidden", cursor:'pointer'}}><RiEditBoxFill style={iconStyles}/></button>
+          <span className="logos"><a href="#"><IoIosMail style={iconStyles}/></a></span>
+          <span className="logos"><a href="#"><RiPrinterFill style={iconStyles}/></a></span>
         </div>       
       </div>
     </div>

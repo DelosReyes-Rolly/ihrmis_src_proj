@@ -36,18 +36,23 @@ export const SidebarOption = [
     more: [
       {
         id: 1,
-        title: "Developement Plan",
+        title: "LD-100, LD-101 and LD-102",
         link: "/learning/development/submissions",
       },
       {
         id: 2,
-        title: "Training",
-        link: "/learning/development/submissions",
+        title: "LD-110",
+        link: "/learning/development/teamdevelopmentplan",
       },
       {
         id: 3,
-        title: "Service Provider",
-        link: "/learning/development/submissions",
+        title: "LD-120",
+        link: "/learning/development/teamdevelopment",
+      },
+      {
+        id: 4,
+        title: "LD-121 and LD-122",
+        link: "/learning/development/individualdevelopment",
       },
     ],
     link: "/learning/development/submissions",

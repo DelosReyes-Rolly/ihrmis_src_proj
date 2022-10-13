@@ -22,6 +22,7 @@ import Submissions from "../views/learning/components/submissions";
 import Consolidated from "../views/learning/components/consolidated";
 import TeamDevelopmentPlan from "../views/learning/pages/team_development_plan";
 import TeamDevelopment from "../views/learning/pages/team_development";
+import IndividualDevelopmentPlan from "../views/learning/pages/individual_development_plan";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -67,6 +68,7 @@ const MainRouter = () => {
           <Route exact path="/learning/development/consolidated" element={<Consolidated />} />
           <Route exact path="/learning/development/teamdevelopmentplan" element={<TeamDevelopmentPlan/>} />
           <Route exact path="/learning/development/teamdevelopment" element={<TeamDevelopment/>} />
+          <Route exact path="/learning/development/individualdevelopment" element={<IndividualDevelopmentPlan/>} />
         </Route>
 
 

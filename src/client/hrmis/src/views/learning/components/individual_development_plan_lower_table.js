@@ -1,9 +1,6 @@
 import React from 'react';
 import { useTable, useSortBy, useRowSelect } from 'react-table';
 import { TbArrowsDownUp } from 'react-icons/tb'; 
-import CheckboxComponent from '../../common/input_component/checkbox_input_component/checkbox_input_component';
-
-
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
     const defaultRef = React.useRef()
@@ -21,29 +18,26 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 )
 
-function SubmissionTable() {
+function IndividualDevelopmentPlanLowerTable() {
   let iconStyles = { fontSize: "0.8em", color: "#084c84"};
  const data = React.useMemo(
      () => [
        {
-        col1: "Office of the Secretary (OSEC)",
-        col2: "01-15-2021",
-        col3: "In-Preparation"
+        col1: "Insufficient knowledge in Budgeting",
+        col2: "Formal Classroom Training",
+        col3: "External training on Budgeting",
+        col4: "Scholarship",
+        col5: "11-20-2021",
+        // col1: "Improve Management Skills",
+        // col2: "Developmental Activities/Interventions: Added responsibilities on managing ABC project",
+        // col4: "4th Quarter 2021: Official communication",
        },
        {
-        col1: "Office of the Undersecretary for Scientific and Technical Services (OUSEC - STS)",
-        col2: "11-20-2021",
-        col3: "For Revision"
-       },
-       {
-        col1: "Office of the Director for Planning and Evaluation Service (PES)",
-        col2: "10-05-2021",
-        col3: "Approved (Received)"
-       },
-       {
-        col1: "Policy Developement and Planning Division (PDPD)",
-        col2: null,
-        col3: null
+        col1: "Improve Management Skills",
+        col2: "Developemental Activities/ Interventions",
+        col3: "Added Responsibility on managing ABC project",
+        col4: "Official Communication",
+        col5: "4th Quarter 2021",
        },
      ],
      []
@@ -52,17 +46,25 @@ function SubmissionTable() {
  const columns = React.useMemo(
      () => [
        {
-         Header: 'Name of Office',
+         Header: 'Performance Gap',
          accessor: 'col1',
        },
        {
-         Header: 'Date',
+         Header: 'Developement Activity',
          accessor: 'col2',
        },
        {
-         Header: 'Status',
-         accessor: 'col3',
-       },
+          Header: 'Development Type',
+          accessor: 'col3',
+        },
+        {
+          Header: 'Support Needed',
+          accessor: 'col4',
+        },
+        {
+          Header: 'Completion Date',
+          accessor: 'col5',
+        },
      ],
      []
  )
@@ -73,25 +75,7 @@ function SubmissionTable() {
   headerGroups,
   rows,
   prepareRow,
- } = useTable({ columns, data }, useSortBy, useRowSelect,hooks => {
-  hooks.visibleColumns.push(columns => [
-    // Let's make a column for selection
-    ...columns,
-    {
-      id: 'selection',
-      // The cell can use the individual row's getToggleRowSelectedProps method
-      // to the render a checkbox
-      Cell: ({ row }) => (
-        <div>
-          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        </div>
-      ),
-    },
-  
-  ])
-}
-);
-
+} = useTable({ columns, data }, useSortBy);
  return (
      <div>
        <table {...getTableProps()}>
@@ -139,7 +123,6 @@ function SubmissionTable() {
                        </td>
                    )
                  })}
-                 {/* <div><CheckboxComponent/></div> */}
                </tr>
            )
          })}
@@ -149,4 +132,4 @@ function SubmissionTable() {
  );
 }
 
-export default SubmissionTable;
+export default IndividualDevelopmentPlanLowerTable;

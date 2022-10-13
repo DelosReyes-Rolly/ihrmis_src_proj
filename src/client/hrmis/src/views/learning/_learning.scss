@@ -33,6 +33,16 @@ a.hover:hover { text-decoration: none; color: #084c84; }
     margin-left: -12px;
 }
 
+.buttonActivity{
+  color: white;
+  background-color: #084c84;
+  padding: 10px 20px 12px 20px;
+  font-weight:600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
 .button-dropdown{
     color: #084c84;
     border-color: #084c84;
@@ -77,4 +87,17 @@ a.hover:hover { text-decoration: none; color: #084c84; }
     border-width: 1px;
     border-style: solid;
     border-color: #ddd;
+  }
+
+  /* ================================ Date in new period =================================================  */
+
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  @media (max-width: 800px) {
+    .flex-container {
+      flex-direction: column;
+    }
   }
