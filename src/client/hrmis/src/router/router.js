@@ -47,15 +47,15 @@ const MainRouter = () => {
 
       <Routes>
         {/* ===========================================
-				AUTHENTICATION ROUTE IS DEFINED HERE
-				===========================================
+				    AUTHENTICATION ROUTE IS DEFINED HERE
+				    ===========================================
 				*/}
 
         <Route exact path="/" element={<LoginView />} />
 
         {/* ===========================================
-					RSP MODULE ROUTES ARE DEFINED HERE
-					===========================================
+					  RSP MODULE ROUTES ARE DEFINED HERE
+					  ===========================================
 				*/}
 
         <Route exact path="/rsp" element={<MainPageLayout />}>

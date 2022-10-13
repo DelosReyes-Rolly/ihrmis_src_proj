@@ -39,7 +39,7 @@ const DisplayPerson = ({modal}) => {
       console.log(err.message);
     });
   };
-  
+
   const data = React.useMemo(() => personData, [personData]);
 
   const columns = React.useMemo(
@@ -55,7 +55,7 @@ const DisplayPerson = ({modal}) => {
     ],
     []
     );
-    
+
     useEffect(() => {
       fetchPersonData();
       }, [modal]);
@@ -68,9 +68,9 @@ const DisplayPerson = ({modal}) => {
 }
 
 const PersonTable = ({ columns, data }) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, } = 
-    useTable({ 
-      columns, 
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, } =
+    useTable({
+      columns,
       data,
     })
 
