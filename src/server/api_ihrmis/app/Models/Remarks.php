@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class Remarks extends Model
 {
     use HasFactory;
-    protected $table = 'person';
-    protected $primaryKey = 'psn_id';
+    protected $table = 'tbl_remarks';
+    protected $primaryKey = 'remarks_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [
-        'psn_name',
-        'psn_email',
+        'remarks',
     ];
 
     public $timestamps = false;

@@ -1,7 +1,17 @@
 import React from "react";
-import { AiFillMessage, AiOutlineHome } from "react-icons/ai";
 import { MdContactPage } from "react-icons/md";
 import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
+import {
+  AiOutlineHome,
+  AiOutlineEdit,
+  AiOutlineUser,
+  AiOutlineWallet,
+  AiOutlineFileSearch,
+  AiOutlineCalendar,
+  AiFillMessage, 
+  AiOutlineHome
+} from "react-icons/ai";
+import { IoAlbumsOutline, IoTimerOutline } from "react-icons/io5";
 
 export const SidebarOption = [
   {
@@ -11,13 +21,15 @@ export const SidebarOption = [
     more: null,
     link: "/rsp/dashboard",
   },
+
   {
-    title: "Meeting One",
+    title: "Meeting",
     id: 2,
-    icon: <AiFillMessage size="20" />,
+    icon: <AiOutlineHome size="20" />,
     more: null,
     link: "/meeting-local/meeting-one",
   },
+
   {
     title: "IPCR",
     id: 3,
@@ -25,13 +37,32 @@ export const SidebarOption = [
     more: null,
     link: "/pm/ipcr-page",
   },
-  // {
-  //   title: "Page One",
-  //   id: 2,
-  //   icon: <MdContactPage size="20" />,
-  //   more: null,
-  //   link: "/module-name/page-one",
-  // },
+
+
+  {
+    title: "Performance",
+    id: 4,
+    icon: <IoTimerOutline size="20" />,
+    more: [
+      {
+        id: 1,
+        title: "Perfomance Report",
+        link: "#",
+      },
+      {
+        id: 2,
+        title: "Major Final Output",
+        link: "/performance/mfo/status-monitoring",
+      },
+      {
+        id: 3,
+        title: "Weekly Monitoring",
+        link: "#",
+      },
+    ],
+    link: "#",
+  },
+
   // {
   // 	title: "Request",
   // 	id: 2,
