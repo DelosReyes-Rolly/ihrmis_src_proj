@@ -1,4 +1,6 @@
 import React from "react";
+import { MdContactPage } from "react-icons/md";
+import { BsFillFileEarmarkPersonFill } from "react-icons/bs";
 import {
   AiOutlineHome,
   AiOutlineEdit,
@@ -6,6 +8,8 @@ import {
   AiOutlineWallet,
   AiOutlineFileSearch,
   AiOutlineCalendar,
+  AiFillMessage, 
+  AiOutlineHome
 } from "react-icons/ai";
 import { IoAlbumsOutline, IoTimerOutline } from "react-icons/io5";
 
@@ -27,8 +31,17 @@ export const SidebarOption = [
   },
 
   {
-    title: "Performance",
+    title: "IPCR",
     id: 3,
+    icon: <BsFillFileEarmarkPersonFill size="20" />,
+    more: null,
+    link: "/pm/ipcr-page",
+  },
+
+
+  {
+    title: "Performance",
+    id: 4,
     icon: <IoTimerOutline size="20" />,
     more: [
       {

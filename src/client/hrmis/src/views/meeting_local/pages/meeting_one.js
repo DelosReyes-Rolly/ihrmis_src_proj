@@ -19,6 +19,14 @@ const MeetingOne = () => {
 
       <DisplayPerson modal={modal} />
 
+      <div className="container-hello">
+        <ButtonComponent buttonName="MO-130" onClick={() => setModal(true)} />
+      </div>
+      <br />
+      <div>
+        <DisplayPerson modal={modal} />
+      </div>
+
     </div>
   );
 };

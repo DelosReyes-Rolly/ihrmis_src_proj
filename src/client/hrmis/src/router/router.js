@@ -17,6 +17,7 @@ import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
 import MeetingOne from "../views/meeting_local/pages/meeting_one";
+import IpcrPage from "../views/pm_module/pages/ipc_page";
 import StatusMonitoring from "../views/pm_module/major_final_output/pages/mfo_status_monitoring";
 
 const MainRouter = () => {
@@ -82,9 +83,19 @@ const MainRouter = () => {
         </Route>
       </Route>
 
+        <Route exact path="/pm" element={<MainPageLayout />}>
+          <Route path="/pm/ipcr-page" element={<IpcrPage />} />
+        </Route>
+
+
+        {/* <Route exact path="/module-name" element={<MainPageLayout />}>
+          <Route path="/module-name/page-one" element={<PageOne />} />
+        </Route> */}
+
       <Route exact path="/meeting-local" element={<MainPageLayout />}>
         <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
       </Route>
+
 
         {/* ===========================================
              		404 PAGE: WHEN ROUTES AREN'T DEFINE
