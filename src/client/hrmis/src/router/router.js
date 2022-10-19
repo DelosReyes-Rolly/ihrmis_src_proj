@@ -6,6 +6,7 @@ import {
   Navigate,
   useNavigate,
   useLocation,
+  NavLink,
 } from "react-router-dom";
 
 import LoaderComponent from "../views/common/loader_component/loader_component";
@@ -15,8 +16,8 @@ import MainPageLayout from "../views/app";
 import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
-import PageOne from "../views/module_name/pages/page_one";
 import MeetingOne from "../views/meeting_local/pages/meeting_one";
+import StatusMonitoring from "../views/pm_module/major_final_output/pages/mfo_status_monitoring";
 
 const MainRouter = () => {
   const isBusy = useSelector((state) => state.popupResponse.isBusy);
@@ -33,6 +34,10 @@ const MainRouter = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
+
+  let activeStyle = {
+    textDecoration: "underline",
+  };
 
   return (
     <React.Fragment>
@@ -58,23 +63,32 @@ const MainRouter = () => {
           <Route index element={<Navigate to="/rsp/dashboard" />} />
           <Route path="/rsp/dashboard" element={<DashboardView />} />
         </Route>
-
-        {/* ===========================================
-					  MODULE NAME ROUTES ARE DEFINED HERE
-					  ===========================================
+        {/* 	===========================================
+					PDS ROUTES ARE DEFINED HERE																																																																																																																																																																																							                              ===========================================
 				*/}
 
-        <Route exact path="/meeting-local" element={<MainPageLayout />}>
-          <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
-        </Route>
+        {/* ===========================================
+					PERFORMANCE MODULE ROUTES ARE DEFINED HERE
+					===========================================
+				*/}
 
-        {/* <Route exact path="/module-name" element={<MainPageLayout />}>
-          <Route path="/module-name/page-one" element={<PageOne />} />
-        </Route> */}
+      {/* <Route exact path="/performance" element={<MainPageLayout />}>
+        <Route path="/performance/mfo-status-monitoring" element={<StatusMonitoring />} />
+      </Route> */}
+
+      <Route exact path="/performance">
+        <Route path="/performance/mfo" element={<MainPageLayout />}>
+          <Route path="/performance/mfo/status-monitoring" element={<StatusMonitoring />} />
+        </Route>
+      </Route>
+
+      <Route exact path="/meeting-local" element={<MainPageLayout />}>
+        <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
+      </Route>
 
         {/* ===========================================
-            404 PAGE: WHEN ROUTES AREN'T DEFINE
-            ===========================================
+             		404 PAGE: WHEN ROUTES AREN'T DEFINE
+            		===========================================
 				*/}
         <Route
           path="*"

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\PersonController;
+use App\Http\Controllers\RemarksController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,3 +27,6 @@ Route::post('update-user', [AuthController::class, "updateUser"]);
 
 Route::get('get-person', [PersonController::class, "getPerson"]);
 Route::post('add-person', [PersonController::class, "addPerson"]);
+
+Route::get('get-remarks', [RemarksController::class, "getRemarks"]);
+Route::post('add-remarks', [RemarksController::class, "addRemarks"]);

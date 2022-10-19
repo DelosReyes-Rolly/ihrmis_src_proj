@@ -65,6 +65,24 @@ export const crumbThirdLevel = () => {
 		{ label: "Plantilla Items", route: "ihrmis/plantilla-items" },
 		{ label: "Office", route: "ihrmis/office" },
 	];
+
+  const getThirdLevel = (number) => {
+		const { getFirstLevel } = crumbFirstLevel();
+		const { getSecondLevel } = crumbSecondLevel();
+		let newArr = [];
+		getFirstLevel(number).forEach((element) => {
+			console.log(element?.length);
+			newArr.push(element);
+		});
+    getSecondLevel(number).forEach((element) => {
+			console.log(element?.length);
+			newArr.push(element);
+		});
+		newArr.push(plantillaLevel[number]);
+		return newArr;
+	};
+
+  return { getThirdLevel };
 };
 
 const BreadcrumbConfig = ({ array = [] }) => {
