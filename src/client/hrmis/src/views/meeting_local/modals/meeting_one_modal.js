@@ -3,7 +3,7 @@ import ModalComponent from "../../common/modal_component/modal_component";
 import InputComponent from "../../common/input_component/input_component/input_component";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { format, sub } from "date-fns";
+import { sub } from "date-fns";
 import axios from "axios";
 import { API_HOST } from "../../../helpers/global/global_config";
 import { ALERT_ENUM, popupAlert } from "../../../helpers/alert_response";
@@ -40,30 +40,40 @@ const MeetingOneModal = ({ isDisplay, onClose }) => {
   return (
     <React.Fragment>
       <ModalComponent
-        title="MFO Table"
+        title="Meeting One"
         isDisplay={isDisplay}
         onClose={onClose}
         onSubmitType="submit"
         onSubmit={formHandler.handleSubmit}
       >
         <div>
-          <label>Year</label>
+          <label>Name</label>
           <InputComponent
-            prop type={"date"}
-            // name="psn_name"
-            // value={formHandler.values.psn_name}
-            // onChange={formHandler.handleChange}
+            name="psn_name"
+            value={formHandler.values.psn_name}
+            onChange={formHandler.handleChange}
           />
+
+          {formHandler.touched.psn_name && formHandler.errors.psn_name ? (
+            <p className="error-validation-styles">
+              {formHandler.errors.psn_name}
+            </p>
+          ) : null}
         </div>
         <br />
         <div>
-          <label>Copy from Year</label>
+          <label>Email</label>
           <InputComponent
-            prop type={"date"}
-            // name="psn_email"
-            // value={formHandler.values.psn_email}
-            // onChange={formHandler.handleChange}
+            name="psn_email"
+            value={formHandler.values.psn_email}
+            onChange={formHandler.handleChange}
           />
+
+          {formHandler.touched.psn_email && formHandler.errors.psn_email ? (
+            <p className="error-validation-styles">
+              {formHandler.errors.psn_email}
+            </p>
+          ) : null}
         </div>
       </ModalComponent>
     </React.Fragment>

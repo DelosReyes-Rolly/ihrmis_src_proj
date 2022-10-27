@@ -8,8 +8,7 @@ import {
   AiOutlineWallet,
   AiOutlineFileSearch,
   AiOutlineCalendar,
-  AiFillMessage, 
-  AiOutlineHome
+  AiFillMessage,
 } from "react-icons/ai";
 import { IoAlbumsOutline, IoTimerOutline } from "react-icons/io5";
 
