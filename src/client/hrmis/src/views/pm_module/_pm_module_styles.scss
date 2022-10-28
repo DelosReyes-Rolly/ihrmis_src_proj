@@ -1,10 +1,46 @@
+
+.datePicker {
+    border-radius: 0.3rem;
+    text-align: center;
+    padding: 10px;
+    font-size: 15px;
+  }
+  
+
+  .slim-datePicker {
+    border-radius: 0.3rem;
+    text-align: center;
+    font-size: 15px;
+    flex-basis: 200px;
+  }
+
 .form-radio-item{
     float: right;
     padding-right: 10px;
     // padding-right: 10px;
-    // display: flex;
+    display: flex;
+    flex-wrap: nowrap;
     
 }
+
+
+.pm-212{
+    display: flex;
+    align-items:center;
+    flex: wrap;
+}
+
+.pm-212-text{
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    width: 800px;
+}
+
+
+input[type="radio"]{
+    margin: 0 10px 0 10px;
+  }
 
 .flex-container {
     display: flex;
@@ -16,4 +52,50 @@
     margin: 10px;
     text-align: center;
     line-height: px;
+}
+
+.modals-row{
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+}
+.modal-container{
+    display: flex;
+    align-items:  center;
+    flex: wrap;
+    padding-bottom: 10px;
+}
+
+.scroll-div{
+	box-sizing: border-box;
+	margin-top: 3px;
+	width: 100%;
+	outline: none;
+	border-radius: 5px 5px 5px 5px;
+	border: 1px solid #55555555;
+	padding: 6px 8px;
+	color: black;
+	display: block;
+    overflow-y: scroll;
+    height: 50px;
+    background-color: white;
+}
+
+.success-indicator{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.eff-qual-time{
+    display: flex; 
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.brbottom{
+    margin-bottom: 5px;
+    display: inline-block;
 }

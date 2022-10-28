@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ModalComponent from "../../common/modal_component/modal_component";
 import InputComponent from "../../common/input_component/input_component/input_component";
 import Select from "react-select";
+import { RadioComponent } from "../../common/input_component/checkbox_input_component/checkbox_input_component";
 
 const MajorFinalOutput = ({isDisplay, onClose}) => {
     const [option, setOptions] = useState("Major Final Output 1");
@@ -26,14 +27,14 @@ const MajorFinalOutput = ({isDisplay, onClose}) => {
                     <br/>
                     <div>
                     Placement
-                    <label className="form-radio-item">
-                    <input type="radio" name="radio" />
-                    After
-                    </label>
-                    <label className="form-radio-item">
-                        <input type="radio" name="radio"/>
-                    Before
-                    </label>
+                            <label className = "form-radio-item">
+                                <RadioComponent name="radio"/>
+                                After
+                            </label>
+                            <label className ="form-radio-item">
+                                <RadioComponent  name="radio"/>
+                                Before
+                            </label>
                     <br/>
                     <Select 
                     className="dropdown" 
