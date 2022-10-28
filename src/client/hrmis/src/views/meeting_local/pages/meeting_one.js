@@ -83,6 +83,34 @@ const DisplayPerson = ({ modal }) => {
   return (
     <div>
       <PersonTable columns={columns} data={data} />
+      {/* import axios from 'axios';
+      import React, {useEffect, useState} from 'react';
+      import { useTable } from 'react-table';
+      import { API_HOST } from '../../../helpers/global/global_config';
+      import ButtonComponent from '../../common/button_component/button_component';
+      import AddPersonModal from '../modal/add_person';
+
+      const MeetingOne = () => {
+
+        const [modal, setModal] = useState(false);
+        return (
+          <div style={{ margin: "10px 20px" }}>
+            <AddPersonModal isDisplay={modal} onClose={() => setModal(false)} />
+
+            <ButtonComponent
+            onClick={ () => setModal(true)}
+            buttonName="Add  Person"
+            />
+
+            <DisplayPerson modal={modal} />
+
+            <div className="container-hello">
+              <ButtonComponent buttonName="MO-130" onClick={() => setModal(true)} />
+            </div>
+            <br />
+            <div>
+              <DisplayPerson modal={modal} /> 
+            </div>*/}
     </div>
   );
 };

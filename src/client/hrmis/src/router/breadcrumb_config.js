@@ -80,11 +80,15 @@ export const crumbThirdLevel = () => {
 		{ label: "Development Plan", route: "ihrmis/submissionView" },
 	];
 
-	const getThirdLevel = (number) => {
+  const getThirdLevel = (number) => {
 		const { getFirstLevel } = crumbFirstLevel();
 		const { getSecondLevel } = crumbSecondLevel();
 		let newArr = [];
-		getSecondLevel(number).forEach((element) => {
+		getFirstLevel(number).forEach((element) => {
+			console.log(element?.length);
+			newArr.push(element);
+		});
+    getSecondLevel(number).forEach((element) => {
 			console.log(element?.length);
 			newArr.push(element);
 		});
@@ -92,9 +96,22 @@ export const crumbThirdLevel = () => {
 		return newArr;
 	};
 
-	return { getThirdLevel };
-	
+  return { getThirdLevel };
 };
+
+// const getThirdLevel = (number) => {
+// 	const { getFirstLevel } = crumbFirstLevel();
+// 	const { getSecondLevel } = crumbSecondLevel();
+// 	let newArr = [];
+// 	getSecondLevel(number).forEach((element) => {
+// 		console.log(element?.length);
+// 		newArr.push(element);
+// 	});
+// 	newArr.push(route[number]);
+// 	return newArr;
+// };
+
+// return { getThirdLevel };
 
 const BreadcrumbConfig = ({ array = [] }) => {
 	const navigate = useNavigate();

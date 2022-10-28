@@ -5,24 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class MfoTableStatus extends Model
 {
     use HasFactory;
-<<<<<<< HEAD
 
-=======
->>>>>>> 2215c9adb1b325f735f0ec810bc4a6a00ae0bf7f
-    protected $table = 'person';
-    protected $primaryKey = 'psn_id';
+    protected $table = 'tblmfo_table_status';
+    protected $primaryKey = 'sts_mfo_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var string[]
      */
     protected $fillable = [
-        'psn_name',
-        'psn_email',
+        'sts_mfo_time',
+        'sts_mfo_stg_id',
+        'sts_mfo_remarks',
     ];
-
-    public $timestamps = false;
 }
