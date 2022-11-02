@@ -6,7 +6,6 @@ import {
   Navigate,
   useNavigate,
   useLocation,
-  NavLink,
 } from "react-router-dom";
 
 import LoaderComponent from "../views/common/loader_component/loader_component";
@@ -16,7 +15,6 @@ import MainPageLayout from "../views/app";
 import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
-import SubmissionView from "../views/rsp_module/dashboard/submission_form_LD100";
 import MeetingOne from "../views/meeting_local/pages/meeting_one";
 import DevelopmentPlan from "../views/learning/pages/development_plan";
 import Submissions from "../views/learning/components/submissions";
@@ -24,7 +22,6 @@ import Consolidated from "../views/learning/components/consolidated";
 import TeamDevelopmentPlan from "../views/learning/pages/team_development_plan";
 import TeamDevelopment from "../views/learning/pages/team_development";
 import IndividualDevelopmentPlan from "../views/learning/pages/individual_development_plan";
-// import MeetingOne from "../views/meeting_local/pages/meeting_one";
 import IpcrPage from "../views/pm_module/pages/ipc_page";
 import StatusMonitoring from "../views/pm_module/major_final_output/pages/mfo_status_monitoring";
 
@@ -85,8 +82,6 @@ const MainRouter = () => {
           {/* RSP MODULE ROUTES */}
           <Route index element={<Navigate to="/rsp/dashboard" />} />
           <Route path="/rsp/dashboard" element={<DashboardView />} />
-          <Route path="/rsp/submissionView" element={<SubmissionView />} />
-          <Route path="/rsp/consolidated" element={<Consolidated />} />
         </Route>
         {/* 	===========================================
 					PDS ROUTES ARE DEFINED HERE																																																																																																																																																																																							                              ===========================================

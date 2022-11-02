@@ -33,14 +33,14 @@ const Consolidated = () => {
               <option value="" hidden>Development Activity</option>
               <option value="0">All</option>
             </select> 
-            <div className="left-button">
+            <span className="left-button">
               <select className="button-dropdown">
-                  <option value="" hidden>All Group</option>
-                  <option value="0">All</option>
+                <option value="" hidden>All Group</option>
+                <option value="0">All</option>
               </select> 
               <button className='consolidatedButton' onclick=""> <AiOutlinePlusCircle style={iconStylesPlus}/> </button>
               <button className='consolidatedButton' onclick=""> <AiOutlineCloseCircle style={iconStylesClose}/> </button>
-            </div>
+            </span>
             <ConsolidatedTable />
           </div>
       </div>

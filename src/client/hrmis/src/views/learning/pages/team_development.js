@@ -29,7 +29,7 @@ const TeamDevelopment = () => {
           <span className="logos" style={{marginTop: -30}}><a href="#"><RiPrinterFill style={iconStyles}/></a></span>
         </div>   
         <div style={{textAlign: 'right', paddingBottom: '12px',  marginLeft: 40, marginRight: 40, paddingTop: 10}}>
-          2021-2023 : For Revision    
+          2021-2023 : For Revisions   
         </div>
         <select className="button-dropdown" style={{borderBottomRightRadius: '0px', borderTopRightRadius: '0px'}}>
           <option value="2021-2023">2021-2023</option>

@@ -53,7 +53,7 @@ export const crumbSecondLevel = () => {
 		},
 		{
 			label: "Learning",
-			route: "/rsp/submissionView",
+			route: "/learning/development/submissions",
 		},
 	];
 
@@ -81,14 +81,9 @@ export const crumbThirdLevel = () => {
 	];
 
   const getThirdLevel = (number) => {
-		const { getFirstLevel } = crumbFirstLevel();
 		const { getSecondLevel } = crumbSecondLevel();
 		let newArr = [];
-		getFirstLevel(number).forEach((element) => {
-			console.log(element?.length);
-			newArr.push(element);
-		});
-    getSecondLevel(number).forEach((element) => {
+    	getSecondLevel(number).forEach((element) => {
 			console.log(element?.length);
 			newArr.push(element);
 		});

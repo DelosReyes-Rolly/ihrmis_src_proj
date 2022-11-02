@@ -11,16 +11,14 @@ const ActivityModal = ({isDisplay, onClose}) => {
     return (
         <React.Fragment>
             <ModalComponent isDisplay={isDisplay} onClose={() => onClose()} title={'Individual Developement Activity'}>
-                <div className="flex-container">
-                    <div style={{paddingRight: 20}}>
-                        <span><label>For the Year </label></span>
-                    </div>
-                    <div style={{paddingRight: 40}}>
+                <div className="flex-container">         
+                    <span style={{paddingRight: 20}}>For the Year </span>
+                    <span style={{paddingRight: 40}}>
                         <SelectComponent
                             name="date"
                             type={"date"}
                         />
-                    </div>
+                    </span>
                 </div><br/>
                 <label>Performance Gap </label>
                 <SelectComponent/><br/><br/>

@@ -30,9 +30,9 @@ const DevelopmentPlan = () => {
             <span><a className='hover'>Consolidated</a></span>
           </NavLink> 
           <RemarksModal onClose={() => setOpenRemarksModal(false)} isDisplay={openRemarksModal}/>
-          <button className="logos" onClick={() => setOpenRemarksModal(true)} style={{borderStyle: "hidden", cursor:'pointer'}}><RiEditBoxFill style={iconStyles}/></button>
-          <span className="logos"><a href="#"><IoIosMail style={iconStyles}/></a></span>
-          <span className="logos"><a href="#"><RiPrinterFill style={iconStyles}/></a></span>
+          <button className="logos" style={{marginTop:-20}} onClick={() => setOpenRemarksModal(true)}><RiEditBoxFill style={iconStyles}/></button>
+          <span className="logos" style={{marginTop:-20}}><a href="#"><IoIosMail style={iconStyles}/></a></span>
+          <span className="logos" style={{marginTop:-20}}><a href="#"><RiPrinterFill style={iconStyles}/></a></span>
         </div>       
       </div>
     </div>

@@ -18,6 +18,8 @@ a.hover:hover { text-decoration: none; color: #084c84; }
 .logos{
     float: right;
     margin: 0px 40px 0px 0px;
+    border-style: hidden;
+    cursor: pointer;
 }
 
 .buttonPlus{
@@ -46,11 +48,13 @@ a.hover:hover { text-decoration: none; color: #084c84; }
 .button-dropdown{
     color: #084c84;
     border-color: #084c84;
-    padding: 8px 0px 10px 0px;
+    padding: 8px 60px 10px 0px;
+    text-align: center;
     font-weight:600;
-    border-radius: 10px;
+    border-radius: 6px;
     cursor: pointer;
     border-style: #084c84;
+    margin-right: 10px;
 }
 
 
@@ -60,8 +64,8 @@ a.hover:hover { text-decoration: none; color: #084c84; }
 }
 
 .left-button{
+  float: right;
   display: flex; 
-  justify-content: space-around;
 }
 
 .consolidatedButton{

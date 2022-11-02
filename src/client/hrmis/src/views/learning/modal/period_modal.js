@@ -54,7 +54,7 @@ const PeriodModal = ({isDisplay, onClose}) => {
                 onSubmit={formHandler.handleSubmit}
             >
             <div className="flex-container">
-                <div style={{paddingRight: 40}}>
+                <span style={{paddingRight: 40}}>
                     <label>Period From</label>
                     <InputComponent 
                         name="prd_start"
@@ -67,8 +67,8 @@ const PeriodModal = ({isDisplay, onClose}) => {
                         {formHandler.errors.prd_start}
                         </p>
                     ) : null}
-                </div>
-                <div style={{paddingRight: 40}}>
+                </span>
+                <span style={{paddingRight: 40}}>
                     <label>To</label>
                     <InputComponent    
                         name="prd_end"
@@ -81,7 +81,7 @@ const PeriodModal = ({isDisplay, onClose}) => {
                         {formHandler.errors.prd_end}
                         </p>
                     ) : null}
-                </div>
+                </span>
             </div><br/>
             <label>Title</label>
             <InputComponent

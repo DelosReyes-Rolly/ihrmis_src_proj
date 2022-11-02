@@ -5,11 +5,15 @@ import ModalComponent from "../../common/modal_component/modal_component";
 
 const RemarksModal = ({isDisplay, onClose}) => {
     return (
-        <React.Fragment>
-            <ModalComponent isDisplay={isDisplay} onClose={() => onClose()} title={'Remarks'}>
-                <TextAreaComponent/>
-            </ModalComponent>
-        </React.Fragment>
+        <div>
+            <React.Fragment>
+                <ModalComponent isDisplay={isDisplay} onClose={() => onClose()} title={'Remarks'}>
+                    <div style={{marginLeft: 20, marginRight: 20}}>
+                        <TextAreaComponent/>
+                    </div>
+                </ModalComponent>
+            </React.Fragment>
+        </div>
     );
 };
 

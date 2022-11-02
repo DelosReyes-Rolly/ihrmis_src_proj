@@ -5,7 +5,7 @@ import TextAreaComponent from "../../common/input_component/textarea_input_compo
 import ModalComponent from "../../common/modal_component/modal_component";
 import { BsArrowsFullscreen, BsUpload } from "react-icons/bs";
 import SelectComponent from "../../common/input_component/select_component/select_component";
-
+import ToggleSwitchComponent from "../../common/toggle_switch_component/toggle_switch";
 
 const SignatureModal = ({isDisplay, onClose}) => {
     let iconStyles = { fontSize: "1.4em", color: "#084c84"};
@@ -14,12 +14,12 @@ const SignatureModal = ({isDisplay, onClose}) => {
             <ModalComponent isDisplay={isDisplay} onClose={() => onClose()} title={'Signature'}>
                 <label>Name of Signatory</label>
                 <div style={{float:"right"}}>
-                    Show all
+                    <ToggleSwitchComponent/>Show all
                 </div>
                 <SelectComponent/><br/><br/>
                 <TextAreaComponent/><br/><br/>
                 <CheckboxComponent/>
-                Remember
+                {" "} Remember
                 <div style={{float: "right"}}>
                     <span style={{ marginRight: 20}}><a href="#" target="_blank" rel="noreferrer"><BsUpload style={iconStyles}/></a></span>
                     <span style={{ marginRight: 20}}><a href="#" target="_blank" rel="noreferrer"><BsArrowsFullscreen style={iconStyles}/></a></span>
