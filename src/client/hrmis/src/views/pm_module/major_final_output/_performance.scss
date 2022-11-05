@@ -95,7 +95,6 @@ table {
   font-size: 14px;
 }
 
-
 // ====================================================================
 .remarks-textarea {
   width: 95%;
@@ -109,6 +108,7 @@ table {
   justify-content: center;
 }
 
+// ====================================================================
 .comment-details {
   display: flex;
 }
@@ -183,7 +183,7 @@ table {
   transform: scaleX(-1);
 }
 
-// ================================
+// ====================================================================
 .signature-switch {
   display: flex;
   justify-content: space-between;
@@ -214,8 +214,7 @@ table {
   margin-left: 15px;
 }
 
-
-// ====================
+// ====================================================================
 .hr-references {
   margin-top: 20px;
   margin-bottom: 5px;

@@ -73,10 +73,6 @@ const MainRouter = () => {
 					===========================================
 				*/}
 
-      {/* <Route exact path="/performance" element={<MainPageLayout />}>
-        <Route path="/performance/mfo-status-monitoring" element={<StatusMonitoring />} />
-      </Route> */}
-
       <Route exact path="/performance">
         <Route path="/performance/mfo" element={<MainPageLayout />}>
           <Route path="/performance/mfo/status-monitoring" element={<StatusMonitoring />} />
@@ -86,11 +82,6 @@ const MainRouter = () => {
         <Route exact path="/pm" element={<MainPageLayout />}>
           <Route path="/pm/ipcr-page" element={<IpcrPage />} />
         </Route>
-
-
-        {/* <Route exact path="/module-name" element={<MainPageLayout />}>
-          <Route path="/module-name/page-one" element={<PageOne />} />
-        </Route> */}
 
       <Route exact path="/meeting-local" element={<MainPageLayout />}>
         <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />

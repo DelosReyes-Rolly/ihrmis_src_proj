@@ -6,7 +6,6 @@ import TextAreaComponent from '../../../common/input_component/textarea_input_co
 import ModalComponent from '../../../common/modal_component/modal_component'
 import ToggleSwitchComponent from '../../../common/toggle_switch_component/toggle_switch'
 import { AiOutlineFullscreen, AiOutlineUpload } from "react-icons/ai"
-import SearchComponent from '../../../common/input_component/search_input/search_input'
 
 const ModalSignature = ({ isDisplay, onClose }) => {
   return (
