@@ -95,7 +95,6 @@ table {
   font-size: 14px;
 }
 
-
 // ====================================================================
 .remarks-textarea {
   width: 95%;
@@ -109,6 +108,7 @@ table {
   justify-content: center;
 }
 
+// ====================================================================
 .comment-details {
   display: flex;
 }
@@ -183,19 +183,67 @@ table {
   transform: scaleX(-1);
 }
 
-// ================================
-.hr-references {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
+// ====================================================================
 .signature-switch {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
 }
 
+.signatory-toggle {
+  display: flex;
+}
+
 .signature-checkbox {
   display: flex;
   vertical-align: middle;
+  line-height: 22px;
 }
+
+.signature-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.signature-icons {
+  display: flex;
+}
+
+.signature-icon {
+  font-size: 25px;
+  margin-left: 15px;
+}
+
+// ====================================================================
+.hr-references {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.references-body {
+  font-size: 14px;
+}
+
+.references-files {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  line-height: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.references-files:hover {
+  background-color: #E5E8E8;
+}
+
+.delete-file {
+  color: #E74C3C;
+  font-size: 20px;
+}
+
+
+
+

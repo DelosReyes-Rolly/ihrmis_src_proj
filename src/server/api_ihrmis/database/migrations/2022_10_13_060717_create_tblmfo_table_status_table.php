@@ -15,6 +15,10 @@ class CreateTblmfoTableStatusTable extends Migration
     {
         Schema::create('tblmfo_table_status', function (Blueprint $table) {
             $table->increments('sts_mfo_id')->comment('Mfo status identifier');
+
+            // $table->unsigneddateTime('sts_mfo_time');
+            // $table->foreign('sts_mfo_time')->references('mfo_sts_time')->on('tblmfo_tables');
+
             $table->dateTime('sts_mfo_time')->comment('Mfo status datetime');
             $table->integer('sts_mfo_stg_id');
             $table->text('sts_mfo_remarks')->nullable();

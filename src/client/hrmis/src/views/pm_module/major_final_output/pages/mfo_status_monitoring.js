@@ -14,28 +14,6 @@ const StatusMonitoring = () => {
       <div className='content-container'>
         <MfoTable />
       </div>
-
-
-      {/* <div className='modals'>
-        <ModalRemarks onClose={ () => setOpenModalRemarks(false)} isDisplay={openModalRemarks} />
-
-        <ButtonComponent
-        onClick={ () => setOpenModalRemarks(true)}
-        buttonName="Remarks"
-        style={{ margin: 20 }}
-        />
-
-        <ModalComments onClose={ () => setOpenModalComments(false)} isDisplay={openModalComments} />
-
-        <ButtonComponent
-        onClick={ () => setOpenModalComments(true)}
-        buttonName="Comments"
-        style={{ margin: 20 }}
-        />
-      </div>
-      <div>
-        <ShowRemarks />
-      </div> */}
     </div>
   );
 };

@@ -1,132 +1,24 @@
-import React from 'react'
-import { useTable } from 'react-table'
-import { TbArrowsDownUp } from "react-icons/tb";
+import React, { useEffect, useState } from 'react'
 import IconComponent from '../../../common/icon_component/icon';
+import { useTable } from 'react-table';
+import { TbArrowsDownUp } from "react-icons/tb";
 import { IoIosMail } from 'react-icons/io';
 import { MdMessage } from 'react-icons/md';
-import { useState } from 'react';
 import ModalRemarks from './modal_remarks';
 import ModalComments from './modal_comments';
 import ButtonComponent from '../../../common/button_component/button_component';
 import ModalReferences from './modal_references';
-import ModalSignature from './modal_signatuire';
+import ModalSignature from './modal_signature';
+import axios from 'axios';
+import { API_HOST } from '../../../../helpers/global/global_config';
 
 const MfoTable = () => {
-  const data = React.useMemo(
-    () => [
-      {
-        col1: <input type="checkbox" />,
-        col2: 'Office of the Secretary (OSEC)',
-        col3: '01-15-2021',
-        col4: 'In-Preparation',
-        col5: '',
-      },
-      {
-        col1: <input type="checkbox" />,
-        col2: 'Office of the Undersecretary for Science and Technical Services (OUSEC-STS)',
-        col3: '01-15-2021',
-        col4: 'For Revision',
-        col5: '',
-      },
-      {
-        col1: <input type="checkbox" />,
-        col2: 'Office of the Director for Planning and Evaluation Service (PES)',
-        col3: '01-15-2021',
-        col4: 'Approved',
-        col5: '',
-      },
-      {
-        col1: <input type="checkbox" />,
-        col2: 'Policy Development and Planning Division (PDPD)',
-        col3: '',
-        col4: '',
-        col5: '',
-      },
-    ],
-    []
-  )
-
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: '',
-        accessor: 'col1', 
-      },
-      {
-        Header: 'Name of Office',
-        accessor: 'col2', 
-      },
-      {
-        Header: 'Date',
-        accessor: 'col3',
-      },
-      {
-        Header: 'Status',
-        accessor: 'col4',
-      },
-      {
-        Header: 'Remarks',
-        accessor: 'col5',
-      },
-    ],
-    []
-  )
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data })
-
   return (
     <div>
       <TitleBar />
       <DropdownButtons />
 
-      <table {...getTableProps()} className="table-design">
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps()} 
-                  className="th-design"
-                >
-                  <div>
-                    <TbArrowsDownUp className='arrow-icon'/>
-                    {column.render('Header')}
-                  </div>
-                  
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row)
-            return (
-              <tr {...row.getRowProps()} >
-                {row.cells.map(cell => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      className="td-design"
-
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                    
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-
+      <DisplayMfoTable />
     </div>
   )
 }
@@ -228,3 +120,100 @@ const TitleBar = () => {
   )
 }
 
+const DisplayMfoTable = () => {
+  const [mfoTable, setMfoTable] = useState([]);
+
+  const fetchMfoTable = async () => {
+    await axios
+      .get(API_HOST + "get-mfo-table")
+      .then((response) => {
+        const data = response?.data;
+        setMfoTable([...data]);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Name of Office",
+        accessor: "mfo_ofc_id",
+      },
+      {
+        Header: "Date",
+        accessor: "mfo_sts_time",
+      },
+      {
+        Header: "Status",
+        accessor: "Status",
+      },
+      {
+        Header: "Remarks",
+        accessor: "Remarks",
+      },
+    ],
+    []
+  );
+
+  const data = React.useMemo(() => mfoTable, [mfoTable]);
+
+  useEffect(() => {
+    fetchMfoTable();
+  },);
+
+  return (
+    <div>
+      <MfoTableStucture columns={columns} data={data} />
+    </div>
+  );
+}
+
+const MfoTableStucture = ({columns, data}) => {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
+    columns,
+    data,
+  })
+
+  return (
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()} 
+                className="th-design"
+              >
+                <div>
+                  <TbArrowsDownUp className='arrow-icon'/>
+                  {column.render('Header')}
+                </div>
+                
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row, i) => {
+          prepareRow(row)
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map(cell => {
+                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+              })}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  );
+}
