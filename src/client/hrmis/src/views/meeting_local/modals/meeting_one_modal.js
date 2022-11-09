@@ -9,27 +9,27 @@ import { API_HOST } from "../../../helpers/global/global_config";
 import { ALERT_ENUM, popupAlert } from "../../../helpers/alert_response";
 
 const MeetingOneModal = ({ isDisplay, onClose }) => {
-  const formHandler = useFormik({
-    initialValues: {
-      psn_name: "",
+  const formHandler = useFormik({ //formik - functiont that handles form in react
+    initialValues: {              //here is initial value
+      psn_name: "",               //laman ng db
       psn_email: "",
     },
-    validationSchema: Yup.object({
-      psn_name: Yup.string()
+    validationSchema: Yup.object({    //validation - checker
+      psn_name: Yup.string()          //string dapat, kapag hindi string papasok as baba
         .typeError("Invalid Input")
-        .required("This field is required"),
+        .required("This field is required"),    //required
       psn_email: Yup.string()
-        .typeError("Invalid Input")
+        .typeError("Invalid Input")         
         .required("This field is required")
-        .email("Invalid Input"),
+        .email("Invalid Input"),              //meron sa yup na email validation
     }),
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {    //kapag sinubmit - kailangan ng value at resetForm
       axios
-        .post(API_HOST + "add-person", values)
+        .post(API_HOST + "add-person", values)    //api_host = link, add-person = route, values = value to be submitted
         .then(() => {
-          popupAlert("Success", ALERT_ENUM.success);
-          resetForm();
-          onClose();
+          popupAlert("Success", ALERT_ENUM.success);  //if success
+          resetForm();                                //form will reset
+          onClose();                                  //and then form will close
         })
         .catch((err) => {
           popupAlert("Failed", ALERT_ENUM.fail);
@@ -44,21 +44,21 @@ const MeetingOneModal = ({ isDisplay, onClose }) => {
         isDisplay={isDisplay}
         onClose={onClose}
         onSubmitType="submit"
-        onSubmit={formHandler.handleSubmit}
+        onSubmit={formHandler.handleSubmit} //maghahandle ng submit
       >
         <div>
           <label>Name</label>
           <InputComponent
-            name="psn_name"
-            value={formHandler.values.psn_name}
-            onChange={formHandler.handleChange}
+            name="psn_name"         //yung nasa taas laman ng db
+            value={formHandler.values.psn_name} //value ng form handler sa taas
+            onChange={formHandler.handleChange} //onChange - ano mangyayari kapag may bago sa input = ""
           />
 
           {formHandler.touched.psn_name && formHandler.errors.psn_name ? (
             <p className="error-validation-styles">
               {formHandler.errors.psn_name}
             </p>
-          ) : null}
+          ) : null}  {/* copy paste */}
         </div>
         <br />
         <div>

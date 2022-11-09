@@ -11,6 +11,8 @@
 @import "./defaults/default_z_index";
 @import "./defaults/css_transition";
 @import "./defaults/default_common.utils";
+@import "./../../views/meeting_local/meeting_local";
+@import "./../../views/learning/learning";
 
 * {
   margin: 0px;

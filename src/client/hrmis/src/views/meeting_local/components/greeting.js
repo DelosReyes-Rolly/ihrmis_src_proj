@@ -1,11 +1,9 @@
-import React from "react";
+import React from 'react'
 
 const Greeting = () => {
   return (
-    <div>
-      <h1>Greeting</h1>
-    </div>
-  );
-};
+    <div>Greeting</div>
+  )
+}
 
-export default Greeting;
+export default Greeting
