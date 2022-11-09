@@ -1,0 +1,267 @@
+.button-position {
+    display: flex;
+    gap: 10px;
+    margin-left: 25px;
+  }
+
+.text-end {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    width: 95%;
+    margin-top: 5px;
+    font-weight: 300;
+    padding-left: 25px;
+    margin-bottom: 3vh;
+}
+
+.relative
+{
+  position: relative;
+}
+
+// Table Style
+.table-container {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+
+.badge {
+  
+  display: inline-block;
+  position: absolute;
+  left: 2.5vmin;
+  text-align: center;
+  width: 5px;
+  height: 5px;
+  border-radius: 50% !important;
+  padding: 3px !important;
+  font-size: 5px !important;
+  color: white;
+  z-index: 100;
+}
+.fixed {
+  position: fixed;
+}
+
+
+.pointer {
+  cursor: pointer;
+}
+.table-content {
+    display: table;
+    // table-layout: fixed;
+    width: 95%;
+    margin-top: 3vh;
+    margin-bottom: 2em;
+    margin-left: 25px;
+    border-collapse: collapse;
+    color: map-get($primaryColor, regular);
+    
+    border: solid 1px grey;
+    th {
+        display: table-cell;
+        text-align: internal left;
+        font-weight: 600;
+        width: auto;
+        min-width: 10rem;
+        border: solid 1px grey;
+    }
+
+    td {
+        display: table-cell;
+        text-align: internal left !important;
+        vertical-align: text-top;
+        padding: 7px;
+        border: solid 1px grey;
+
+    }
+    .black
+    {
+      color: black;
+    }
+
+    .pd-left {
+      padding-left: 0.5rem;
+    }
+    .pd-5 {
+      padding: 5px;
+    }
+    .width-full {
+      width: 5px !important;
+      min-width: 5px !important; 
+    }
+
+    .no-border {
+      border-bottom: none !important;
+      border-top: none !important;
+    }
+    .no-border-top {
+      border-collapse: separate !important;
+    }
+
+    .no-border-btm {
+      border-bottom: none !important;
+    }
+    .red {
+      color: red !important;
+    }
+    .absolute {
+      position: absolute;
+    }
+    .right-comment-commitment {
+      transform: translateX(18vw);
+    }
+    .right-comment-commitment-1 {
+      transform: translateX(11vw);
+    }
+    .right-comment-commitment-2 {
+      transform: translateX(15vw);
+    }
+    .right-comment-rating {
+      transform: translateX(16vw)
+    }
+    .right-comment-rating-1 {
+      transform: translateX(14.5vw)
+    }
+    .right-comment-rating-2 {
+      transform: translate(1vmin, -5vh)
+    }
+
+    .right-comment-mfo {
+      transform: translateX(10.5vw);
+    }
+
+    .right-comment-mfo-1 {
+      transform: translateX(8.5vw);
+    }
+    .right-comment-mfo-2 {
+      transform: translateX(12.5vw);
+    }
+
+    .right-comment-cascaded {
+      transform: translateX(12vw);
+    }
+    .right-comment-cascaded-1 {
+      transform: translateX(10vw);
+    }
+
+    
+}
+
+.subtable {
+  display: table;
+  width: 100%;
+  height: auto;
+  border: none !important;
+  border-collapse: unset;
+
+  .width-full {
+    width: 5px !important;
+  }
+ 
+}
+
+.select {
+    display: block;
+    background: transparent;
+    max-width: 100% !important;
+    width: auto !important;
+    margin-top: 0 !important;
+    color: rgb(0, 78, 135) !important;
+    border: 1px solid rgb(0, 78, 135) !important;
+    padding: 7px 5px 7px 15px;
+    border-radius: 5px;
+    // overflow: hidden;
+    font-weight: 600;
+    &:focus {
+        outline-color: rgb(0, 78, 135);
+        outline-width: 1px;
+        color: rgb(0, 78, 135);
+    }
+}
+
+
+// Icon Dropdown Style
+.actions-style {
+    display: inline-block;
+    position: absolute;
+    left: 20px;
+    top: -10px;
+    border: 1px solid #D0D0D0;
+    background-color: white;
+    width: in;
+    padding: 2px 0px;
+    z-index: $sidebarIndex;
+    .arrow-style {
+      position: absolute;
+      top: -10px;
+      right: 1px;
+      color: white;
+    }
+    li {
+      padding: 7px 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+  
+    li:hover {
+      background-color: #EDEDED;
+    }
+  }
+
+.select-container {
+  display: flex;
+    gap: 10px;
+    margin-left: 20px
+}
+
+.select-position {
+    display: flex;
+    gap: 10px;
+    margin-left: 20px;
+    justify-content: space-between;
+    width: 86%;
+}
+
+.select-start {
+  display: flex;
+  gap: 10px;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+}
+
+.flex {
+  display: flex;
+
+}
+.letter {
+  display: table-cell;
+  vertical-align: middle !important;
+  text-align: center;
+  color: black;
+  width: 15px !important;
+}
+
+.rating {
+  display: table-cell;
+  vertical-align: middle !important;
+  text-align: center;
+  color: black;
+}
+
+.td-separator {
+  border-left: 1px solid grey;
+  height: 10rem;
+  padding-right: 0.5em;
+}
+
+.pad-top {
+  padding-top: 10px;
+}
