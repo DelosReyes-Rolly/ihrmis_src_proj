@@ -15,6 +15,14 @@ export const crumbFirstLevel = () => {
 			label: "Library",
 			route: "/library",
 		},
+		{
+			label: "Home",
+			route: "/rsp",
+		},
+		{
+			label: "Home",
+			route: "/rsp",
+		},
 	];
 	const getFirstLevel = (number) => {
 		let newArr = [];
@@ -43,6 +51,10 @@ export const crumbSecondLevel = () => {
 			label: "Calendar",
 			route: "/ihrmis/calendar",
 		},
+		{
+			label: "Learning",
+			route: "/learning/development/submissions",
+		},
 	];
 
 	const getSecondLevel = (number) => {
@@ -60,30 +72,41 @@ export const crumbSecondLevel = () => {
 };
 
 export const crumbThirdLevel = () => {
-	const plantillaLevel = [
+	const route = [
 		{ label: "Employee", route: "ihrmis/employee" },
 		{ label: "Plantilla Items", route: "ihrmis/plantilla-items" },
 		{ label: "Office", route: "ihrmis/office" },
+		{ label: "Office", route: "ihrmis/office" },
+		{ label: "Development Plan", route: "ihrmis/submissionView" },
 	];
 
   const getThirdLevel = (number) => {
-		const { getFirstLevel } = crumbFirstLevel();
 		const { getSecondLevel } = crumbSecondLevel();
 		let newArr = [];
-		getFirstLevel(number).forEach((element) => {
+    	getSecondLevel(number).forEach((element) => {
 			console.log(element?.length);
 			newArr.push(element);
 		});
-    getSecondLevel(number).forEach((element) => {
-			console.log(element?.length);
-			newArr.push(element);
-		});
-		newArr.push(plantillaLevel[number]);
+		newArr.push(route[number]);
 		return newArr;
 	};
 
   return { getThirdLevel };
 };
+
+// const getThirdLevel = (number) => {
+// 	const { getFirstLevel } = crumbFirstLevel();
+// 	const { getSecondLevel } = crumbSecondLevel();
+// 	let newArr = [];
+// 	getSecondLevel(number).forEach((element) => {
+// 		console.log(element?.length);
+// 		newArr.push(element);
+// 	});
+// 	newArr.push(route[number]);
+// 	return newArr;
+// };
+
+// return { getThirdLevel };
 
 const BreadcrumbConfig = ({ array = [] }) => {
 	const navigate = useNavigate();

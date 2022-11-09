@@ -6,7 +6,6 @@ import {
   Navigate,
   useNavigate,
   useLocation,
-  NavLink,
 } from "react-router-dom";
 
 import LoaderComponent from "../views/common/loader_component/loader_component";
@@ -17,6 +16,12 @@ import DashboardView from "../views/rsp_module/dashboard/dashboard_view";
 import LoginView from "../views/authentication/login_view";
 import FourOfourPage from "../views/common/response_component/404_page/fourofour_page";
 import MeetingOne from "../views/meeting_local/pages/meeting_one";
+import DevelopmentPlan from "../views/learning/pages/development_plan";
+import Submissions from "../views/learning/components/submissions";
+import Consolidated from "../views/learning/components/consolidated";
+import TeamDevelopmentPlan from "../views/learning/pages/team_development_plan";
+import TeamDevelopment from "../views/learning/pages/team_development";
+import IndividualDevelopmentPlan from "../views/learning/pages/individual_development_plan";
 import IpcrPage from "../views/pm_module/pages/ipc_page";
 import StatusMonitoring from "../views/pm_module/major_final_output/pages/mfo_status_monitoring";
 
@@ -58,6 +63,20 @@ const MainRouter = () => {
 					  RSP MODULE ROUTES ARE DEFINED HERE
 					  ===========================================
 				*/}
+
+        <Route exact path="/meeting-local" element={<MainPageLayout />}>
+          <Route path="/meeting-local/meeting-one" element={<MeetingOne />} />
+        </Route>
+
+        <Route exact path="/learning" element={<MainPageLayout />}>
+          <Route exact path="/learning/development/submissions" element={<Submissions/>} />
+          <Route exact path="/learning/development/consolidated" element={<Consolidated />} />
+          <Route exact path="/learning/development/teamdevelopmentplan" element={<TeamDevelopmentPlan/>} />
+          <Route exact path="/learning/development/teamdevelopment" element={<TeamDevelopment/>} />
+          <Route exact path="/learning/development/individualdevelopment" element={<IndividualDevelopmentPlan/>} />
+        </Route>
+
+
 
         <Route exact path="/rsp" element={<MainPageLayout />}>
           {/* RSP MODULE ROUTES */}

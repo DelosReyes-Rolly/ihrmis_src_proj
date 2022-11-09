@@ -10,6 +10,9 @@ import {
   AiOutlineCalendar,
   AiFillMessage,
 } from "react-icons/ai";
+import{
+  BiBookOpen,
+}from "react-icons/bi"
 import { IoAlbumsOutline, IoTimerOutline } from "react-icons/io5";
 
 export const SidebarOption = [
@@ -20,10 +23,46 @@ export const SidebarOption = [
     more: null,
     link: "/rsp/dashboard",
   },
+  {
+    title: "Meeting One",
+    id: 2,
+    icon: <AiFillMessage size="20" />,
+    more: null,
+    link: "/meeting-local/meeting-one",
+  },
+  {
+    title: "Learning",
+    id: 3,
+    icon: <BiBookOpen size="20" />,
+    more: null,
+    more: [
+      {
+        id: 1,
+        title: "LD-100, LD-101 and LD-102",
+        link: "/learning/development/submissions",
+      },
+      {
+        id: 2,
+        title: "LD-110",
+        link: "/learning/development/teamdevelopmentplan",
+      },
+      {
+        id: 3,
+        title: "LD-120",
+        link: "/learning/development/teamdevelopment",
+      },
+      {
+        id: 4,
+        title: "LD-121 and LD-122",
+        link: "/learning/development/individualdevelopment",
+      },
+    ],
+    link: "/learning/development/submissions",
+  },
 
   {
     title: "Meeting",
-    id: 2,
+    id: 4,
     icon: <AiOutlineHome size="20" />,
     more: null,
     link: "/meeting-local/meeting-one",
@@ -31,7 +70,7 @@ export const SidebarOption = [
 
   {
     title: "IPCR",
-    id: 3,
+    id: 5,
     icon: <BsFillFileEarmarkPersonFill size="20" />,
     more: null,
     link: "/pm/ipcr-page",
@@ -40,7 +79,7 @@ export const SidebarOption = [
 
   {
     title: "Performance",
-    id: 4,
+    id: 6,
     icon: <IoTimerOutline size="20" />,
     more: [
       {

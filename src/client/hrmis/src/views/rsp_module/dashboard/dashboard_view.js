@@ -13,7 +13,7 @@ const DashboardView = ({}) => {
           Welcome <strong>{username}!</strong>
         </div>
         <br />
-        <h1>Dashboard View</h1>
+        <h1>Dashboard Views</h1>
       </div>
     </div>
   );
